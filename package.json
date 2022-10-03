@@ -4,6 +4,17 @@
   "version": "0.0.0",
   "type": "module",
   "license": "MIT",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/bentevi.umd.cjs",
+  "module": "./dist/bentevi.js",
+  "exports": {
+    ".": {
+      "import": "./dist/bentevi.js",
+      "require": "./dist/bentevi.umd.cjs"
+    }
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
