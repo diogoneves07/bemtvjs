@@ -9,6 +9,7 @@ const componentsToDelete: Set<ComponentManager> = new Set();
 
 function shouldComponentBeUnmounted(componentManager: ComponentManager) {
   const nodes = componentManager.nodes;
+
   if (isMounted(componentManager.componentThis) && !nodes.length) {
     dispatchUnmountedLifeCycle(componentManager.componentThis);
     componentsToDelete.add(componentManager);

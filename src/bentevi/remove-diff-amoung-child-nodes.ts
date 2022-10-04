@@ -1,8 +1,9 @@
 import { ALL_ELEMENTS_MANAGER } from "./manager-el";
 import { KEY_ATTRIBUTE_NAME } from "./globals";
 import {
-  appendNodeToTemplateObject,
-  removeNodeFromTemplateObject,
+  appendNodeToComponentManagerNodes,
+  removeNodeFromComponentManagerNodes,
+  replaceNodeInComponentManagerNodes,
 } from "./components-manager-nodes";
 
 function removeDiffNodesAttrs(newNode: Element, oldNode: Element) {
@@ -42,17 +43,17 @@ export function removeDiffAmoungChildNodes(
 ) {
   let newChildNodesArray = newChildNodes;
 
-  let oldChildNodesArray = oldChildNodes;
-
   const length = newChildNodesArray.length;
+
+  let oldChildNodesArray = oldChildNodes.slice(0, length);
 
   const parentElement = oldChildNodes[0].parentElement;
 
   if (!parentElement) return;
 
-  for (const node of oldChildNodesArray.slice(length)) {
+  for (const node of oldChildNodes.slice(length)) {
     parentElement.removeChild(node);
-    removeNodeFromTemplateObject(node);
+    removeNodeFromComponentManagerNodes(node);
   }
 
   for (let index = 0; index < length; index++) {
@@ -61,20 +62,23 @@ export function removeDiffAmoungChildNodes(
 
     if (!oldNode) {
       parentElement.appendChild(newNode);
-      appendNodeToTemplateObject(newNode);
+      appendNodeToComponentManagerNodes(newNode);
+      continue;
+    }
+
+    if (newNode.nodeType !== oldNode.nodeType) {
+      parentElement.replaceChild(newNode, oldNode);
+      replaceNodeInComponentManagerNodes(newNode, oldNode);
       continue;
     }
 
     if ("tagName" in newNode) {
       if ((newNode as Element).tagName !== (oldNode as Element).tagName) {
         parentElement.replaceChild(newNode, oldNode);
+        replaceNodeInComponentManagerNodes(newNode, oldNode);
+
         continue;
       }
-    }
-
-    if (newNode.nodeType !== oldNode.nodeType) {
-      parentElement.replaceChild(newNode, oldNode);
-      continue;
     }
 
     if (newNode instanceof Text) {

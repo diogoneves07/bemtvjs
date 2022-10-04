@@ -1,4 +1,5 @@
 import ComponentManager from "./component-manager";
+import { setComponentThisFirstElement } from "./components-this";
 import {
   getNodeComponentKeys,
   setNodeComponentKeys,
@@ -6,17 +7,19 @@ import {
 
 export const ALL_COMPONENTS_MANAGER: ComponentManager[] = [];
 
-function setComponentThisFirstElement(componentManager: ComponentManager) {
+function findAndSetComponentThisFirstElement(
+  componentManager: ComponentManager
+) {
   for (const node of componentManager.nodes) {
     if (!(node instanceof Element)) continue;
 
-    componentManager.componentThis.firstElement = node;
+    setComponentThisFirstElement(componentManager.componentThis, node);
 
     return;
   }
 }
 
-export function appendNodeToTemplateObject(node: Node) {
+export function appendNodeToComponentManagerNodes(node: Node) {
   const keys = getNodeComponentKeys(node);
 
   if (!keys) return;
@@ -25,11 +28,11 @@ export function appendNodeToTemplateObject(node: Node) {
     if (!keys.includes(m.key)) continue;
 
     m.nodes.push(node);
-    setComponentThisFirstElement(m);
+    findAndSetComponentThisFirstElement(m);
   }
 }
 
-export function removeNodeFromTemplateObject(node: Node) {
+export function removeNodeFromComponentManagerNodes(node: Node) {
   const keys = getNodeComponentKeys(node);
 
   if (!keys) return;
@@ -38,18 +41,21 @@ export function removeNodeFromTemplateObject(node: Node) {
     if (!keys.includes(m.key)) continue;
     m.nodes = m.nodes.filter((n) => n !== node);
 
-    setComponentThisFirstElement(m);
+    findAndSetComponentThisFirstElement(m);
   }
 }
 
-export function replaceNodeInTemplateObject(oldNode: Node, newNode: Node) {
+export function replaceNodeInComponentManagerNodes(
+  newNode: Node,
+  oldNode: Node
+) {
   const keys = getNodeComponentKeys(oldNode);
   if (!keys) return;
 
   for (const m of ALL_COMPONENTS_MANAGER) {
     if (!keys.includes(m.key)) continue;
     m.nodes = m.nodes.map((n) => (n === oldNode ? newNode : oldNode));
-    setComponentThisFirstElement(m);
+    findAndSetComponentThisFirstElement(m);
   }
 }
 
@@ -63,5 +69,5 @@ export function setComponentManagerNodes(key: string, nodes: Node[]) {
   }
 
   componentManager.nodes = nodes;
-  setComponentThisFirstElement(componentManager);
+  findAndSetComponentThisFirstElement(componentManager);
 }

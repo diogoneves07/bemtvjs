@@ -27,7 +27,8 @@ export default function ComponentThisFactory(
 ) {
   const componentThis = new ComponentThis(name, parent);
 
-  const listeners = getComponentThisData(componentThis).listeners;
+  const componentThisData = getComponentThisData(componentThis);
+  const listeners = componentThisData.listeners;
 
   const propxyComponentThis = new Proxy(componentThis, {
     get(target, name) {
@@ -62,8 +63,12 @@ export default function ComponentThisFactory(
 
         listeners.add(listenerObject);
 
-        if (componentThis.firstElement) {
-          return insertEventListener(componentThis.firstElement, name, ...args);
+        if (componentThisData.firstElement) {
+          return insertEventListener(
+            componentThisData.firstElement,
+            name,
+            ...args
+          );
         }
 
         return () => {

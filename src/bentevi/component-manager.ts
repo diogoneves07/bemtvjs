@@ -4,14 +4,14 @@ import { ComponentThis } from "./components-this";
 
 export type TemplateCallback = () => string;
 
+const AVOIDS_EMPTY_TEMPLATE = "&nbsp;";
 export default class ComponentManager {
-  protected __getCurrentTemplate: TemplateCallback;
-
   componentThis: ComponentThis;
   key: string;
   id: number;
   lastTemplateValue: string;
   nodes: Node[];
+  getCurrentTemplate: TemplateCallback;
 
   constructor(
     componentThis: ComponentThis,
@@ -19,8 +19,8 @@ export default class ComponentManager {
   ) {
     const isResultFn = typeof callbackOrText === "function";
     const getCurrentTemplate = isResultFn
-      ? callbackOrText
-      : () => callbackOrText;
+      ? () => AVOIDS_EMPTY_TEMPLATE + callbackOrText()
+      : () => AVOIDS_EMPTY_TEMPLATE + callbackOrText;
 
     this.id = ALL_COMPONENTS_MANAGER.length;
 
@@ -30,16 +30,14 @@ export default class ComponentManager {
 
     this.nodes = [];
 
-    this.__getCurrentTemplate = getCurrentTemplate;
+    this.getCurrentTemplate = getCurrentTemplate;
     this.lastTemplateValue = getCurrentTemplate();
 
     ALL_COMPONENTS_MANAGER.push(this);
 
     return this;
   }
-  getCurrentTemplate() {
-    return this.__getCurrentTemplate();
-  }
+
   getCurrentTemplateWithHost() {
     return `${TAG_HOST_NAME}[id = "${
       this.key

@@ -9,21 +9,10 @@ interface ManagerElData<E> {
   element: E | null;
   CSSClasses: string[];
   applyCSSWhenElementIsAvallable: Parameters<typeof gooberCSS>[];
+  reapplyCSSClasses: (m: ManagerEl) => void;
 }
-function applyElementCSS(el: Element, args: Parameters<typeof gooberCSS>) {
-  applyLastCSSCreated();
-  const c = gooberCSS(...args);
-  el.classList.add(c);
-
-  return c;
-}
-export function getManagerElData(m: ManagerEl) {
-  return (m as any).__data;
-}
-
 export const ALL_ELEMENTS_MANAGER = new WeakMap<Element, ManagerEl>();
 export interface ManagerEl<E extends Element = Element> extends Listeners {}
-
 export class ManagerEl<E = Element> {
   readonly key: string;
 
@@ -32,6 +21,7 @@ export class ManagerEl<E = Element> {
     CSSClasses: [],
     applyCSSWhenElementIsAvallable: [],
     element: null,
+    reapplyCSSClasses,
   };
 
   public set _(v: E | null) {
@@ -72,12 +62,24 @@ export class ManagerEl<E = Element> {
 
     return this;
   }
-  protected __reapplyCSSClasses() {
-    const element = this._;
+}
 
-    if (!element) return;
-    for (const c of this.__data.CSSClasses) {
-      element.classList.add(c);
-    }
+export function getManagerElData(m: ManagerEl) {
+  return (m as any).__data as ManagerEl["__data"];
+}
+
+function applyElementCSS(el: Element, args: Parameters<typeof gooberCSS>) {
+  applyLastCSSCreated();
+  const c = gooberCSS(...args);
+  el.classList.add(c);
+
+  return c;
+}
+function reapplyCSSClasses(m: ManagerEl) {
+  const element = m._;
+
+  if (!element) return;
+  for (const c of getManagerElData(m).CSSClasses) {
+    element.classList.add(c);
   }
 }

@@ -41,7 +41,7 @@ export default function updateUIWithNewTemplate(
 
   SIMPLE_DIV.innerHTML = newHtml;
 
-  const hosts = SIMPLE_DIV.children[0].getElementsByTagName(TAG_HOST_NAME);
+  const hosts = SIMPLE_DIV.getElementsByTagName(TAG_HOST_NAME);
 
   for (const host of Array.from(hosts)) {
     SIMPLE_DOCUMENT_FRAGMENT.replaceChildren(
@@ -55,7 +55,7 @@ export default function updateUIWithNewTemplate(
     host.parentElement?.replaceChild(SIMPLE_DOCUMENT_FRAGMENT, host);
   }
 
-  const possibleNewChildNodes = Array.from(SIMPLE_DIV.children[0].childNodes);
+  const possibleNewChildNodes = Array.from(SIMPLE_DIV.childNodes);
 
   const oldChildNodes = nodes;
 

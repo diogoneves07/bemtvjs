@@ -16,8 +16,6 @@ export default function render(
   insert: string | Node = document.body
 ) {
   window.requestAnimationFrame(() => {
-    console.time("Mounted");
-
     const parent =
       typeof insert === "string" ? document.querySelector(insert) : insert;
 

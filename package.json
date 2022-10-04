@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "license": "MIT",
+  "types": ".types/main.d.ts",
   "files": [
     "dist"
   ],
@@ -20,6 +21,10 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/diogoneves07/bentivejs.git"
   },
   "devDependencies": {
     "@types/jest": "^29.0.0",

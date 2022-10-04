@@ -27,13 +27,13 @@ export default function makeTemplateTree(pureTemplate: string) {
 
   let mutableTemplate = scapeLiteralLibrarySymbols(
     removeTemplateEmptyLines(removeTemplateComments(pureTemplate))
-  ).replaceAll(" ~ ", "\n\n");
+  ).replaceAll(/\s~\s/g, "\n\n");
 
   let tagsObjectId = -1;
 
   const replaceTagIndexByTagObject = (findTagsObjectsId: string[]) => {
     return findTagsObjectsId.map((value) => {
-      // "~" Previously used to avoid conflit with normal numbers
+      // "~" Previously used to avoid conflict with normal numbers in template
       if (value.slice(-1) !== "~") return value;
 
       const possibleIndex = parseFloat(value.slice(0, -1));
@@ -98,7 +98,7 @@ export default function makeTemplateTree(pureTemplate: string) {
 
       TAG_TREE.push(newTagValues);
 
-      return `${tagsObjectId}~`; // Use "~" to avoid conflit with normal numbers in template.;
+      return `${tagsObjectId}~`; // Use "~" to avoid conflict with normal numbers in template
     });
   } while (mutableTemplate.includes("["));
 

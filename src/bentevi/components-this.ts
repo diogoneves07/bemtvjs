@@ -23,7 +23,10 @@ interface ComponentThisData {
   unmountedFns?: Set<LifeCycleCallback>;
   updatedFns: Set<LifeCycleCallback>;
   mounted: boolean;
+  els: ManagerEl[];
 }
+
+export interface ComponentThis extends Listeners, Props {}
 
 export interface ComponentThis extends Listeners, Props {}
 export class ComponentThis {
@@ -37,6 +40,7 @@ export class ComponentThis {
     updatedFns: new Set<LifeCycleCallback>().add(
       getElementsForElsManager.bind(this)
     ),
+    els: [],
   };
 
   readonly globalProps: GlobalProps = getComponentsGlobalProps();
@@ -46,25 +50,9 @@ export class ComponentThis {
   readonly injectedProps: InjectedProps = {};
   readonly i: InjectedProps = this.injectedProps;
   readonly name: string;
-  readonly els: ManagerEl[] = [];
 
   parent: ComponentThis | null = null;
   children: string = "";
-
-  set firstElement(v: Element | null) {
-    if (!v || this.__data.firstElement === v) return;
-
-    [...this.__data.listeners].map((o) => {
-      o.removeListener = insertEventListener(v, o.listener, ...o.args);
-      return o;
-    });
-
-    this.__data.firstElement = v;
-  }
-
-  get firstElement() {
-    return this.__data.firstElement;
-  }
 
   constructor(name: string, parent?: ComponentThis) {
     this.name = name;
@@ -105,7 +93,7 @@ export class ComponentThis {
 
     const managerEl = ManagerElFactory<E>(keyWithoutTokens);
 
-    this.els.push(managerEl);
+    this.__data.els.push(managerEl);
 
     if (!selectorOrElement) return [managerEl, key];
 
@@ -154,8 +142,24 @@ export function isMounted(componentThis: ComponentThis) {
   return getComponentThisData(componentThis).mounted;
 }
 
+export function setComponentThisFirstElement(
+  componentThis: ComponentThis,
+  newValue: Element | null
+) {
+  const d = getComponentThisData(componentThis);
+
+  if (!newValue || d.firstElement === newValue) return;
+
+  [...d.listeners].map((o) => {
+    o.removeListener = insertEventListener(newValue, o.listener, ...o.args);
+    return o;
+  });
+
+  d.firstElement = newValue;
+}
+
 function getElementsForElsManager(this: ComponentThis) {
-  const els: ComponentThis["els"] = this.els;
+  const els: ComponentThis["els"] = getComponentThisData(this).els;
 
   for (const el of els) {
     el._ = document.querySelector(`[${KEY_ATTRIBUTE_NAME}="${el.key}"]`);
