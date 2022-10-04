@@ -5,9 +5,13 @@ _("Counter", ({ click$, i }) => {
 
   click$(() => count++);
 
-  return () => `Counter example: button[Cliked: ${count}]`;
+  return () => `button[Cliked: ${count}]`;
+});
+
+_("App", () => {
+  return () => `Counter example: Counter[]`;
 });
 
 // <div>Hello world!</div>
 // div[Hello world!]
-render(`Counter[]`);
+render(`App[]`);
