@@ -36,6 +36,8 @@ function runComponentCallback(
     normalizeComponentName(realComponentName)
   );
 
+  if (parent) assignPropsToComponentChild(parent, componentThis);
+
   propsInjected && Object.assign(componentThis.injectedProps, propsInjected);
 
   result = (componentCallback as any).call(componentThis, componentThis);
@@ -101,8 +103,6 @@ function processEachTemplate(
     componentsManager.push(componentManager);
 
     const currentTemplate = componentManager.getCurrentTemplateWithHost();
-
-    if (parent) assignPropsToComponentChild(parent, componentThis);
 
     const [componentTemlate, m] = processEachTemplate(
       currentTemplate,
