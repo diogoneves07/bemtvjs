@@ -6,12 +6,12 @@ _("Counter", ({ click$, p }) => {
 
   click$(() => count++);
 
-  return () => `button[Cliked: ${count}]`;
+  return () => `button[Cliked:<strong>${count}</strong>]`;
 });
 
 _("App", ({ defineProps }) => {
-  defineProps("a", { start: 90 });
-  return () => `Counter example: Counter_a[]`;
+  const key = defineProps({ start: 90 });
+  return () => `Counter example: Counter${key}[]`;
 });
 
 // <div>Hello world!</div>
