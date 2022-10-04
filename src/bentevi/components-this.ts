@@ -70,10 +70,22 @@ export class ComponentThis {
     return this;
   }
 
-  defineProps(key: string | number, value: Record<string, any>) {
+  defineProps(value: Record<string, any>): string;
+  defineProps(key: string, value: Record<string, any>): string;
+  defineProps(
+    keyOrProps: (string | number) | Record<string, any>,
+    value?: Record<string, any>
+  ) {
+    const isKey = typeof keyOrProps === "string";
+    const props = (isKey ? value : keyOrProps) as Record<string, any>;
+
     if (!this.__data.propsDefined) this.__data.propsDefined = new Map();
-    this.__data.propsDefined.set(key.toString(), value);
-    return this;
+
+    const key = isKey ? keyOrProps : this.__data.propsDefined.size;
+
+    this.__data.propsDefined.set(key.toString(), props);
+
+    return "_" + key.toString();
   }
 
   el<E extends Element = Element>(): [
