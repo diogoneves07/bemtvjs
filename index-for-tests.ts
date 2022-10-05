@@ -1,25 +1,20 @@
 import { render, _ } from "./src/main";
 
-_("Counter", ({ click$, p, onMount, onUpdate, toParent }) => {
-  let count = p.start || 0;
+_("Counter", ({ click$, p, toGlobal }) => {
+  let count: number = p.start || 0;
 
-  click$(() => {
-    count++;
-    toParent({ count });
-  });
+  click$(() => count++);
 
-  toParent({ count });
+  toGlobal({ doubleValue: () => count * 2 });
 
   return () => `button[Cliked: strong[${count}]]`;
 });
 
-_("App", ({ defineProps, i }) => {
+_("App", ({ defineProps }) => {
   const key = defineProps({ start: 0 });
-  return () => {
-    return `Counter example: Counter${key}[] br[] Double value: ${
-      (i.count || 0) * 2
-    }`;
-  };
+
+  return ({ doubleValue = () => 0 }) =>
+    `Counter example: Counter${key}[] br[] Double value: ${doubleValue()}`;
 });
 
 // <div>Hello world!</div>

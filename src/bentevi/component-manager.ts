@@ -1,6 +1,8 @@
+import { GlobalProps } from "./types/global-props";
 import { TAG_HOST_NAME } from "./globals";
 import { ALL_COMPONENTS_MANAGER } from "./components-manager-nodes";
 import { ComponentThis } from "./components-this";
+import { getComponentsGlobalProps } from "./components-global-props";
 
 export type TemplateCallback = () => string;
 
@@ -15,11 +17,11 @@ export default class ComponentManager {
 
   constructor(
     componentThis: ComponentThis,
-    callbackOrText: TemplateCallback | string
+    callbackOrText: (globalProps: GlobalProps) => string | string
   ) {
     const isResultFn = typeof callbackOrText === "function";
     const getCurrentTemplate = isResultFn
-      ? () => AVOIDS_EMPTY_TEMPLATE + callbackOrText()
+      ? () => AVOIDS_EMPTY_TEMPLATE + callbackOrText(getComponentsGlobalProps())
       : () => AVOIDS_EMPTY_TEMPLATE + callbackOrText;
 
     this.id = ALL_COMPONENTS_MANAGER.length;

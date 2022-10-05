@@ -1,6 +1,8 @@
-let GLOBAL_PROPS: Record<string, any> = {};
+import { GlobalProps } from "./types/global-props";
 
-export function assignToComponentsGlobalProps(value: Record<string, any>) {
+let GLOBAL_PROPS: GlobalProps = {};
+
+export function assignToComponentsGlobalProps(value: GlobalProps) {
   Object.assign(GLOBAL_PROPS, value);
 }
 

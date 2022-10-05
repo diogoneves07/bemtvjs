@@ -1,10 +1,14 @@
+import { GlobalProps } from "./types/global-props";
 import { LIBRARY_NAME_IN_ERRORS_MESSAGE } from "./../globals";
 import { ComponentThis } from "./components-this";
 
 type ComponentCallback =
-  | ((self: ComponentThis) => () => string)
+  | ((self: ComponentThis) => (globalProps: GlobalProps) => string)
   | ((self: ComponentThis) => string)
-  | ((this: ComponentThis, self: ComponentThis) => () => string)
+  | ((
+      this: ComponentThis,
+      self: ComponentThis
+    ) => (globalProps: GlobalProps) => string)
   | ((this: ComponentThis, self: ComponentThis) => string);
 
 type GlobalComponentsMap = Map<string, ComponentCallback>;
