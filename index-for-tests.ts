@@ -2,11 +2,10 @@ import { render, _ } from "./src/main";
 
 _("Counter", ({ click$, p }) => {
   let count = p.start || 0;
-  console.log({ ...p });
 
   click$(() => count++);
 
-  return () => `button[Cliked:<strong>${count}</strong>]`;
+  return () => `button[Cliked: strong[${count}]]`;
 });
 
 _("App", ({ defineProps }) => {

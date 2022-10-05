@@ -28,7 +28,6 @@ interface ComponentThisData {
 
 export interface ComponentThis extends Listeners, Props {}
 
-export interface ComponentThis extends Listeners, Props {}
 export class ComponentThis {
   __data: ComponentThisData = {
     mounted: false,
