@@ -2,7 +2,6 @@ import { render, _ } from "./src/main";
 
 _("Counter", ({ click$, p, toGlobal }) => {
   let count: number = p.start || 0;
-
   click$(() => count++);
 
   toGlobal({ doubleValue: () => count * 2 });
@@ -10,11 +9,12 @@ _("Counter", ({ click$, p, toGlobal }) => {
   return () => `button[Cliked: strong[${count}]]`;
 });
 
-_("App", ({ defineProps }) => {
+_("App", ({ defineProps, g }) => {
   const key = defineProps({ start: 0 });
 
-  return ({ doubleValue = () => 0 }) =>
-    `Counter example: Counter${key}[] br[] Double value: ${doubleValue()}`;
+  return ({ doubleValue = () => 0 }) => {
+    return `Counter example: Counter${key}[] br[] Double value: ${doubleValue()}`;
+  };
 });
 
 // <div>Hello world!</div>

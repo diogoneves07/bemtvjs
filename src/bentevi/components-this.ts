@@ -9,10 +9,9 @@ import getElement from "../utilities/get-element";
 import { ManagerEl } from "./manager-el";
 import insertEventListener from "./insert-event-listener";
 import { ManagerElFactory } from "./manager-el-factory";
+import { GlobalProps } from "./types/global-props";
 
-type GlobalProps = Record<string, any>;
 type Props = Record<string, any>;
-type InjectedProps = Record<string, any>;
 type LifeCycleCallback = () => void;
 
 interface ComponentThisData {
@@ -46,8 +45,6 @@ export class ComponentThis {
   readonly g: GlobalProps = this.globalProps;
   readonly props: Props = {};
   readonly p: Props = this.props;
-  readonly injectedProps: InjectedProps = {};
-  readonly i: InjectedProps = this.injectedProps;
   readonly name: string;
 
   parent: ComponentThis | null = null;
@@ -59,13 +56,8 @@ export class ComponentThis {
     return this;
   }
 
-  toGlobal(value: Record<string, any>) {
+  toGlobal(value: GlobalProps | Record<string, any>) {
     assignToComponentsGlobalProps(value);
-    return this;
-  }
-
-  toParent(value: Record<string, any>) {
-    this.parent && Object.assign(this.parent.injectedProps, value);
     return this;
   }
 

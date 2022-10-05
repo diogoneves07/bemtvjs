@@ -1,26 +1,8 @@
 import { ComponentListener } from "./types/listeners";
 import { ComponentThis, getComponentThisData } from "./components-this";
-import { defineComponentInjectedProps } from "./components-injected-props";
 import insertEventListener from "./insert-event-listener";
-import isComponentName from "./is-component-name";
 import isEventListener from "./is-event-listener";
 
-function observerComponentInjectedProps(
-  o: Record<string, any>,
-  toComponentName: string,
-  componentThis: ComponentThis
-) {
-  return new Proxy(o, {
-    set(t, p, newValue) {
-      if (typeof p !== "string") return false;
-
-      defineComponentInjectedProps(componentThis, toComponentName, p, newValue);
-
-      t[p] = newValue;
-      return true;
-    },
-  });
-}
 export default function ComponentThisFactory(
   name: string,
   parent?: ComponentThis
@@ -40,16 +22,6 @@ export default function ComponentThisFactory(
       }
 
       if (typeof name !== "string") return false;
-
-      if (isComponentName(name)) {
-        (target as any)[name] = observerComponentInjectedProps(
-          {},
-          name,
-          propxyComponentThis
-        );
-
-        return (target as any)[name];
-      }
 
       if (!isEventListener(name)) return;
 
@@ -84,14 +56,6 @@ export default function ComponentThisFactory(
       (target as any)[name] = fn;
 
       return fn;
-    },
-    set(t, p, newValue) {
-      if (typeof p === "string" && isComponentName(p)) {
-        observerComponentInjectedProps(newValue, name, propxyComponentThis);
-      }
-      t[p as any] = newValue;
-
-      return true;
     },
   });
   return propxyComponentThis;

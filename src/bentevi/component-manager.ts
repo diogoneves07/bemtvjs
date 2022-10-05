@@ -1,8 +1,8 @@
-import { GlobalProps } from "./types/global-props";
 import { TAG_HOST_NAME } from "./globals";
 import { ALL_COMPONENTS_MANAGER } from "./components-manager-nodes";
 import { ComponentThis } from "./components-this";
 import { getComponentsGlobalProps } from "./components-global-props";
+import { ComponentTemplateCallback } from "./component";
 
 export type TemplateCallback = () => string;
 
@@ -17,7 +17,7 @@ export default class ComponentManager {
 
   constructor(
     componentThis: ComponentThis,
-    callbackOrText: (globalProps: GlobalProps) => string | string
+    callbackOrText: ComponentTemplateCallback | string
   ) {
     const isResultFn = typeof callbackOrText === "function";
     const getCurrentTemplate = isResultFn

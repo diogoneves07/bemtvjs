@@ -1,16 +1,15 @@
 import { LIBRARY_NAME_IN_ERRORS_MESSAGE } from "./../globals";
-import ComponentManager, { TemplateCallback } from "./component-manager";
+import ComponentManager from "./component-manager";
 import { ComponentThis, getComponentThisProps } from "./components-this";
-import { getComponentCallback } from "./component";
+import { ComponentTemplateCallback, getComponentCallback } from "./component";
 import ComponentThisFactory from "./component-this-factory";
 import normalizeComponentName from "./normalize-component-name";
 import getKeyInComponentName from "./get-key-in-component-name";
-import { getComponentPropsInjected } from "./components-injected-props";
 import getNextComponentDataInTemplate from "./get-next-component-data-in-template";
 
 type RunComponentCallbackReturn =
-  | [componentThis: ComponentThis, result: string | TemplateCallback]
-  | [componentThis: undefined, result: string | TemplateCallback];
+  | [componentThis: ComponentThis, result: string | ComponentTemplateCallback]
+  | [componentThis: undefined, result: string | ComponentTemplateCallback];
 
 type processComponentsResult = [
   result: string,
@@ -32,13 +31,7 @@ function runComponentCallback(
 
   const componentThis = ComponentThisFactory(name, parent);
 
-  const propsInjected = getComponentPropsInjected(
-    normalizeComponentName(realComponentName)
-  );
-
   if (parent) assignPropsToComponentChild(parent, componentThis);
-
-  propsInjected && Object.assign(componentThis.injectedProps, propsInjected);
 
   result = (componentCallback as any).call(componentThis, componentThis);
   return [componentThis, result];

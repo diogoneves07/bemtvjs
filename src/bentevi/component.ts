@@ -2,6 +2,8 @@ import { GlobalProps } from "./types/global-props";
 import { LIBRARY_NAME_IN_ERRORS_MESSAGE } from "./../globals";
 import { ComponentThis } from "./components-this";
 
+export type ComponentTemplateCallback = (globalProps: GlobalProps) => string;
+
 type ComponentCallback =
   | ((self: ComponentThis) => (globalProps: GlobalProps) => string)
   | ((self: ComponentThis) => string)
