@@ -71,7 +71,6 @@ export function removeDiffAmoungChildNodes(
       replaceNodeInComponentManagerNodes(newNode, oldNode);
       continue;
     }
-
     if ("tagName" in newNode) {
       if ((newNode as Element).tagName !== (oldNode as Element).tagName) {
         parentElement.replaceChild(newNode, oldNode);
@@ -88,7 +87,7 @@ export function removeDiffAmoungChildNodes(
       continue;
     }
 
-    if (!(newNode instanceof Element)) return;
+    if (!(newNode instanceof Element)) continue;
 
     if (
       newNode.textContent === newNode.innerHTML &&
@@ -99,7 +98,7 @@ export function removeDiffAmoungChildNodes(
 
     removeDiffNodesAttrs(newNode, oldNode as Element);
 
-    if (!newNode.childNodes[0]) return;
+    if (!newNode.childNodes[0]) continue;
 
     removeDiffAmoungChildNodes(
       Array.from(newNode.childNodes),

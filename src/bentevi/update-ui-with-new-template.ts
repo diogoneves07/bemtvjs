@@ -58,7 +58,6 @@ export default function updateUIWithNewTemplate(
   const possibleNewChildNodes = Array.from(SIMPLE_DIV.childNodes);
 
   const oldChildNodes = nodes;
-
   removeDiffAmoungChildNodes(possibleNewChildNodes, oldChildNodes);
 
   SIMPLE_DIV.innerHTML = "";

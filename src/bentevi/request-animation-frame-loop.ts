@@ -29,7 +29,6 @@ function shouldComponentBeUnmounted(componentManager: ComponentManager) {
         shouldComponentBeUnmounted(componentManager);
         continue;
       }
-
       const nodes = componentManager.nodes;
 
       if (!nodes.length || !nodes[0].parentElement?.isConnected) {
