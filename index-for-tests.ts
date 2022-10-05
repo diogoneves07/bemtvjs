@@ -8,6 +8,7 @@ _("Counter", ({ click$, p, $ }) => {
   click$(increment);
 
   $({ doubleValue });
+  $({ doubleValue });
 
   return () => `button[Cliked: strong[${count}]]`;
 });
