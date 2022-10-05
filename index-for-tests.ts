@@ -3,18 +3,19 @@ import { render, _ } from "./src/main";
 _("Counter", ({ click$, p, $ }) => {
   let count: number = p.start || 0;
   const increment = () => count++;
-  const doubleValue = () => count * 2;
+
+  const getCountValue = () => count;
 
   click$(increment);
 
-  $({ doubleValue });
-  $({ doubleValue });
+  $({ getCountValue });
 
   return () => `button[Cliked: strong[${count}]]`;
 });
 
 _("DoubleCounter", () => {
-  return ({ doubleValue = () => 0 }) => `Double value: ${doubleValue()}`;
+  return ({ getCountValue = () => 0 }) =>
+    `Double value: ${getCountValue() * 2}`;
 });
 
 _("App", ({ defineProps }) => {
