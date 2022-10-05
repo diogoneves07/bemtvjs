@@ -56,7 +56,7 @@ export class ComponentThis {
     return this;
   }
 
-  toGlobal(value: GlobalProps | Record<string, any>) {
+  $(value: GlobalProps | Record<string, any>) {
     assignToComponentsGlobalProps(value);
     return this;
   }
