@@ -5,11 +5,10 @@ import { ComponentTemplateCallback } from "./component";
 
 export type TemplateCallback = () => string;
 
-const AVOIDS_EMPTY_TEMPLATE = "&nbsp;";
+const AVOIDS_EMPTY_TEMPLATE = " &nbsp; ";
 export default class ComponentManager {
   componentThis: ComponentThis;
   key: string;
-  id: number;
   lastTemplateValue: string;
   nodes: Node[];
   getCurrentTemplate: TemplateCallback;
@@ -23,9 +22,7 @@ export default class ComponentManager {
       ? () => AVOIDS_EMPTY_TEMPLATE + callbackOrText()
       : () => AVOIDS_EMPTY_TEMPLATE + callbackOrText;
 
-    this.id = ALL_COMPONENTS_MANAGER.length;
-
-    this.key = `bh${this.id}`;
+    this.key = `bh${ALL_COMPONENTS_MANAGER.length}`;
 
     this.componentThis = componentThis;
 

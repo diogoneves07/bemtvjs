@@ -3,8 +3,6 @@ import { KEY_ATTRIBUTE_NAME } from "../bentevi/globals";
 import compactArrayJoiningTextItems from "./compact-array-joining-text-items";
 import createTagObject from "./create-tag-object";
 import getAttributesDefinedByKeys from "./get-attributes-defined-by-keys";
-import removeTemplateComments from "./remove-template-comments";
-import removeTemplateEmptyLines from "./remove-template-empty-lines";
 import scapeLiteralLibrarySymbols from "./scape-literal-library-symbols";
 import { TagPropsTree } from "./types/template";
 
@@ -25,9 +23,7 @@ function setAttributesDefinedByKeys(
 export default function makeTemplateTree(pureTemplate: string) {
   const TAG_TREE: (TagPropsTree | null)[] = [];
 
-  let mutableTemplate = scapeLiteralLibrarySymbols(
-    removeTemplateEmptyLines(removeTemplateComments(pureTemplate))
-  ).replaceAll(/\s~\s/g, "\n\n");
+  let mutableTemplate = scapeLiteralLibrarySymbols(pureTemplate);
 
   let tagsObjectId = -1;
 
