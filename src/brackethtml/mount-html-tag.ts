@@ -1,11 +1,7 @@
 import isSelfClosingTag from "./is-self-closing-tag";
-import { TagPropsTree } from "./types/template";
+import { TagProps } from "./types/template";
 
-export default function mountHTMLTag(tagProps: TagPropsTree | string) {
-  if (typeof tagProps === "string") {
-    return tagProps;
-  }
-
+export default function mountHTMLTag(tagProps: TagProps) {
   const { tagName, children, attributes, cssClassName } = tagProps;
   let tagAttrs = attributes;
   if (cssClassName) {
@@ -22,15 +18,7 @@ export default function mountHTMLTag(tagProps: TagPropsTree | string) {
     }
   }
 
-  let tagChildren = "";
-
-  if (children) {
-    for (const childTagProps of children) {
-      tagChildren += mountHTMLTag(childTagProps);
-    }
-  }
-
   if (isSelfClosingTag(tagName)) return `<${tagName} ${tagAttrs}/>`;
 
-  return `<${tagName} ${tagAttrs}>${tagChildren}</${tagName}>`;
+  return `<${tagName} ${tagAttrs}>${children}</${tagName}>`;
 }

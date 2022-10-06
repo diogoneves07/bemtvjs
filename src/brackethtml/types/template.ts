@@ -5,7 +5,3 @@ export interface TagProps {
   css: string | null;
   cssClassName: string;
 }
-
-export interface TagPropsTree extends Omit<TagProps, "children"> {
-  children: (string | TagPropsTree)[] | null;
-}

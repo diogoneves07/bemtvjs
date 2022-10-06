@@ -7,8 +7,7 @@ import processUpdatedTemplate from "./process-updated-template";
 import { removeDiffAmoungChildNodes } from "./remove-diff-amoung-child-nodes";
 import { TAG_HOST_NAME } from "./globals";
 import { setNodeComponentKeys } from "./nodes-component-keys";
-import templateTreeToHTMLText from "../brackethtml/template-tree-to-html-text";
-import makeTemplateTree from "../brackethtml/make-template-tree";
+import brackethtmlToHTML from "../brackethtml/brackethtml-to-html";
 import {
   dispatchMountedLifeCycle,
   dispatchUpdatedLifeCycle,
@@ -34,8 +33,7 @@ export default function updateUIWithNewTemplate(
     componentsManagerUpdated,
   } = processUpdatedTemplate(componentManager);
 
-  const newTemplateTree = makeTemplateTree(pureTemplate);
-  const newHtml = templateTreeToHTMLText(newTemplateTree);
+  const newHtml = brackethtmlToHTML(pureTemplate);
 
   componentManager.lastTemplateValue = template;
 

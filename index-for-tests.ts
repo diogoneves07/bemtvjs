@@ -24,7 +24,7 @@ _("App", ({ defineProps, share, use }) => {
 
   return () =>
     `
-      Olá, strong[${use("username")}]! br[]br[]
+      Olá, strong[ color:blue; ~ ${use("username")}]! br[]br[]
       Counter example: Counter${key}[] br[] DoubleCounter[] 
     `;
 });

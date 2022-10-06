@@ -1,10 +1,9 @@
 import { getLastCSSCreated } from "../bentevi/css-template";
-import makeTemplateTree from "./make-template-tree";
-import templateTreeToHTMLText from "./template-tree-to-html-text";
+import brackethtmlToHTML from "./brackethtml-to-html";
 
 export default function brackethtmlTranspiler(template: string) {
   return {
-    html: templateTreeToHTMLText(makeTemplateTree(template)),
+    html: brackethtmlToHTML(template),
     css: getLastCSSCreated(),
   };
 }
