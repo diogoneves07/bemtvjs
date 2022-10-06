@@ -10,6 +10,8 @@ import { ManagerEl } from "./manager-el";
 import insertEventListener from "./insert-event-listener";
 import { ManagerElFactory } from "./manager-el-factory";
 import { GlobalProps } from "./types/global-props";
+import reshareProps from "./reshare-props";
+import useSharedProp from "./share-shared-prop";
 
 type Props = Record<string, any>;
 type LifeCycleCallback = () => void;
@@ -23,6 +25,7 @@ interface ComponentThisData {
   updatedFns: Set<LifeCycleCallback>;
   mounted: boolean;
   els: ManagerEl[];
+  sharedData: Record<string, any>;
 }
 
 export interface ComponentThis extends Listeners, Props {}
@@ -39,6 +42,7 @@ export class ComponentThis {
       getElementsForElsManager.bind(this)
     ),
     els: [],
+    sharedData: {},
   };
 
   readonly globalProps: GlobalProps = getComponentsGlobalProps();
@@ -56,19 +60,31 @@ export class ComponentThis {
     return this;
   }
 
-  $(value: GlobalProps | Record<string, any>) {
-    assignToComponentsGlobalProps(value);
+  $(o: GlobalProps | Record<string, any>) {
+    assignToComponentsGlobalProps(o);
     return this;
   }
 
-  defineProps(value: Record<string, any>): string;
-  defineProps(key: string, value: Record<string, any>): string;
+  share(o: GlobalProps | Record<string, any>) {
+    Object.assign(this.__data.sharedData, o);
+  }
+
+  reshare(o: GlobalProps | Record<string, any>) {
+    reshareProps(this, o);
+  }
+
+  use(key: string) {
+    return useSharedProp(this, key);
+  }
+
+  defineProps(o: Record<string, any>): string;
+  defineProps(key: string, o: Record<string, any>): string;
   defineProps(
     keyOrProps: (string | number) | Record<string, any>,
-    value?: Record<string, any>
+    o?: Record<string, any>
   ) {
     const isKey = typeof keyOrProps === "string";
-    const props = (isKey ? value : keyOrProps) as Record<string, any>;
+    const props = (isKey ? o : keyOrProps) as Record<string, any>;
 
     if (!this.__data.propsDefined) this.__data.propsDefined = new Map();
 

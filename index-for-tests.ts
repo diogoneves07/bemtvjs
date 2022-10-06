@@ -1,26 +1,34 @@
-import { render, _ } from "./src/main";
+import { $, render, _ } from "./src/main";
 
-_("Counter", ({ click$, p, $ }) => {
+_("Counter", ({ click$, p, reshare }) => {
   let count: number = p.start || 0;
   const increment = () => count++;
-
-  const getCountValue = () => count;
+  const getCounterValue = () => count;
 
   click$(increment);
 
-  $({ getCountValue });
+  reshare({ getCounterValue });
 
   return () => `button[Cliked: strong[${count}]]`;
 });
 
-_("DoubleCounter", () => {
-  return ({ getCountValue = () => 0 }) =>
-    `Double value: ${getCountValue() * 2}`;
+_("DoubleCounter", ({ use, reshare }) => {
+  reshare({ username: "Little bird" });
+  return () => ` Double value: ${use("getCounterValue")() * 2}`;
 });
 
-_("App", ({ defineProps }) => {
+_("App", ({ defineProps, share, use }) => {
   const key = defineProps({ start: 0 });
-  return () => `Counter example: Counter${key}[] br[] DoubleCounter[] `;
+
+  share({ getCounterValue: () => 0, username: "unknown" });
+
+  return () => {
+    return `
+    Olá, ${use("username")}! ${use("age") || ":)"}
+    Counter example: Counter${key}[] br[] DoubleCounter[] 
+    
+    `;
+  };
 });
 
 // <div>Hello world!</div>

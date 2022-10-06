@@ -1,7 +1,6 @@
 import { LIBRARY_NAME_IN_ERRORS_MESSAGE } from "./../globals";
+import { GLOBAL_PROPS } from "./globals";
 import { GlobalProps } from "./types/global-props";
-
-export let GLOBAL_PROPS: GlobalProps = {};
 
 export function assignToComponentsGlobalProps(
   value: GlobalProps | Record<string, any>

@@ -26,7 +26,7 @@ export declare class ComponentThis {
     parent: ComponentThis | null;
     children: string;
     constructor(name: string, parent?: ComponentThis);
-    toGlobal(value: GlobalProps | Record<string, any>): this;
+    $(value: GlobalProps | Record<string, any>): this;
     defineProps(value: Record<string, any>): string;
     defineProps(key: string, value: Record<string, any>): string;
     el<E extends Element = Element>(): [
