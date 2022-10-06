@@ -1,5 +1,5 @@
 import { LIBRARY_NAME_IN_ERRORS_MESSAGE } from "../globals";
-import { KEY_ATTRIBUTE_NAME } from "../bentevi/globals";
+import { KEY_ATTRIBUTE_NAME } from "../bentive/globals";
 import createTagObject from "./create-tag-object";
 import getAttributesDefinedByKeys from "./get-attributes-defined-by-keys";
 import scapeLiteralLibrarySymbols from "./scape-literal-library-symbols";

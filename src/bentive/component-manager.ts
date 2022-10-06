@@ -1,4 +1,4 @@
-import { TAG_HOST_NAME } from "./globals";
+import { LIBRARY_NAME, TAG_HOST_NAME } from "./globals";
 import { ALL_COMPONENTS_MANAGER } from "./components-manager-nodes";
 import { ComponentThis } from "./components-this";
 import { ComponentTemplateCallback } from "./component";
@@ -22,7 +22,7 @@ export default class ComponentManager {
       ? () => AVOIDS_EMPTY_TEMPLATE + callbackOrText()
       : () => AVOIDS_EMPTY_TEMPLATE + callbackOrText;
 
-    this.key = `bh${ALL_COMPONENTS_MANAGER.length}`;
+    this.key = `${LIBRARY_NAME}${ALL_COMPONENTS_MANAGER.length}`;
 
     this.componentThis = componentThis;
 

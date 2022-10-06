@@ -1,5 +1,5 @@
 {
-  "name": "bentevi",
+  "name": "bentive",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -9,12 +9,12 @@
     "dist",
     "types"
   ],
-  "main": "./dist/bentevi.umd.cjs",
-  "module": "./dist/bentevi.js",
+  "main": "./dist/bentive.umd.cjs",
+  "module": "./dist/bentive.js",
   "exports": {
     ".": {
-      "import": "./dist/bentevi.js",
-      "require": "./dist/bentevi.umd.cjs"
+      "import": "./dist/bentive.js",
+      "require": "./dist/bentive.umd.cjs"
     }
   },
   "scripts": {

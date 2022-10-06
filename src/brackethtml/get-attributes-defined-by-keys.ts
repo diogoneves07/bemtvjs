@@ -1,7 +1,7 @@
 import {
   REGEX_CUSTOM_ATTR_KEY,
   REGEX_CUSTOM_ATTR_KEY_VALUE,
-} from "./../bentevi/generate-el-key";
+} from "./../bentive/generate-el-key";
 
 export default function getAttributesDefinedByKeys(tagContent: string) {
   let attributesDefinedByKeys: string[] | undefined;

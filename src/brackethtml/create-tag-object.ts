@@ -1,4 +1,4 @@
-import { gooberCSS } from "../bentevi/css-template";
+import { gooberCSS } from "../bentive/css-template";
 import { TagProps } from "./types/template";
 
 const reusableObject = {} as TagProps;
