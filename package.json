@@ -4,9 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "license": "MIT",
-  "types": ".types/main.d.ts",
+  "types": "./types/main.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "types"
   ],
   "main": "./dist/bentevi.umd.cjs",
   "module": "./dist/bentevi.js",

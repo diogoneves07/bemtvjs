@@ -22,13 +22,11 @@ _("App", ({ defineProps, share, use }) => {
 
   share({ getCounterValue: () => 0, username: "unknown" });
 
-  return () => {
-    return `
-    Olá,  strong[${use("username")}]! br[]br[]
-    Counter example: Counter${key}[] br[] DoubleCounter[] 
-    
+  return () =>
+    `
+      Olá, strong[${use("username")}]! br[]br[]
+      Counter example: Counter${key}[] br[] DoubleCounter[] 
     `;
-  };
 });
 
 // <div>Hello world!</div>
