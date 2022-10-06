@@ -43,7 +43,7 @@ export function defineComponentThisFirstElement(
 }
 
 export function getElementsForElsManager(this: ComponentThis) {
-  const els: ComponentThis["els"] = getComponentThisData(this).els;
+  const els = getComponentThisData(this).els;
 
   for (const el of els) {
     el._ = document.querySelector(`[${KEY_ATTRIBUTE_NAME}="${el.key}"]`);
