@@ -14,7 +14,7 @@ _("Counter", ({ click$, p, reshare }) => {
 
 _("DoubleCounter", ({ use, reshare }) => {
   reshare({ username: "Little bird" });
-  return () => ` Double value: ${use("getCounterValue")() * 2}`;
+  return () => ` Double value: ${use<() => number>("getCounterValue")() * 2}`;
 });
 
 _("App", ({ defineProps, share, use }) => {

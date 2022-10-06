@@ -1,28 +1,17 @@
-import { Listeners, ComponentListener } from "./types/listeners";
+import { Listeners } from "./types/listeners";
 import generateKey, { REGEX_CUSTOM_ATTR_KEY_VALUE } from "./generate-el-key";
 import getElement from "../utilities/get-element";
-import { ManagerEl } from "./manager-el";
 import { ManagerElFactory } from "./manager-el-factory";
 import reshareProps from "./reshare-props";
 import useSharedProp from "./use-shared-prop";
 import { getElementsForElsManager } from "./work-with-components-this";
+import {
+  ComponentThisData,
+  LifeCycleCallback,
+  Props,
+} from "./types/component-this-data";
 
-type Props = Record<string, any>;
-type LifeCycleCallback = () => void;
-
-interface ComponentThisData {
-  listeners: Set<ComponentListener>;
-  firstElement: Element | null;
-  propsDefined?: Map<string, Props>;
-  mountedFns: Set<LifeCycleCallback>;
-  unmountedFns?: Set<LifeCycleCallback>;
-  updatedFns: Set<LifeCycleCallback>;
-  mounted: boolean;
-  els: ManagerEl[];
-  sharedData: Record<string, any>;
-}
-
-export interface ComponentThis extends Listeners, Props {}
+export interface ComponentThis extends Listeners {}
 
 export class ComponentThis {
   __data: ComponentThisData = {
