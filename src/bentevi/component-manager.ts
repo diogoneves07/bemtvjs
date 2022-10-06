@@ -1,4 +1,4 @@
-import { GLOBAL_PROPS, TAG_HOST_NAME } from "./globals";
+import { TAG_HOST_NAME } from "./globals";
 import { ALL_COMPONENTS_MANAGER } from "./components-manager-nodes";
 import { ComponentThis } from "./components-this";
 import { ComponentTemplateCallback } from "./component";
@@ -20,7 +20,7 @@ export default class ComponentManager {
   ) {
     const isResultFn = typeof callbackOrText === "function";
     const getCurrentTemplate = isResultFn
-      ? () => AVOIDS_EMPTY_TEMPLATE + callbackOrText(GLOBAL_PROPS)
+      ? () => AVOIDS_EMPTY_TEMPLATE + callbackOrText()
       : () => AVOIDS_EMPTY_TEMPLATE + callbackOrText;
 
     this.id = ALL_COMPONENTS_MANAGER.length;

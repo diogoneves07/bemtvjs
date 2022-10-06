@@ -1,4 +1,4 @@
-import { $, render, _ } from "./src/main";
+import { render, _ } from "./src/main";
 
 _("Counter", ({ click$, p, reshare }) => {
   let count: number = p.start || 0;
@@ -24,7 +24,7 @@ _("App", ({ defineProps, share, use }) => {
 
   return () => {
     return `
-    Olá, ${use("username")}! ${use("age") || ":)"}
+    Olá,  strong[${use("username")}]! br[]br[]
     Counter example: Counter${key}[] br[] DoubleCounter[] 
     
     `;

@@ -1,15 +1,10 @@
 import { KEY_ATTRIBUTE_NAME } from "./globals";
 import { Listeners, ComponentListener } from "./types/listeners";
-import {
-  assignToComponentsGlobalProps,
-  getComponentsGlobalProps,
-} from "./components-global-props";
 import generateKey, { REGEX_CUSTOM_ATTR_KEY_VALUE } from "./generate-el-key";
 import getElement from "../utilities/get-element";
 import { ManagerEl } from "./manager-el";
 import insertEventListener from "./insert-event-listener";
 import { ManagerElFactory } from "./manager-el-factory";
-import { GlobalProps } from "./types/global-props";
 import reshareProps from "./reshare-props";
 import useSharedProp from "./share-shared-prop";
 
@@ -45,8 +40,6 @@ export class ComponentThis {
     sharedData: {},
   };
 
-  readonly globalProps: GlobalProps = getComponentsGlobalProps();
-  readonly g: GlobalProps = this.globalProps;
   readonly props: Props = {};
   readonly p: Props = this.props;
   readonly name: string;
@@ -60,16 +53,11 @@ export class ComponentThis {
     return this;
   }
 
-  $(o: GlobalProps | Record<string, any>) {
-    assignToComponentsGlobalProps(o);
-    return this;
-  }
-
-  share(o: GlobalProps | Record<string, any>) {
+  share(o: Record<string, any>) {
     Object.assign(this.__data.sharedData, o);
   }
 
-  reshare(o: GlobalProps | Record<string, any>) {
+  reshare(o: Record<string, any>) {
     reshareProps(this, o);
   }
 
