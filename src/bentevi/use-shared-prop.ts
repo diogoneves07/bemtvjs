@@ -1,4 +1,5 @@
-import { ComponentThis, getComponentThisData } from "./components-this";
+import { ComponentThis } from "./components-this";
+import { getComponentThisData } from "./work-with-components-this";
 export default function useSharedProp(
   componentThis: ComponentThis,
   key: string

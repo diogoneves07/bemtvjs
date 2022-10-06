@@ -5,8 +5,8 @@ import brackethtmlTranspiler from "../brackethtml/brackethtml-transpiler";
 import { applyLastCSSCreated } from "./css-template";
 import processComponentsInTemplate from "./process-components-in-template";
 import { setComponentManagerNodes } from "./components-manager-nodes";
-import { dispatchMountedLifeCycle } from "./components-this";
 import { saveRelativeInstances } from "./component-relative-instances";
+import { dispatchMountedLifeCycle } from "./work-with-components-this";
 
 const SIMPLE_DIV = document.createElement("div");
 const SIMPLE_DOCUMENT_FRAGMENT = document.createDocumentFragment();

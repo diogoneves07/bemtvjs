@@ -1,7 +1,8 @@
 import { ComponentListener } from "./types/listeners";
-import { ComponentThis, getComponentThisData } from "./components-this";
+import { ComponentThis } from "./components-this";
 import insertEventListener from "./insert-event-listener";
 import isEventListener from "./is-event-listener";
+import { getComponentThisData } from "./work-with-components-this";
 
 export default function ComponentThisFactory(
   name: string,

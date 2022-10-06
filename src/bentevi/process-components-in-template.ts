@@ -1,11 +1,12 @@
 import { LIBRARY_NAME_IN_ERRORS_MESSAGE } from "./../globals";
 import ComponentManager from "./component-manager";
-import { ComponentThis, getComponentThisProps } from "./components-this";
+import { ComponentThis } from "./components-this";
 import { ComponentTemplateCallback, getComponentCallback } from "./component";
 import ComponentThisFactory from "./component-this-factory";
 import normalizeComponentName from "./normalize-component-name";
 import getKeyInComponentName from "./get-key-in-component-name";
 import getNextComponentDataInTemplate from "./get-next-component-data-in-template";
+import { getComponentThisProps } from "./work-with-components-this";
 
 type RunComponentCallbackReturn =
   | [componentThis: ComponentThis, result: string | ComponentTemplateCallback]

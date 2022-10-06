@@ -1,9 +1,9 @@
 import ComponentManager from "./component-manager";
-import { setComponentThisFirstElement } from "./components-this";
 import {
   getNodeComponentKeys,
   setNodeComponentKeys,
 } from "./nodes-component-keys";
+import { defineComponentThisFirstElement } from "./work-with-components-this";
 
 export const ALL_COMPONENTS_MANAGER: ComponentManager[] = [];
 
@@ -13,7 +13,7 @@ function findAndSetComponentThisFirstElement(
   for (const node of componentManager.nodes) {
     if (!(node instanceof Element)) continue;
 
-    setComponentThisFirstElement(componentManager.componentThis, node);
+    defineComponentThisFirstElement(componentManager.componentThis, node);
 
     return;
   }

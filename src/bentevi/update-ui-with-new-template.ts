@@ -5,14 +5,14 @@ import {
 } from "./component-relative-instances";
 import processUpdatedTemplate from "./process-updated-template";
 import { removeDiffAmoungChildNodes } from "./remove-diff-amoung-child-nodes";
-import {
-  dispatchMountedLifeCycle,
-  dispatchUpdatedLifeCycle,
-} from "./components-this";
 import { TAG_HOST_NAME } from "./globals";
 import { setNodeComponentKeys } from "./nodes-component-keys";
 import templateTreeToHTMLText from "../brackethtml/template-tree-to-html-text";
 import makeTemplateTree from "../brackethtml/make-template-tree";
+import {
+  dispatchMountedLifeCycle,
+  dispatchUpdatedLifeCycle,
+} from "./work-with-components-this";
 
 const SIMPLE_DIV = document.createElement("div");
 const SIMPLE_DOCUMENT_FRAGMENT = document.createDocumentFragment();

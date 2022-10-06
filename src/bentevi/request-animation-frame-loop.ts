@@ -1,9 +1,12 @@
 import ComponentManager from "./component-manager";
-import { dispatchUnmountedLifeCycle, isMounted } from "./components-this";
 import { applyLastCSSCreated } from "./css-template";
 import { ALL_COMPONENTS_MANAGER } from "./components-manager-nodes";
 import updateUIWithNewTemplate from "./update-ui-with-new-template";
 import deleteComponentManager from "./delete-component-manager";
+import {
+  dispatchUnmountedLifeCycle,
+  isMounted,
+} from "./work-with-components-this";
 
 const componentsToDelete: Set<ComponentManager> = new Set();
 

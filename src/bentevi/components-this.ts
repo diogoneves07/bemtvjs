@@ -1,12 +1,11 @@
-import { KEY_ATTRIBUTE_NAME } from "./globals";
 import { Listeners, ComponentListener } from "./types/listeners";
 import generateKey, { REGEX_CUSTOM_ATTR_KEY_VALUE } from "./generate-el-key";
 import getElement from "../utilities/get-element";
 import { ManagerEl } from "./manager-el";
-import insertEventListener from "./insert-event-listener";
 import { ManagerElFactory } from "./manager-el-factory";
 import reshareProps from "./reshare-props";
 import useSharedProp from "./use-shared-prop";
+import { getElementsForElsManager } from "./work-with-components-this";
 
 type Props = Record<string, any>;
 type LifeCycleCallback = () => void;
@@ -122,53 +121,5 @@ export class ComponentThis {
   onUpdate(fn: () => void) {
     this.__data.updatedFns.add(fn);
     return this;
-  }
-}
-
-export function getComponentThisData(componentThis: ComponentThis) {
-  return componentThis.__data;
-}
-export function dispatchUpdatedLifeCycle(componentThis: ComponentThis) {
-  getComponentThisData(componentThis).updatedFns?.forEach((f) => f());
-}
-
-export function dispatchMountedLifeCycle(componentThis: ComponentThis) {
-  getComponentThisData(componentThis).mounted = true;
-
-  getComponentThisData(componentThis).mountedFns?.forEach((f) => f());
-}
-
-export function dispatchUnmountedLifeCycle(componentThis: ComponentThis) {
-  getComponentThisData(componentThis).unmountedFns?.forEach((f) => f());
-}
-
-export function getComponentThisProps(parent: ComponentThis, key: string) {
-  return getComponentThisData(parent).propsDefined?.get(key);
-}
-export function isMounted(componentThis: ComponentThis) {
-  return getComponentThisData(componentThis).mounted;
-}
-
-export function setComponentThisFirstElement(
-  componentThis: ComponentThis,
-  newValue: Element | null
-) {
-  const d = getComponentThisData(componentThis);
-
-  if (!newValue || d.firstElement === newValue) return;
-
-  [...d.listeners].map((o) => {
-    o.removeListener = insertEventListener(newValue, o.listener, ...o.args);
-    return o;
-  });
-
-  d.firstElement = newValue;
-}
-
-function getElementsForElsManager(this: ComponentThis) {
-  const els: ComponentThis["els"] = getComponentThisData(this).els;
-
-  for (const el of els) {
-    el._ = document.querySelector(`[${KEY_ATTRIBUTE_NAME}="${el.key}"]`);
   }
 }
