@@ -6,7 +6,7 @@ import { ManagerEl } from "./manager-el";
 import insertEventListener from "./insert-event-listener";
 import { ManagerElFactory } from "./manager-el-factory";
 import reshareProps from "./reshare-props";
-import useSharedProp from "./share-shared-prop";
+import useSharedProp from "./use-shared-prop";
 
 type Props = Record<string, any>;
 type LifeCycleCallback = () => void;
@@ -61,8 +61,8 @@ export class ComponentThis {
     reshareProps(this, o);
   }
 
-  use(key: string) {
-    return useSharedProp(this, key);
+  use<T>(key: string) {
+    return useSharedProp(this, key) as T;
   }
 
   defineProps(o: Record<string, any>): string;
