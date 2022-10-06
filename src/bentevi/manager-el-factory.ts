@@ -10,37 +10,31 @@ export function ManagerElFactory<E extends Element = Element>(key: string) {
   return new Proxy(managerEl, {
     get(target, name) {
       if (name in target) return (target as any)[name];
+      if (typeof name !== "string" || !isEventListener(name)) return false;
 
-      if (typeof name !== "string") return false;
-      if (isEventListener(name)) {
-        const fn = (
-          ...args: [fn: Function, options: AddEventListenerOptions]
-        ) => {
-          const listenerObject: ComponentListener = {
-            listener: name.slice(0, -1),
-            args,
-          };
+      const fn = (
+        ...args: [fn: Function, options: AddEventListenerOptions]
+      ) => {
+        const listenerObject: ComponentListener = {
+          listener: name.slice(0, -1),
+          args,
+        };
 
-          listeners.add(listenerObject);
+        listeners.add(listenerObject);
 
-          if (managerEl._) {
-            return insertEventListener(managerEl._, name, ...args);
+        if (managerEl._) return insertEventListener(managerEl._, name, ...args);
+
+        return () => {
+          if (!listenerObject.removeListener) {
+            listeners.delete(listenerObject);
+            return;
           }
 
-          return () => {
-            if (!listenerObject.removeListener) {
-              listeners.delete(listenerObject);
-              return;
-            }
-
-            listenerObject.removeListener();
-          };
+          listenerObject.removeListener();
         };
-        (target as any)[name] = fn;
-        return fn;
-      }
-
-      return false;
+      };
+      (target as any)[name] = fn;
+      return fn;
     },
   });
 }
