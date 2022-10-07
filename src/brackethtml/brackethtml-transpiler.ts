@@ -1,4 +1,4 @@
-import { getLastCSSCreated } from "../bentive/css-template";
+import { getLastCSSCreated } from "../bemtevi/css-template";
 import brackethtmlToHTML from "./brackethtml-to-html";
 
 export default function brackethtmlTranspiler(template: string) {
