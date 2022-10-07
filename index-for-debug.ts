@@ -17,11 +17,13 @@ _("DoubleCounter", ({ use, reshare }) => {
   return () => ` Double value: ${use<() => number>("getCounterValue")() * 2}`;
 });
 
-_("App", ({ defineProps, share, use }) => {
+_("App", ({ defineProps, share, use, onUpdate }) => {
   const key = defineProps({ start: 0 });
 
   share({ getCounterValue: () => 0, username: "unknown" });
-
+  onUpdate(() => {
+    console.log("m");
+  });
   return () =>
     `
       h1[Olá, span[ color:blue; ~ ${use("username")}]!] br[]br[]
