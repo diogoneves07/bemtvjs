@@ -2,12 +2,13 @@ import { render, _ } from "./src/main";
 
 _("Counter", ({ click$, p, reshare }) => {
   let count: number = p.start || 0;
+
   const increment = () => count++;
   const getCounterValue = () => count;
 
-  click$(increment);
-
   reshare({ getCounterValue });
+
+  click$(increment);
 
   return () => `button[Cliked: strong[${count}]]`;
 });
@@ -18,9 +19,10 @@ _("DoubleCounter", ({ use, reshare }) => {
 });
 
 _("App", ({ defineProps, share, use, onUpdate }) => {
-  const key = defineProps({ start: 0 });
+  const key = defineProps({ start: 20 });
 
   share({ getCounterValue: () => 0, username: "unknown" });
+
   return () =>
     `
       h1[Olá, span[ color:blue; ~ ${use("username")}]!] br[]br[]
