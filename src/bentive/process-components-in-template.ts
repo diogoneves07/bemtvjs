@@ -1,7 +1,7 @@
 import { LIBRARY_NAME_IN_ERRORS_MESSAGE } from "./../globals";
 import ComponentManager from "./component-manager";
 import { ComponentThis } from "./components-this";
-import { ComponentTemplateCallback, getComponentCallback } from "./component";
+import { ComponentTemplateCallback, getComponentCallback } from "./components";
 import ComponentThisFactory from "./component-this-factory";
 import normalizeComponentName from "./normalize-component-name";
 import getKeyInComponentName from "./get-key-in-component-name";

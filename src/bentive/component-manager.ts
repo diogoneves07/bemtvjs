@@ -1,7 +1,7 @@
 import { LIBRARY_NAME, TAG_HOST_NAME } from "./globals";
 import { ALL_COMPONENTS_MANAGER } from "./components-manager-nodes";
 import { ComponentThis } from "./components-this";
-import { ComponentTemplateCallback } from "./component";
+import { ComponentTemplateCallback } from "./components";
 
 export type TemplateCallback = () => string;
 
