@@ -10,18 +10,18 @@ interface ManagerElData<E> {
   CSSClasses: string[];
   applyCSSWhenElementIsAvallable: Parameters<typeof gooberCSS>[];
   reapplyCSSClasses: (m: ManagerEl) => void;
+  key: string;
 }
 export const ALL_ELEMENTS_MANAGER = new WeakMap<Element, ManagerEl>();
 export interface ManagerEl<E extends Element = Element> extends Listeners {}
 export class ManagerEl<E = Element> {
-  readonly key: string;
-
   protected readonly __data: ManagerElData<E> = {
     listeners: new Set(),
     CSSClasses: [],
     applyCSSWhenElementIsAvallable: [],
     element: null,
     reapplyCSSClasses,
+    key: "",
   };
 
   public set _(v: E | null) {
@@ -47,7 +47,7 @@ export class ManagerEl<E = Element> {
 
   constructor(key: string) {
     this._ = null;
-    this.key = key;
+    this.__data.key = key;
     return this;
   }
 
