@@ -17,21 +17,16 @@ export function getLastCSSCreated() {
 }
 
 const lastStyleTextAdded: string[] = [];
-let firstStyleAdded: HTMLStyleElement;
 
 export function applyLastCSSCreated() {
   const css = extractLastCSSCreated();
   if (css && !lastStyleTextAdded.includes(css)) {
     const style = document.createElement("style");
-
     style.textContent = css;
+    document.head.appendChild(style);
+
     lastStyleTextAdded.push(css);
-    if (firstStyleAdded) {
-      document.head.insertBefore(style, firstStyleAdded.nextSibling);
-    } else {
-      firstStyleAdded = style;
-      document.head.prepend(style);
-    }
+
     return true;
   }
   return false;
