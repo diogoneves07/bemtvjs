@@ -5,7 +5,7 @@ type ComponentData = {
   children: string;
 };
 
-const regexComponentName = /\b[A-Z]\S*?\[/;
+const regexComponentName = /\b[A-Z]\w*?\[/;
 
 function getAloneRightBracket(template: string) {
   let check = false;

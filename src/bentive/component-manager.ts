@@ -41,7 +41,7 @@ export default class ComponentManager {
       this.key
     }" ~ ${this.getCurrentTemplate()}]`;
   }
-  updateLastTemplateValue() {
+  updateLastTemplateValueProperty() {
     this.lastTemplateValue = this.getCurrentTemplate();
   }
   shouldTemplateBeUpdate() {

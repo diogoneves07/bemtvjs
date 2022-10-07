@@ -36,7 +36,7 @@ export default function processUpdatedTemplate(
 
       if (relativeInstance.shouldTemplateBeUpdate()) {
         componentsManagerUpdated.push(relativeInstance);
-        relativeInstance.updateLastTemplateValue();
+        relativeInstance.updateLastTemplateValueProperty();
       }
 
       template = componentData.before + value + componentData.after;

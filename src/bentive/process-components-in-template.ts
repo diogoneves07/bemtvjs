@@ -48,7 +48,7 @@ function assignPropsToComponentChild(
   );
 
   if (childProps) {
-    (child as any).props = Object.assign(child.props, childProps);
+    Object.assign(child.props, childProps);
   }
 }
 
@@ -65,7 +65,7 @@ function getTemplateWithCurrentPropsValues(
 
     const value = componentManager.getCurrentTemplateWithHost();
 
-    componentManager.updateLastTemplateValue();
+    componentManager.updateLastTemplateValueProperty();
 
     newTemplate = componentData.before + value + componentData.after;
   }
@@ -75,10 +75,9 @@ function getTemplateWithCurrentPropsValues(
 
 function processEachTemplate(
   template: string,
+  componentsManager: ComponentManager[],
   parent?: ComponentThis
-): [result: string, componentsManager: ComponentManager[]] {
-  const componentsManager: ComponentManager[] = [];
-
+): ComponentManager[] {
   let newTemplate = template;
   let componentData: ReturnType<typeof getNextComponentDataInTemplate>;
 
@@ -96,31 +95,29 @@ function processEachTemplate(
 
     componentsManager.push(componentManager);
 
-    const currentTemplate = componentManager.getCurrentTemplateWithHost();
-
-    const [componentTemlate, m] = processEachTemplate(
-      currentTemplate,
+    processEachTemplate(
+      componentManager.getCurrentTemplateWithHost(),
+      componentsManager,
       componentThis
     );
 
-    componentsManager.push(...m);
-
-    newTemplate = componentData.before + componentTemlate + componentData.after;
+    newTemplate = componentData.before + componentData.after;
   }
 
-  return [newTemplate, componentsManager];
+  return componentsManager;
 }
 
 export default function processComponentsInTemplate(
   template: string,
   firstParent?: ComponentThis
 ): processComponentsResult {
-  const [, componentsManager] = processEachTemplate(template, firstParent);
+  const componentsManager = processEachTemplate(template, [], firstParent);
 
   const newTemplate = getTemplateWithCurrentPropsValues(
     template,
     componentsManager
   );
+
   const componentsThis = componentsManager.map((o) => o.componentThis);
 
   return [newTemplate, componentsThis, componentsManager];

@@ -21,9 +21,6 @@ _("App", ({ defineProps, share, use, onUpdate }) => {
   const key = defineProps({ start: 0 });
 
   share({ getCounterValue: () => 0, username: "unknown" });
-  onUpdate(() => {
-    console.log("m");
-  });
   return () =>
     `
       h1[Olá, span[ color:blue; ~ ${use("username")}]!] br[]br[]
@@ -33,4 +30,4 @@ _("App", ({ defineProps, share, use, onUpdate }) => {
 
 // <div>Hello world!</div>
 // div[Hello world!]
-render(`App[]`);
+render(`App[]`.repeat(100));

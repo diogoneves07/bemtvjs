@@ -15,19 +15,19 @@ export default function render(
   template: string,
   insert: string | Node = document.body
 ) {
+  const parent =
+    typeof insert === "string" ? document.querySelector(insert) : insert;
+
+  if (!parent) return;
+
+  const [pureTemplate, componentsThis, componentsManager] =
+    processComponentsInTemplate(template);
+
+  saveRelativeInstances(componentsManager);
+
+  const data = brackethtmlTranspiler(pureTemplate);
+
   window.requestAnimationFrame(() => {
-    const parent =
-      typeof insert === "string" ? document.querySelector(insert) : insert;
-
-    if (!parent) return;
-
-    const [pureTemplate, componentsThis, componentsManager] =
-      processComponentsInTemplate(template);
-
-    saveRelativeInstances(componentsManager);
-
-    const data = brackethtmlTranspiler(pureTemplate);
-
     SIMPLE_DIV.innerHTML = data.html;
 
     const hosts = SIMPLE_DIV.getElementsByTagName(TAG_HOST_NAME);
