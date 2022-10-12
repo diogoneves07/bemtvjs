@@ -99,11 +99,11 @@ export class ComponentThis {
     const { mounted } = data;
 
     if (mounted) {
-      managerEl._ = getElement(selectorOrElement) as E;
+      managerEl.it = getElement(selectorOrElement) as E;
     } else {
       data.mountedFns = new Set<any>([
         () => {
-          managerEl._ = getElement(selectorOrElement) as E;
+          managerEl.it = getElement(selectorOrElement) as E;
         },
         ...data.mountedFns,
       ]);

@@ -47,7 +47,7 @@ export function getElementsForElsManager(this: ComponentThis) {
   const els = getComponentThisData(this).els;
 
   for (const el of els) {
-    el._ = document.querySelector(
+    el.it = document.querySelector(
       `[${KEY_ATTRIBUTE_NAME}="${getManagerElData(el).key}"]`
     );
   }

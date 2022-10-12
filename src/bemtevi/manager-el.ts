@@ -24,7 +24,7 @@ export class ManagerEl<E = Element> {
     key: "",
   };
 
-  public set _(v: E | null) {
+  public set it(v: E | null) {
     if (!v || this.__data.element === v) return;
 
     ALL_ELEMENTS_MANAGER.set(v as Element, this);
@@ -41,18 +41,18 @@ export class ManagerEl<E = Element> {
     this.__data.element = v;
   }
 
-  public get _() {
+  public get it() {
     return this.__data.element;
   }
 
   constructor(key: string) {
-    this._ = null;
+    this.it = null;
     this.__data.key = key;
     return this;
   }
 
   css(...args: Parameters<typeof css>) {
-    const element = this._;
+    const element = this.it;
 
     if (!element) {
       this.__data.applyCSSWhenElementIsAvallable.push(args);
@@ -76,7 +76,7 @@ function applyElementCSS(el: Element, args: Parameters<typeof gooberCSS>) {
   return c;
 }
 function reapplyCSSClasses(m: ManagerEl) {
-  const element = m._;
+  const element = m.it;
 
   if (!element) return;
   for (const c of getManagerElData(m).CSSClasses) {

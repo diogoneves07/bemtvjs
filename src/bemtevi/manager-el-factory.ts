@@ -22,7 +22,8 @@ export function ManagerElFactory<E extends Element = Element>(key: string) {
 
         listeners.add(listenerObject);
 
-        if (managerEl._) return insertEventListener(managerEl._, name, ...args);
+        if (managerEl.it)
+          return insertEventListener(managerEl.it, name, ...args);
 
         return () => {
           if (!listenerObject.removeListener) {
