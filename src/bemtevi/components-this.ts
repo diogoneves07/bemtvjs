@@ -4,7 +4,10 @@ import getElement from "../utilities/get-element";
 import { ManagerElFactory } from "./manager-el-factory";
 import reshareProps from "./reshare-props";
 import useSharedProp from "./use-shared-prop";
-import { getElementsForElsManager } from "./work-with-components-this";
+import {
+  getComponentThisData,
+  getElementsForElsManager,
+} from "./work-with-components-this";
 import {
   ComponentThisData,
   LifeCycleCallback,
@@ -92,7 +95,20 @@ export class ComponentThis {
 
     if (!selectorOrElement) return [managerEl, key];
 
-    managerEl._ = getElement(selectorOrElement) as E;
+    const data = getComponentThisData(this);
+    const { mounted } = data;
+
+    if (mounted) {
+      managerEl._ = getElement(selectorOrElement) as E;
+    } else {
+      data.mountedFns = new Set<any>([
+        () => {
+          managerEl._ = getElement(selectorOrElement) as E;
+        },
+        ...data.mountedFns,
+      ]);
+    }
+
     return managerEl;
   }
 
