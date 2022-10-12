@@ -1,4 +1,4 @@
-import { render, _ } from "./src/main";
+import { _ } from "./src/main";
 
 _("Counter", ({ click$, p, reshare, el, onMount }) => {
   let count: number = p.start || 0;
@@ -29,8 +29,6 @@ _("App", ({ defineProps, share }) => {
   share({ getCounterValue: () => 0 });
 
   return () => `Counter${key}[] br[] {[]} Counter:Double[]`;
-});
-
-render(`App[]`);
+}).render();
 
 //autoloadLazyComponents([()=> import('./react/lazy/')])
