@@ -17,12 +17,10 @@ e uma biblioteca CSS-in-JS **integrada ao template**,
 atualizações refinadas para o DOM real por meio de um loop de detecção de alteração no template que
 permite reatividade sem esforço do desenvolvedor.
 
-### Objetivo
-
-Atualmente, o principal objetivo da nossa biblioteca é ser uma ferramenta especializada no desenvolvimento de pequenas aplicações web,
+Atualmente, o principal objetivo é ser uma ferramenta especializada no desenvolvimento de **pequenas aplicações web**,
 permitindo ao desenvolvedor utilizar uma sintaxe agradável,
 direta e que possa ser aprendida em poucos minutos e não em horas,
-pense em: _“Apenas adicionar a Bemtevi ao seu index.html e se divertir construindo sua aplicação”_.
+pense em: “Apenas adicionar a Bemtevi ao seu index.html e se divertir construindo sua aplicação”.
 
 ## Um breve olhar
 
@@ -639,7 +637,7 @@ O `btnManager` contém propriedades e métodos úteis para lidar com o elemento 
 <dl>
   <dt><code>it</code></dt>
   <dd><br>
-      <p>Permite acesso ao elemento DOM real, o valor padrão é ```null``` e é alterado assim que o elemento é adicionado ao DOM</p>
+      <p>Permite acesso ao elemento DOM real, o valor padrão é <code>null</code> e é alterado assim que o elemento é adicionado ao DOM.</p>
   </dd>
 </dl>
 
@@ -696,7 +694,7 @@ Cada instância do componente Bemtevi passa por uma série de etapas como montar
 
 #### onMount
 
-Chamada apenas uma vez depois que os elementos do template são adicionados ao DOM
+Chamada apenas uma vez depois que os elementos do template são adicionados ao DOM:
 
 ```javascript
 _("Counter", ({ onMount }) => {
@@ -708,7 +706,7 @@ _("Counter", ({ onMount }) => {
 
 #### onUpdate
 
-Chamada sempre que o template é alterado e as alterações foram aplicadas ao DOM
+Chamada sempre que o template é alterado e as alterações forem aplicadas ao DOM:
 
 ```javascript
 _("Counter", ({ onMount }) => {
@@ -724,7 +722,7 @@ _("Counter", ({ onMount }) => {
 
 #### onUnmount
 
-Chamada apenas uma vez depois que todos os elementos do modelo foram removidos do DOM e instância do componente será destruída.
+Chamada apenas uma vez depois que todos os elementos do modelo foram removidos do DOM e instância do componente será destruída:
 
 ```javascript
 _("Counter", ({ onUnmount }) => {
