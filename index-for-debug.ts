@@ -1,4 +1,4 @@
-import { render, _, hasComponent } from "./src/main";
+import { render, _ } from "./src/main";
 
 _("Counter", ({ click$, p, reshare, el, onMount }) => {
   let count: number = p.start || 0;
@@ -18,23 +18,19 @@ _("Counter", ({ click$, p, reshare, el, onMount }) => {
   return () => `button[ id="diogo" ~ Value: strong[${count}]]`;
 });
 
-_("DoubleCounter", ({ use, reshare }) => {
+_("Counter:Double", ({ use, reshare }) => {
   reshare({ username: "Little bird" });
   return () => ` Double value: ${use<() => number>("getCounterValue")() * 2}`;
 });
 
-_("Message", ({ children }) => `br[] br[] ${children}`);
-
-_("App", ({ defineProps, share, use }) => {
-  const key = defineProps({ start: 20 });
+_("App", ({ defineProps, share }) => {
+  const key = defineProps({ start: 0 });
 
   share({ getCounterValue: () => 0 });
-  return () => `Counter${key}[] br[] DoubleCounter[] Message[Diogo Neves]`;
+
+  return () => `Counter${key}[] br[] {[]} Counter:Double[]`;
 });
 
-// <div>Hello world!</div>
-// div[Hello world!]
-//
 render(`App[]`);
 
-//lazyCompoenentes([impor])
+//autoloadLazyComponents([()=> import('./react/lazy/')])
