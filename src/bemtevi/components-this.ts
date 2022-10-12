@@ -41,23 +41,23 @@ export class ComponentThis {
     return this;
   }
 
-  share(o: Record<string, any>) {
+  share<T extends Record<string, any>>(o: T) {
     Object.assign(this.__data.sharedData, o);
   }
 
-  reshare(o: Record<string, any>) {
+  reshare<T extends Record<string, any>>(o: T) {
     reshareProps(this, o);
   }
 
-  use<T>(key: string) {
-    return useSharedProp(this, key) as T;
+  use<ReturnType = any>(key: string) {
+    return useSharedProp(this, key) as ReturnType;
   }
 
-  defineProps(o: Record<string, any>): string;
-  defineProps(key: string, o: Record<string, any>): string;
-  defineProps(
-    keyOrProps: (string | number) | Record<string, any>,
-    o?: Record<string, any>
+  defineProps<T extends Record<string, any>>(o: T): string;
+  defineProps<T extends Record<string, any>>(key: string, o: T): string;
+  defineProps<T extends Record<string, any>>(
+    keyOrProps: (string | number) | T,
+    o?: T
   ) {
     const isKey = typeof keyOrProps === "string";
     const props = (isKey ? o : keyOrProps) as Record<string, any>;
