@@ -12,7 +12,7 @@ e orquestrados “automagicamente” por um
 
 ## Por que Bemtevi?
 
-Ligeiramente opinativo, minimalista, leve(gzip: 6.5 KiB) mesmo com uma linguagem de marcação
+Ligeiramente opinativo, minimalista, leve(**gzip: 6.5 KiB**) mesmo com uma linguagem de marcação
 e uma biblioteca CSS-in-JS **integrada ao template**,
 atualizações refinadas para o DOM real por meio de um loop de detecção de alteração no template que
 permite reatividade sem esforço do desenvolvedor.
