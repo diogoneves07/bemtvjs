@@ -3,17 +3,15 @@ import { ComponentThis } from "./components-this";
 
 export type ComponentTemplateCallback = () => string;
 
-type ComponentCallback =
+type ComponentFn =
   | ((self: ComponentThis) => () => string)
-  | ((self: ComponentThis) => string)
-  | ((this: ComponentThis, self: ComponentThis) => () => string)
-  | ((this: ComponentThis, self: ComponentThis) => string);
+  | ((self: ComponentThis) => string);
 
-type GlobalComponentsMap = Map<string, ComponentCallback>;
+type GlobalComponentsMap = Map<string, ComponentFn>;
 
 const GLOBAL_COMPONENTS_MAP: GlobalComponentsMap = new Map();
 
-export function getComponentCallback(componentName: string) {
+export function getComponentFn(componentName: string) {
   return GLOBAL_COMPONENTS_MAP.get(componentName);
 }
 
@@ -21,13 +19,13 @@ export function hasComponent(name: string) {
   return GLOBAL_COMPONENTS_MAP.get(name) ? true : false;
 }
 
-export function Component<N extends string, C extends ComponentCallback>(
+export function Component<N extends string, C extends ComponentFn>(
   componentName: N,
-  componentCallback: C
+  componentFn: C
 ): void {
   if (GLOBAL_COMPONENTS_MAP.has(componentName)) {
     throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} This component "${componentName}" name is already in use!`;
   }
-  GLOBAL_COMPONENTS_MAP.set(componentName, componentCallback);
+  GLOBAL_COMPONENTS_MAP.set(componentName, componentFn);
 }
 export const _ = Component;
