@@ -20,6 +20,7 @@ type processComponentsResult = [
 
 function runComponentCallback(
   name: string,
+  children: string,
   parent?: ComponentThis
 ): RunComponentCallbackReturn {
   let result = "";
@@ -31,6 +32,8 @@ function runComponentCallback(
     throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} The component "${realComponentName}" was not created!`;
 
   const componentThis = ComponentThisFactory(name, parent);
+
+  componentThis.children = children;
 
   if (parent) assignPropsToComponentChild(parent, componentThis);
 
@@ -84,12 +87,12 @@ function processEachTemplate(
   while ((componentData = getNextComponentDataInTemplate(newTemplate))) {
     const [componentThis, result] = runComponentCallback(
       componentData.name,
+      componentData.children,
+
       parent
     );
 
     if (!componentThis) continue;
-
-    componentThis.children = componentData.children;
 
     const componentManager = new ComponentManager(componentThis, result);
 
