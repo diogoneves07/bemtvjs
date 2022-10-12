@@ -29,18 +29,18 @@ export class ComponentThis {
     ),
     els: [],
     sharedData: {},
+    parent: null,
   };
 
   readonly props: Props = {};
   readonly p: Props = this.props;
   readonly name: string;
 
-  parent: ComponentThis | null = null;
   children: string = "";
 
   constructor(name: string, parent?: ComponentThis) {
     this.name = name;
-    this.parent = parent || null;
+    this.__data.parent = parent || null;
     return this;
   }
 

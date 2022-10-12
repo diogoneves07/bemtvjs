@@ -5,7 +5,7 @@ export default function reshareProps(
   componentThis: ComponentThis,
   props: Record<string, any>
 ) {
-  const { sharedData } = getComponentThisData(componentThis);
+  const { sharedData, parent } = getComponentThisData(componentThis);
   const keys = Object.keys(props);
   keys.slice().forEach((key, index) => {
     if (Object.hasOwn(sharedData, key)) {
@@ -14,12 +14,12 @@ export default function reshareProps(
     }
   });
 
-  if (!keys.length || !componentThis.parent) return;
+  if (!keys.length || !parent) return;
 
   const remainingProps = keys.reduce((p, c) => {
     p[c] = props[c];
     return p;
   }, {} as Record<string, any>);
 
-  reshareProps(componentThis.parent, remainingProps);
+  reshareProps(parent, remainingProps);
 }
