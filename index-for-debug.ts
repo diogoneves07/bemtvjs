@@ -1,16 +1,21 @@
-import { render, _ } from "./src/main";
+import { render, _, hasComponent } from "./src/main";
 
-_("Counter", ({ click$, p, reshare }) => {
+_("Counter", ({ click$, p, reshare, el, onMount }) => {
   let count: number = p.start || 0;
 
   const increment = () => count++;
   const getCounterValue = () => count;
+  const btn = el("#diogo");
+
+  onMount(() => {
+    console.log(btn.it);
+  });
 
   reshare({ getCounterValue });
 
   click$(increment);
 
-  return () => `button[Cliked: strong[${count}]]`;
+  return () => `button[ id="diogo" ~ Value: strong[${count}]]`;
 });
 
 _("DoubleCounter", ({ use, reshare }) => {
@@ -18,18 +23,18 @@ _("DoubleCounter", ({ use, reshare }) => {
   return () => ` Double value: ${use<() => number>("getCounterValue")() * 2}`;
 });
 
-_("App", ({ defineProps, share, use, onUpdate }) => {
+_("Message", ({ children }) => `br[] br[] ${children}`);
+
+_("App", ({ defineProps, share, use }) => {
   const key = defineProps({ start: 20 });
 
-  share({ getCounterValue: () => 0, username: "unknown" });
-
-  return () =>
-    `
-      h1[Olá, span[ color:blue; ~ ${use("username")}]!] br[]br[]
-      Counter example: Counter${key}[] br[] DoubleCounter[] 
-    `;
+  share({ getCounterValue: () => 0 });
+  return () => `Counter${key}[] br[] DoubleCounter[] Message[Diogo Neves]`;
 });
 
 // <div>Hello world!</div>
 // div[Hello world!]
-render(`App[]`.repeat(100));
+//
+render(`App[]`);
+
+//lazyCompoenentes([impor])
