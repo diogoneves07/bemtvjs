@@ -70,6 +70,9 @@ _("Counter", ({ click$ }) => {
     - [onMount](#onmount)
     - [onUpdate](#onupdate)
     - [onUnmount](#onunmount)
+  - [Inicializando(Bootstrapping) um App Bemtevi](#inicializandobootstrapping-um-app-bemtevi)
+  - [Dividindo o Código (Code-Splitting)](#dividindo-o-código-code-splitting)
+  - [Usando fallback(Plano B)](#usando-fallbackplano-b)
 - [Fechamento](#fechamento)
 
 ## Instalação
@@ -513,6 +516,8 @@ O mesmo acontece ao re-compartilhar uma propriedade, o valor atualizado será o 
 Primeiro vamos declarar um componente Counter:
 
 ```javascript
+import { _ } from "bemtevi";
+
 _("Counter", () => {
   let count = 0;
 
@@ -527,6 +532,8 @@ _("Counter", () => {
 Observe dentro dele a função `getCounterValue()` que, quando chamada, retornará o valor mais recente da variável `count`, no entanto, precisamos torná-la acessível de fora do componente, para isso usaremos o método `reshare()`:
 
 ```javascript
+import { _ } from "bemtevi";
+
 _("Counter", ({ reshare }) => {
   let count = 0;
 
@@ -545,6 +552,8 @@ O método `reshare()` fará o seguinte, se um componente acima compartilhou uma 
 Em seguida, criaremos um componente DoubleCounter que usará o método `getCounterValue()` para acessar o valor atual do contador:
 
 ```javascript
+import { _ } from "bemtevi";
+
 _("DoubleCounter", ({ use }) => {
   return () => ` Double value: ${use("getCounterValue")() * 2}`;
 });
@@ -555,12 +564,16 @@ Podemos fazer uso do método dentro do template de DoubleCounter porque sua cham
 Para resolver isso temos que criar um componente que esteja acima de Counter e DoubleCounter:
 
 ```javascript
+import { _ } from "bemtevi";
+
 _("App", () => `Counter[] br[] DoubleCounter[] `).render();
 ```
 
 O componente acima dos demais tem outra responsabilidade a de compartilhar os valores definindo assim os valores padrão:
 
 ```javascript
+import { _ } from "bemtevi";
+
 _("App", ({ share }) => {
   share({ getCounterValue: () => 0 });
 
@@ -583,6 +596,8 @@ Os manipuladores de eventos podem ser injetados na instância do componente como
 Ao injetar manipuladores de eventos na instância do componente, Bemtevi irá adicioná-los ao primeiro elemento que encontrar no template:
 
 ```javascript
+import { _ } from "bemtevi";
+
 _("Counter", ({ reshare, click$ }) => {
   let count = 0;
 
@@ -601,6 +616,8 @@ A Bemtevi gerenciará os manipuladores de eventos em caso de alteração do temp
 Pode ser necessário acessar o elemento DOM, para isso podemos utilizar o método `el()`, que retorna uma tupla onde o primeiro item é um objeto e o segundo é a chave que deve ser aplicada ao elemento de interesse:
 
 ```javascript
+import { _ } from "bemtevi";
+
 _("Counter", ({ el }) => {
   const [btnManager, btnKey] = el();
 
@@ -613,6 +630,8 @@ A chave pode ser usada em qualquer lugar dentro dos colchetes da tag.
 Opcionalmente, o método `el()` aceita um argumento que pode ser um elemento DOM ou um seletor(usará [querySelector](https://developer.mozilla.org/pt-BR/docs/Web/API/Document/querySelector) para encontrar o elemento), então o método retornará apenas um objeto:
 
 ```javascript
+import { _ } from "bemtevi";
+
 _("Counter", ({ el }) => {
   const btnManager = el("#button");
 
@@ -632,6 +651,8 @@ O `btnManager` contém propriedades e métodos úteis para lidar com o elemento 
 </dl>
 
 ```javascript
+import { _ } from "bemtevi";
+
 _("Counter", ({ el }) => {
   const [btnKey, btnManager] = el();
 
@@ -650,6 +671,8 @@ _("Counter", ({ el }) => {
 </dl>
 
 ```javascript
+import { _ } from "bemtevi";
+
 _("Counter", ({ el }) => {
   const [btnKey, btnManager] = el();
 
@@ -666,6 +689,8 @@ _("Counter", ({ el }) => {
 Assim como na instância do componente, os manipuladores eventos podem ser injetados na instância do elemento(`btnManager`) como um método e sua nomenclatura é a mesma usada em `addEventListener()`, porém, eles devem terminar com um símbolo `$`.
 
 ```javascript
+import { _ } from "bemtevi";
+
 _("Counter", ({ el }) => {
   const [btnKey, btnManager] = el();
 
@@ -687,6 +712,8 @@ Cada instância do componente Bemtevi passa por uma série de etapas como montar
 Chamada apenas uma vez depois que os elementos do template são adicionados ao DOM:
 
 ```javascript
+import { _ } from "bemtevi";
+
 _("Counter", ({ onMount }) => {
   onMount(() => console.log("Mounted!"));
 
@@ -699,6 +726,8 @@ _("Counter", ({ onMount }) => {
 Chamada sempre que o template é alterado e as alterações forem aplicadas ao DOM:
 
 ```javascript
+import { _ } from "bemtevi";
+
 _("Counter", ({ onMount }) => {
   let count = 0;
 
@@ -715,12 +744,109 @@ _("Counter", ({ onMount }) => {
 Chamada apenas uma vez depois que todos os elementos do modelo foram removidos do DOM e instância do componente será destruída:
 
 ```javascript
+import { _ } from "bemtevi";
+
 _("Counter", ({ onUnmount }) => {
   onUnmount(() => console.log("Unmounted!"));
 
   return () => `button[ My button]`;
 }).render();
 ```
+
+### Inicializando(Bootstrapping) um App Bemtevi
+
+Na Bemtevi, os componentes são declarados globalmente e usados ​​a partir de sua chave de declaração (o nome do componente), então podemos usar um componente sem importar seu módulo desde que ele já tenha sido importado em algum momento da aplicação.
+
+Para garantir que um componente foi importado, podemos simplesmente importá-lo para o módulo onde queremos usá-lo:
+
+```javascript
+import "./components/Counter";
+
+_("App", () => `Counter[]`).render();
+```
+
+> Observe que a importação visa apenas os efeitos colaterais do módulo, ou seja, a criação do componente.
+
+Essa prática funcionará muito bem, porém, pode ser tedioso fazer isso em todos os módulos que você irá precisar do componente, outra solução é criar um arquivo de inicialização e nele importar todos os componentes que irá precisar:
+
+`bootstrap.js`:
+
+```javascript
+import "./components/Counter";
+import "./components/Message";
+import "./components/HelloWorld";
+import "./components/Menu";
+import "./components/Footer";
+import "./components/Header";
+```
+
+E no arquivo principal da sua aplicação, importe o arquivo que importa os componentes:
+
+`main.js`:
+
+```javascript
+import "./bootstrap";
+
+/* ... */
+```
+
+### Dividindo o Código (Code-Splitting)
+
+Para evitar o envio de componentes que a princípio podem ser desnecessários para o usuário, podemos usar [importações dinâmicas](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import)(dynamic import), que nos permite importar um módulo a qualquer momento em nossa aplicação.
+
+Para automatizar o processo de importação de componentes, a Bemtevi oferece a função `autoImportComponents()` que aceita um objeto onde o nome das propriedades deve ser o nome dos componentes e seus valores devem ser uma função que importa o componente usando importação dinâmica:
+
+```javascript
+import { autoImportComponents } from "bemtevi";
+
+autoImportComponents({
+  Counter() {
+    import("./components/Counter");
+  },
+  Message() {
+    import("./components/Message");
+  },
+});
+```
+
+```javascript
+import { autoImportComponents } from "bemtevi";
+
+autoImportComponents({
+  Counter() {
+    import("./components/Counter");
+  },
+  Message() {
+    import("./components/Message");
+  },
+});
+```
+
+O Bemtevi usará a função de importação de cada componente quando for utilizado em qualquer template, porém, irá ignorar o componente até o momento em que estiver disponível, ou seja, o template que desejar o componente que ainda não foi baixado será renderizado normalmente apenas ignorando o este componente.
+
+```javascript
+import { _ } from "bemtevi";
+
+_("App", () => () => `A messagem é: Message[]`).render();
+```
+
+No exemplo acima, inicialmente a página exibiria “A mensagem é:”, pois o componente `Message` ainda não havia sido baixado, mas assim que estivesse disponível o template seria atualizado e a página também exibiria o template do componente `Message`.
+
+### Usando fallback(Plano B)
+
+A função `match()` pode ser usada para apresentar uma alternativa enquanto um determinado componente não estiver disponível, ela aceita dois argumentos, o primeiro é o componente de interesse que se estiver disponível é retornado como valor, e o segundo argumento que deve ser uma `string` que só é usado como retorno se o componente não estiver disponível:
+
+```javascript
+import { _, match } from "bemtevi";
+
+_("App", () => () => {
+  return `
+        Dados: 
+        ${match("Data[]", "<div>Carregando...</div>")}`;
+}).render();
+```
+
+> Esta função está otimizada para que possamos usá-la diretamente no template.
 
 ## Fechamento
 

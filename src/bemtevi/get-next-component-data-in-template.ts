@@ -1,11 +1,11 @@
+import { REGEX_COMPONENT_NAME } from "./globals";
+
 type ComponentData = {
   before: string;
   after: string;
   name: string;
   children: string;
 };
-
-const regexComponentName = /\b[A-Z][\w|:]*?\[/;
 
 function getAloneRightBracket(template: string) {
   let check = false;
@@ -25,12 +25,13 @@ function getAloneRightBracket(template: string) {
 export default function getNextComponentDataInTemplate(
   allTemplate: string
 ): ComponentData | false {
-  const start = allTemplate.search(regexComponentName);
+  const start = allTemplate.search(REGEX_COMPONENT_NAME);
 
   if (start === -1) return false;
 
   const end = start + getAloneRightBracket(allTemplate.slice(start)) + 1;
   const template = allTemplate.slice(start, end);
+
   const leftBracketIndex = template.indexOf("[");
 
   const before = allTemplate.slice(0, start);

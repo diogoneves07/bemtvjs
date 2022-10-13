@@ -1,5 +1,4 @@
 import { _ } from "./src/main";
-
 _("Counter", ({ click$, p, reshare, el, onMount }) => {
   let count: number = p.start || 0;
 
@@ -30,5 +29,4 @@ _("App", ({ defineProps, share }) => {
 
   return () => `Counter${key}[] br[] {[]} Counter:Double[]`;
 }).render();
-
-//autoloadLazyComponents([()=> import('./react/lazy/')])
+// ${match("Lazy[]", )}

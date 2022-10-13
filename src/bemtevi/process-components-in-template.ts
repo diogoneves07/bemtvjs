@@ -7,6 +7,11 @@ import normalizeComponentName from "./normalize-component-name";
 import getKeyInComponentName from "./get-key-in-component-name";
 import getNextComponentDataInTemplate from "./get-next-component-data-in-template";
 import { getComponentThisProps } from "./work-with-components-this";
+import {
+  autoImportComponent,
+  isComponentAlreadyImported,
+  isComponentAutoImport,
+} from "./auto-import-components";
 
 type RunComponentFnReturn =
   | [componentThis: ComponentThis, result: string | ComponentTemplateCallback]
@@ -17,6 +22,8 @@ type processComponentsResult = [
   componentsThis: ComponentThis[],
   componentsManager: ComponentManager[]
 ];
+
+type NextComponentData = ReturnType<typeof getNextComponentDataInTemplate>;
 
 function runComponentFn(
   name: string,
@@ -62,17 +69,25 @@ function getTemplateWithCurrentPropsValues(
   componentsManager: ComponentManager[]
 ) {
   let newTemplate = template;
+  let componentData: NextComponentData;
+  let count = 0;
 
-  for (const componentManager of componentsManager) {
-    const componentData = getNextComponentDataInTemplate(newTemplate);
+  while ((componentData = getNextComponentDataInTemplate(newTemplate))) {
+    const name = componentData.name;
+    const componentManager = componentsManager[count];
 
-    if (!componentData) continue;
+    if (!isComponentAlreadyImported(name)) {
+      newTemplate = componentData.before + componentData.after;
+      continue;
+    }
 
     const value = componentManager.getCurrentTemplateWithHost();
 
     componentManager.updateLastTemplateValueProperty();
 
     newTemplate = componentData.before + value + componentData.after;
+
+    count++;
   }
 
   return newTemplate;
@@ -84,15 +99,19 @@ function processEachTemplate(
   parent?: ComponentThis
 ): ComponentManager[] {
   let newTemplate = template;
-  let componentData: ReturnType<typeof getNextComponentDataInTemplate>;
+  let componentData: NextComponentData;
 
   while ((componentData = getNextComponentDataInTemplate(newTemplate))) {
-    const [componentThis, result] = runComponentFn(
-      componentData.name,
-      componentData.children,
+    const { name, children, before, after } = componentData;
 
-      parent
-    );
+    if (!isComponentAlreadyImported(name)) {
+      isComponentAutoImport(name) && autoImportComponent(name);
+      newTemplate = componentData.before + componentData.after;
+
+      continue;
+    }
+
+    const [componentThis, result] = runComponentFn(name, children, parent);
 
     if (!componentThis) continue;
 
@@ -106,7 +125,7 @@ function processEachTemplate(
       componentThis
     );
 
-    newTemplate = componentData.before + componentData.after;
+    newTemplate = before + after;
   }
 
   return componentsManager;
