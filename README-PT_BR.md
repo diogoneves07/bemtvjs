@@ -24,7 +24,7 @@ pense em: “Apenas adicionar a Bemtevi ao seu index.html e se divertir construi
 
 ## Um breve olhar
 
-Antes de prosseguir com a documentação vamos ver um exemplo de um componente **Counter**:
+Componente **Counter**:
 
 ```javascript
 import { _ } from "bemtevi";
@@ -43,7 +43,6 @@ _("Counter", ({ click$ }) => {
 - [Instalação](#instalação)
 - [Funcionamento(Sob o capô)](#funcionamentosob-o-capô)
 - [Documentação](#documentação)
-  - [Hello World](#hello-world)
   - [Introduzindo Brackethtml](#introduzindo-brackethtml)
     - [Por que Brackethtml?](#por-que-brackethtml)
     - [Brackethtml + CSS-in-JS (goober)](#brackethtml--css-in-js-goober)
@@ -52,7 +51,7 @@ _("Counter", ({ click$ }) => {
   - [Componentes](#componentes)
     - [Renderizando um Componente](#renderizando-um-componente)
     - [Compondo Componentes](#compondo-componentes)
-    - [Componentes disponíveis](#componentes-disponíveis)
+    - [Verificar componentes disponíveis](#verificar-componentes-disponíveis)
     - [Props](props)
     - [Filhos do componente](#filhos-do-componente)
     - [Componentes sem e com estado](#componentes-sem-e-com-estado)
@@ -63,7 +62,7 @@ _("Counter", ({ click$ }) => {
       - [Usando os dados](#usando-os-dados)
       - [Re-compartilhando dados](#re-compartilhando-dados)
       - [Funcionamento(Sob o capô)](#funcionamentosob-o-capô-1)
-      - [Usando Closures](#usando-closures)
+      - [Dados entre componentes](#dados-entre-componentesavançado)
   - [Manipulando eventos](#manipulando-eventos)
   - [Elementos DOM](#elementos-dom)
     - [Eventos do elemento](#eventos-do-elemento)
@@ -123,18 +122,6 @@ sistema de gerenciamento de eventos do DOM,
 API inovadora para compartilhamento de dados entre componentes,
 métodos de ciclo de vida e açúcares sintáticos que trarão uma ótima experiência ao desenvolvedor!
 
-### Hello World
-
-O menor exemplo de Bemtevi é algo assim:
-
-```javascript
-import { render } from "bemtevi";
-
-render(`h1[Hello World]`);
-```
-
-Isso exibe a mensagem “Hello World” no _body_ da página.
-
 ### Introduzindo Brackethtml
 
 Considere esta declaração de variável:
@@ -180,19 +167,19 @@ A lista abaixo descreve as regras de uso:
 const btn = `button[]`;
 ```
 
-- Se o símbolo "**~**" não estiver presente tudo que estiver dentro dos colchetes da tag será entendido como seus filhos:
+- Se o símbolo `~` não estiver presente tudo que estiver dentro dos colchetes da tag será entendido como seus filhos:
 
 ```javascript
 const btn = `h1[ span[ Hello world! ] ]`;
 ```
 
-- O símbolo "**~**" é responsável por separar os atributos e CSS-in-JS dos filhos da tag e deve ser usado entre espaços em branco:
+- O símbolo `~` é responsável por separar os atributos e CSS-in-JS dos filhos da tag e deve ser usado entre espaços em branco:
 
 ```javascript
 const btn = `button[color:blue; ~ Click me!]`;
 ```
 
-- Tudo antes do símbolo "**~**" é considerado atributos e/ou CSS-in-JS:
+- Tudo antes do símbolo `~` é considerado atributos e/ou CSS-in-JS:
 
 ```javascript
 const btn = `button[padding:50px; ~]`;
@@ -204,7 +191,7 @@ const btn = `button[padding:50px; ~]`;
 const btn = `button[data-username = "Bemtive" padding:50px; ~  Hello!]`;
 ```
 
-- Os atributos devem usar apenas aspas duplas `"`:
+- Os atributos devem usar apenas aspas duplas ````:
 
 ```javascript
 const btn = `button[class="hello" ~ Click me!]`;
@@ -218,7 +205,7 @@ const btn = `button[class="hello" font-family:'Courier New'; ~ Click me!]`;
 
 #### Caracteres especiais
 
-Alguns caracteres devem ser escapados para serem usados ​​sem que o os interprete: `~`, `[` e `]`.
+Alguns caracteres devem ser escapados para serem usados ​​sem que a Brackethtml os interprete: `~`, `[` e `]`.
 
 Para escapá-los basta envolvê-los entre chaves "{}":
 
@@ -240,13 +227,13 @@ const btn = `button[Click {[]} me!]`;
 
 > A partir de agora você já consegue interpretar e usar a Brackethtml. Esperamos que sua produtividade aumente consideravelmente.
 
-> Em um futuro próximo, seria incrível ter uma extensão que pudesse destacar o de acordo com suas regras, facilitando a separação visual de cada parte.
+> Em um futuro próximo, seria incrível ter uma extensão que pudesse destacar a Brackethtml de acordo com suas regras, facilitando a separação visual de cada parte.
 
 ### Componentes
 
 Componentes permitem você dividir a UI em partes independentes, reutilizáveis e pensar em cada parte isoladamente.
 
-Para criar um componente podemos importar o símbolo "\_" que é um alias da função "Component" do mesmo módulo:
+Para criar um componente podemos importar o símbolo `_` que é um alias da função `Component` do mesmo módulo:
 
 ```javascript
 import { _, Component } from "bemtevi";
@@ -258,7 +245,7 @@ _("Counter", () => {});
 Component("Counter", () => {});
 ```
 
-> Ao longo desta documentação os exemplos darão preferência ao símbolo "\_", no entanto, fique à vontade para escolher em seus projetos.
+> Ao longo desta documentação os exemplos darão preferência ao símbolo `_`, no entanto, fique à vontade para escolher em seus projetos.
 
 A função aceita dois argumentos:
 
@@ -269,9 +256,9 @@ A função aceita dois argumentos:
   </dd>
 </dl>
 
-Deve sempre começar com um caractere maiúsculo (CamelCase) e aceita todos os caracteres alfanuméricos e o símbolo ":".
+Deve sempre começar com um caractere maiúsculo (CamelCase) e aceita todos os caracteres alfanuméricos e o símbolo `:`.
 
-Os nomes dos componentes funcionam como uma chave para acessar suas funções e, portanto, devem ser únicos, para evitar conflitos você pode usar o símbolo ":" para indicar um componente que esteja relacionado a algo:
+Os nomes dos componentes funcionam como uma chave para acessar suas funções e, portanto, devem ser únicos, para evitar conflitos você pode usar o símbolo `:` para indicar um componente que esteja relacionado a algo:
 
 ```javascript
 import { _, Component } from "bemtevi";
@@ -301,7 +288,7 @@ _("Counter", (componentInstance) => console.log(componentInstance));
 
 ### Renderizando um Componente
 
-Após declarar o componente, a função retornada possui um método `render()` que pode ser chamado para renderizar o componente em algum lugar da página:
+Após declarar o componente, a instância retornada possui um método `render()` que pode ser chamado para renderizar o componente em algum lugar da página:
 
 ```javascript
 import { _ } from "bemtevi";
@@ -309,7 +296,7 @@ import { _ } from "bemtevi";
 _("Counter", () => `h1[Hello world!]`).render();
 ```
 
-Este método aceita opcionalmente um argumento que indica um elemento ou um seletor(usará [querySelector](https://developer.mozilla.org/pt-BR/docs/Web/API/Document/querySelector) para encontrar o elemento) para inserir o componente(O padrão é `document.body`) e retorna a mesma função.
+Este método aceita opcionalmente um argumento que indica um elemento ou um seletor(usará [querySelector](https://developer.mozilla.org/pt-BR/docs/Web/API/Document/querySelector) para encontrar o elemento) para inserir o componente(O padrão é `document.body`) e retorna a mesma instância.
 
 Também podemos importar a função `render()` que funciona de maneira semelhante:
 
@@ -339,7 +326,7 @@ _("App", () => `Welcome[] Welcome[] Welcome[]`);
 render("App", "#app");
 ```
 
-### Componentes disponíveis
+### Verificar componentes disponíveis
 
 Para verificar se um componente está disponível, podemos usar o método `hasComponent()` que aceita uma argumento que é o nome do componente:
 
@@ -381,7 +368,7 @@ _("Message", ({ props }) => {
 });
 ```
 
-Também poderíamos usar a propriedade `p` que é um alias de "props":
+Também poderíamos usar a propriedade `p` que é um alias de `props`:
 
 ```javascript
 import { _, render } from "bemtevi";
@@ -518,7 +505,8 @@ O componente abaixo consumirá a propriedade do componente acima mais próximo.
 
 O mesmo acontece ao re-compartilhar uma propriedade, o valor atualizado será o do componente acima mais próximo.
 
-#### Usando Closures
+<details>
+  <summary><h4>Dados entre componentes(Avançado)</h4></summary>
 
 [Closures](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures) podem dar acesso a valores contidos em componentes de forma que o valor retornado sempre estará atualizado.
 
@@ -583,12 +571,14 @@ _("App", ({ share }) => {
 As etapas acima descrevem que o componente acima define as propriedades e
 os componentes abaixo podem acessá-las e/ou alterá-las.
 
+</details>
+
 ### Manipulando eventos
 
 Manipular eventos em Bemtevi é muito semelhante a manipular eventos usando
 [addEventListener()](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener).
 
-Os eventos podem ser injetados na instância do componente como um método e sua nomenclatura é a mesma usada em `addEventListener()`, porém, eles devem terminar com um símbolo "$".
+Os manipuladores de eventos podem ser injetados na instância do componente como um método e sua nomenclatura é a mesma usada em `addEventListener()`, porém, eles devem terminar com um símbolo `$`.
 
 Ao injetar manipuladores de eventos na instância do componente, Bemtevi irá adicioná-los ao primeiro elemento que encontrar no template:
 
@@ -673,7 +663,7 @@ _("Counter", ({ el }) => {
 
 #### Eventos do elemento
 
-Assim como na instância do componente, os eventos podem ser injetados na instância do elemento(`btnManager`) como um método e sua nomenclatura é a mesma usada em `addEventListener()`, porém, eles devem terminar com um símbolo "$".
+Assim como na instância do componente, os manipuladores eventos podem ser injetados na instância do elemento(`btnManager`) como um método e sua nomenclatura é a mesma usada em `addEventListener()`, porém, eles devem terminar com um símbolo `$`.
 
 ```javascript
 _("Counter", ({ el }) => {
