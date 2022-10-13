@@ -51,7 +51,7 @@ _("Counter", ({ click$ }) => {
   - [Componentes](#componentes)
     - [Renderizando um Componente](#renderizando-um-componente)
     - [Compondo Componentes](#compondo-componentes)
-    - [Verificar componentes disponíveis](#verificar-componentes-disponíveis)
+    - [Verificando componentes disponíveis](#verificando-componentes-disponíveis)
     - [Props](props)
     - [Filhos do componente](#filhos-do-componente)
     - [Componentes sem e com estado](#componentes-com-e-sem-estado)
@@ -329,7 +329,7 @@ _("App", () => `Welcome[] Welcome[] Welcome[]`);
 render("App", "#app");
 ```
 
-### Verificar componentes disponíveis
+### Verificando componentes disponíveis
 
 Para verificar se um componente está disponível, podemos usar o método `hasComponent()` que aceita uma argumento que é o nome do componente:
 
@@ -809,7 +809,7 @@ autoImportComponents({
 });
 ```
 
-A Bemtevi usará a função de importação de cada componente quando for utilizado em qualquer template, porém, irá ignorar o componente até o momento em que estiver disponível, ou seja, o template que desejar o componente que ainda não foi baixado será renderizado normalmente apenas ignorando o este componente.
+A Bemtevi fará a importação do componente assim que componente for utilizado em um template, porém, irá ignorar o componente até o momento em que estiver disponível.
 
 ```javascript
 import { _ } from "bemtevi";
@@ -834,6 +834,8 @@ _("App", () => () => {
 ```
 
 > Esta função está otimizada para que possamos usá-la diretamente no template.
+
+> **Esta função acionará a importação automática se o componente for autoimportável**.
 
 ## Fechamento
 
