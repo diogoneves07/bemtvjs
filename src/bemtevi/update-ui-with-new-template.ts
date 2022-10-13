@@ -6,12 +6,12 @@ import {
 import processUpdatedTemplate from "./process-updated-template";
 import { removeDiffAmoungChildNodes } from "./remove-diff-amoung-child-nodes";
 import { TAG_HOST_NAME } from "./globals";
-import { setNodeComponentKeys } from "./nodes-component-keys";
 import brackethtmlToHTML from "../brackethtml/brackethtml-to-html";
 import {
   dispatchMountedLifeCycle,
   dispatchUpdatedLifeCycle,
 } from "./work-with-components-this";
+import { setComponentManagerNodes } from "./components-manager-nodes";
 
 const SIMPLE_DIV = document.createElement("div");
 const SIMPLE_DOCUMENT_FRAGMENT = document.createDocumentFragment();
@@ -46,9 +46,10 @@ export default function updateUIWithNewTemplate(
       ...(Array.from(host.childNodes) as Node[])
     );
 
-    for (const node of Array.from(SIMPLE_DOCUMENT_FRAGMENT.childNodes)) {
-      setNodeComponentKeys(node, host.id);
-    }
+    setComponentManagerNodes(
+      host.id,
+      Array.from(SIMPLE_DOCUMENT_FRAGMENT.childNodes)
+    );
 
     host.parentElement?.replaceChild(SIMPLE_DOCUMENT_FRAGMENT, host);
   }

@@ -2,7 +2,7 @@ import { LIBRARY_NAME_IN_ERRORS_MESSAGE } from "../globals";
 import ComponentInstance from "./component-instance";
 import { ComponentThis } from "./components-this";
 
-type ComponentFn =
+export type ComponentFn =
   | ((self: ComponentThis) => () => string)
   | ((self: ComponentThis) => string);
 

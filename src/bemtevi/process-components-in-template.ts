@@ -1,7 +1,7 @@
 import { LIBRARY_NAME_IN_ERRORS_MESSAGE } from "./../globals";
 import ComponentManager from "./component-manager";
 import { ComponentThis } from "./components-this";
-import { ComponentTemplateCallback, getComponentFn } from "./components";
+import { ComponentFn, getComponentFn } from "./components";
 import ComponentThisFactory from "./component-this-factory";
 import normalizeComponentName from "./normalize-component-name";
 import getKeyInComponentName from "./get-key-in-component-name";
@@ -13,10 +13,6 @@ import {
   isComponentAutoImport,
 } from "./auto-import-components";
 
-type RunComponentFnReturn =
-  | [componentThis: ComponentThis, result: string | ComponentTemplateCallback]
-  | [componentThis: undefined, result: string | ComponentTemplateCallback];
-
 type processComponentsResult = [
   result: string,
   componentsThis: ComponentThis[],
@@ -25,38 +21,14 @@ type processComponentsResult = [
 
 type NextComponentData = ReturnType<typeof getNextComponentDataInTemplate>;
 
-function runComponentFn(
-  name: string,
-  children: string,
-  parent?: ComponentThis
-): RunComponentFnReturn {
-  let result: string | ComponentTemplateCallback = "";
-
-  const realComponentName = normalizeComponentName(name);
-
-  const componentFn = getComponentFn(realComponentName);
-
-  if (!componentFn)
-    throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} The component "${realComponentName}" was not created!`;
-
-  const componentThis = ComponentThisFactory(name, parent);
-
-  componentThis.children = children;
-
-  if (parent) assignPropsToComponentChild(parent, componentThis);
-
-  result = componentFn(componentThis);
-
-  return [componentThis, result];
-}
-
 function assignPropsToComponentChild(
-  parent: ComponentThis,
-  child: ComponentThis
+  child: ComponentThis,
+  componentName: string,
+  parent: ComponentThis
 ) {
   const childProps = getComponentThisProps(
     parent,
-    getKeyInComponentName(child.name)
+    getKeyInComponentName(componentName)
   );
 
   if (childProps) {
@@ -76,7 +48,7 @@ function getTemplateWithCurrentPropsValues(
     const name = componentData.name;
     const componentManager = componentsManager[count];
 
-    if (!isComponentAlreadyImported(name)) {
+    if (!isComponentAlreadyImported(normalizeComponentName(name))) {
       newTemplate = componentData.before + componentData.after;
       continue;
     }
@@ -103,17 +75,27 @@ function processEachTemplate(
 
   while ((componentData = getNextComponentDataInTemplate(newTemplate))) {
     const { name, children, before, after } = componentData;
+    const realComponentName = normalizeComponentName(name);
 
-    if (!isComponentAlreadyImported(name)) {
-      isComponentAutoImport(name) && autoImportComponent(name);
+    if (!isComponentAlreadyImported(realComponentName)) {
       newTemplate = componentData.before + componentData.after;
 
-      continue;
+      if (isComponentAutoImport(realComponentName)) {
+        autoImportComponent(realComponentName);
+        continue;
+      }
+
+      throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} The component "${realComponentName}" was not created!`;
     }
 
-    const [componentThis, result] = runComponentFn(name, children, parent);
+    const componentFn = getComponentFn(realComponentName) as ComponentFn;
+    const componentThis = ComponentThisFactory(realComponentName, parent);
 
-    if (!componentThis) continue;
+    componentThis.children = children;
+
+    if (parent) assignPropsToComponentChild(componentThis, name, parent);
+
+    const result = componentFn(componentThis);
 
     const componentManager = new ComponentManager(componentThis, result);
 
