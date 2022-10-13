@@ -809,20 +809,7 @@ autoImportComponents({
 });
 ```
 
-```javascript
-import { autoImportComponents } from "bemtevi";
-
-autoImportComponents({
-  Counter() {
-    import("./components/Counter");
-  },
-  Message() {
-    import("./components/Message");
-  },
-});
-```
-
-O Bemtevi usará a função de importação de cada componente quando for utilizado em qualquer template, porém, irá ignorar o componente até o momento em que estiver disponível, ou seja, o template que desejar o componente que ainda não foi baixado será renderizado normalmente apenas ignorando o este componente.
+A Bemtevi usará a função de importação de cada componente quando for utilizado em qualquer template, porém, irá ignorar o componente até o momento em que estiver disponível, ou seja, o template que desejar o componente que ainda não foi baixado será renderizado normalmente apenas ignorando o este componente.
 
 ```javascript
 import { _ } from "bemtevi";
