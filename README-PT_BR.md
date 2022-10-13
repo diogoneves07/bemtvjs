@@ -207,22 +207,22 @@ const btn = `button[class="hello" font-family:'Courier New'; ~ Click me!]`;
 
 Alguns caracteres devem ser escapados para serem usados ​​sem que a Brackethtml os interprete: `~`, `[` e `]`.
 
-Para escapá-los basta envolvê-los entre chaves "{}":
+Para escapá-los basta envolvê-los entre parênteses "()":
 
 ```javascript
-const btn = `button[Click {~} me!]`;
+const btn = `button[Click (~) me!]`;
 ```
 
 ```javascript
-const btn = `button[Click {[} me!]`;
+const btn = `button[Click ([) me!]`;
 ```
 
 ```javascript
-const btn = `button[Click {]} me!]`;
+const btn = `button[Click (]) me!]`;
 ```
 
 ```javascript
-const btn = `button[Click {[]} me!]`;
+const btn = `button[Click ([]) me!]`;
 ```
 
 > A partir de agora você já consegue interpretar e usar a Brackethtml. Esperamos que sua produtividade aumente consideravelmente.
