@@ -1,5 +1,4 @@
 import ComponentManager from "./component-manager";
-import { applyLastCSSCreated } from "./css-template";
 import { ALL_COMPONENTS_MANAGER } from "./components-manager-nodes";
 import updateUIWithNewTemplate from "./update-ui-with-new-template";
 import deleteComponentManager from "./delete-component-manager";
@@ -7,6 +6,7 @@ import {
   dispatchUnmountedLifeCycle,
   isMounted,
 } from "./work-with-components-this";
+import { BRACKETHTML_CSS_IN_JS } from "../brackethtml/globals";
 
 const componentsToDelete: Set<ComponentManager> = new Set();
 
@@ -41,12 +41,14 @@ function shouldComponentBeUnmounted(componentManager: ComponentManager) {
 
       hasChanges = true;
 
+      console.log("m");
+
       updateUIWithNewTemplate(componentManager);
 
       shouldComponentBeUnmounted(componentManager);
     }
 
-    if (hasChanges) applyLastCSSCreated();
+    if (hasChanges) BRACKETHTML_CSS_IN_JS.applyLastCSSCreated();
 
     requestAnimationFrameLoop();
   });

@@ -1,14 +1,15 @@
+import { BEMTEVI_CSS_IN_JS } from "./globals";
 import { ComponentListener } from "./types/listeners";
-import { applyLastCSSCreated, gooberCSS } from "./css-template";
 import { Listeners } from "./types/listeners";
 import insertEventListener from "./insert-event-listener";
 import { css } from "goober";
 
+type CSSInJSParameters = Parameters<typeof BEMTEVI_CSS_IN_JS["gooberCSS"]>;
 interface ManagerElData<E> {
   listeners: Set<ComponentListener>;
   element: E | null;
   CSSClasses: string[];
-  applyCSSWhenElementIsAvallable: Parameters<typeof gooberCSS>[];
+  applyCSSWhenElementIsAvallable: CSSInJSParameters[];
   reapplyCSSClasses: (m: ManagerEl) => void;
   key: string;
 }
@@ -68,9 +69,9 @@ export function getManagerElData(m: ManagerEl) {
   return (m as any).__data as ManagerEl["__data"];
 }
 
-function applyElementCSS(el: Element, args: Parameters<typeof gooberCSS>) {
-  applyLastCSSCreated();
-  const c = gooberCSS(...args);
+function applyElementCSS(el: Element, args: CSSInJSParameters) {
+  BEMTEVI_CSS_IN_JS.applyLastCSSCreated();
+  const c = BEMTEVI_CSS_IN_JS.gooberCSS(...args);
   el.classList.add(c);
 
   return c;

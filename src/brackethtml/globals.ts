@@ -1,3 +1,4 @@
+import { CSSInJS } from "../css-in-js/main";
 export const TEMPLATE_SYMBOLS = {
   leftBracket: "[",
   rightBracket: "]",
@@ -17,3 +18,5 @@ export const TEMPLATE_SYMBOLS_SCAPE: Record<string, string> =
     }),
     {}
   );
+
+export const BRACKETHTML_CSS_IN_JS = new CSSInJS();

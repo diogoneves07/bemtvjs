@@ -1,12 +1,12 @@
 import "./request-animation-frame-loop"; // !important
 
-import { TAG_HOST_NAME } from "./globals";
+import { BEMTEVI_CSS_IN_JS, TAG_HOST_NAME } from "./globals";
 import brackethtmlTranspiler from "../brackethtml/brackethtml-transpiler";
-import { applyLastCSSCreated } from "./css-template";
 import processComponentsInTemplate from "./process-components-in-template";
 import { setComponentManagerNodes } from "./components-manager-nodes";
 import { saveRelativeInstances } from "./component-relative-instances";
 import { dispatchMountedLifeCycle } from "./work-with-components-this";
+import { BRACKETHTML_CSS_IN_JS } from "../brackethtml/globals";
 
 const SIMPLE_DIV = document.createElement("div");
 const SIMPLE_DOCUMENT_FRAGMENT = document.createDocumentFragment();
@@ -52,7 +52,8 @@ export default function render(
 
     SIMPLE_DIV.innerHTML = "";
 
-    applyLastCSSCreated();
+    BRACKETHTML_CSS_IN_JS.applyLastCSSCreated();
+
     for (const c of componentsThis) {
       dispatchMountedLifeCycle(c);
     }

@@ -1,5 +1,5 @@
-import { gooberCSS } from "../bemtevi/css-template";
 import { TagProps } from "./types/template";
+import { BRACKETHTML_CSS_IN_JS } from "./globals";
 
 const reusableObject = {} as TagProps;
 const reusableArray: string[] = [];
@@ -58,7 +58,9 @@ export default function createTagObject(
 
   tagObject.children = children;
   tagObject.attributes = attributes;
-  tagObject.cssClassName = css.replaceAll(/\s/g, "") ? gooberCSS`${css}` : "";
+  tagObject.cssClassName = css.replaceAll(/\s/g, "")
+    ? BRACKETHTML_CSS_IN_JS.gooberCSS`${css}`
+    : "";
   tagObject.css = css;
   return tagObject;
 }
