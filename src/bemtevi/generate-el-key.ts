@@ -1,5 +1,5 @@
-import { LIBRARY_NAME } from "./globals";
 let count = 0;
+
 export const SCAPE_FOR_KEYS: { start: string; end: string } = {
   start: "|~",
   end: "~|",
