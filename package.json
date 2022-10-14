@@ -21,7 +21,8 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "test": "jest"
+    "test": "jest",
+    "commit": "cz"
   },
   "repository": {
     "type": "git",
@@ -29,6 +30,7 @@
   },
   "devDependencies": {
     "@types/jest": "^29.0.0",
+    "cz-conventional-changelog": "^3.3.0",
     "ts-jest": "^28.0.8",
     "ts-node": "^10.9.1",
     "typescript": "^4.6.4",
@@ -36,5 +38,10 @@
   },
   "dependencies": {
     "goober": "^2.1.11"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
