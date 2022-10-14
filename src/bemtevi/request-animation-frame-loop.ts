@@ -41,8 +41,6 @@ function shouldComponentBeUnmounted(componentManager: ComponentManager) {
 
       hasChanges = true;
 
-      console.log("m");
-
       updateUIWithNewTemplate(componentManager);
 
       shouldComponentBeUnmounted(componentManager);

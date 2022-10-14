@@ -54,7 +54,9 @@ export function replaceNodeInComponentManagerNodes(
 
   for (const m of ALL_COMPONENTS_MANAGER) {
     if (!keys.includes(m.key)) continue;
+
     m.nodes = m.nodes.map((n) => (n === oldNode ? newNode : oldNode));
+
     findAndSetComponentThisFirstElement(m);
   }
 }

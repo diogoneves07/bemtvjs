@@ -1,4 +1,4 @@
-import { ALL_ELEMENTS_MANAGER } from "./manager-el";
+import { ALL_ELEMENTS_MANAGER, getManagerElData } from "./manager-el";
 import { KEY_ATTRIBUTE_NAME } from "./globals";
 import {
   appendNodeToComponentManagerNodes,
@@ -32,7 +32,7 @@ function removeDiffNodesAttrs(newNode: Element, oldNode: Element) {
     ) {
       const m = ALL_ELEMENTS_MANAGER.get(oldNode);
       if (m) {
-        (m as any).__reapplyCSSClasses();
+        getManagerElData(m).reapplyCSSClasses();
       }
     }
   }
@@ -79,7 +79,6 @@ export function removeDiffAmoungChildNodes(
         continue;
       }
     }
-
     if (newNode instanceof Text) {
       if (newNode.textContent !== oldNode.textContent) {
         oldNode.textContent = newNode.textContent;

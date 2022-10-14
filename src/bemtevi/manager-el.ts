@@ -10,7 +10,7 @@ interface ManagerElData<E> {
   element: E | null;
   CSSClasses: string[];
   applyCSSWhenElementIsAvallable: CSSInJSParameters[];
-  reapplyCSSClasses: (m: ManagerEl) => void;
+  reapplyCSSClasses: () => void;
   key: string;
 }
 export const ALL_ELEMENTS_MANAGER = new WeakMap<Element, ManagerEl>();
@@ -21,7 +21,7 @@ export class ManagerEl<E = Element> {
     CSSClasses: [],
     applyCSSWhenElementIsAvallable: [],
     element: null,
-    reapplyCSSClasses,
+    reapplyCSSClasses: () => reapplyCSSClasses(this),
     key: "",
   };
 
