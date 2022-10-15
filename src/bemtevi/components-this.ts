@@ -56,22 +56,14 @@ export class ComponentThis {
     return useSharedProp(this, key) as ReturnType;
   }
 
-  defineProps<T extends Record<string, any>>(o: T): string;
-  defineProps<T extends Record<string, any>>(key: string, o: T): string;
-  defineProps<T extends Record<string, any>>(
-    keyOrProps: (string | number) | T,
-    o?: T
-  ) {
-    const isKey = typeof keyOrProps === "string";
-    const props = (isKey ? o : keyOrProps) as Record<string, any>;
-
+  defineProps<T extends Record<string, any>>(props: T) {
     if (!this.__data.propsDefined) this.__data.propsDefined = new Map();
 
-    const key = isKey ? keyOrProps : this.__data.propsDefined.size;
+    const key = this.__data.propsDefined.size.toString();
 
-    this.__data.propsDefined.set(key.toString(), props);
+    this.__data.propsDefined.set(key, props);
 
-    return "_" + key.toString();
+    return "_" + key;
   }
 
   el<E extends Element = Element>(): [
