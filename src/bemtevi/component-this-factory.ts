@@ -26,7 +26,7 @@ export default function ComponentThisFactory(
 
       if (!isEventListener(name)) return;
 
-      const fn = (
+      const newEventListener = (
         ...args: [fn: Function, options: AddEventListenerOptions]
       ) => {
         const listenerObject: ComponentListener = {
@@ -54,9 +54,9 @@ export default function ComponentThisFactory(
         };
       };
 
-      (target as any)[name] = fn;
+      (target as any)[name] = newEventListener;
 
-      return fn;
+      return newEventListener;
     },
   });
   return propxyComponentThis;

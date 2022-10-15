@@ -5,6 +5,7 @@ const RELATIVES_INSTANCES: ComponentManager[][] = [];
 export function saveRelativeInstances(relativeInstances: ComponentManager[]) {
   RELATIVES_INSTANCES.push(relativeInstances);
 }
+
 export function addToRelativeInstances(
   newInstances: ComponentManager | ComponentManager[],
   relative: ComponentManager
