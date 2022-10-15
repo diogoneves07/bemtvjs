@@ -37,9 +37,21 @@
         float: left;
       }
     </style>
-    <title>Vite + TS</title>
+    <title>Bemtevi debug</title>
   </head>
   <body>
-    <script type="module" src="index-for-debug.ts"></script>
+    <script type="module">
+      import { _ } from "./src/main";
+
+      _("Counter", ({ click$ }) => {
+        let count = 0;
+
+        click$(() => count++);
+
+        return () => `button[ color:red; ~ Value: strong[${count}]]`;
+      });
+
+      _("App", () => `Counter[]`).render();
+    </script>
   </body>
 </html>
