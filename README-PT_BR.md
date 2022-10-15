@@ -54,7 +54,7 @@ _("Counter", ({ click$ }) => {
     - [Verificando componentes disponíveis](#verificando-componentes-disponíveis)
     - [Props](#props)
     - [Filhos do componente](#filhos-do-componente)
-    - [Componentes sem e com estado](#componentes-com-e-sem-estado)
+    - [Componentes com e sem estado](#componentes-com-e-sem-estado)
       - [Com estado](#com-estado)
       - [Sem estado](#sem-estado)
     - [Compartilhando dados entre componentes](#compartilhando-dados-entre-componentes)
