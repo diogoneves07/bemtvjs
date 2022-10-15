@@ -30,9 +30,11 @@ export default function render(
     for (const key of Object.keys(keysAndNodes)) {
       setComponentManagerNodes(key, keysAndNodes[key]);
     }
+
     for (const node of nodes) {
       parent.appendChild(node);
     }
+
     BRACKETHTML_CSS_IN_JS.applyLastCSSCreated();
 
     for (const c of componentsThis) {

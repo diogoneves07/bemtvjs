@@ -13,12 +13,12 @@ const componentsToDelete: Set<ComponentManager> = new Set();
 function shouldComponentBeUnmounted(componentManager: ComponentManager) {
   const nodes = componentManager.nodes;
 
-  if (isMounted(componentManager.componentThis) && !nodes.length) {
-    dispatchUnmountedLifeCycle(componentManager.componentThis);
-    componentsToDelete.add(componentManager);
-    return true;
-  }
-  return false;
+  if (!isMounted(componentManager.componentThis) || nodes.length) return false;
+
+  dispatchUnmountedLifeCycle(componentManager.componentThis);
+  componentsToDelete.add(componentManager);
+
+  return true;
 }
 
 (function requestAnimationFrameLoop() {
@@ -32,6 +32,7 @@ function shouldComponentBeUnmounted(componentManager: ComponentManager) {
         shouldComponentBeUnmounted(componentManager);
         continue;
       }
+
       const nodes = componentManager.nodes;
 
       if (!nodes.length || !nodes[0].parentElement?.isConnected) {

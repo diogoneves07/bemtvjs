@@ -7,10 +7,11 @@ import {
 } from "./components-manager-nodes";
 import { getManagerElData } from "./work-with-manger-el";
 
-function removeDiffNodesAttrs(newNode: Element, oldNode: Element) {
+function removeDiffBetweenNodesAttrs(newNode: Element, oldNode: Element) {
   const attrsLength = newNode.attributes.length;
   for (let attrIndex = 0; attrIndex < attrsLength; attrIndex++) {
     const newAttr = newNode.attributes.item(attrIndex);
+
     if (!newAttr) continue;
 
     const attrName = newAttr.name.toLowerCase();
@@ -27,15 +28,14 @@ function removeDiffNodesAttrs(newNode: Element, oldNode: Element) {
       oldNode.setAttribute(attrName, newAttr.value);
     }
 
-    if (
-      newNode.hasAttribute(KEY_ATTRIBUTE_NAME) &&
-      (attrName === "class" || attrName === "classname")
-    ) {
-      const m = ALL_ELEMENTS_MANAGER.get(oldNode);
-      if (m) {
-        getManagerElData(m).reapplyCSSClasses();
-      }
-    }
+    if (!newNode.hasAttribute(KEY_ATTRIBUTE_NAME)) continue;
+    if (!(attrName === "class" || attrName === "classname")) continue;
+
+    const m = ALL_ELEMENTS_MANAGER.get(oldNode);
+
+    if (!m) continue;
+
+    getManagerElData(m).reapplyCSSClasses();
   }
 }
 export function removeDiffAmoungChildNodes(
@@ -96,7 +96,7 @@ export function removeDiffAmoungChildNodes(
       oldNode.textContent = newNode.textContent;
     }
 
-    removeDiffNodesAttrs(newNode, oldNode as Element);
+    removeDiffBetweenNodesAttrs(newNode, oldNode as Element);
 
     if (!newNode.childNodes[0]) continue;
 

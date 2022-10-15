@@ -11,11 +11,11 @@ type UpdatedTemplateObject = {
 export default function processUpdatedTemplate(
   componentManager: ComponentManager
 ): UpdatedTemplateObject {
-  let template = componentManager.getCurrentTemplateWithHost();
-  let relativeInstances = getRelativeInstances(componentManager)?.slice();
-
+  const relativeInstances = getRelativeInstances(componentManager)?.slice();
   const newComponentsManager: ComponentManager[] = [];
-  let componentsManagerUpdated: ComponentManager[] = [];
+  const componentsManagerUpdated: ComponentManager[] = [];
+
+  let template = componentManager.getCurrentTemplateWithHost();
 
   if (!relativeInstances)
     return { template, newComponentsManager, componentsManagerUpdated };
