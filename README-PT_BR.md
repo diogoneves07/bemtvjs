@@ -52,7 +52,7 @@ _("Counter", ({ click$ }) => {
     - [Renderizando um Componente](#renderizando-um-componente)
     - [Compondo Componentes](#compondo-componentes)
     - [Verificando componentes disponíveis](#verificando-componentes-disponíveis)
-    - [Props](props)
+    - [Props](#props)
     - [Filhos do componente](#filhos-do-componente)
     - [Componentes sem e com estado](#componentes-com-e-sem-estado)
       - [Com estado](#com-estado)
