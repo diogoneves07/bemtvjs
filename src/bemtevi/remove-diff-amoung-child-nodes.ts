@@ -1,10 +1,11 @@
-import { ALL_ELEMENTS_MANAGER, getManagerElData } from "./manager-el";
+import { ALL_ELEMENTS_MANAGER } from "./manager-el";
 import { KEY_ATTRIBUTE_NAME } from "./globals";
 import {
   appendNodeToComponentManagerNodes,
   removeNodeFromComponentManagerNodes,
   replaceNodeInComponentManagerNodes,
 } from "./components-manager-nodes";
+import { getManagerElData } from "./work-with-manger-el";
 
 function removeDiffNodesAttrs(newNode: Element, oldNode: Element) {
   const attrsLength = newNode.attributes.length;

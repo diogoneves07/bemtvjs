@@ -1,7 +1,8 @@
 import { ComponentListener } from "./types/listeners";
 import insertEventListener from "./insert-event-listener";
 import isEventListener from "./is-event-listener";
-import { getManagerElData, ManagerEl } from "./manager-el";
+import { ManagerEl } from "./manager-el";
+import { getManagerElData } from "./work-with-manger-el";
 
 export function ManagerElFactory<E extends Element = Element>(key: string) {
   const managerEl = new ManagerEl<E>(key);
@@ -12,7 +13,7 @@ export function ManagerElFactory<E extends Element = Element>(key: string) {
       if (name in target) return (target as any)[name];
       if (typeof name !== "string" || !isEventListener(name)) return false;
 
-      const fn = (
+      const newEventListener = (
         ...args: [fn: Function, options: AddEventListenerOptions]
       ) => {
         const listenerObject: ComponentListener = {
@@ -34,8 +35,8 @@ export function ManagerElFactory<E extends Element = Element>(key: string) {
           listenerObject.removeListener();
         };
       };
-      (target as any)[name] = fn;
-      return fn;
+      (target as any)[name] = newEventListener;
+      return newEventListener;
     },
   });
 }

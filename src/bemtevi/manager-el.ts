@@ -3,9 +3,10 @@ import { ComponentListener } from "./types/listeners";
 import { Listeners } from "./types/listeners";
 import insertEventListener from "./insert-event-listener";
 import { css } from "goober";
+import { applyElementCSS, reapplyCSSClasses } from "./work-with-manger-el";
 
 type CSSInJSParameters = Parameters<typeof BEMTEVI_CSS_IN_JS["gooberCSS"]>;
-interface ManagerElData<E> {
+export interface ManagerElData<E> {
   listeners: Set<ComponentListener>;
   element: E | null;
   CSSClasses: string[];
@@ -13,8 +14,10 @@ interface ManagerElData<E> {
   reapplyCSSClasses: () => void;
   key: string;
 }
+
 export const ALL_ELEMENTS_MANAGER = new WeakMap<Element, ManagerEl>();
 export interface ManagerEl<E extends Element = Element> extends Listeners {}
+
 export class ManagerEl<E = Element> {
   protected readonly __data: ManagerElData<E> = {
     listeners: new Set(),
@@ -62,25 +65,5 @@ export class ManagerEl<E = Element> {
     applyElementCSS(element, args);
 
     return this;
-  }
-}
-
-export function getManagerElData(m: ManagerEl) {
-  return (m as any).__data as ManagerEl["__data"];
-}
-
-function applyElementCSS(el: Element, args: CSSInJSParameters) {
-  BEMTEVI_CSS_IN_JS.applyLastCSSCreated();
-  const c = BEMTEVI_CSS_IN_JS.gooberCSS(...args);
-  el.classList.add(c);
-
-  return c;
-}
-function reapplyCSSClasses(m: ManagerEl) {
-  const element = m.it;
-
-  if (!element) return;
-  for (const c of getManagerElData(m).CSSClasses) {
-    element.classList.add(c);
   }
 }
