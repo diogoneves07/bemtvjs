@@ -2,7 +2,7 @@
   <img  src='https://github.com/diogoneves07/bentivejs/blob/main/assets/bemtv-logo.png'  alt='Bemtv logo'>
 </p>
 
-**Bemtv**(Abbreviation of the bird's name in [Bem-te-vi](https://pt.wikipedia.org/wiki/Bem-te-vi)) is a JavaScript library that brings a new approach to creating interactive UIs.
+**Bemtv**(Abbreviation of the bird's name [Bem-te-vi](https://pt.wikipedia.org/wiki/Bem-te-vi)) is a JavaScript library that brings a new approach to creating interactive UIs.
 
 Basically, it's the combination of
 [Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy),
