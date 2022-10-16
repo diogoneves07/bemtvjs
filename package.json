@@ -1,7 +1,7 @@
 {
   "name": "bemtevi",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
   "license": "MIT",
   "types": "./types/main.d.ts",
@@ -10,10 +10,10 @@
     "types"
   ],
   "main": "./dist/bemtevi.umd.cjs",
-  "module": "./dist/bemtevi.js",
+  "module": "./dist/bemtevi.es.js",
   "exports": {
     ".": {
-      "import": "./dist/bemtevi.js",
+      "import": "./dist/bemtevi.es.js",
       "require": "./dist/bemtevi.umd.cjs"
     }
   },
