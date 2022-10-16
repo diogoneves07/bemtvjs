@@ -43,8 +43,6 @@ _("Counter", ({ click$ }) => {
 
 > **Please, if you liked the project, don't leave without leaving your star! it encourages us to keep developing.**
 
-> **Attention:** The project is in the initial phase and we haven't released a package yet, it will soon be available for you to use
-
 <hr />
 
 <br>

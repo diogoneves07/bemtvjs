@@ -43,8 +43,6 @@ _("Counter", ({ click$ }) => {
 
 > **Por favor, se você gostou do projeto, não vá embora sem deixar sua estrela! Ela nos encoraja a continuar desenvolvendo.**
 
-> **Atenção**: O projeto está em fase inicial e ainda não lançamos um pacote, em breve estará disponível para você usar!
-
 <hr />
 
 <br>

@@ -1,9 +1,21 @@
 {
   "name": "bemtevi",
-  "private": true,
   "version": "0.1.0",
   "type": "module",
   "license": "MIT",
+  "author": "Diogo Neves",
+  "description": "Minimalist and lightweight UI library, even with its own markup language and a CSS-In-JS library built into the template, plus a powerful template reactivity system.",
+  "keywords": [
+    "frontend",
+    "UI",
+    "reactive",
+    "declarative",
+    "components",
+    "lightweight",
+    "markup-language",
+    "CSS-In-JS",
+    "bemtevi"
+  ],
   "types": "./types/main.d.ts",
   "files": [
     "dist",
