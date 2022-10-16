@@ -47,7 +47,9 @@ _("Counter", ({ click$ }) => {
 
 <hr />
 
-## Índice
+<br>
+<details>
+  <summary><h2>Índice</h2></summary>
 
 - [Instalação](#instalação)
 - [Funcionamento(Sob o capô)](#funcionamentosob-o-capô)
@@ -83,6 +85,9 @@ _("Counter", ({ click$ }) => {
   - [Dividindo o Código (Code-Splitting)](#dividindo-o-código-code-splitting)
   - [Usando fallback(Plano B)](#usando-fallbackplano-b)
 - [Fechamento](#fechamento)
+
+</details>
+<br>
 
 ## Instalação
 

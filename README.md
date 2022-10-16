@@ -47,7 +47,9 @@ _("Counter", ({ click$ }) => {
 
 <hr />
 
-## Table of contents
+<br>
+<details>
+  <summary><h2>Table of contents</h2></summary>
 
 - [Installation](#installation)
 - [Behavior(Under the hood)](#behaviorunder-the-hood)
@@ -83,6 +85,9 @@ _("Counter", ({ click$ }) => {
   - [Code-Splitting](#code-splitting)
   - [Using fallback](#using-fallback)
 - [And That’s It](#and-thats-it)
+
+</details>
+<br>
 
 ## Installation
 
