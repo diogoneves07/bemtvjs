@@ -45,6 +45,9 @@ export class ManagerEl<E = Element> {
     this.__data.element = v;
   }
 
+  /**
+   * The real DOM element.
+   */
   public get it() {
     return this.__data.element;
   }
@@ -55,6 +58,9 @@ export class ManagerEl<E = Element> {
     return this;
   }
 
+  /**
+   * Allows to apply style to element.
+   */
   css(...args: Parameters<typeof css>) {
     const element = this.it;
 

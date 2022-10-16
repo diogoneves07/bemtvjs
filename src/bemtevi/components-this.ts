@@ -32,10 +32,14 @@ export class ComponentThis {
     parent: null,
   };
 
+  /** The component properties */
   readonly props: Props = {};
+  /** The component properties */
   readonly p: Props = this.props;
+  /** The component name */
   readonly name: string;
 
+  /** The component children */
   children: string = "";
 
   constructor(name: string, parent?: ComponentThis) {
@@ -44,18 +48,46 @@ export class ComponentThis {
     return this;
   }
 
+  /**
+   * Shares the data with itself(this component) and everyone below it.
+   *
+   * @param o
+   * An object.
+   */
   share<T extends Record<string, any>>(o: T) {
     Object.assign(this.__data.sharedData, o);
   }
 
+  /**
+   * Updates the values ​​of properties that have been shared.
+   *
+   * @param o
+   *  An object.
+   */
   reshare<T extends Record<string, any>>(o: T) {
     reshareProps(this, o);
   }
 
+  /**
+   * Allows you to use properties that have been shared.
+   * @param key
+   * The property name.
+   *
+   * @returns
+   * The property value or undefined.
+   */
   use<ReturnType = any>(key: string) {
     return useSharedProp(this, key) as ReturnType;
   }
 
+  /**
+   * @param props
+   * An object.
+   *
+   * @returns
+   * A key that can be used before the component's opening square bracket, so the component will
+   * receive the declared props
+   */
   defineProps<T extends Record<string, any>>(props: T) {
     if (!this.__data.propsDefined) this.__data.propsDefined = new Map();
 
@@ -66,11 +98,26 @@ export class ComponentThis {
     return "_" + key;
   }
 
+  /**
+   * Creates an instance to manage a real DOM element.
+   *
+   * @returns
+   * The instance to manage the real DOM element;
+   */
   el<E extends Element = Element>(): [
     managerEl: ReturnType<typeof ManagerElFactory<E>>,
     key: string
   ];
 
+  /**
+   * Creates an instance to manage a real DOM element.
+   *
+   * @param selectorOrElement
+   * The element of instance
+   *
+   * @returns
+   * The instance to manage the real DOM element;
+   */
   el<E extends Element = Element>(
     selectorOrElement?: string | Element
   ): ReturnType<typeof ManagerElFactory<E>>;
@@ -104,17 +151,37 @@ export class ComponentThis {
     return managerEl;
   }
 
+  /**
+   * Calls(only once) the callback after template elements are added to the DOM:
+   *
+   * @param fn
+   * The callback
+   */
   onMount(fn: () => void) {
     this.__data.mountedFns.add(fn);
     return this;
   }
 
+  /**
+   * Calls(only once) the callback whenever the template changes
+   * and the changes are applied to the DOM:
+   *
+   * @param fn
+   * The callback
+   */
   onUnmount(fn: () => void) {
     if (!this.__data.unmountedFns) this.__data.unmountedFns = new Set();
     this.__data.unmountedFns.add(fn);
     return this;
   }
 
+  /**
+   * Calls the callback after all temĺate elements have been removed from the DOM
+   * and component instance will be destroyed.
+   *
+   * @param fn
+   * The callback
+   */
   onUpdate(fn: () => void) {
     this.__data.updatedFns.add(fn);
     return this;

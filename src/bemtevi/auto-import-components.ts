@@ -21,6 +21,14 @@ export function autoImportComponent(name: string) {
   importComponents.set(name, true);
 }
 
+/**
+ * Automates the dynamic import process of components.
+ *
+ * @param components
+ *
+ * An object where the name of the properties must be the name of the components and their values
+ * ​​must be a function that imports the component using dynamic import.
+ */
 export function autoImportComponents(
   components: Record<string, AutoImportCallback>
 ) {

@@ -7,6 +7,12 @@ export default class ComponentInstance {
     this.name = name;
   }
 
+  /**
+   * Renders the component somewhere on the page.
+   *
+   * @param selectorOrElement
+   * The element to insert the nodes
+   */
   render(selectorOrElement?: Element | string) {
     render(this.name + "[]", selectorOrElement);
     return this;

@@ -8,6 +8,14 @@ import { dispatchMountedLifeCycle } from "./work-with-components-this";
 import { BRACKETHTML_CSS_IN_JS } from "../brackethtml/globals";
 import getPossibleNewNodes from "./get-possible-new-nodes";
 
+/**
+ * Renders the template somewhere on the page.
+ *
+ * @param template
+ * A template.
+ * @param insert
+ * The element to insert the nodes
+ */
 export default function render(
   template: string,
   insert: string | Node = document.body

@@ -4,6 +4,17 @@ import normalizeComponentName from "./normalize-component-name";
 
 const CACHE: Map<string, true> = new Map();
 
+/**
+ *
+ * @param component
+ * The component and its children
+ *
+ * @param alternative
+ * The alternative if the component is not available
+ *
+ * @returns
+ * The component if available or the second argument
+ */
 export function matchComponent(
   component: `${string}[${string}]`,
   alternative: string = ""
