@@ -91,7 +91,7 @@ _("Counter", ({ click$ }) => {
 
 ```bash
 
-npm i bemtevi
+npm i bemtv
 
 ```
 
