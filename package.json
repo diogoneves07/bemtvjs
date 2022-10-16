@@ -14,19 +14,19 @@
     "lightweight",
     "markup-language",
     "CSS-In-JS",
-    "bemtevi"
+    "bemtv"
   ],
   "types": "./types/main.d.ts",
   "files": [
     "dist",
     "types"
   ],
-  "main": "./dist/bemtevi.umd.cjs",
-  "module": "./dist/bemtevi.es.js",
+  "main": "./dist/bemtv.umd.cjs",
+  "module": "./dist/bemtv.es.js",
   "exports": {
     ".": {
-      "import": "./dist/bemtevi.es.js",
-      "require": "./dist/bemtevi.umd.cjs"
+      "import": "./dist/bemtv.es.js",
+      "require": "./dist/bemtv.umd.cjs"
     }
   },
   "scripts": {
@@ -38,7 +38,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/diogoneves07/bemtevijs.git"
+    "url": "https://github.com/diogoneves07/bemtvjs.git"
   },
   "devDependencies": {
     "@types/jest": "^29.0.0",

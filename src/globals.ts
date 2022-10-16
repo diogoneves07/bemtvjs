@@ -1,1 +1,1 @@
-export const LIBRARY_NAME_IN_ERRORS_MESSAGE = "Bemtevi:";
+export const LIBRARY_NAME_IN_ERRORS_MESSAGE = "Bemtv:";

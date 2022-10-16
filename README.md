@@ -1,8 +1,8 @@
 <p align='center'>
-  <img  src='https://github.com/diogoneves07/bentivejs/blob/main/assets/bemtevi-logo.png'  alt='Bemtevi logo'>
+  <img  src='https://github.com/diogoneves07/bentivejs/blob/main/assets/bemtv-logo.png'  alt='Bemtv logo'>
 </p>
 
-Bemtevi is a JavaScript library that brings a new approach to creating interactive UIs.
+Bemtv(Abbreviation of the bird's name in [Bem-te-vi](https://pt.wikipedia.org/wiki/Bem-te-vi)) is a JavaScript library that brings a new approach to creating interactive UIs.
 
 Basically, it's the combination of
 [Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy),
@@ -11,7 +11,7 @@ added to syntactic sugars
 and orchestrated “automagically” by a
 [requestAnimationFrame](https://developer.mozilla.org/en-US/docs/Web/API/Window/requestAnimationFrame) loop.
 
-## Why Bemtevi?
+## Why Bemtv?
 
 Slightly opinionated, minimalistic, lightweight (**gzip: 6.5 KiB**) even with a markup language
 and a CSS-in-JS library **integrated into the template**,
@@ -21,14 +21,14 @@ allows effortless reactivity.
 Currently, the main objective is to be a tool specialized in the development of **small web applications**,
 allowing the developer to use a great syntax,
 direct and that can be learned in a few minutes rather than hours,
-think about: “Just add Bemtevi to your index.html and have fun building your application”.
+think about: “Just add Bemtv to your index.html and have fun building your application”.
 
 ## A brief look
 
 **Counter** component:
 
 ```javascript
-import { _ } from "bemtevi";
+import { _ } from "bemtv";
 
 _("Counter", ({ click$ }) => {
   let count = 0;
@@ -79,7 +79,7 @@ _("Counter", ({ click$ }) => {
     - [onMount](#onmount)
     - [onUpdate](#onupdate)
     - [onUnmount](#onunmount)
-  - [Bootstrapping a Bemtevi App](#bootstrapping-a-bemtevi-app)
+  - [Bootstrapping a Bemtv App](#bootstrapping-a-bemtv-app)
   - [Code-Splitting](#code-splitting)
   - [Using fallback](#using-fallback)
 - [And That’s It](#and-thats-it)
@@ -100,7 +100,7 @@ npm i bemtv
 The approach used to create components differs from the conventional one, we basically use the power of [Closures](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures) and orchestrate the calls with a [requestAnimationFrame](https://developer.mozilla.org/en-US/docs/Web/API/Window/requestAnimationFrame) loop:
 
 ```javascript
-import { _ } from "bemtevi";
+import { _ } from "bemtv";
 
 _("Counter", () => {
   let count = 0;
@@ -117,7 +117,7 @@ In the example above, notice that the `templateCreator()` function
 is a **Closure**, which means it has access to the function scope external to it.
 With that, whenever it is called it will return the _“Template string”_ with the most recent value of the variable `count`.
 
-After creating the component, Bemtevi starts calling the `templateCreator()` function every time before the next browser repaint and compares the _“Template string”_ with its previous value to determine if the template has changed.
+After creating the component, Bemtv starts calling the `templateCreator()` function every time before the next browser repaint and compares the _“Template string”_ with its previous value to determine if the template has changed.
 
 At first, we might think that this will overload the browser, however, there are best practices that we should follow to avoid this:
 
@@ -129,7 +129,7 @@ By following these recommendations, your application will not be overloaded.
 
 ## Documentation
 
-Bemtevi strives to be minimalist and powerful,
+Bemtv strives to be minimalist and powerful,
 the documentation is small enough to fit in this README,
 but full of features like its own markup language,
 CSS-in-JS library ([goober](https://github.com/cristianbote/goober)) **integrated into the template**,
@@ -252,7 +252,7 @@ Components let you split the UI into independent, reusable pieces, and think abo
 To create a component we can import the `_` symbol which is an alias of the `Component` function of the same module:
 
 ```javascript
-import { _, Component } from "bemtevi";
+import { _, Component } from "bemtv";
 
 // They work the same way:
 
@@ -277,7 +277,7 @@ It must always start with an uppercase character (CamelCase) and accepts all alp
 Component names act as a key to access their functions and therefore must be unique, to avoid conflicts you can use the `:` symbol to indicate a component that is related to something:
 
 ```javascript
-import { _, Component } from "bemtevi";
+import { _, Component } from "bemtv";
 
 _("Jquery:Ajax", (self) => console.log(self.name));
 // OR
@@ -297,7 +297,7 @@ It must always return a `string` or a function that returns a `string`.
 This function will get the component instance as its first and only argument.
 
 ```javascript
-import { _, Component } from "bemtevi";
+import { _, Component } from "bemtv";
 
 _("Counter", (componentInstance) => console.log(componentInstance));
 ```
@@ -307,7 +307,7 @@ _("Counter", (componentInstance) => console.log(componentInstance));
 After declaring the component, the returned instance has a `render()` method that can be called to render the component somewhere on the page:
 
 ```javascript
-import { _ } from "bemtevi";
+import { _ } from "bemtv";
 
 _("Counter", () => `h1[Hello world!]`).render();
 ```
@@ -317,7 +317,7 @@ This method optionally accepts an argument that indicates an element or a select
 We can also import the `render()` function which works in a similar way:
 
 ```javascript
-import { _, render } from "bemtevi";
+import { _, render } from "bemtv";
 
 _("Counter", () => `h1[Hello world!]`);
 
@@ -333,7 +333,7 @@ Components can refer to other components in their output. This lets us use the s
 For example, we can create an App component that renders `Welcome` many times:
 
 ```javascript
-import { _, render } from "bemtevi";
+import { _, render } from "bemtv";
 
 _("Welcome", () => `h1[Hello world!] br[]`);
 
@@ -347,7 +347,7 @@ render("App", "#app");
 To check if a component is available, we can use the `hasComponent()` method which accepts an argument that is the name of the component:
 
 ```javascript
-import { hasComponent } from "bemtevi";
+import { hasComponent } from "bemtv";
 
 if (hasComponent("App")) {
   //...
@@ -363,7 +363,7 @@ Normally in other libraries and frameworks props are passed as attributes of the
 to pass props to a component, we use the `defineProps()` method which is available in the component instance:
 
 ```javascript
-import { _, render } from "bemtevi";
+import { _, render } from "bemtv";
 
 _("App", ({ defineProps }) => {
   const key = defineProps({ message });
@@ -375,7 +375,7 @@ _("App", ({ defineProps }) => {
 The `defineProps()` method accepts an object as an argument and returns a key that can be used before the component's opening square bracket, so the component will receive the declared props:
 
 ```javascript
-import { _, render } from "bemtevi";
+import { _, render } from "bemtv";
 
 _("Message", ({ props }) => {
   const { message } = props;
@@ -387,7 +387,7 @@ _("Message", ({ props }) => {
 We could also use the `p` property which is an alias of `props`:
 
 ```javascript
-import { _, render } from "bemtevi";
+import { _, render } from "bemtv";
 
 _("Message", ({ p }) => {
   const { message } = p;
@@ -403,7 +403,7 @@ Components can also group children, but the parent component must decide whether
 The component can access its children via the `children` property which will always be a `string`:
 
 ```javascript
-import { _, render } from "bemtevi";
+import { _, render } from "bemtv";
 
 _("Message", ({ children }) => `h1[${children}]`);
 
@@ -425,7 +425,7 @@ There is a distinction between stateful and stateless components:
 Stateful components are those that return a function because their template is mutable:
 
 ```javascript
-import { _, render } from "bemtevi";
+import { _, render } from "bemtv";
 
 _("Counter", () => {
   let count = 0;
@@ -441,7 +441,7 @@ _("Counter", () => {
 Stateless components are those that return a `string` because their template will never change after being generated:
 
 ```javascript
-import { _, render } from "bemtevi";
+import { _, render } from "bemtv";
 
 _("Welcome", ({ props }) => {
   const { message } = props;
@@ -461,7 +461,7 @@ The Share API provides a way to share data like this between the component above
 To share the data we use the `share()` method which accepts an object with the properties to be shared:
 
 ```javascript
-import { _, render } from "bemtevi";
+import { _, render } from "bemtv";
 
 _("Parent", ({ share }) => {
   share({ message: " Hello world! " });
@@ -475,7 +475,7 @@ _("Parent", ({ share }) => {
 To use the shared properties we use the `use()` method which accepts a `string` which is the name of the property to be used:
 
 ```javascript
-import { _, render } from "bemtevi";
+import { _, render } from "bemtv";
 
 _("Child", ({ use }) => `strong[${use("message")}]`);
 ```
@@ -487,7 +487,7 @@ In some situations we may need the child component to fetch data and update, how
 For this we can use the `share()` method combined with the `reshare()` method which also accepts an object and updates the values ​​that were previously shared:
 
 ```javascript
-import { _, render } from "bemtevi";
+import { _, render } from "bemtv";
 
 _("Message", ({ reshare }) => {
   let message = "";
@@ -529,7 +529,7 @@ The same happens when re-sharing a property, the updated value will be that of t
 First let's declare a Counter component:
 
 ```javascript
-import { _ } from "bemtevi";
+import { _ } from "bemtv";
 
 _("Counter", () => {
   let count = 0;
@@ -545,7 +545,7 @@ _("Counter", () => {
 Note within it the `getCounterValue()` function which, when called, will return the most recent value of the `count` variable, however we need to make it accessible from outside the component, for that we will use the `reshare()` method:
 
 ```javascript
-import { _ } from "bemtevi";
+import { _ } from "bemtv";
 
 _("Counter", ({ reshare }) => {
   let count = 0;
@@ -565,7 +565,7 @@ The `reshare()` method will do the following, if a component above has shared a 
 Next, we'll create a DoubleCounter component that will use the `getCounterValue()` method to access the current value of the counter:
 
 ```javascript
-import { _ } from "bemtevi";
+import { _ } from "bemtv";
 
 _("DoubleCounter", ({ use }) => {
   return () => ` Double value: ${use("getCounterValue")() * 2}`;
@@ -577,7 +577,7 @@ We can make use of the method inside DoubleCounter's template because its call r
 To solve this we have to create a component that is above Counter and DoubleCounter:
 
 ```javascript
-import { _ } from "bemtevi";
+import { _ } from "bemtv";
 
 _("App", () => `Counter[] br[] DoubleCounter[] `).render();
 ```
@@ -585,7 +585,7 @@ _("App", () => `Counter[] br[] DoubleCounter[] `).render();
 The component above the others has another responsibility to share the values, thus setting the default values:
 
 ```javascript
-import { _ } from "bemtevi";
+import { _ } from "bemtv";
 
 _("App", ({ share }) => {
   share({ getCounterValue: () => 0 });
@@ -601,15 +601,15 @@ the components below can access and/or change them.
 
 ### Handling events
 
-Handling events in Bemtevi is very similar to handling events using
+Handling events in Bemtv is very similar to handling events using
 [addEventListener()](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener).
 
 Event handlers can be injected into the component instance as a method and their naming is the same as in `addEventListener()`, however they must end with a `$` symbol.
 
-When injecting event handlers into the component instance, Bemtevi will add them to the first element it finds in the template:
+When injecting event handlers into the component instance, Bemtv will add them to the first element it finds in the template:
 
 ```javascript
-import { _ } from "bemtevi";
+import { _ } from "bemtv";
 
 _("Counter", ({ reshare, click$ }) => {
   let count = 0;
@@ -622,14 +622,14 @@ _("Counter", ({ reshare, click$ }) => {
 
 The accepted arguments also follow those of `addEventListener()`.
 
-Bemtevi will manage the event handlers and if the template changes, if necessary, it can add them again.
+Bemtv will manage the event handlers and if the template changes, if necessary, it can add them again.
 
 ### DOM elements
 
 It may be necessary to access the DOM element, for this we can use the `el()` method, which returns a tuple where the first item is an object and the second is the key that should be applied to the element:
 
 ```javascript
-import { _ } from "bemtevi";
+import { _ } from "bemtv";
 
 _("Counter", ({ el }) => {
   const [btnManager, btnKey] = el();
@@ -643,7 +643,7 @@ The key can be used anywhere inside the tag's square brackets.
 Optionally, the `el()` method accepts an argument that can be a DOM element or a selector (will use [querySelector](https://developer.mozilla.org/pt-BR/docs/Web/API/Document/querySelector) to find the element), then the method will only return one object:
 
 ```javascript
-import { _ } from "bemtevi";
+import { _ } from "bemtv";
 
 _("Counter", ({ el }) => {
   const btnManager = el("#button");
@@ -664,7 +664,7 @@ The `btnManager` contains useful properties and methods for dealing with the DOM
 </dl>
 
 ```javascript
-import { _ } from "bemtevi";
+import { _ } from "bemtv";
 
 _("Counter", ({ el }) => {
   const [btnKey, btnManager] = el();
@@ -684,7 +684,7 @@ _("Counter", ({ el }) => {
 </dl>
 
 ```javascript
-import { _ } from "bemtevi";
+import { _ } from "bemtv";
 
 _("Counter", ({ el }) => {
   const [btnKey, btnManager] = el();
@@ -702,7 +702,7 @@ _("Counter", ({ el }) => {
 As with the component instance, event handlers can be injected into the element instance (`btnManager`) as a method and their naming is the same as used in `addEventListener()`, however they must end with a `$` symbol .
 
 ```javascript
-import { _ } from "bemtevi";
+import { _ } from "bemtv";
 
 _("Counter", ({ el }) => {
   const [btnKey, btnManager] = el();
@@ -718,7 +718,7 @@ _("Counter", ({ el }) => {
 
 ### Lifecycle Hooks
 
-Each instance of the Bemtevi component goes through a series of steps. Along the way, it also runs functions called lifecycle hooks, giving users the opportunity to add their own code at specific stages.
+Each instance of the Bemtv component goes through a series of steps. Along the way, it also runs functions called lifecycle hooks, giving users the opportunity to add their own code at specific stages.
 .
 
 #### onMount
@@ -726,7 +726,7 @@ Each instance of the Bemtevi component goes through a series of steps. Along the
 Called only once after template elements are added to the DOM:
 
 ```javascript
-import { _ } from "bemtevi";
+import { _ } from "bemtv";
 
 _("Counter", ({ onMount }) => {
   onMount(() => console.log("Mounted!"));
@@ -740,7 +740,7 @@ _("Counter", ({ onMount }) => {
 Called whenever the template is changed and the changes are applied to the DOM:
 
 ```javascript
-import { _ } from "bemtevi";
+import { _ } from "bemtv";
 
 _("Counter", ({ onMount }) => {
   let count = 0;
@@ -758,7 +758,7 @@ _("Counter", ({ onMount }) => {
 Called only once after all template elements have been removed from the DOM and component instance will be destroyed:
 
 ```javascript
-import { _ } from "bemtevi";
+import { _ } from "bemtv";
 
 _("Counter", ({ onUnmount }) => {
   onUnmount(() => console.log("Unmounted!"));
@@ -767,9 +767,9 @@ _("Counter", ({ onUnmount }) => {
 }).render();
 ```
 
-### Bootstrapping a Bemtevi App
+### Bootstrapping a Bemtv App
 
-At Bemtevi, components are declared globally and used from their declaration key (the component name), so we can use a component without importing its module as long as it has already been imported at some point in the application.
+At Bemtv, components are declared globally and used from their declaration key (the component name), so we can use a component without importing its module as long as it has already been imported at some point in the application.
 
 To ensure that a component has been imported, we can simply import it into the module where we want to use it:
 
@@ -808,10 +808,10 @@ import "./bootstrap";
 
 To avoid sending components that at first may be unnecessary for the user, we can use [dynamic imports](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import)( dynamic import), which allows us to import a module at any time in our application.
 
-To automate the component import process, Bemtevi offers the `autoImportComponents()` function that accepts an object where the name of the properties must be the name of the components and their values ​​must be a function that imports the component using dynamic import:
+To automate the component import process, Bemtv offers the `autoImportComponents()` function that accepts an object where the name of the properties must be the name of the components and their values ​​must be a function that imports the component using dynamic import:
 
 ```javascript
-import { autoImportComponents } from "bemtevi";
+import { autoImportComponents } from "bemtv";
 
 autoImportComponents({
   Counter() {
@@ -823,10 +823,10 @@ autoImportComponents({
 });
 ```
 
-Bemtevi will import the component as soon as the component is used in a template, however, it will ignore the component until it is available.
+Bemtv will import the component as soon as the component is used in a template, however, it will ignore the component until it is available.
 
 ```javascript
-import { _ } from "bemtevi";
+import { _ } from "bemtv";
 
 _("App", () => () => `A messagem é: Message[]`).render();
 ```
@@ -838,7 +838,7 @@ In the example above, initially the page would display “Message is:”, as the
 The `match()` function can be used to present an alternative while a certain component is not available, it accepts two arguments, the first is the component, if available, is returned as a value, and the second argument that must be a `string` that is only used as a return if the component is not available:
 
 ```javascript
-import { _, match } from "bemtevi";
+import { _, match } from "bemtv";
 
 _("App", () => () => {
   return `

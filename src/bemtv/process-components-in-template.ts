@@ -1,4 +1,4 @@
-import { LIBRARY_NAME_IN_ERRORS_MESSAGE } from "./../globals";
+import { LIBRARY_NAME_IN_ERRORS_MESSAGE } from "../globals";
 import ComponentManager from "./component-manager";
 import { ComponentThis } from "./components-this";
 import { ComponentFn, getComponentFn } from "./components";

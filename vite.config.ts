@@ -5,8 +5,8 @@ export default defineConfig({
   build: {
     lib: {
       entry: path.resolve(__dirname, "src/main.ts"),
-      name: "Bemtevi",
-      fileName: (format) => `bemtevi.${format}.js`,
+      name: "Bemtv",
+      fileName: (format) => `bemtv.${format}.js`,
     },
   },
 });

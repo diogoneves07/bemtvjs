@@ -1,6 +1,6 @@
-export { matchComponent as match } from "./bemtevi/match-component";
-export { autoImportComponents } from "./bemtevi/auto-import-components";
-export type { ManagerEl } from "./bemtevi/manager-el";
-export type { ComponentThis } from "./bemtevi/components-this";
-export { Component, _, hasComponent } from "./bemtevi/components";
-export { default as render } from "./bemtevi/render";
+export { matchComponent as match } from "./bemtv/match-component";
+export { autoImportComponents } from "./bemtv/auto-import-components";
+export type { ManagerEl } from "./bemtv/manager-el";
+export type { ComponentThis } from "./bemtv/components-this";
+export { Component, _, hasComponent } from "./bemtv/components";
+export { default as render } from "./bemtv/render";

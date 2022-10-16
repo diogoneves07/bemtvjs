@@ -1,8 +1,8 @@
 <p align='center'>
-  <img  src='https://github.com/diogoneves07/bentivejs/blob/main/assets/bemtevi-logo.png'  alt='Bemtevi logo'>
+  <img  src='https://github.com/diogoneves07/bentivejs/blob/main/assets/bemtv-logo.png'  alt='Bemtv logo'>
 </p>
 
-Bemtevi é uma biblioteca JavaScript que traz uma nova abordagem para a criação de UIs interativas.
+Bemtv(Abreviação do nome do pássaro em [Bem-te-vi](https://pt.wikipedia.org/wiki/Bem-te-vi)) é uma biblioteca JavaScript que traz uma nova abordagem para a criação de UIs interativas.
 
 Basicamente, é a junção de
 [Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy),
@@ -11,7 +11,7 @@ somados a açúcares sintáticos
 e orquestrados “automagicamente” por um
 [requestAnimationFrame](https://developer.mozilla.org/en-US/docs/Web/API/Window/requestAnimationFrame) loop.
 
-## Por que Bemtevi?
+## Por que Bemtv?
 
 Ligeiramente opinativo, minimalista, leve(**gzip: 6.5 KiB**) mesmo com uma linguagem de marcação
 e uma biblioteca CSS-in-JS **integrada ao template**,
@@ -21,14 +21,14 @@ permite reatividade sem esforço do desenvolvedor.
 Atualmente, o principal objetivo é ser uma ferramenta especializada no desenvolvimento de **pequenas aplicações web**,
 permitindo ao desenvolvedor utilizar uma sintaxe agradável,
 direta e que possa ser aprendida em poucos minutos e não em horas,
-pense em: “Apenas adicionar a Bemtevi ao seu index.html e se divertir construindo sua aplicação”.
+pense em: “Apenas adicionar a Bemtv ao seu index.html e se divertir construindo sua aplicação”.
 
 ## Um breve olhar
 
 Componente **Counter**:
 
 ```javascript
-import { _ } from "bemtevi";
+import { _ } from "bemtv";
 
 _("Counter", ({ click$ }) => {
   let count = 0;
@@ -79,7 +79,7 @@ _("Counter", ({ click$ }) => {
     - [onMount](#onmount)
     - [onUpdate](#onupdate)
     - [onUnmount](#onunmount)
-  - [Inicializando(Bootstrapping) um App Bemtevi](#inicializandobootstrapping-um-app-bemtevi)
+  - [Inicializando(Bootstrapping) um App Bemtv](#inicializandobootstrapping-um-app-bemtv)
   - [Dividindo o Código (Code-Splitting)](#dividindo-o-código-code-splitting)
   - [Usando fallback(Plano B)](#usando-fallbackplano-b)
 - [Fechamento](#fechamento)
@@ -100,7 +100,7 @@ npm i bemtv
 A abordagem usada para criar componentes difere da convencional, basicamente usamos o poder de [Closures](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures) e orquestramos as chamadas com um [requestAnimationFrame](https://developer.mozilla.org/en-US/docs/Web/API/Window/requestAnimationFrame) loop:
 
 ```javascript
-import { _ } from "bemtevi";
+import { _ } from "bemtv";
 
 _("Counter", () => {
   let count = 0;
@@ -117,7 +117,7 @@ No exemplo acima, observe que a função `templateCreator()` ela
 é um **Closure**, o que significa que ela tem acesso ao escopo da função externa a ela.
 Com isso, sempre que for chamada ela retornará a _“Template string”_ com o valor mais recente da variável `count`.
 
-Após criar o componente, Bemtevi começa a chamar a função `templateCreator()` toda vez antes da próxima repaint (repintura) do navegador e compara a _“Template string”_ com o seu valor anterior para determinar se há alteração no template.
+Após criar o componente, Bemtv começa a chamar a função `templateCreator()` toda vez antes da próxima repaint (repintura) do navegador e compara a _“Template string”_ com o seu valor anterior para determinar se há alteração no template.
 
 A princípio, podemos pensar que isso sobrecarregará o navegador, no entanto, existem boas práticas que devemos seguir para evitar isso:
 
@@ -129,7 +129,7 @@ Seguindo essas recomendações, sua aplicação não sofrerá sobrecarga.
 
 ## Documentação
 
-A Bemtevi se esforça para ser minimalista e poderosa,
+A Bemtv se esforça para ser minimalista e poderosa,
 a documentação é pequena o suficiente para caber neste README,
 mas cheia de recursos como sua própria linguagem de marcação,
 biblioteca CSS-in-JS ([goober](https://github.com/cristianbote/goober)) **integrada ao template**,
@@ -251,7 +251,7 @@ Componentes permitem você dividir a UI em partes independentes, reutilizáveis 
 Para criar um componente podemos importar o símbolo `_` que é um alias da função `Component` do mesmo módulo:
 
 ```javascript
-import { _, Component } from "bemtevi";
+import { _, Component } from "bemtv";
 
 // Eles funcionam da mesma maneira:
 
@@ -276,7 +276,7 @@ Deve sempre começar com um caractere maiúsculo (CamelCase) e aceita todos os c
 Os nomes dos componentes funcionam como uma chave para acessar suas funções e, portanto, devem ser únicos, para evitar conflitos você pode usar o símbolo `:` para indicar um componente que esteja relacionado a algo:
 
 ```javascript
-import { _, Component } from "bemtevi";
+import { _, Component } from "bemtv";
 
 _("Jquery:Ajax", (self) => console.log(self.name));
 // ou
@@ -296,7 +296,7 @@ Deve sempre retornar uma `string` ou uma função que retorna uma `string`.
 Esta função terá a instância do componente como seu primeiro e único argumento.
 
 ```javascript
-import { _, Component } from "bemtevi";
+import { _, Component } from "bemtv";
 
 _("Counter", (componentInstance) => console.log(componentInstance));
 ```
@@ -306,7 +306,7 @@ _("Counter", (componentInstance) => console.log(componentInstance));
 Após declarar o componente, a instância retornada possui um método `render()` que pode ser chamado para renderizar o componente em algum lugar da página:
 
 ```javascript
-import { _ } from "bemtevi";
+import { _ } from "bemtv";
 
 _("Counter", () => `h1[Hello world!]`).render();
 ```
@@ -316,7 +316,7 @@ Este método aceita opcionalmente um argumento que indica um elemento ou um sele
 Também podemos importar a função `render()` que funciona de maneira semelhante:
 
 ```javascript
-import { _, render } from "bemtevi";
+import { _, render } from "bemtv";
 
 _("Counter", () => `h1[Hello world!]`);
 
@@ -332,7 +332,7 @@ Componentes podem se referir a outros componentes em seu template. Isso nos perm
 Por exemplo, nós podemos criar um componente App que renderiza Welcome muitas vezes:
 
 ```javascript
-import { _, render } from "bemtevi";
+import { _, render } from "bemtv";
 
 _("Welcome", () => `h1[Hello world!] br[]`);
 
@@ -346,7 +346,7 @@ render("App", "#app");
 Para verificar se um componente está disponível, podemos usar o método `hasComponent()` que aceita uma argumento que é o nome do componente:
 
 ```javascript
-import { hasComponent } from "bemtevi";
+import { hasComponent } from "bemtv";
 
 if (hasComponent("App")) {
   //...
@@ -362,7 +362,7 @@ Normalmente em outras bibliotecas e frameworks props são passados ​​como at
 para passar props para um componente, usamos o método `defineProps()` que está disponível na instância do componente:
 
 ```javascript
-import { _, render } from "bemtevi";
+import { _, render } from "bemtv";
 
 _("App", ({ defineProps }) => {
   const key = defineProps({ message });
@@ -374,7 +374,7 @@ _("App", ({ defineProps }) => {
 O método `defineProps()` recebe um objeto como argumento e retorna uma chave que pode ser usada antes do colchete de abertura do componente, então o componente receberá as props declaradas:
 
 ```javascript
-import { _, render } from "bemtevi";
+import { _, render } from "bemtv";
 
 _("Message", ({ props }) => {
   const { message } = props;
@@ -386,7 +386,7 @@ _("Message", ({ props }) => {
 Também poderíamos usar a propriedade `p` que é um alias de `props`:
 
 ```javascript
-import { _, render } from "bemtevi";
+import { _, render } from "bemtv";
 
 _("Message", ({ p }) => {
   const { message } = p;
@@ -402,7 +402,7 @@ Componentes também podem agrupar filhos, mas cabe ao componente que irá receb�
 O componente pode acessar seus filhos através da propriedade `children` que sempre será uma `string`:
 
 ```javascript
-import { _, render } from "bemtevi";
+import { _, render } from "bemtv";
 
 _("Message", ({ children }) => `h1[${children}]`);
 
@@ -424,7 +424,7 @@ Há uma distinção entre componentes com estado e sem estado:
 Componentes com estado são aqueles que retornam uma função porque seu template é mutável:
 
 ```javascript
-import { _, render } from "bemtevi";
+import { _, render } from "bemtv";
 
 _("Counter", () => {
   let count = 0;
@@ -440,7 +440,7 @@ _("Counter", () => {
 Componentes sem estado são aqueles que retornam uma `string` porque seu template nunca mudará após ser gerado:
 
 ```javascript
-import { _, render } from "bemtevi";
+import { _, render } from "bemtv";
 
 _("Welcome", ({ props }) => {
   const { message } = props;
@@ -460,7 +460,7 @@ A API de compartilhamento fornece uma maneira de compartilhar dados como esses e
 Para compartilhar os dados usamos o método `share()` que aceita um objeto com as propriedades a serem compartilhadas:
 
 ```javascript
-import { _, render } from "bemtevi";
+import { _, render } from "bemtv";
 
 _("Parent", ({ share }) => {
   share({ message: " Hello world! " });
@@ -474,7 +474,7 @@ _("Parent", ({ share }) => {
 Para usar as propriedades compartilhadas usamos o método `use()` que aceita uma `string` que é o nome da propriedade a ser usada:
 
 ```javascript
-import { _, render } from "bemtevi";
+import { _, render } from "bemtv";
 
 _("Child", ({ use }) => `strong[${use("message")}]`);
 ```
@@ -486,7 +486,7 @@ Em algumas situações, podemos precisar que o componente filho busque dados e a
 Para isso podemos usar o método `share()` combinado com o método `reshare()` que também aceita um objeto e atualiza os valores que foram compartilhados anteriormente:
 
 ```javascript
-import { _, render } from "bemtevi";
+import { _, render } from "bemtv";
 
 _("Message", ({ reshare }) => {
   let message = "";
@@ -528,7 +528,7 @@ O mesmo acontece ao re-compartilhar uma propriedade, o valor atualizado será o 
 Primeiro vamos declarar um componente Counter:
 
 ```javascript
-import { _ } from "bemtevi";
+import { _ } from "bemtv";
 
 _("Counter", () => {
   let count = 0;
@@ -544,7 +544,7 @@ _("Counter", () => {
 Observe dentro dele a função `getCounterValue()` que, quando chamada, retornará o valor mais recente da variável `count`, no entanto, precisamos torná-la acessível de fora do componente, para isso usaremos o método `reshare()`:
 
 ```javascript
-import { _ } from "bemtevi";
+import { _ } from "bemtv";
 
 _("Counter", ({ reshare }) => {
   let count = 0;
@@ -564,7 +564,7 @@ O método `reshare()` fará o seguinte, se um componente acima compartilhou uma 
 Em seguida, criaremos um componente DoubleCounter que usará o método `getCounterValue()` para acessar o valor atual do contador:
 
 ```javascript
-import { _ } from "bemtevi";
+import { _ } from "bemtv";
 
 _("DoubleCounter", ({ use }) => {
   return () => ` Double value: ${use("getCounterValue")() * 2}`;
@@ -576,7 +576,7 @@ Podemos fazer uso do método dentro do template de DoubleCounter porque sua cham
 Para resolver isso temos que criar um componente que esteja acima de Counter e DoubleCounter:
 
 ```javascript
-import { _ } from "bemtevi";
+import { _ } from "bemtv";
 
 _("App", () => `Counter[] br[] DoubleCounter[] `).render();
 ```
@@ -584,7 +584,7 @@ _("App", () => `Counter[] br[] DoubleCounter[] `).render();
 O componente acima dos demais tem outra responsabilidade a de compartilhar os valores definindo assim os valores padrão:
 
 ```javascript
-import { _ } from "bemtevi";
+import { _ } from "bemtv";
 
 _("App", ({ share }) => {
   share({ getCounterValue: () => 0 });
@@ -600,15 +600,15 @@ os componentes abaixo podem acessá-las e/ou alterá-las.
 
 ### Manipulando eventos
 
-Manipular eventos em Bemtevi é muito semelhante a manipular eventos usando
+Manipular eventos em Bemtv é muito semelhante a manipular eventos usando
 [addEventListener()](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener).
 
 Os manipuladores de eventos podem ser injetados na instância do componente como um método e sua nomenclatura é a mesma usada em `addEventListener()`, porém, eles devem terminar com um símbolo `$`.
 
-Ao injetar manipuladores de eventos na instância do componente, Bemtevi irá adicioná-los ao primeiro elemento que encontrar no template:
+Ao injetar manipuladores de eventos na instância do componente, Bemtv irá adicioná-los ao primeiro elemento que encontrar no template:
 
 ```javascript
-import { _ } from "bemtevi";
+import { _ } from "bemtv";
 
 _("Counter", ({ reshare, click$ }) => {
   let count = 0;
@@ -621,14 +621,14 @@ _("Counter", ({ reshare, click$ }) => {
 
 Os argumentos recebidos também seguem os de `addEventListener()`.
 
-O Bemtevi gerenciará os manipuladores de eventos e se o template mudar, se necessário, poderá adicioná-los novamente.
+O Bemtv gerenciará os manipuladores de eventos e se o template mudar, se necessário, poderá adicioná-los novamente.
 
 ### Elementos DOM
 
 Pode ser necessário acessar o elemento DOM, para isso podemos utilizar o método `el()`, que retorna uma tupla onde o primeiro item é um objeto e o segundo é a chave que deve ser aplicada ao elemento:
 
 ```javascript
-import { _ } from "bemtevi";
+import { _ } from "bemtv";
 
 _("Counter", ({ el }) => {
   const [btnManager, btnKey] = el();
@@ -642,7 +642,7 @@ A chave pode ser usada em qualquer lugar dentro dos colchetes da tag.
 Opcionalmente, o método `el()` aceita um argumento que pode ser um elemento DOM ou um seletor(usará [querySelector](https://developer.mozilla.org/pt-BR/docs/Web/API/Document/querySelector) para encontrar o elemento), então o método retornará apenas um objeto:
 
 ```javascript
-import { _ } from "bemtevi";
+import { _ } from "bemtv";
 
 _("Counter", ({ el }) => {
   const btnManager = el("#button");
@@ -663,7 +663,7 @@ O `btnManager` contém propriedades e métodos úteis para lidar com o elemento 
 </dl>
 
 ```javascript
-import { _ } from "bemtevi";
+import { _ } from "bemtv";
 
 _("Counter", ({ el }) => {
   const [btnKey, btnManager] = el();
@@ -683,7 +683,7 @@ _("Counter", ({ el }) => {
 </dl>
 
 ```javascript
-import { _ } from "bemtevi";
+import { _ } from "bemtv";
 
 _("Counter", ({ el }) => {
   const [btnKey, btnManager] = el();
@@ -701,7 +701,7 @@ _("Counter", ({ el }) => {
 Assim como na instância do componente, os manipuladores eventos podem ser injetados na instância do elemento(`btnManager`) como um método e sua nomenclatura é a mesma usada em `addEventListener()`, porém, eles devem terminar com um símbolo `$`.
 
 ```javascript
-import { _ } from "bemtevi";
+import { _ } from "bemtv";
 
 _("Counter", ({ el }) => {
   const [btnKey, btnManager] = el();
@@ -717,14 +717,14 @@ _("Counter", ({ el }) => {
 
 ### Ciclo de Vida(Lifecycle) Hooks
 
-Cada instância do componente Bemtevi passa por uma série de etapas como montar o template e atualizar o DOM quando os dados forem alterados. Ao longo do caminho, ela também executa funções chamadas ganchos de ciclo de vida, dando aos usuários a oportunidade de adicionar seu próprio código em estágios específicos.
+Cada instância do componente Bemtv passa por uma série de etapas como montar o template e atualizar o DOM quando os dados forem alterados. Ao longo do caminho, ela também executa funções chamadas ganchos de ciclo de vida, dando aos usuários a oportunidade de adicionar seu próprio código em estágios específicos.
 
 #### onMount
 
 Chamada apenas uma vez depois que os elementos do template são adicionados ao DOM:
 
 ```javascript
-import { _ } from "bemtevi";
+import { _ } from "bemtv";
 
 _("Counter", ({ onMount }) => {
   onMount(() => console.log("Mounted!"));
@@ -738,7 +738,7 @@ _("Counter", ({ onMount }) => {
 Chamada sempre que o template é alterado e as alterações forem aplicadas ao DOM:
 
 ```javascript
-import { _ } from "bemtevi";
+import { _ } from "bemtv";
 
 _("Counter", ({ onMount }) => {
   let count = 0;
@@ -756,7 +756,7 @@ _("Counter", ({ onMount }) => {
 Chamada apenas uma vez depois que todos os elementos do modelo foram removidos do DOM e instância do componente será destruída:
 
 ```javascript
-import { _ } from "bemtevi";
+import { _ } from "bemtv";
 
 _("Counter", ({ onUnmount }) => {
   onUnmount(() => console.log("Unmounted!"));
@@ -765,9 +765,9 @@ _("Counter", ({ onUnmount }) => {
 }).render();
 ```
 
-### Inicializando(Bootstrapping) um App Bemtevi
+### Inicializando(Bootstrapping) um App Bemtv
 
-Na Bemtevi, os componentes são declarados globalmente e usados ​​a partir de sua chave de declaração (o nome do componente), então podemos usar um componente sem importar seu módulo desde que ele já tenha sido importado em algum momento da aplicação.
+Na Bemtv, os componentes são declarados globalmente e usados ​​a partir de sua chave de declaração (o nome do componente), então podemos usar um componente sem importar seu módulo desde que ele já tenha sido importado em algum momento da aplicação.
 
 Para garantir que um componente foi importado, podemos simplesmente importá-lo para o módulo onde queremos usá-lo:
 
@@ -806,10 +806,10 @@ import "./bootstrap";
 
 Para evitar o envio de componentes que a princípio podem ser desnecessários para o usuário, podemos usar [importações dinâmicas](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import)(dynamic import), que nos permite importar um módulo a qualquer momento em nossa aplicação.
 
-Para automatizar o processo de importação de componentes, a Bemtevi oferece a função `autoImportComponents()` que aceita um objeto onde o nome das propriedades deve ser o nome dos componentes e seus valores devem ser uma função que importa o componente usando importação dinâmica:
+Para automatizar o processo de importação de componentes, a Bemtv oferece a função `autoImportComponents()` que aceita um objeto onde o nome das propriedades deve ser o nome dos componentes e seus valores devem ser uma função que importa o componente usando importação dinâmica:
 
 ```javascript
-import { autoImportComponents } from "bemtevi";
+import { autoImportComponents } from "bemtv";
 
 autoImportComponents({
   Counter() {
@@ -821,10 +821,10 @@ autoImportComponents({
 });
 ```
 
-A Bemtevi fará a importação do componente assim que componente for utilizado em um template, porém, irá ignorar o componente até o momento em que estiver disponível.
+A Bemtv fará a importação do componente assim que componente for utilizado em um template, porém, irá ignorar o componente até o momento em que estiver disponível.
 
 ```javascript
-import { _ } from "bemtevi";
+import { _ } from "bemtv";
 
 _("App", () => () => `A messagem é: Message[]`).render();
 ```
@@ -836,7 +836,7 @@ No exemplo acima, inicialmente a página exibiria “A mensagem é:”, pois o c
 A função `match()` pode ser usada para apresentar uma alternativa enquanto um determinado componente não estiver disponível, ela aceita dois argumentos, o primeiro é o componente de interesse que se estiver disponível é retornado como valor, e o segundo argumento que deve ser uma `string` que só é usado como retorno se o componente não estiver disponível:
 
 ```javascript
-import { _, match } from "bemtevi";
+import { _, match } from "bemtv";
 
 _("App", () => () => {
   return `

@@ -7,7 +7,7 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-debug-bemtevi
+debug-bemtv
 
 node_modules
 coverage
