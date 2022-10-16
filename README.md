@@ -249,8 +249,6 @@ const btn = `button[Click ([]) me!]`;
 
 ### Components
 
-.
-
 Components let you split the UI into independent, reusable pieces, and think about each piece in isolation.
 
 To create a component we can import the `_` symbol which is an alias of the `Component` function of the same module:
@@ -759,7 +757,7 @@ _("Counter", ({ onMount }) => {
 
 #### onUnmount
 
-Called only once after all model elements have been removed from the DOM and component instance will be destroyed:
+Called only once after all template elements have been removed from the DOM and component instance will be destroyed:
 
 ```javascript
 import { _ } from "bemtevi";
