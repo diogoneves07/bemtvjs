@@ -1,9 +1,10 @@
 <p align='center'>
-  <img  src='https://github.com/diogoneves07/bentivejs/blob/main/assets/bemtevi-logo.png'  alt='Bemtevi - mascote'>
+  <img  src='https://github.com/diogoneves07/bentivejs/blob/main/assets/bemtevi-logo.png'  alt='Bemtevi logo'>
 </p>
 
-Bemtevi é uma biblioteca JavaScript que traz uma nova abordagem para a criação de UI interativas.
-Em poucas palavras, é a junção de
+Bemtevi é uma biblioteca JavaScript que traz uma nova abordagem para a criação de UIs interativas.
+
+Basicamente, é a junção de
 [Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy),
 [Template literals (Template strings)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals)
 somados a açúcares sintáticos
@@ -38,6 +39,14 @@ _("Counter", ({ click$ }) => {
 }).render();
 ```
 
+<hr />
+
+> **Por favor, se você gostou do projeto, não vá embora sem deixar sua estrela! Ela nos encoraja a continuar desenvolvendo.**
+
+> **Atenção**: O projeto está em fase inicial e ainda não lançamos um pacote, em breve estará disponível para você usar!
+
+<hr />
+
 ## Índice
 
 - [Instalação](#instalação)
@@ -65,8 +74,8 @@ _("Counter", ({ click$ }) => {
       - [Dados entre componentes](#dados-entre-componentesavançado)
   - [Manipulando eventos](#manipulando-eventos)
   - [Elementos DOM](#elementos-dom)
-    - [Eventos do elemento](#eventos-do-elemento)
-  - [Ciclo de Vida(Lifecycle)](#ciclo-de-vidalifecycle)
+    - [Manipulando eventos do elemento](#manipulando-eventos-do-elemento)
+  - [Ciclo de Vida(Lifecycle) Hooks](#ciclo-de-vidalifecycle-hooks)
     - [onMount](#onmount)
     - [onUpdate](#onupdate)
     - [onUnmount](#onunmount)
@@ -133,7 +142,7 @@ Considere esta declaração de variável:
 const btn = `button[Click me!]`;
 ```
 
-Essa sintaxe estranha é uma _`string`_ normal, porém nossa biblioteca a entende e pode converter para HTML, chamamos de “Brackethtml”.
+Essa sintaxe estranha é uma `string` normal, porém nossa biblioteca a entende e pode converter para HTML, chamamos de “Brackethtml”.
 
 O HTML equivalente seria:
 
@@ -148,7 +157,7 @@ O objetivo principal é reduzir a redundância do HTML e ainda ser facilmente co
 Brackethtml suporta HTML normalmente e você pode até misturar os dois se precisar.
 
 Basicamente, nos exemplos anteriores,
-removemos a necessidade de uma tag de fechamento para a tag _button_.
+removemos a necessidade de uma tag de fechamento para a tag `button`.
 
 > Recomendamos que experimente porque é muito semelhante ao HTML e queremos que seja uma característica importante da nossa biblioteca.
 
@@ -194,7 +203,7 @@ const btn = `button[padding:50px; ~]`;
 const btn = `button[data-username = "Bemtive" padding:50px; ~  Hello!]`;
 ```
 
-- Os atributos devem usar apenas aspas duplas ````:
+- Os atributos devem usar apenas aspas duplas `"`:
 
 ```javascript
 const btn = `button[class="hello" ~ Click me!]`;
@@ -609,11 +618,11 @@ _("Counter", ({ reshare, click$ }) => {
 
 Os argumentos recebidos também seguem os de `addEventListener()`.
 
-A Bemtevi gerenciará os manipuladores de eventos em caso de alteração do template, se necessário, poderá adicioná-los novamente.
+O Bemtevi gerenciará os manipuladores de eventos e se o template mudar, se necessário, poderá adicioná-los novamente.
 
 ### Elementos DOM
 
-Pode ser necessário acessar o elemento DOM, para isso podemos utilizar o método `el()`, que retorna uma tupla onde o primeiro item é um objeto e o segundo é a chave que deve ser aplicada ao elemento de interesse:
+Pode ser necessário acessar o elemento DOM, para isso podemos utilizar o método `el()`, que retorna uma tupla onde o primeiro item é um objeto e o segundo é a chave que deve ser aplicada ao elemento:
 
 ```javascript
 import { _ } from "bemtevi";
@@ -684,7 +693,7 @@ _("Counter", ({ el }) => {
 
 > Este método é idêntico ao método [goober - css()](https://goober.js.org/api/css/) (veja mais detalhes na documentação do goober)
 
-#### Eventos do elemento
+#### Manipulando eventos do elemento
 
 Assim como na instância do componente, os manipuladores eventos podem ser injetados na instância do elemento(`btnManager`) como um método e sua nomenclatura é a mesma usada em `addEventListener()`, porém, eles devem terminar com um símbolo `$`.
 
@@ -703,7 +712,7 @@ _("Counter", ({ el }) => {
 }).render();
 ```
 
-### Ciclo de Vida(Lifecycle)
+### Ciclo de Vida(Lifecycle) Hooks
 
 Cada instância do componente Bemtevi passa por uma série de etapas como montar o template e atualizar o DOM quando os dados forem alterados. Ao longo do caminho, ela também executa funções chamadas ganchos de ciclo de vida, dando aos usuários a oportunidade de adicionar seu próprio código em estágios específicos.
 
