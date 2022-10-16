@@ -859,4 +859,4 @@ _("App", () => () => {
 
 Thanks for getting here, if you have any questions, suggestions or want to help the project in other ways, just get in touch, soon news and improvements will come!
 
-Don't forget to give the project your star up, as it encourages us to keep developing, take care see you soon!
+Don't forget to give the project your star up, as it encourages us to keep developing, see you soon!
