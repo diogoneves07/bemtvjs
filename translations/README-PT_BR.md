@@ -13,7 +13,7 @@ e orquestrados “automagicamente” por um
 
 ## Por que Bemtv?
 
-Ligeiramente opinativo, minimalista, leve(**gzip: 6.5 KiB**) mesmo com uma linguagem de marcação
+Ligeiramente opinativo, minimalista, leve(<img alt="npm bundle size" height='20px' padding="0" src="https://img.shields.io/bundlephobia/minzip/bemtv?style=flat-square">) mesmo com uma linguagem de marcação
 e uma biblioteca CSS-in-JS **integrada ao template**,
 atualizações refinadas para o DOM real por meio de um loop de detecção de alteração no template que
 permite reatividade sem esforço do desenvolvedor.

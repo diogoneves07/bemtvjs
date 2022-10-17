@@ -13,7 +13,7 @@ and orchestrated “automagically” by a
 
 ## Why Bemtv?
 
-Slightly opinionated, minimalistic, lightweight (**gzip: 6.5 KiB**) even with a markup language
+Slightly opinionated, minimalistic, lightweight(<img alt="npm bundle size" height='20px' padding="0" src="https://img.shields.io/bundlephobia/minzip/bemtv?style=flat-square">) even with a markup language
 and a CSS-in-JS library **integrated into the template**,
 fine-grained updates to the real DOM via a template change detection loop loop that
 allows effortless reactivity.
