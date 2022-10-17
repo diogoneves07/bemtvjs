@@ -12,8 +12,6 @@
     "declarative",
     "components",
     "lightweight",
-    "markup-language",
-    "CSS-In-JS",
     "bemtv"
   ],
   "types": "./types/main.d.ts",
