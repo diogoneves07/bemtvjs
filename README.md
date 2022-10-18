@@ -2,6 +2,12 @@
   <img  src='https://github.com/diogoneves07/bentivejs/blob/main/assets/bemtv-logo.png'  alt='Bemtv logo'>
 </p>
 
+## Translations:
+
+- [Português do Brasil](https://github.com/diogoneves07/bemtvjs/blob/main/translations/README-PT_BR.md)
+
+<hr>
+
 **Bemtv**(Abbreviation of the bird's name [Bem-te-vi](https://pt.wikipedia.org/wiki/Bem-te-vi)) is a JavaScript library that brings a new approach to creating interactive UIs.
 
 Basically, it's the combination of
@@ -15,7 +21,7 @@ and orchestrated “automagically” by a
 
 Slightly opinionated, minimalistic, lightweight(<img alt="npm bundle size" height='20px' padding="0" src="https://img.shields.io/bundlephobia/minzip/bemtv?style=flat-square">) even with a markup language
 and a CSS-in-JS library **integrated into the template**,
-fine-grained updates to the real DOM via a template change detection loop loop that
+fine-grained updates to the real DOM via a template change detection loop that
 allows effortless reactivity.
 
 Currently, the main objective is to be a tool specialized in the development of **small web applications**,
