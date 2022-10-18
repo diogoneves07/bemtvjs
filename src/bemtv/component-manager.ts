@@ -6,6 +6,10 @@ import { ComponentTemplateCallback } from "./components";
 export type TemplateCallback = () => string;
 
 const AVOIDS_EMPTY_TEMPLATE = " &nbsp; ";
+
+function avoidEmptyTemplate(template: string) {
+  return template.trim() === "" ? AVOIDS_EMPTY_TEMPLATE : template;
+}
 export default class ComponentManager {
   componentThis: ComponentThis;
   key: string;
@@ -19,8 +23,8 @@ export default class ComponentManager {
   ) {
     const isResultFn = typeof callbackOrText === "function";
     const getCurrentTemplate = isResultFn
-      ? () => AVOIDS_EMPTY_TEMPLATE + callbackOrText()
-      : () => AVOIDS_EMPTY_TEMPLATE + callbackOrText;
+      ? () => avoidEmptyTemplate(callbackOrText())
+      : () => avoidEmptyTemplate(callbackOrText);
 
     this.key = `${LIBRARY_NAME}${ALL_COMPONENTS_MANAGER.length}`;
 
