@@ -1,4 +1,5 @@
 let userInactive = false;
+let setTimeoutId: number | undefined;
 [
   "mousedown",
   "mousemove",
@@ -7,12 +8,17 @@ let userInactive = false;
   "touchstart",
   "touchmove",
 ].forEach((l) => {
-  document.addEventListener(l, () => (userInactive = false), true);
-});
+  document.addEventListener(
+    l,
+    () => {
+      userInactive = false;
 
-setInterval(() => {
-  userInactive = true;
-}, 2000);
+      clearTimeout(setTimeoutId);
+      setTimeoutId = setTimeout(() => (userInactive = true), 2000);
+    },
+    true
+  );
+});
 
 export function isUserInactive() {
   return userInactive;
