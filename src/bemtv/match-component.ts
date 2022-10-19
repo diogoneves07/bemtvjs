@@ -25,7 +25,7 @@ export function matchComponent(
     component.slice(0, component.indexOf("["))
   );
 
-  if (hasComponent(componentName)) {
+  if (hasComponent(componentName as any)) {
     CACHE.set(component, true);
     return component;
   }

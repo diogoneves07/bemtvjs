@@ -4,6 +4,8 @@ import { ComponentThis } from "./components-this";
 
 type GlobalComponentsMap = Map<string, ComponentFn>;
 
+type ComponentName = `${Capitalize<string>}${string}`;
+
 const GLOBAL_COMPONENTS_MAP: GlobalComponentsMap = new Map();
 
 export type ComponentFn =
@@ -22,7 +24,7 @@ export function getComponentFn(componentName: string) {
  * @param name
  * The component name.
  */
-export function hasComponent(name: string) {
+export function hasComponent(name: ComponentName) {
   return GLOBAL_COMPONENTS_MAP.get(name) ? true : false;
 }
 
@@ -40,7 +42,7 @@ export function hasComponent(name: string) {
  * @returns
  * The component creation instance.
  */
-export function Component<N extends string, C extends ComponentFn>(
+export function Component<N extends ComponentName, C extends ComponentFn>(
   componentName: N,
   componentFn: C
 ) {
