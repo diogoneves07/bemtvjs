@@ -10,27 +10,41 @@ const AVOIDS_EMPTY_TEMPLATE = " &nbsp; ";
 function avoidEmptyTemplate(template: string) {
   return template.trim() === "" ? AVOIDS_EMPTY_TEMPLATE : template;
 }
+
 export default class ComponentManager {
   componentThis: ComponentThis;
   key: string;
   lastTemplateValue: string;
   nodes: Node[];
   getCurrentTemplate: TemplateCallback;
+  updateOnlyAfterThisTime: number;
 
   constructor(
     componentThis: ComponentThis,
     callbackOrText: ComponentTemplateCallback | string
   ) {
     const isResultFn = typeof callbackOrText === "function";
-    const getCurrentTemplate = isResultFn
-      ? () => avoidEmptyTemplate(callbackOrText())
-      : () => avoidEmptyTemplate(callbackOrText);
+    const useTemplate = isResultFn ? callbackOrText : () => callbackOrText;
+
+    const getCurrentTemplate = () => {
+      const timeBeforeGenarateTemaplate = Date.now();
+      const template = avoidEmptyTemplate(useTemplate());
+      const timeAfterGenarateTemaplate = Date.now();
+
+      this.updateOnlyAfterThisTime =
+        timeAfterGenarateTemaplate +
+        (timeAfterGenarateTemaplate - timeBeforeGenarateTemaplate);
+
+      return template;
+    };
 
     this.key = `${LIBRARY_NAME}${ALL_COMPONENTS_MANAGER.length}`;
 
     this.componentThis = componentThis;
 
     this.nodes = [];
+
+    this.updateOnlyAfterThisTime = 0;
 
     this.getCurrentTemplate = getCurrentTemplate;
     this.lastTemplateValue = getCurrentTemplate();
@@ -49,6 +63,8 @@ export default class ComponentManager {
     this.lastTemplateValue = this.getCurrentTemplate();
   }
   shouldTemplateBeUpdate() {
-    return this.lastTemplateValue !== this.getCurrentTemplate();
+    return Date.now() > this.updateOnlyAfterThisTime
+      ? this.lastTemplateValue !== this.getCurrentTemplate()
+      : false;
   }
 }

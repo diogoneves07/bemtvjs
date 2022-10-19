@@ -48,10 +48,8 @@
 
         click$(() => count++);
 
-        return () => `button[ color:red; ~ Value: strong[${count}]]`;
-      });
-
-      _("App", () => `Counter[]`).render();
+        return () => `button[ color:blue; ~ Cliked: strong[${count}]]`;
+      }).render();
     </script>
   </body>
 </html>

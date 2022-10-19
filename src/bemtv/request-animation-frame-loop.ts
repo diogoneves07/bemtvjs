@@ -7,13 +7,19 @@ import {
   isMounted,
 } from "./work-with-components-this";
 import { BRACKETHTML_CSS_IN_JS } from "../brackethtml/globals";
+import { isUserInactive } from "./is-user-inactive";
 
 const componentsToDelete: Set<ComponentManager> = new Set();
+
+const framesLimit = 20;
+const timeoutForLoop = 1000 / framesLimit;
+const alternativeFramesLimit = 5;
+const alternativeTimeoutForLoop = 1000 / alternativeFramesLimit;
 
 function shouldComponentBeUnmounted(componentManager: ComponentManager) {
   const nodes = componentManager.nodes;
 
-  if (!isMounted(componentManager.componentThis) || nodes.length) return false;
+  if (nodes.length) return false;
 
   dispatchUnmountedLifeCycle(componentManager.componentThis);
   componentsToDelete.add(componentManager);
@@ -28,6 +34,8 @@ function shouldComponentBeUnmounted(componentManager: ComponentManager) {
   requestAnimationFrame(() => {
     let hasChanges = false;
     for (const componentManager of ALL_COMPONENTS_MANAGER) {
+      if (!isMounted(componentManager.componentThis)) continue;
+
       if (!componentManager.shouldTemplateBeUpdate()) {
         shouldComponentBeUnmounted(componentManager);
         continue;
@@ -49,6 +57,9 @@ function shouldComponentBeUnmounted(componentManager: ComponentManager) {
 
     if (hasChanges) BRACKETHTML_CSS_IN_JS.applyLastCSSCreated();
 
-    requestAnimationFrameLoop();
+    setTimeout(
+      () => requestAnimationFrameLoop(),
+      isUserInactive() ? alternativeTimeoutForLoop : timeoutForLoop
+    );
   });
 })();
