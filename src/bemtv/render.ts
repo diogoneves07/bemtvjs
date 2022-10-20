@@ -36,9 +36,11 @@ export default function render(
   const data = brackethtmlTranspiler(pureTemplate);
 
   window.requestAnimationFrame(() => {
-    const [keysAndNodes, nodes] = getPossibleNewNodes(data.html);
+    const [keysAndNodes] = getPossibleNewNodes(data.html);
+    const nodes: Node[] = [];
 
     for (const key of Object.keys(keysAndNodes)) {
+      nodes.push(...keysAndNodes[key]);
       setComponentManagerNodes(key, keysAndNodes[key]);
     }
 

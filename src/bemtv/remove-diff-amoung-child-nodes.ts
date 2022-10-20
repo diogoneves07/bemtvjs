@@ -56,6 +56,7 @@ export function removeDiffAmoungChildNodes(
     parentElement.removeChild(node);
     removeNodeFromComponentManagerNodes(node);
   }
+
   for (let index = 0; index < length; index++) {
     const newNode = newChildNodesArray[index];
     const oldNode = oldChildNodesArray[index];

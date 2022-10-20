@@ -22,9 +22,8 @@ const alternativeFramesLimit = 5;
 const alternativeTimeoutForLoop = 1000 / alternativeFramesLimit;
 
 function shouldComponentBeUnmounted(componentManager: ComponentManager) {
-  const nodes = componentManager.nodes;
-
-  if (nodes.length) return false;
+  if (!componentManager.parent) return false;
+  if (componentManager.parent.hasComponentChild(componentManager)) return false;
 
   dispatchUnmountedLifeCycle(componentManager.componentThis);
   componentsToDelete.add(componentManager);
@@ -42,13 +41,6 @@ function shouldComponentBeUnmounted(componentManager: ComponentManager) {
       if (!isMounted(componentManager.componentThis)) continue;
 
       if (!componentManager.shouldTemplateBeUpdate()) {
-        shouldComponentBeUnmounted(componentManager);
-        continue;
-      }
-
-      const nodes = componentManager.nodes;
-
-      if (!nodes.length || !nodes[0].parentElement?.isConnected) {
         shouldComponentBeUnmounted(componentManager);
         continue;
       }

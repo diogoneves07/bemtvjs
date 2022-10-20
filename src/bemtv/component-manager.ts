@@ -1,11 +1,9 @@
-import { LIBRARY_NAME, TAG_HOST_NAME } from "./globals";
+import { AVOIDS_EMPTY_TEMPLATE, LIBRARY_NAME, TAG_HOST_NAME } from "./globals";
 import { ALL_COMPONENTS_MANAGER } from "./components-manager-nodes";
 import { ComponentThis } from "./components-this";
 import { ComponentTemplateCallback } from "./components";
 
 export type TemplateCallback = () => string;
-
-const AVOIDS_EMPTY_TEMPLATE = " &nbsp; ";
 
 function avoidEmptyTemplate(template: string) {
   return template.trim() === "" ? AVOIDS_EMPTY_TEMPLATE : template;
@@ -15,12 +13,17 @@ export default class ComponentManager {
   componentThis: ComponentThis;
   key: string;
   lastTemplateValue: string;
-  nodes: Node[];
   getCurrentTemplate: TemplateCallback;
   updateOnlyAfterThisTime: number;
   shouldForceUpdate: boolean;
+
+  nodes: Node[] = [];
+  parent: ComponentManager | null;
+  componentsInTemplate: Set<ComponentManager> = new Set();
+
   constructor(
     componentThis: ComponentThis,
+    parent: ComponentManager | null,
     callbackOrText: ComponentTemplateCallback | string
   ) {
     const isResultFn = typeof callbackOrText === "function";
@@ -42,7 +45,8 @@ export default class ComponentManager {
 
     this.componentThis = componentThis;
 
-    this.nodes = [];
+    this.parent = parent;
+
     this.shouldForceUpdate = false;
 
     this.updateOnlyAfterThisTime = 0;
@@ -74,5 +78,14 @@ export default class ComponentManager {
     return Date.now() > this.updateOnlyAfterThisTime
       ? this.lastTemplateValue !== this.getCurrentTemplate()
       : false;
+  }
+  addComponentChild(c: ComponentManager) {
+    this.componentsInTemplate.add(c);
+  }
+  hasComponentChild(c: ComponentManager) {
+    return this.componentsInTemplate.has(c);
+  }
+  resetComponentsChildContainer() {
+    this.componentsInTemplate.clear();
   }
 }

@@ -1,15 +1,16 @@
-import { TAG_HOST_NAME } from "./globals";
+import { AVOIDS_EMPTY_TEMPLATE, TAG_HOST_NAME } from "./globals";
 const SIMPLE_DIV = document.createElement("div");
 const SIMPLE_DOCUMENT_FRAGMENT = document.createDocumentFragment();
 
 function removeUnnecessaryEmptyTextNodes(a: Node[]) {
-  if (a.length > 1) {
-    const r = a.filter((n) => {
-      return n instanceof Text && !n.textContent?.trim() ? false : true;
-    });
-    return r.length === 0 ? [a[0]] : r;
-  }
-  return a;
+  if (a.length === 0) return a;
+  const r = a.filter((n) => {
+    const t = n.textContent;
+    return n instanceof Text && !t?.trim() && t !== AVOIDS_EMPTY_TEMPLATE
+      ? false
+      : true;
+  });
+  return r.length === 0 ? [a[0]] : r;
 }
 export default function getPossibleNewNodes(
   newHtml: string

@@ -62,7 +62,7 @@ function processEachTemplate(
   template: string,
   componentsManager: ComponentManager[],
   dynamicImportComponents: string[],
-  parent?: ComponentThis
+  parent: ComponentManager | null = null
 ): [ComponentManager[], string[]] {
   let newTemplate = template;
   let componentData: NextComponentData;
@@ -82,16 +82,30 @@ function processEachTemplate(
       throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} The component "${realComponentName}" was not created!`;
     }
 
+    const componentThisParent = parent ? parent.componentThis : undefined;
     const componentFn = getComponentFn(realComponentName) as ComponentFn;
-    const componentThis = ComponentThisFactory(realComponentName, parent);
+    const componentThis = ComponentThisFactory(
+      realComponentName,
+      componentThisParent
+    );
 
     componentThis.children = children;
 
-    if (parent) assignPropsToComponentChild(componentThis, name, parent);
+    if (componentThisParent) {
+      assignPropsToComponentChild(componentThis, name, componentThisParent);
+    }
 
     const result = componentFn(componentThis);
 
-    const componentManager = new ComponentManager(componentThis, result);
+    const componentManager = new ComponentManager(
+      componentThis,
+      parent,
+      result
+    );
+
+    if (parent) {
+      parent.addComponentChild(componentManager);
+    }
 
     componentsManager.push(componentManager);
 
@@ -99,7 +113,7 @@ function processEachTemplate(
       componentManager.getCurrentTemplateWithHost(),
       componentsManager,
       dynamicImportComponents,
-      componentThis
+      componentManager
     );
 
     newTemplate = before + after;
@@ -110,7 +124,7 @@ function processEachTemplate(
 
 export default function processComponentsInTemplate(
   template: string,
-  firstParent?: ComponentThis
+  firstParent: ComponentManager | null = null
 ) {
   const [componentsManager, dynamicImportComponents] = processEachTemplate(
     template,
