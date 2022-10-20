@@ -1,9 +1,14 @@
 import ComponentManager from "./component-manager";
-import { ALL_COMPONENTS_MANAGER } from "./components-manager-nodes";
-import updateUIWithNewTemplate from "./update-ui-with-new-template";
+import {
+  ALL_COMPONENTS_MANAGER,
+  setComponentManagerNodes,
+} from "./components-manager-nodes";
+import updatedUIWithNewTemplate from "./update-ui-with-new-template";
 import deleteComponentManager from "./delete-component-manager";
 import {
+  dispatchMountedLifeCycle,
   dispatchUnmountedLifeCycle,
+  dispatchUpdatedLifeCycle,
   isMounted,
 } from "./work-with-components-this";
 import { BRACKETHTML_CSS_IN_JS } from "../brackethtml/globals";
@@ -50,9 +55,32 @@ function shouldComponentBeUnmounted(componentManager: ComponentManager) {
 
       hasChanges = true;
 
-      updateUIWithNewTemplate(componentManager);
-
       shouldComponentBeUnmounted(componentManager);
+
+      const updatedUI = updatedUIWithNewTemplate(componentManager);
+      if (!updatedUI) continue;
+
+      const { newComponentsManager, componentsManagerUpdated, keysAndNodes } =
+        updatedUI;
+
+      if (
+        !componentManager.shouldForceUpdate ||
+        newComponentsManager.length ||
+        componentsManagerUpdated.length
+      ) {
+        dispatchUpdatedLifeCycle(componentManager.componentThis);
+      }
+
+      for (const c of componentsManagerUpdated) {
+        dispatchUpdatedLifeCycle(c.componentThis);
+      }
+
+      for (const c of newComponentsManager) {
+        if (keysAndNodes[c.key]) {
+          setComponentManagerNodes(c.key, keysAndNodes[c.key]);
+        }
+        dispatchMountedLifeCycle(c.componentThis);
+      }
     }
 
     if (hasChanges) BRACKETHTML_CSS_IN_JS.applyLastCSSCreated();

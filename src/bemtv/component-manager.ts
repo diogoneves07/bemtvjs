@@ -18,7 +18,7 @@ export default class ComponentManager {
   nodes: Node[];
   getCurrentTemplate: TemplateCallback;
   updateOnlyAfterThisTime: number;
-
+  shouldForceUpdate: boolean;
   constructor(
     componentThis: ComponentThis,
     callbackOrText: ComponentTemplateCallback | string
@@ -43,6 +43,7 @@ export default class ComponentManager {
     this.componentThis = componentThis;
 
     this.nodes = [];
+    this.shouldForceUpdate = false;
 
     this.updateOnlyAfterThisTime = 0;
 
@@ -63,6 +64,13 @@ export default class ComponentManager {
     this.lastTemplateValue = this.getCurrentTemplate();
   }
   shouldTemplateBeUpdate() {
+    const shouldForceUpdate = this.shouldForceUpdate;
+
+    if (shouldForceUpdate) {
+      this.shouldForceUpdate = false;
+      return true;
+    }
+
     return Date.now() > this.updateOnlyAfterThisTime
       ? this.lastTemplateValue !== this.getCurrentTemplate()
       : false;

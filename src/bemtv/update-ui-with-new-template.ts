@@ -6,13 +6,8 @@ import {
 import processUpdatedTemplate from "./process-updated-template";
 import { removeDiffAmoungChildNodes } from "./remove-diff-amoung-child-nodes";
 import brackethtmlToHTML from "../brackethtml/brackethtml-to-html";
-import {
-  dispatchMountedLifeCycle,
-  dispatchUpdatedLifeCycle,
-} from "./work-with-components-this";
 import { setNodeComponentKeys } from "./nodes-component-keys";
 import getPossibleNewNodes from "./get-possible-new-nodes";
-import { setComponentManagerNodes } from "./components-manager-nodes";
 
 export default function updateUIWithNewTemplate(
   componentManager: ComponentManager
@@ -45,16 +40,5 @@ export default function updateUIWithNewTemplate(
 
   addToRelativeInstances(newComponentsManager, componentManager);
 
-  dispatchUpdatedLifeCycle(componentManager.componentThis);
-
-  for (const c of componentsManagerUpdated) {
-    dispatchUpdatedLifeCycle(c.componentThis);
-  }
-
-  for (const c of newComponentsManager) {
-    if (keysAndNodes[c.key]) {
-      setComponentManagerNodes(c.key, keysAndNodes[c.key]);
-    }
-    dispatchMountedLifeCycle(c.componentThis);
-  }
+  return { newComponentsManager, componentsManagerUpdated, keysAndNodes };
 }

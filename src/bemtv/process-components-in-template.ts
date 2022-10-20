@@ -13,12 +13,6 @@ import {
   isComponentAutoImport,
 } from "./auto-import-components";
 
-type processComponentsResult = [
-  result: string,
-  componentsThis: ComponentThis[],
-  componentsManager: ComponentManager[]
-];
-
 type NextComponentData = ReturnType<typeof getNextComponentDataInTemplate>;
 
 function assignPropsToComponentChild(
@@ -52,7 +46,6 @@ function getTemplateWithCurrentPropsValues(
       newTemplate = componentData.before + componentData.after;
       continue;
     }
-
     const value = componentManager.getCurrentTemplateWithHost();
 
     componentManager.updateLastTemplateValueProperty();
@@ -68,7 +61,7 @@ function getTemplateWithCurrentPropsValues(
 function processEachTemplate(
   template: string,
   componentsManager: ComponentManager[],
-  importComponents: string[],
+  dynamicImportComponents: string[],
   parent?: ComponentThis
 ): [ComponentManager[], string[]] {
   let newTemplate = template;
@@ -82,7 +75,7 @@ function processEachTemplate(
       newTemplate = componentData.before + componentData.after;
 
       if (isComponentAutoImport(realComponentName)) {
-        importComponents.push(realComponentName);
+        dynamicImportComponents.push(realComponentName);
         continue;
       }
 
@@ -105,21 +98,21 @@ function processEachTemplate(
     processEachTemplate(
       componentManager.getCurrentTemplateWithHost(),
       componentsManager,
-      importComponents,
+      dynamicImportComponents,
       componentThis
     );
 
     newTemplate = before + after;
   }
 
-  return [componentsManager, importComponents];
+  return [componentsManager, dynamicImportComponents];
 }
 
 export default function processComponentsInTemplate(
   template: string,
   firstParent?: ComponentThis
-): processComponentsResult {
-  const [componentsManager, importComponents] = processEachTemplate(
+) {
+  const [componentsManager, dynamicImportComponents] = processEachTemplate(
     template,
     [],
     [],
@@ -133,7 +126,12 @@ export default function processComponentsInTemplate(
 
   const componentsThis = componentsManager.map((o) => o.componentThis);
 
-  importComponents.forEach(autoImportComponent);
+  dynamicImportComponents.forEach(autoImportComponent);
 
-  return [newTemplate, componentsThis, componentsManager];
+  return {
+    newTemplate,
+    componentsThis,
+    componentsManager,
+    dynamicImportComponents,
+  };
 }

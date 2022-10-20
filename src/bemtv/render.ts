@@ -25,8 +25,11 @@ export default function render(
 
   if (!parent) return;
 
-  const [pureTemplate, componentsThis, componentsManager] =
-    processComponentsInTemplate(template);
+  const {
+    newTemplate: pureTemplate,
+    componentsThis,
+    componentsManager,
+  } = processComponentsInTemplate(template);
 
   saveRelativeInstances(componentsManager);
 

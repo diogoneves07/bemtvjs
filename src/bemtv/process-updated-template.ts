@@ -17,6 +17,8 @@ export default function processUpdatedTemplate(
 
   let template = componentManager.getCurrentTemplateWithHost();
 
+  componentManager.updateLastTemplateValueProperty();
+
   if (!relativeInstances)
     return { template, newComponentsManager, componentsManagerUpdated };
 
@@ -45,10 +47,18 @@ export default function processUpdatedTemplate(
       continue;
     }
 
-    const [componentTemlate, , componentsManager] = processComponentsInTemplate(
+    const {
+      newTemplate: componentTemlate,
+      componentsManager,
+      dynamicImportComponents,
+    } = processComponentsInTemplate(
       `${componentData.name}[${componentData.children}]`,
       componentManager.componentThis
     );
+
+    if (dynamicImportComponents.length > 0) {
+      componentManager.shouldForceUpdate = true;
+    }
 
     newComponentsManager.push(...componentsManager);
 
