@@ -21,7 +21,12 @@ export default function getPossibleNewNodes(
     host.parentElement?.replaceChild(SIMPLE_DOCUMENT_FRAGMENT, host);
   }
 
-  const allElementsOrganized = Array.from(SIMPLE_DIV.childNodes);
+  let allElementsOrganized = Array.from(SIMPLE_DIV.childNodes);
+  if (allElementsOrganized.length > 1) {
+    allElementsOrganized = allElementsOrganized.filter((n) => {
+      return n instanceof Text && !n.textContent?.trim() ? false : true;
+    });
+  }
 
   SIMPLE_DIV.innerHTML = "";
 
