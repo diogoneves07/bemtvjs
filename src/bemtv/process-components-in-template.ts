@@ -68,8 +68,9 @@ function getTemplateWithCurrentPropsValues(
 function processEachTemplate(
   template: string,
   componentsManager: ComponentManager[],
+  importComponents: string[],
   parent?: ComponentThis
-): ComponentManager[] {
+): [ComponentManager[], string[]] {
   let newTemplate = template;
   let componentData: NextComponentData;
 
@@ -81,7 +82,7 @@ function processEachTemplate(
       newTemplate = componentData.before + componentData.after;
 
       if (isComponentAutoImport(realComponentName)) {
-        autoImportComponent(realComponentName);
+        importComponents.push(realComponentName);
         continue;
       }
 
@@ -104,20 +105,26 @@ function processEachTemplate(
     processEachTemplate(
       componentManager.getCurrentTemplateWithHost(),
       componentsManager,
+      importComponents,
       componentThis
     );
 
     newTemplate = before + after;
   }
 
-  return componentsManager;
+  return [componentsManager, importComponents];
 }
 
 export default function processComponentsInTemplate(
   template: string,
   firstParent?: ComponentThis
 ): processComponentsResult {
-  const componentsManager = processEachTemplate(template, [], firstParent);
+  const [componentsManager, importComponents] = processEachTemplate(
+    template,
+    [],
+    [],
+    firstParent
+  );
 
   const newTemplate = getTemplateWithCurrentPropsValues(
     template,
@@ -125,6 +132,8 @@ export default function processComponentsInTemplate(
   );
 
   const componentsThis = componentsManager.map((o) => o.componentThis);
+
+  importComponents.forEach(autoImportComponent);
 
   return [newTemplate, componentsThis, componentsManager];
 }

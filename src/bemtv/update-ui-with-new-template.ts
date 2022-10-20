@@ -17,8 +17,6 @@ import { setComponentManagerNodes } from "./components-manager-nodes";
 export default function updateUIWithNewTemplate(
   componentManager: ComponentManager
 ) {
-  const template = componentManager.getCurrentTemplate();
-
   const nodes = componentManager.nodes;
 
   const relativeInstances = getRelativeInstances(componentManager);
@@ -32,8 +30,6 @@ export default function updateUIWithNewTemplate(
   } = processUpdatedTemplate(componentManager);
 
   const newHtml = brackethtmlToHTML(pureTemplate);
-
-  componentManager.lastTemplateValue = template;
 
   const [keysAndNodes, possibleNewChildNodes] = getPossibleNewNodes(newHtml);
 
