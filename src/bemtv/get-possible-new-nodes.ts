@@ -6,6 +6,10 @@ function removeUnnecessaryEmptyTextNodes(a: Node[]) {
   if (a.length === 0) return a;
   const r = a.filter((n) => {
     const t = n.textContent;
+    if (n instanceof Text) {
+      n.textContent = n.textContent?.trim() || null;
+      n.textContent = n.textContent || " ";
+    }
     return n instanceof Text && !t?.trim() && t !== AVOIDS_EMPTY_TEMPLATE
       ? false
       : true;
@@ -38,6 +42,5 @@ export default function getPossibleNewNodes(
   );
 
   SIMPLE_DIV.innerHTML = "";
-
   return [keysAndNodes, allElementsOrganized];
 }
