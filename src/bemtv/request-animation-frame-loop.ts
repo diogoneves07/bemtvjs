@@ -1,18 +1,15 @@
+import { ALL_COMPONENTS_MANAGER } from "./component-manager-store";
 import ComponentManager from "./component-manager";
-import {
-  ALL_COMPONENTS_MANAGER,
-  setComponentManagerNodes,
-} from "./components-manager-nodes";
+import { setComponentManagerNodes } from "./components-manager-nodes";
 import updatedUIWithNewTemplate from "./update-ui-with-new-template";
-import deleteComponentManager from "./delete-component-manager";
 import {
   dispatchMountedLifeCycle,
-  dispatchUnmountedLifeCycle,
   dispatchUpdatedLifeCycle,
   isMounted,
 } from "./work-with-components-this";
 import { BRACKETHTML_CSS_IN_JS } from "../brackethtml/globals";
 import { isUserInactive } from "./is-user-inactive";
+import shouldComponentBeUnmounted from "./should-component-be-unmounted";
 
 const componentsToDelete: Set<ComponentManager> = new Set();
 
@@ -21,18 +18,7 @@ const timeoutForLoop = 1000 / framesLimit;
 const alternativeFramesLimit = 5;
 const alternativeTimeoutForLoop = 1000 / alternativeFramesLimit;
 
-function shouldComponentBeUnmounted(componentManager: ComponentManager) {
-  if (!componentManager.parent) return false;
-  if (componentManager.parent.hasComponentChild(componentManager)) return false;
-
-  dispatchUnmountedLifeCycle(componentManager.componentThis);
-  componentsToDelete.add(componentManager);
-
-  return true;
-}
-
 (function requestAnimationFrameLoop() {
-  componentsToDelete.forEach(deleteComponentManager);
   componentsToDelete.clear();
 
   requestAnimationFrame(() => {

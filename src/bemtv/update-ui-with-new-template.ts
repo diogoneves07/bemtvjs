@@ -1,8 +1,4 @@
 import ComponentManager from "./component-manager";
-import {
-  addToRelativeInstances,
-  getRelativeInstances,
-} from "./component-relative-instances";
 import processUpdatedTemplate from "./process-updated-template";
 import { removeDiffAmoungChildNodes } from "./remove-diff-amoung-child-nodes";
 import brackethtmlToHTML from "../brackethtml/brackethtml-to-html";
@@ -13,10 +9,6 @@ export default function updateUIWithNewTemplate(
   componentManager: ComponentManager
 ) {
   const nodes = componentManager.nodes;
-
-  const relativeInstances = getRelativeInstances(componentManager);
-
-  if (!relativeInstances) return;
 
   const {
     template: pureTemplate,
@@ -37,8 +29,6 @@ export default function updateUIWithNewTemplate(
   const oldChildNodes = nodes;
 
   removeDiffAmoungChildNodes(possibleNewChildNodes, oldChildNodes);
-
-  addToRelativeInstances(newComponentsManager, componentManager);
 
   return { newComponentsManager, componentsManagerUpdated, keysAndNodes };
 }

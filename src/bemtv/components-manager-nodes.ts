@@ -1,11 +1,10 @@
 import ComponentManager from "./component-manager";
+import { ALL_COMPONENTS_MANAGER } from "./component-manager-store";
 import {
   getNodeComponentKeys,
   setNodeComponentKeys,
 } from "./nodes-component-keys";
 import { defineComponentThisFirstElement } from "./work-with-components-this";
-
-export const ALL_COMPONENTS_MANAGER: ComponentManager[] = [];
 
 function findAndSetComponentThisFirstElement(
   componentManager: ComponentManager
@@ -63,7 +62,9 @@ export function replaceNodeInComponentManagerNodes(
 }
 
 export function setComponentManagerNodes(key: string, nodes: Node[]) {
-  const componentManager = ALL_COMPONENTS_MANAGER.find((o) => o.key === key);
+  const componentManager = [...ALL_COMPONENTS_MANAGER].find(
+    (o) => o.key === key
+  );
 
   if (!componentManager) return;
 

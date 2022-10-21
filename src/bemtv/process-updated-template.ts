@@ -1,5 +1,4 @@
 import ComponentManager from "./component-manager";
-import { getRelativeInstances } from "./component-relative-instances";
 import getNextComponentDataInTemplate from "./get-next-component-data-in-template";
 import processComponentsInTemplate from "./process-components-in-template";
 
@@ -11,7 +10,7 @@ type UpdatedTemplateObject = {
 export default function processUpdatedTemplate(
   componentManager: ComponentManager
 ): UpdatedTemplateObject {
-  const relativeInstances = getRelativeInstances(componentManager)?.slice();
+  const childComponents = [...componentManager.getChildComponents()];
   const newComponentsManager: ComponentManager[] = [];
   const componentsManagerUpdated: ComponentManager[] = [];
 
@@ -20,33 +19,29 @@ export default function processUpdatedTemplate(
   componentManager.updateLastTemplateValueProperty();
   componentManager.resetComponentsChildContainer();
 
-  if (!relativeInstances)
-    return { template, newComponentsManager, componentsManagerUpdated };
-
   let componentData: ReturnType<typeof getNextComponentDataInTemplate>;
 
   while ((componentData = getNextComponentDataInTemplate(template))) {
     const name = componentData.name;
 
-    const index = relativeInstances.findIndex(
+    const index = childComponents.findIndex(
       (o) => o.componentThis.name === name
     );
 
     if (index > -1) {
-      const relativeInstance = relativeInstances[index];
+      const childComponent = childComponents[index];
 
-      componentManager.addComponentChild(relativeInstance);
+      const value = childComponent.getCurrentTemplateWithHost();
 
-      const value = relativeInstance.getCurrentTemplateWithHost();
-
-      if (relativeInstance.shouldTemplateBeUpdate()) {
-        componentsManagerUpdated.push(relativeInstance);
-        relativeInstance.updateLastTemplateValueProperty();
+      if (childComponent.shouldTemplateBeUpdate()) {
+        componentsManagerUpdated.push(childComponent);
+        childComponent.updateLastTemplateValueProperty();
       }
 
       template = componentData.before + value + componentData.after;
 
-      relativeInstances.splice(index, 1);
+      componentManager.addComponentChild(childComponent);
+
       continue;
     }
 

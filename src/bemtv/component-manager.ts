@@ -1,7 +1,7 @@
 import { AVOIDS_EMPTY_TEMPLATE, LIBRARY_NAME, TAG_HOST_NAME } from "./globals";
-import { ALL_COMPONENTS_MANAGER } from "./components-manager-nodes";
 import { ComponentThis } from "./components-this";
 import { ComponentTemplateCallback } from "./components";
+import { ALL_COMPONENTS_MANAGER } from "./component-manager-store";
 
 export type TemplateCallback = () => string;
 
@@ -41,7 +41,7 @@ export default class ComponentManager {
       return template;
     };
 
-    this.key = `${LIBRARY_NAME}${ALL_COMPONENTS_MANAGER.length}`;
+    this.key = `${LIBRARY_NAME}${ALL_COMPONENTS_MANAGER.size}`;
 
     this.componentThis = componentThis;
 
@@ -54,7 +54,7 @@ export default class ComponentManager {
     this.getCurrentTemplate = getCurrentTemplate;
     this.lastTemplateValue = getCurrentTemplate();
 
-    ALL_COMPONENTS_MANAGER.push(this);
+    ALL_COMPONENTS_MANAGER.add(this);
 
     return this;
   }
@@ -84,6 +84,9 @@ export default class ComponentManager {
   }
   hasComponentChild(c: ComponentManager) {
     return this.componentsInTemplate.has(c);
+  }
+  getChildComponents() {
+    return this.componentsInTemplate;
   }
   resetComponentsChildContainer() {
     this.componentsInTemplate.clear();

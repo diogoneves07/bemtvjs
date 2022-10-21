@@ -4,7 +4,6 @@ import "./request-animation-frame-loop"; // !important
 import brackethtmlTranspiler from "../brackethtml/brackethtml-transpiler";
 import processComponentsInTemplate from "./process-components-in-template";
 import { setComponentManagerNodes } from "./components-manager-nodes";
-import { saveRelativeInstances } from "./component-relative-instances";
 import { dispatchMountedLifeCycle } from "./work-with-components-this";
 import { BRACKETHTML_CSS_IN_JS } from "../brackethtml/globals";
 import getPossibleNewNodes from "./get-possible-new-nodes";
@@ -33,13 +32,8 @@ export default function render(
     parent = insert;
   }
 
-  const {
-    newTemplate: pureTemplate,
-    componentsThis,
-    componentsManager,
-  } = processComponentsInTemplate(template);
-
-  saveRelativeInstances(componentsManager);
+  const { newTemplate: pureTemplate, componentsThis } =
+    processComponentsInTemplate(template);
 
   const data = brackethtmlTranspiler(pureTemplate);
 
