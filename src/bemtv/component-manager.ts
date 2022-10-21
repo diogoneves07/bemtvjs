@@ -75,7 +75,7 @@ export default class ComponentManager {
       return true;
     }
 
-    return Date.now() > this.updateOnlyAfterThisTime
+    return Date.now() >= this.updateOnlyAfterThisTime
       ? this.lastTemplateValue !== this.getCurrentTemplate()
       : false;
   }
