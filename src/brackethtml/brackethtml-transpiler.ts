@@ -4,6 +4,6 @@ import { BRACKETHTML_CSS_IN_JS } from "./globals";
 export default function brackethtmlTranspiler(template: string) {
   return {
     html: brackethtmlToHTML(template),
-    css: BRACKETHTML_CSS_IN_JS.getLastCSSCreated(),
+    css: BRACKETHTML_CSS_IN_JS.extractLastCSSCreated(),
   };
 }
