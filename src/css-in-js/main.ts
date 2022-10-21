@@ -15,7 +15,7 @@ export class CSSInJS {
     return css;
   }
   getLastCSSCreated() {
-    return this.__container.textContent;
+    return this.__container.textContent || "";
   }
   applyLastCSSCreated() {
     const css = this.extractLastCSSCreated();
