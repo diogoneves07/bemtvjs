@@ -1,7 +1,7 @@
 import { render } from "../../src/main";
 import "./components-for-use-in-tests/Counter";
 
-describe("Renders the templates", () => {
+describe("Render the templates", () => {
   it("Should add text in document.body", (done) => {
     render("Hello world!");
     setTimeout(() => {
@@ -9,6 +9,11 @@ describe("Renders the templates", () => {
 
       done();
     }, 100);
+  });
+  it("Should throw an error because the selector is invalid", () => {
+    expect(() => {
+      render("Hello world!", "");
+    }).toThrow();
   });
   it("Should add text in div#app", (done) => {
     document.body.textContent = "";
