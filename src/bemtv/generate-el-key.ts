@@ -6,7 +6,7 @@ export const SCAPE_FOR_KEYS: { start: string; end: string } = {
 };
 export const REGEX_CUSTOM_ATTR_KEY_VALUE = /(?<=\|\~)[\S\s]*(?=\~\|)/g;
 
-export const REGEX_CUSTOM_ATTR_KEY = /\|\~[\S\s]*\~\|/g;
+export const REGEX_CUSTOM_ATTR_KEY = /\|\~[\S\s][^\|\~]*\~\|/g;
 
 export default function generateKey() {
   return `${SCAPE_FOR_KEYS.start}key-${count++}${SCAPE_FOR_KEYS.end}`;

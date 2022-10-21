@@ -47,8 +47,10 @@ export function getElementsForElsManager(this: ComponentThis) {
   const els = getComponentThisData(this).els;
 
   for (const el of els) {
-    el.it = document.querySelector(
-      `[${KEY_ATTRIBUTE_NAME}="${getManagerElData(el).key}"]`
-    );
+    el.it =
+      Array.from(document.querySelectorAll(`[${KEY_ATTRIBUTE_NAME}]`)).find(
+        (n) =>
+          n.getAttribute(KEY_ATTRIBUTE_NAME)?.includes(getManagerElData(el).key)
+      ) || null;
   }
 }

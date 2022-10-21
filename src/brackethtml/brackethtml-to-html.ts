@@ -13,11 +13,9 @@ function setAttributesDefinedByKeys(
   tagObject: Exclude<ReturnType<typeof createTagObject>, false>,
   attrsDefinedByKeys: string[]
 ) {
-  if (attrsDefinedByKeys) {
-    for (const value of attrsDefinedByKeys) {
-      tagObject.attributes += ` ${KEY_ATTRIBUTE_NAME}="${value}"`;
-    }
-  }
+  tagObject.attributes += ` ${KEY_ATTRIBUTE_NAME}="${attrsDefinedByKeys.join(
+    " "
+  )}"`;
   return tagObject;
 }
 
