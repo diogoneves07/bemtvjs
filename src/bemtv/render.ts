@@ -1,3 +1,4 @@
+import { LIBRARY_NAME_IN_ERRORS_MESSAGE } from "./../globals";
 import "./request-animation-frame-loop"; // !important
 
 import brackethtmlTranspiler from "../brackethtml/brackethtml-transpiler";
@@ -18,12 +19,19 @@ import getPossibleNewNodes from "./get-possible-new-nodes";
  */
 export default function render(
   template: string,
-  insert: string | Node = document.body
+  insert: string | Element = document.body
 ) {
-  const parent =
-    typeof insert === "string" ? document.querySelector(insert) : insert;
+  let parent: Element;
 
-  if (!parent) return;
+  if (typeof insert === "string") {
+    const el = insert ? document.querySelector(insert) : null;
+    if (!el) {
+      throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} This selector "${insert}" is invalid or the element does not exist!`;
+    }
+    parent = el;
+  } else {
+    parent = insert;
+  }
 
   const {
     newTemplate: pureTemplate,
