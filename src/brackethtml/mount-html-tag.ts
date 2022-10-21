@@ -14,7 +14,7 @@ export default function mountHTMLTag(tagProps: TagProps) {
         classAttrIndex
       )}${cssClassName} ${tagAttrs.slice(classAttrIndex)}`;
     } else {
-      tagAttrs += `class = "${cssClassName}"`;
+      tagAttrs += ` class = "${cssClassName}" `;
     }
   }
 
