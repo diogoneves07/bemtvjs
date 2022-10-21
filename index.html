@@ -40,16 +40,6 @@
     <title>Bemtv debug</title>
   </head>
   <body>
-    <script type="module">
-      import { _ } from "./src/main";
-
-      _("Counter", ({ click$ }) => {
-        let count = 0;
-
-        click$(() => count++);
-
-        return () => `button[ color:blue; ~ Cliked: strong[${count}]]`;
-      }).render();
-    </script>
+    <script type="module" src="./debug-bemtv/App.ts"></script>
   </body>
 </html>
