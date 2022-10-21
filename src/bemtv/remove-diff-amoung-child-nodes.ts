@@ -5,7 +5,7 @@ import {
   removeNodeFromComponentManagerNodes,
   replaceNodeInComponentManagerNodes,
 } from "./components-manager-nodes";
-import { getManagerElData } from "./work-with-manger-el";
+import { getManagerElData } from "./work-with-manager-el";
 
 function removeDiffBetweenNodesAttrs(newNode: Element, oldNode: Element) {
   const attrsLength = newNode.attributes.length;

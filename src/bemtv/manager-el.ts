@@ -3,7 +3,7 @@ import { ComponentListener } from "./types/listeners";
 import { Listeners } from "./types/listeners";
 import insertEventListener from "./insert-event-listener";
 import { css } from "goober";
-import { applyElementCSS, reapplyCSSClasses } from "./work-with-manger-el";
+import { applyElementCSS, reapplyCSSClasses } from "./work-with-manager-el";
 
 type CSSInJSParameters = Parameters<typeof BEMTEVI_CSS_IN_JS["gooberCSS"]>;
 export interface ManagerElData<E> {

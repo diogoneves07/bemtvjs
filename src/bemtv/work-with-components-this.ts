@@ -1,7 +1,7 @@
 import { KEY_ATTRIBUTE_NAME } from "./globals";
 import { ComponentThis } from "./components-this";
 import insertEventListener from "./insert-event-listener";
-import { getManagerElData } from "./work-with-manger-el";
+import { getManagerElData } from "./work-with-manager-el";
 
 export function getComponentThisData(componentThis: ComponentThis) {
   return componentThis.__data;

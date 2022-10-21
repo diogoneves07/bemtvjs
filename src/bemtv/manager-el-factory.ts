@@ -2,7 +2,7 @@ import { ComponentListener } from "./types/listeners";
 import insertEventListener from "./insert-event-listener";
 import isEventListener from "./is-event-listener";
 import { ManagerEl } from "./manager-el";
-import { getManagerElData } from "./work-with-manger-el";
+import { getManagerElData } from "./work-with-manager-el";
 
 export function ManagerElFactory<E extends Element = Element>(key: string) {
   const managerEl = new ManagerEl<E>(key);
