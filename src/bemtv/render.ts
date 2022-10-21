@@ -1,4 +1,5 @@
 import { LIBRARY_NAME_IN_ERRORS_MESSAGE } from "./../globals";
+
 import "./request-animation-frame-loop"; // !important
 
 import brackethtmlTranspiler from "../brackethtml/brackethtml-transpiler";
@@ -35,10 +36,10 @@ export default function render(
   const { newTemplate: pureTemplate, componentsThis } =
     processComponentsInTemplate(template);
 
-  const data = brackethtmlTranspiler(pureTemplate);
+  const brackethtml = brackethtmlTranspiler(pureTemplate);
 
   window.requestAnimationFrame(() => {
-    const [keysAndNodes, n] = getPossibleNewNodes(data.html);
+    const [keysAndNodes, n] = getPossibleNewNodes(brackethtml.html);
     const nodes: Node[] = [...n];
 
     for (const key of Object.keys(keysAndNodes)) {
@@ -50,7 +51,7 @@ export default function render(
       parent.appendChild(node);
     }
 
-    BRACKETHTML_CSS_IN_JS.applyLastCSSCreated();
+    BRACKETHTML_CSS_IN_JS.applyLastCSSCreated(brackethtml.css);
 
     for (const c of componentsThis) {
       dispatchMountedLifeCycle(c);

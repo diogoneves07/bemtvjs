@@ -12,10 +12,10 @@ export class CSSInJS {
   extractLastCSSCreated() {
     const css = this.__container.textContent;
     this.__container.textContent = "";
-    return css;
+    return css || "";
   }
-  applyLastCSSCreated() {
-    const css = this.extractLastCSSCreated();
+  applyLastCSSCreated(CSS?: string) {
+    const css = CSS || this.extractLastCSSCreated();
     if (css && !lastStyleTextAdded.includes(css)) {
       const style = document.createElement("style");
       style.textContent = css;
