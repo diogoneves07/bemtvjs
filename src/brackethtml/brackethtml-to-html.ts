@@ -43,8 +43,6 @@ export default function brackethtmlToHTML(pureTemplate: string) {
 
       let tagObject = createTagObject(tagName, tagContent);
 
-      if (!tagObject) return "";
-
       if (attrsDefinedByKeys) {
         tagObject = setAttributesDefinedByKeys(tagObject, attrsDefinedByKeys);
       }

@@ -23,13 +23,8 @@ function reuseArray(attrsAndCSS: string, children: string) {
  * ? Attention: To improve the performance this function reuses the object it returns,
  * ? its object must be used and discarded.
  */
-export default function createTagObject(
-  tagName: string,
-  tagContent: string
-): TagProps | false {
+export default function createTagObject(tagName: string, tagContent: string) {
   const tagObject = reuseObject(tagName, reusableObject);
-
-  if (!tagName) return false;
 
   if (!tagContent) return tagObject;
 
