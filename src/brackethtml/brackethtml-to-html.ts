@@ -46,7 +46,7 @@ export default function brackethtmlToHTML(pureTemplate: string) {
 
       tagContent = newTagContent;
 
-      let tagObject = createTagObject(tagName, tagContent, true);
+      let tagObject = createTagObject(tagName, tagContent);
 
       if (!tagObject) return "";
 
@@ -54,7 +54,7 @@ export default function brackethtmlToHTML(pureTemplate: string) {
         tagObject = setAttributesDefinedByKeys(tagObject, attrsDefinedByKeys);
       }
 
-      return mountHTMLTag(tagObject); // Use "~" to avoid conflict with normal numbers in template
+      return mountHTMLTag(tagObject);
     });
   } while (mutableTemplate.includes("["));
 
