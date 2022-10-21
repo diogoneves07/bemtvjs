@@ -7,7 +7,6 @@ import mountHTMLTag from "./mount-html-tag";
 import unscapeLiteralLibrarySymbols from "./unscape-literal-library-symbols";
 
 const regexTagData = /[a-z-0-9]*\[[^\]\[]*?\]/g;
-const regexIsValidTag = /^[a-z](-?[a-z0-9])*/;
 
 function setAttributesDefinedByKeys(
   tagObject: Exclude<ReturnType<typeof createTagObject>, false>,
@@ -34,8 +33,6 @@ export default function brackethtmlToHTML(pureTemplate: string) {
       const leftBracketIndex = value.indexOf("[");
 
       const tagName = value.slice(0, leftBracketIndex);
-
-      if (!regexIsValidTag.test(tagName)) return "";
 
       let tagContent = value.slice(leftBracketIndex + 1, -1);
 
