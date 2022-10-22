@@ -4,7 +4,9 @@
 
 <br>
 <p align='center'>
+<a href="https://coveralls.io/github/diogoneves07/bemtvjs">
   <img alt="Coveralls" src="https://img.shields.io/coveralls/github/diogoneves07/bemtvjs?label=test%20coverage&style=for-the-badge">
+  </a>
 </p>
 
 ## Translations:
