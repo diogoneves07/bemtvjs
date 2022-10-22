@@ -2,6 +2,11 @@
   <img  src='https://github.com/diogoneves07/bentivejs/blob/main/assets/bemtv-logo.png'  alt='Bemtv logo'>
 </p>
 
+<br>
+<p align='center'>
+  <img alt="Coveralls" src="https://img.shields.io/coveralls/github/diogoneves07/bemtvjs?label=test%20coverage&style=for-the-badge">
+</p>
+
 **Bemtv**(Abreviação do nome do pássaro [Bem-te-vi](https://pt.wikipedia.org/wiki/Bem-te-vi)) é uma biblioteca JavaScript que traz uma nova abordagem para a criação de UIs interativas.
 
 Basicamente, é a junção de

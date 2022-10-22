@@ -2,6 +2,11 @@
   <img  src='https://github.com/diogoneves07/bentivejs/blob/main/assets/bemtv-logo.png'  alt='Bemtv logo'>
 </p>
 
+<br>
+<p align='center'>
+  <img alt="Coveralls" src="https://img.shields.io/coveralls/github/diogoneves07/bemtvjs?label=test%20coverage&style=for-the-badge">
+</p>
+
 ## Translations:
 
 - [Português do Brasil](https://github.com/diogoneves07/bemtvjs/blob/main/translations/README-PT_BR.md)
