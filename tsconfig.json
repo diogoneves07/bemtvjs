@@ -7,7 +7,7 @@
     "moduleResolution": "Node",
     "strict": true,
     "emitDeclarationOnly": true,
-    "declarationDir": "types/",
+    "declarationDir": "./types",
     "sourceMap": true,
     "resolveJsonModule": true,
     "isolatedModules": true,

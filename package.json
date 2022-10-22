@@ -1,6 +1,6 @@
 {
   "name": "bemtv",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "type": "module",
   "license": "MIT",
   "author": "Diogo Neves",
@@ -32,7 +32,8 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "test": "jest",
-    "commit": "cz"
+    "commit": "cz",
+    "coverage": "jest --coverage"
   },
   "repository": {
     "type": "git",
