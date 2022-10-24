@@ -1,6 +1,5 @@
 import { KEY_ATTRIBUTE_NAME } from "./globals";
 import { ComponentThis } from "./components-this";
-import insertEventListener from "./insert-event-listener";
 import { getManagerElData } from "./work-with-manager-el";
 
 export function getComponentThisData(componentThis: ComponentThis) {
@@ -25,22 +24,6 @@ export function getComponentThisProps(parent: ComponentThis, key: string) {
 }
 export function isMounted(componentThis: ComponentThis) {
   return getComponentThisData(componentThis).mounted;
-}
-
-export function defineComponentThisFirstElement(
-  componentThis: ComponentThis,
-  newValue: Element | null
-) {
-  const d = getComponentThisData(componentThis);
-
-  if (!newValue || d.firstElement === newValue) return;
-
-  [...d.listeners].map((o) => {
-    o.removeListener = insertEventListener(newValue, o.listener, ...o.args);
-    return o;
-  });
-
-  d.firstElement = newValue;
 }
 
 export function getElementsForElsManager(this: ComponentThis) {

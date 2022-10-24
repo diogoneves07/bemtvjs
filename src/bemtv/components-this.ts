@@ -13,6 +13,7 @@ import {
   LifeCycleCallback,
   Props,
 } from "./types/component-this-data";
+import insertEventListener from "./insert-event-listener";
 
 export interface ComponentThis extends Listeners {}
 
@@ -30,6 +31,22 @@ export class ComponentThis {
     els: [],
     sharedData: {},
     parent: null,
+    defineFirstElement(newValue: Element | null) {
+      const d = this;
+
+      if (d.firstElement === newValue) return;
+
+      if (d.firstElement)
+        d.listeners.forEach((o) => o.removeListener && o.removeListener());
+
+      d.firstElement = newValue;
+
+      if (!newValue) return;
+
+      for (const o of d.listeners) {
+        o.removeListener = insertEventListener(newValue, o.listener, ...o.args);
+      }
+    },
   };
 
   /** The component properties */

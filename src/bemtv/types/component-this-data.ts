@@ -8,6 +8,7 @@ export type LifeCycleCallback = () => void;
 export interface ComponentThisData {
   listeners: Set<ComponentListener>;
   firstElement: Element | null;
+  defineFirstElement: (node: Element | null) => void;
   propsDefined?: Map<string, Props>;
   mountedFns: Set<LifeCycleCallback>;
   unmountedFns?: Set<LifeCycleCallback>;

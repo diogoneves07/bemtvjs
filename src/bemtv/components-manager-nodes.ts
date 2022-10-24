@@ -4,16 +4,19 @@ import {
   getNodeComponentKeys,
   setNodeComponentKeys,
 } from "./nodes-component-keys";
-import { defineComponentThisFirstElement } from "./work-with-components-this";
+import { getComponentThisData } from "./work-with-components-this";
 
 function findAndSetComponentThisFirstElement(
   componentManager: ComponentManager
 ) {
+  const d = getComponentThisData(componentManager.componentThis);
+
+  d.defineFirstElement(null);
+
   for (const node of componentManager.nodes) {
     if (!(node instanceof Element)) continue;
 
-    defineComponentThisFirstElement(componentManager.componentThis, node);
-
+    d.defineFirstElement(node);
     return;
   }
 }
