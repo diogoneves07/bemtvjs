@@ -37,14 +37,14 @@ export function appendNodeToComponentManagerNodes(node: Node) {
 export function removeNodeFromComponentManagerNodes(node: Node) {
   const keys = getNodeComponentKeys(node);
 
-  if (!keys) return;
+  if (keys) {
+    for (const m of ALL_COMPONENTS_MANAGER) {
+      if (!keys.includes(m.key)) continue;
 
-  for (const m of ALL_COMPONENTS_MANAGER) {
-    if (!keys.includes(m.key)) continue;
+      m.nodes = m.nodes.filter((n) => n !== node);
 
-    m.nodes = m.nodes.filter((n) => n !== node);
-
-    findAndSetComponentThisFirstElement(m);
+      findAndSetComponentThisFirstElement(m);
+    }
   }
 }
 
