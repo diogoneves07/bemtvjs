@@ -36,28 +36,29 @@ const alternativeTimeoutForLoop = 1000 / alternativeFramesLimit;
       shouldComponentBeUnmounted(componentManager);
 
       const updatedUI = updatedUIWithNewTemplate(componentManager);
-      if (!updatedUI) continue;
 
-      const { newComponentsManager, componentsManagerUpdated, keysAndNodes } =
-        updatedUI;
+      if (updatedUI) {
+        const { newComponentsManager, componentsManagerUpdated, keysAndNodes } =
+          updatedUI;
 
-      if (
-        !componentManager.shouldForceUpdate ||
-        newComponentsManager.length ||
-        componentsManagerUpdated.length
-      ) {
-        dispatchUpdatedLifeCycle(componentManager.componentThis);
-      }
-
-      for (const c of componentsManagerUpdated) {
-        dispatchUpdatedLifeCycle(c.componentThis);
-      }
-
-      for (const c of newComponentsManager) {
-        if (keysAndNodes[c.key]) {
-          setComponentManagerNodes(c.key, keysAndNodes[c.key]);
+        if (
+          !componentManager.shouldForceUpdate ||
+          newComponentsManager.length ||
+          componentsManagerUpdated.length
+        ) {
+          dispatchUpdatedLifeCycle(componentManager.componentThis);
         }
-        dispatchMountedLifeCycle(c.componentThis);
+
+        for (const c of componentsManagerUpdated) {
+          dispatchUpdatedLifeCycle(c.componentThis);
+        }
+
+        for (const c of newComponentsManager) {
+          if (keysAndNodes[c.key]) {
+            setComponentManagerNodes(c.key, keysAndNodes[c.key]);
+          }
+          dispatchMountedLifeCycle(c.componentThis);
+        }
       }
     }
 
