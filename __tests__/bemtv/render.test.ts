@@ -18,9 +18,7 @@ describe("Render the templates", () => {
       render("Hello world!", "");
     }).toThrow();
   });
-  it("Should add text in div#app", (done) => {
-    document.body.innerHTML = "";
-
+  it("Should add text in div", (done) => {
     const div = document.createElement("div");
     div.id = "app";
 
@@ -29,6 +27,18 @@ describe("Render the templates", () => {
     setTimeout(() => {
       expect(div.textContent?.trim()).toBe("Hello world!");
 
+      done();
+    }, 100);
+  });
+  it("Should add text in div#app", (done) => {
+    const div = document.createElement("div");
+    div.id = "app";
+    document.body.appendChild(div);
+
+    render("Hello world!", "#app");
+
+    setTimeout(() => {
+      expect(div.textContent?.trim()).toBe("Hello world!");
       done();
     }, 100);
   });
