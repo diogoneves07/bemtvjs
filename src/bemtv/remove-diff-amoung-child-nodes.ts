@@ -8,6 +8,7 @@ import { reapplyCSSClasses } from "./work-with-manager-el";
 
 function removeDiffBetweenNodesAttrs(newNode: Element, oldNode: Element) {
   const attrsLength = newNode.attributes.length;
+
   for (let attrIndex = 0; attrIndex < attrsLength; attrIndex++) {
     const newAttr = newNode.attributes.item(attrIndex);
 
@@ -17,20 +18,11 @@ function removeDiffBetweenNodesAttrs(newNode: Element, oldNode: Element) {
 
     if (newAttr.value === oldNode.getAttribute(attrName)) continue;
 
-    if (newAttr instanceof SVGElement) {
-      oldNode.setAttributeNS(
-        "http://www.w3.org/2000/svg",
-        attrName,
-        newAttr.value
-      );
-    } else {
-      oldNode.setAttribute(attrName, newAttr.value);
-    }
+    oldNode.setAttribute(attrName, newAttr.value);
 
-    if (!newNode.hasAttribute(KEY_ATTRIBUTE_NAME)) continue;
     if (!(attrName === "class")) continue;
 
-    reapplyCSSClasses(oldNode);
+    newNode.hasAttribute(KEY_ATTRIBUTE_NAME) && reapplyCSSClasses(oldNode);
   }
 }
 export function removeDiffAmoungChildNodes(

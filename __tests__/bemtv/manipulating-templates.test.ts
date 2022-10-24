@@ -72,16 +72,18 @@ describe("Checks if changes to templates are applied to the DOM correctly", () =
   });
   it("Should remove diff between SVG elments attributes", (done) => {
     Component("App", () => {
-      const firstValue = `svg[ xmlns="http://www.w3.org/2000/svg" class="red" ~ ]`;
-      const secondValue = `svg[ xmlns="http://www.w3.org/2000/svg" class="blue" ~ ]`;
+      const firstValue = `svg[ xmlns="http://www.w3.org/2000/svg"  ~ circle[class="red" ~ ]]`;
+      const secondValue = `svg[ xmlns="http://www.w3.org/2000/svg" ~ circle[class="blue" ~ ]]`;
       let t = firstValue;
       setTimeout(() => (t = secondValue), 100);
       return () => t;
     }).render();
 
     setTimeout(() => {
-      expect(document.body.children[0].tagName.toLowerCase()).toBe("svg");
-      expect(document.body.children[0].getAttribute("class")).toBe("blue");
+      expect(document.getElementsByTagName("circle")[0]).toBeTruthy();
+      expect(
+        document.getElementsByTagName("circle")[0].getAttribute("class")
+      ).toBe("blue");
       done();
     }, 200);
   });
