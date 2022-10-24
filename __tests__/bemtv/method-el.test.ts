@@ -1,5 +1,8 @@
 import { Component } from "../../src/main";
 import { ManagerEl } from "./../../src/bemtv/manager-el";
+import { resetTestEnvironment } from "./utilities/reset-test-environment";
+
+resetTestEnvironment();
 
 describe("el method", () => {
   it("Should return a tuple", () => {
@@ -17,7 +20,7 @@ describe("el method", () => {
     div.id = "app";
     document.body.appendChild(div);
 
-    Component("App1", ({ el }) => {
+    Component("App", ({ el }) => {
       const m = el("app");
 
       expect(m).toBeInstanceOf(ManagerEl);

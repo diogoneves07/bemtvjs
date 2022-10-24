@@ -1,4 +1,7 @@
 import { Component } from "../../src/main";
+import { resetTestEnvironment } from "./utilities/reset-test-environment";
+
+resetTestEnvironment();
 
 describe("Inject event handlers to component instance", () => {
   it("Should add onclick event listener to element", (done) => {
@@ -23,7 +26,7 @@ describe("Inject event handlers to component instance", () => {
   });
 
   it("Should remove onclick event listener from element", (done) => {
-    Component("App1", ({ el, click$ }) => {
+    Component("App", ({ el, click$ }) => {
       const [appEl, key] = el<HTMLButtonElement>();
       const clickFn = jest.fn();
 

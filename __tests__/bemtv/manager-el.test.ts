@@ -1,9 +1,12 @@
 import { Component } from "../../src/main";
+import { resetTestEnvironment } from "./utilities/reset-test-environment";
+
+resetTestEnvironment();
 
 describe("ManagerEl", () => {
   describe("ManagerEl.css method", () => {
     it("Should add style to element", (done) => {
-      Component("App1", ({ el }) => {
+      Component("App", ({ el }) => {
         const [appEl, key] = el<HTMLButtonElement>();
 
         appEl.css`font-size:50px;`;
@@ -27,7 +30,7 @@ describe("ManagerEl", () => {
 
   describe("Inject event handlers to ManagerEl instance", () => {
     it("Should add onclick event listener to element", (done) => {
-      Component("App2", ({ el }) => {
+      Component("App", ({ el }) => {
         const [appEl, key] = el<HTMLButtonElement>();
         const clickFn = jest.fn();
 
@@ -48,7 +51,7 @@ describe("ManagerEl", () => {
     });
 
     it("Should remove onclick event listener from element", (done) => {
-      Component("App3", ({ el }) => {
+      Component("App", ({ el }) => {
         const [appEl, key] = el<HTMLButtonElement>();
         const clickFn = jest.fn();
 

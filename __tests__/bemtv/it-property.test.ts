@@ -1,4 +1,7 @@
 import { Component } from "../../src/main";
+import { resetTestEnvironment } from "./utilities/reset-test-environment";
+
+resetTestEnvironment();
 
 describe("ManagerEl.it property", () => {
   it("Should use #app element in ManagerEl", (done) => {
@@ -6,7 +9,7 @@ describe("ManagerEl.it property", () => {
     div.id = "app";
     document.body.appendChild(div);
 
-    Component("App1", ({ el }) => {
+    Component("App", ({ el }) => {
       const appEl = el("#app");
 
       setTimeout(() => {
@@ -23,7 +26,7 @@ describe("ManagerEl.it property", () => {
 
     document.body.appendChild(div);
 
-    Component("App2", ({ el }) => {
+    Component("App", ({ el }) => {
       const appEl = el(div);
 
       setTimeout(() => {
@@ -36,7 +39,7 @@ describe("ManagerEl.it property", () => {
   });
 
   it("Should get element from template and use in ManagerEl", (done) => {
-    Component("App3", ({ el }) => {
+    Component("App", ({ el }) => {
       const [appEl, key] = el();
 
       setTimeout(() => {
@@ -49,7 +52,7 @@ describe("ManagerEl.it property", () => {
   });
 
   it("Should be null", (done) => {
-    Component("App4", ({ el }) => {
+    Component("App", ({ el }) => {
       const [appEl] = el();
 
       setTimeout(() => {
@@ -62,7 +65,7 @@ describe("ManagerEl.it property", () => {
   });
 
   it("Should replace the HTML elements “span” with “strong”", (done) => {
-    Component("App5", ({ el }) => {
+    Component("App", ({ el }) => {
       const [appEl, key] = el();
       let t = `span[${key} class="today" ~ Click me!]`;
 
@@ -80,7 +83,7 @@ describe("ManagerEl.it property", () => {
   });
 
   it("Should update element attributes", (done) => {
-    Component("App6", ({ el }) => {
+    Component("App", ({ el }) => {
       const [appEl, key] = el();
       let t = `span[${key} class="today" color:red; ~ Click me!]`;
 

@@ -1,11 +1,14 @@
 import { Component } from "../../src/main";
+import { resetTestEnvironment } from "./utilities/reset-test-environment";
+
+resetTestEnvironment();
 
 describe("Checks if changes to templates are applied to the DOM correctly", () => {
   it("Should remove component Child nodes", (done) => {
-    Component("Child1", () => "strong[Not Hey!]");
+    Component("Child", () => "strong[Not Hey!]");
 
-    Component("App1", () => {
-      let t = "Child1[]";
+    Component("App", () => {
+      let t = "Child[]";
       setTimeout(() => (t = "Hey!"), 100);
       return () => t;
     }).render();
@@ -17,8 +20,7 @@ describe("Checks if changes to templates are applied to the DOM correctly", () =
   });
 
   it("Should replace component Text node with strong element", (done) => {
-    document.body.textContent = "";
-    Component("App2", () => {
+    Component("App", () => {
       let t = "Hello";
       setTimeout(() => (t = "strong[Hello]"), 100);
       return () => t;
@@ -31,8 +33,7 @@ describe("Checks if changes to templates are applied to the DOM correctly", () =
   });
 
   it("Should replace component empty Text node with strong element", (done) => {
-    document.body.textContent = "";
-    Component("App3", () => {
+    Component("App", () => {
       let t = "";
       setTimeout(() => (t = "strong[Hello]"), 100);
       return () => t;
@@ -45,8 +46,7 @@ describe("Checks if changes to templates are applied to the DOM correctly", () =
   });
 
   it("Should replace component span element with strong element", (done) => {
-    document.body.textContent = "";
-    Component("App4", () => {
+    Component("App", () => {
       let t = "span[Hey]";
       setTimeout(() => (t = "strong[Hello]"), 100);
       return () => t;
@@ -59,8 +59,7 @@ describe("Checks if changes to templates are applied to the DOM correctly", () =
   });
 
   it("Should remove diff between elments attributes", (done) => {
-    document.body.textContent = "";
-    Component("App5", () => {
+    Component("App", () => {
       let t = "span[ class='test' ~ Hey]";
       setTimeout(() => (t = "strong[class='hello' ~ Hello]"), 100);
       return () => t;
@@ -72,9 +71,7 @@ describe("Checks if changes to templates are applied to the DOM correctly", () =
     }, 200);
   });
   it("Should remove diff between SVG elments attributes", (done) => {
-    document.body.textContent = "";
-
-    Component("App6", () => {
+    Component("App", () => {
       const firstValue = `svg[ xmlns="http://www.w3.org/2000/svg" class="red" ~ ]`;
       const secondValue = `svg[ xmlns="http://www.w3.org/2000/svg" class="blue" ~ ]`;
       let t = firstValue;
@@ -90,8 +87,7 @@ describe("Checks if changes to templates are applied to the DOM correctly", () =
   });
 
   it("Should replace text in component span element", (done) => {
-    document.body.textContent = "";
-    Component("App7", () => {
+    Component("App", () => {
       let t = "span[Hey]";
       setTimeout(() => (t = "span[Hello]"), 100);
       return () => t;
@@ -104,14 +100,12 @@ describe("Checks if changes to templates are applied to the DOM correctly", () =
   });
 
   it("Should component parent and child update", (done) => {
-    document.body.textContent = "";
-
     let parentText = "";
     let childText = "";
 
-    Component("Child2", () => () => childText);
+    Component("Child", () => () => childText);
 
-    Component("App8", () => () => `${parentText} Child2[]`).render();
+    Component("App", () => () => `${parentText} Child[]`).render();
 
     setTimeout(() => {
       parentText = "He";

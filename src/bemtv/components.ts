@@ -6,7 +6,7 @@ type GlobalComponentsMap = Map<string, ComponentFn>;
 
 type ComponentName = `${Capitalize<string>}${string}`;
 
-const GLOBAL_COMPONENTS_MAP: GlobalComponentsMap = new Map();
+export const GLOBAL_COMPONENTS_MAP: GlobalComponentsMap = new Map();
 
 export type ComponentFn =
   | ((self: ComponentThis) => () => string)

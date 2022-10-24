@@ -1,16 +1,19 @@
 import { Component } from "../../src/main";
+import { resetTestEnvironment } from "./utilities/reset-test-environment";
+
+resetTestEnvironment();
 
 describe("sharing API", () => {
   describe("method share()", () => {
     it('Should share "message" property', (done) => {
-      Component("Child1", ({ use }) => {
+      Component("Child", ({ use }) => {
         return () => use("message");
       });
 
-      Component("App1", ({ share }) => {
+      Component("App", ({ share }) => {
         share({ message: "Hello" });
 
-        return () => `Child1[]`;
+        return () => `Child[]`;
       }).render();
 
       setTimeout(() => {
@@ -20,15 +23,15 @@ describe("sharing API", () => {
     });
 
     test('Parent should not access the "user" property', (done) => {
-      document.body.textContent = "";
+      document.body.innerHTML = "";
 
-      Component("Child2", ({ share }) => {
+      Component("Child", ({ share }) => {
         share({ user: "World" });
         return () => ``;
       });
 
-      Component("App2", ({ use }) => {
-        return () => `Child2[] ${use("user")}`;
+      Component("App", ({ use }) => {
+        return () => `Child[] ${use("user")}`;
       }).render();
 
       setTimeout(() => {
@@ -39,15 +42,15 @@ describe("sharing API", () => {
   });
   describe("method reshare()", () => {
     it('Should update "message" property', (done) => {
-      document.body.textContent = "";
+      document.body.innerHTML = "";
 
-      Component("Child3", ({ reshare }) => {
+      Component("Child", ({ reshare }) => {
         reshare({ message: "Hey!" });
         return ``;
       });
-      Component("App3", ({ share, use }) => {
+      Component("App", ({ share, use }) => {
         share({ message: "" });
-        return () => `${use("message")} Child3[]`;
+        return () => `${use("message")} Child[]`;
       }).render();
 
       setTimeout(() => {
@@ -57,15 +60,15 @@ describe("sharing API", () => {
     });
 
     it('Should not update "message" property', (done) => {
-      document.body.textContent = "";
+      document.body.innerHTML = "";
 
-      Component("Child4", ({ share }) => {
+      Component("Child", ({ share }) => {
         share({ message: "Hey!" });
         return ``;
       });
-      Component("App4", ({ reshare, use }) => {
+      Component("App", ({ reshare, use }) => {
         reshare({ message: "" });
-        return () => `${use("message")} Child4[]`;
+        return () => `${use("message")} Child[]`;
       }).render();
 
       setTimeout(() => {
@@ -77,14 +80,14 @@ describe("sharing API", () => {
 
   describe("method use()", () => {
     it('Should use "message" property', (done) => {
-      document.body.textContent = "";
+      document.body.innerHTML = "";
 
-      Component("Child5", ({ use }) => {
+      Component("Child", ({ use }) => {
         return use<string>("message") || "";
       });
-      Component("App5", ({ share }) => {
+      Component("App", ({ share }) => {
         share({ message: "Hey" });
-        return () => `Child5[]`;
+        return () => `Child[]`;
       }).render();
 
       setTimeout(() => {
@@ -94,15 +97,15 @@ describe("sharing API", () => {
     });
 
     it('Should not use "message" property', (done) => {
-      document.body.textContent = "";
+      document.body.innerHTML = "";
 
-      Component("Child6", ({ share }) => {
+      Component("Child", ({ share }) => {
         share({ message: "Hey" });
         return "";
       });
 
-      Component("App6", ({ use }) => {
-        return () => `Child6[] ${use("message")}`;
+      Component("App", ({ use }) => {
+        return () => `Child[] ${use("message")}`;
       }).render();
 
       setTimeout(() => {

@@ -1,4 +1,7 @@
 import { Component } from "../../src/main";
+import { resetTestEnvironment } from "./utilities/reset-test-environment";
+
+resetTestEnvironment();
 
 describe("Checks the values of simple properties of the component instance", () => {
   test("name property", (done) => {
@@ -12,10 +15,10 @@ describe("Checks the values of simple properties of the component instance", () 
   });
 
   test("name children", (done) => {
-    document.body.textContent = "";
+    document.body.innerHTML = "";
 
     Component("Child", ({ children }) => children);
-    Component("App1", () => "Child[Hey!]").render();
+    Component("App", () => "Child[Hey!]").render();
 
     setTimeout(() => {
       expect(document.body?.textContent?.trim()).toBe("Hey!");

@@ -1,4 +1,7 @@
 import { Component } from "../../src/main";
+import { resetTestEnvironment } from "./utilities/reset-test-environment";
+
+resetTestEnvironment();
 
 describe("Lifecycle Hooks", () => {
   test("onUnmount method", (done) => {
@@ -9,7 +12,7 @@ describe("Lifecycle Hooks", () => {
       return () => `Hello world`;
     });
 
-    Component("App3", () => {
+    Component("App", () => {
       let t = `Child[]`;
       setTimeout(() => (t = "Hey!"), 100);
       return () => t;

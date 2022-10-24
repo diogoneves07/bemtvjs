@@ -1,9 +1,14 @@
 import { Component, match } from "../../src/main";
-import "./components-for-use-in-tests/Counter";
+import { resetTestEnvironment } from "./utilities/reset-test-environment";
+import { createCounterComponent } from "./utilities/Counter";
+
+resetTestEnvironment();
 
 describe("Shows an alternative if the component is not available", () => {
   test("Component is available", (done) => {
-    Component("App1", () => {
+    createCounterComponent();
+
+    Component("App", () => {
       return () => `${match("Counter[]", "is available")} `;
     }).render();
     setTimeout(() => {
@@ -13,9 +18,7 @@ describe("Shows an alternative if the component is not available", () => {
   });
 
   test("Component is not available", (done) => {
-    document.body.innerHTML = "";
-
-    Component("App2", () => {
+    Component("App", () => {
       return () => `${match("Message[]", "is not available")} `;
     }).render();
 

@@ -1,10 +1,13 @@
 import { Component } from "../../src/main";
+import { resetTestEnvironment } from "./utilities/reset-test-environment";
+
+resetTestEnvironment();
 
 describe(`
    Checks the reapplication of CSS classes to the element of the “ManagerEl.it” property
 `, () => {
   it("Should reapply the class inserted via the “ManagerEl.css()” method", (done) => {
-    Component("App1", ({ el }) => {
+    Component("App", ({ el }) => {
       const [appEl, key] = el();
       let t = `span[${key} Click me!]`;
 
@@ -28,7 +31,7 @@ describe(`
   it(`
      Should apply the class inserted through the “ManagerEl.css()” method to the new element
   `, (done) => {
-    Component("App2", ({ el }) => {
+    Component("App", ({ el }) => {
       const [appEl, key] = el();
       let t = `span[${key} Click me!]`;
 

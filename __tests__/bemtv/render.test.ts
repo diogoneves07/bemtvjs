@@ -1,5 +1,8 @@
 import { render } from "../../src/main";
-import "./components-for-use-in-tests/Counter";
+import { resetTestEnvironment } from "./utilities/reset-test-environment";
+import { createCounterComponent } from "./utilities/Counter";
+
+resetTestEnvironment();
 
 describe("Render the templates", () => {
   it("Should add text in document.body", (done) => {
@@ -16,7 +19,7 @@ describe("Render the templates", () => {
     }).toThrow();
   });
   it("Should add text in div#app", (done) => {
-    document.body.textContent = "";
+    document.body.innerHTML = "";
 
     const div = document.createElement("div");
     div.id = "app";
@@ -30,7 +33,7 @@ describe("Render the templates", () => {
     }, 100);
   });
   it("Should add Counter component in document.body", (done) => {
-    document.body.textContent = "";
+    createCounterComponent();
 
     render("Counter[]");
 
