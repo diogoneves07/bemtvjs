@@ -31,7 +31,13 @@ export class ManagerEl<E = Element> {
 
     ALL_ELEMENTS_MANAGER.set(newIt as Element, this);
 
-    [...this.__data.listeners].map((o) => {
+    if (this.__data.element) {
+      this.__data.listeners.forEach(
+        (o) => o.removeListener && o.removeListener()
+      );
+    }
+
+    this.__data.listeners.forEach((o) => {
       o.removeListener = insertEventListener(newIt, o.listener, ...o.args);
       return o;
     });
@@ -41,6 +47,7 @@ export class ManagerEl<E = Element> {
     }
 
     newIt && newIt.classList.add(...this.__data.CSSClasses);
+
     this.__data.applyCSSWhenElementIsAvallable = [];
     this.__data.element = newIt;
   }
