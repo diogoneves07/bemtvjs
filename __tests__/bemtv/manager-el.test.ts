@@ -26,6 +26,30 @@ describe("ManagerEl", () => {
         return () => `button[${key} Click me!]`;
       }).render();
     });
+
+    it("Should add style to element after a time", (done) => {
+      Component("App", ({ el }) => {
+        const [appEl, key] = el<HTMLButtonElement>();
+
+        setTimeout(() => {
+          appEl.css`font-size:50px;`;
+        }, 100);
+
+        setTimeout(() => {
+          expect(document.getElementsByTagName("style").length).toBe(1);
+          expect(appEl.it?.classList.length).toBe(1);
+
+          expect(
+            getComputedStyle(appEl.it as HTMLButtonElement).getPropertyValue(
+              "font-size"
+            )
+          ).toBe("50px");
+          done();
+        }, 200);
+
+        return () => `button[${key} Click me!]`;
+      }).render();
+    });
   });
 
   describe("Inject event handlers to ManagerEl instance", () => {
