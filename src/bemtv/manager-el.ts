@@ -3,7 +3,7 @@ import { ComponentListener } from "./types/listeners";
 import { Listeners } from "./types/listeners";
 import insertEventListener from "./insert-event-listener";
 import { css } from "goober";
-import { applyElementCSS, reapplyCSSClasses } from "./work-with-manager-el";
+import { applyElementCSS } from "./work-with-manager-el";
 
 type CSSInJSParameters = Parameters<typeof BEMTEVI_CSS_IN_JS["gooberCSS"]>;
 export interface ManagerElData<E> {
@@ -11,7 +11,6 @@ export interface ManagerElData<E> {
   element: E | null;
   CSSClasses: string[];
   applyCSSWhenElementIsAvallable: CSSInJSParameters[];
-  reapplyCSSClasses: () => void;
   key: string;
 }
 
@@ -24,25 +23,26 @@ export class ManagerEl<E = Element> {
     CSSClasses: [],
     applyCSSWhenElementIsAvallable: [],
     element: null,
-    reapplyCSSClasses: () => reapplyCSSClasses(this),
     key: "",
   };
 
-  public set it(v: E | null) {
-    if (!v || this.__data.element === v) return;
+  public set it(newIt: E | null) {
+    if (!newIt || this.__data.element === newIt) return;
 
-    ALL_ELEMENTS_MANAGER.set(v as Element, this);
+    ALL_ELEMENTS_MANAGER.set(newIt as Element, this);
 
     [...this.__data.listeners].map((o) => {
-      o.removeListener = insertEventListener(v, o.listener, ...o.args);
+      o.removeListener = insertEventListener(newIt, o.listener, ...o.args);
       return o;
     });
 
     for (const callCSS of this.__data.applyCSSWhenElementIsAvallable.slice()) {
-      this.__data.CSSClasses.push(applyElementCSS(v, callCSS));
+      this.__data.CSSClasses.push(applyElementCSS(newIt, callCSS));
     }
+
+    newIt && newIt.classList.add(...this.__data.CSSClasses);
     this.__data.applyCSSWhenElementIsAvallable = [];
-    this.__data.element = v;
+    this.__data.element = newIt;
   }
 
   /**
@@ -68,7 +68,7 @@ export class ManagerEl<E = Element> {
       this.__data.applyCSSWhenElementIsAvallable.push(args);
       return this;
     }
-    applyElementCSS(element, args);
+    this.__data.CSSClasses.push(applyElementCSS(element, args));
 
     return this;
   }

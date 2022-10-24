@@ -1,5 +1,5 @@
 import { BEMTEVI_CSS_IN_JS } from "./globals";
-import { ManagerEl } from "./manager-el";
+import { ALL_ELEMENTS_MANAGER, ManagerEl } from "./manager-el";
 
 type CSSInJSParameters = Parameters<typeof BEMTEVI_CSS_IN_JS["gooberCSS"]>;
 
@@ -15,11 +15,7 @@ export function applyElementCSS(el: Element, args: CSSInJSParameters) {
 
   return c;
 }
-export function reapplyCSSClasses(m: ManagerEl) {
-  const element = m.it;
-
-  if (!element) return;
-  for (const c of getManagerElData(m).CSSClasses) {
-    element.classList.add(c);
-  }
+export function reapplyCSSClasses(ref: Element) {
+  const m = ALL_ELEMENTS_MANAGER.get(ref) as ManagerEl;
+  if (m && m.it) m.it.classList.add(...getManagerElData(m).CSSClasses);
 }
