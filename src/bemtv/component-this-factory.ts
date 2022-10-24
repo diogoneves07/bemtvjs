@@ -22,41 +22,39 @@ export default function ComponentThisFactory(
         return (target as any)[name];
       }
 
-      if (typeof name !== "string") return false;
+      if (typeof name === "string" && isEventListener(name)) {
+        const newEventListener = (
+          ...args: [fn: Function, options: AddEventListenerOptions]
+        ) => {
+          const listenerObject: ComponentListener = {
+            listener: name.slice(0, -1),
+            args,
+          };
 
-      if (!isEventListener(name)) return;
+          listeners.add(listenerObject);
 
-      const newEventListener = (
-        ...args: [fn: Function, options: AddEventListenerOptions]
-      ) => {
-        const listenerObject: ComponentListener = {
-          listener: name.slice(0, -1),
-          args,
-        };
-
-        listeners.add(listenerObject);
-
-        if (componentThisData.firstElement) {
-          return insertEventListener(
-            componentThisData.firstElement,
-            name,
-            ...args
-          );
-        }
-
-        return () => {
-          if (!listenerObject.removeListener) {
-            listeners.delete(listenerObject);
-            return;
+          if (componentThisData.firstElement) {
+            return insertEventListener(
+              componentThisData.firstElement,
+              listenerObject.listener,
+              ...args
+            );
           }
 
-          listenerObject.removeListener();
+          return () => {
+            if (!listenerObject.removeListener) {
+              listeners.delete(listenerObject);
+              return;
+            }
+
+            listenerObject.removeListener();
+          };
         };
-      };
 
-      (target as any)[name] = newEventListener;
+        (target as any)[name] = newEventListener;
 
-      return newEventListener;
+        return newEventListener;
+      }
     },
   });
   return propxyComponentThis;

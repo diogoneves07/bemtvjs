@@ -71,5 +71,65 @@ describe("ManagerEl", () => {
         return () => `button[${key} Click me!]`;
       }).render();
     });
+
+    it(`
+  Should define strong and then button as first element and add “onclick” listener to it
+`, (done) => {
+      Component("App", ({ click$ }) => {
+        const fn = jest.fn();
+        let t = `strong[Hello!]`;
+        click$(fn);
+
+        setTimeout(() => {
+          t = `button[Click me!]`;
+        }, 100);
+
+        setTimeout(() => {
+          const btn = document.body.getElementsByTagName("button")[0];
+          btn.click();
+          expect(fn).toBeCalledTimes(1);
+          done();
+        }, 200);
+
+        return () => t;
+      }).render();
+    });
+
+    it(`Should add “onclick” listener to button element after mounted time`, (done) => {
+      Component("App", ({ el }) => {
+        const fn = jest.fn();
+        const [btnEl, btnKey] = el<HTMLButtonElement>();
+
+        setTimeout(() => btnEl.click$(fn), 100);
+
+        setTimeout(() => {
+          btnEl.it?.click();
+          expect(fn).toBeCalledTimes(1);
+          done();
+        }, 200);
+
+        return `button[ ${btnKey} Click me!]`;
+      }).render();
+    });
+
+    it(`
+  Should remove “onclick” listener from button element immediately after added
+`, (done) => {
+      Component("App", ({ el }) => {
+        const fn = jest.fn();
+        const [btnEl, btnKey] = el<HTMLButtonElement>();
+
+        const removeOnClickListener = btnEl.click$(fn);
+        removeOnClickListener();
+
+        setTimeout(() => {
+          btnEl.it?.click();
+          expect(fn).toBeCalledTimes(0);
+          done();
+        }, 200);
+
+        return `button[${btnKey} Click me!]`;
+      }).render();
+    });
   });
 });
