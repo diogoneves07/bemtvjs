@@ -474,7 +474,7 @@ _("Welcome", ({ props }) => {
 
 We can use props to pass data from the parent component to its children, but this usage can be cumbersome for certain types of props (like local preferences or UI theme), which are used by many components within the application.
 
-The Share API provides a way to share data like this between the component above and all components below it, without having to explicitly pass props between each level.
+The Sharing API provides a way to share data like this between the component above and all components below it, without having to explicitly pass props between each level.
 
 #### Sharing data
 
