@@ -155,5 +155,26 @@ describe("ManagerEl", () => {
         return `button[${btnKey} Click me!]`;
       }).render();
     });
+
+    it(`
+  Should remove “onclick” listener with “capture:true” from button element immediately after added
+`, (done) => {
+      Component("App", ({ el }) => {
+        const fn = jest.fn();
+        const [btnEl, btnKey] = el<HTMLButtonElement>();
+
+        const removeOnClickListener = btnEl.click$(fn, { capture: true });
+
+        setTimeout(() => {
+          removeOnClickListener();
+
+          btnEl.it?.click();
+          expect(fn).toBeCalledTimes(0);
+          done();
+        }, 200);
+
+        return `button[${btnKey} Click me!]`;
+      }).render();
+    });
   });
 });
