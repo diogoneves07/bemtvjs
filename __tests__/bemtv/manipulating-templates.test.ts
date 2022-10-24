@@ -88,6 +88,19 @@ describe("Checks if changes to templates are applied to the DOM correctly", () =
     }, 200);
   });
 
+  it("should remove most elements", (done) => {
+    Component("App", () => {
+      let t = "span[Hey] span[Hey] span[Hey] span[Hey] span[Hey] span[Hey]";
+      setTimeout(() => (t = "span[Hello]"), 100);
+      return () => t;
+    }).render();
+
+    setTimeout(() => {
+      expect(document.body.children[0].textContent?.trim()).toBe("Hello");
+      done();
+    }, 200);
+  });
+
   it("Should replace text in component span element", (done) => {
     Component("App", () => {
       let t = "span[Hey]";

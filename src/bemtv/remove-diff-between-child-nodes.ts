@@ -10,9 +10,7 @@ function removeDiffBetweenNodesAttrs(newNode: Element, oldNode: Element) {
   const attrsLength = newNode.attributes.length;
 
   for (let attrIndex = 0; attrIndex < attrsLength; attrIndex++) {
-    const newAttr = newNode.attributes.item(attrIndex);
-
-    if (!newAttr) continue;
+    const newAttr = newNode.attributes.item(attrIndex) as Attr;
 
     const attrName = newAttr.name.toLowerCase();
 
@@ -20,12 +18,12 @@ function removeDiffBetweenNodesAttrs(newNode: Element, oldNode: Element) {
 
     oldNode.setAttribute(attrName, newAttr.value);
 
-    if (!(attrName === "class")) continue;
-
-    newNode.hasAttribute(KEY_ATTRIBUTE_NAME) && reapplyCSSClasses(oldNode);
+    attrName === "class" &&
+      newNode.hasAttribute(KEY_ATTRIBUTE_NAME) &&
+      reapplyCSSClasses(oldNode);
   }
 }
-export function removeDiffAmoungChildNodes(
+export function removeDiffBetweenChildNodes(
   newChildNodes: Node[],
   oldChildNodes: Node[]
 ) {
@@ -35,9 +33,7 @@ export function removeDiffAmoungChildNodes(
 
   let oldChildNodesArray = oldChildNodes.slice(0, length);
 
-  const parentElement = oldChildNodes[0].parentElement;
-
-  if (!parentElement) return;
+  const parentElement = oldChildNodes[0].parentElement as HTMLElement;
 
   for (const node of oldChildNodes.slice(length)) {
     parentElement.removeChild(node);
@@ -74,22 +70,22 @@ export function removeDiffAmoungChildNodes(
       continue;
     }
 
-    if (!(newNode instanceof Element)) continue;
+    if (newNode instanceof Element) {
+      if (
+        newNode.textContent === newNode.innerHTML &&
+        newNode.textContent !== oldNode.textContent
+      ) {
+        oldNode.textContent = newNode.textContent;
+      }
 
-    if (
-      newNode.textContent === newNode.innerHTML &&
-      newNode.textContent !== oldNode.textContent
-    ) {
-      oldNode.textContent = newNode.textContent;
+      removeDiffBetweenNodesAttrs(newNode, oldNode as Element);
+
+      if (newNode.childNodes[0]) {
+        removeDiffBetweenChildNodes(
+          Array.from(newNode.childNodes),
+          Array.from((oldNode as Element).childNodes)
+        );
+      }
     }
-
-    removeDiffBetweenNodesAttrs(newNode, oldNode as Element);
-
-    if (!newNode.childNodes[0]) continue;
-
-    removeDiffAmoungChildNodes(
-      Array.from(newNode.childNodes),
-      Array.from((oldNode as Element).childNodes)
-    );
   }
 }

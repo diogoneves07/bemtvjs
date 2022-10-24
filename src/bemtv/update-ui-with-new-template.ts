@@ -1,6 +1,6 @@
 import ComponentManager from "./component-manager";
 import processUpdatedTemplate from "./process-updated-template";
-import { removeDiffAmoungChildNodes } from "./remove-diff-amoung-child-nodes";
+import { removeDiffBetweenChildNodes } from "./remove-diff-between-child-nodes";
 import brackethtmlToHTML from "../brackethtml/brackethtml-to-html";
 import { setNodeComponentKeys } from "./nodes-component-keys";
 import getPossibleNewNodes from "./get-possible-new-nodes";
@@ -28,7 +28,7 @@ export default function updateUIWithNewTemplate(
 
   const oldChildNodes = nodes;
 
-  removeDiffAmoungChildNodes(possibleNewChildNodes, oldChildNodes);
+  removeDiffBetweenChildNodes(possibleNewChildNodes, oldChildNodes);
 
   return { newComponentsManager, componentsManagerUpdated, keysAndNodes };
 }
