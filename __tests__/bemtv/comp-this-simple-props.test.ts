@@ -15,8 +15,6 @@ describe("Checks the values of simple properties of the component instance", () 
   });
 
   test("name children", (done) => {
-    document.body.innerHTML = "";
-
     Component("Child", ({ children }) => children);
     Component("App", () => "Child[Hey!]").render();
 

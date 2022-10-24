@@ -23,8 +23,6 @@ describe("sharing API", () => {
     });
 
     test('Parent should not access the "user" property', (done) => {
-      document.body.innerHTML = "";
-
       Component("Child", ({ share }) => {
         share({ user: "World" });
         return () => ``;
@@ -42,8 +40,6 @@ describe("sharing API", () => {
   });
   describe("method reshare()", () => {
     it('Should update "message" property', (done) => {
-      document.body.innerHTML = "";
-
       Component("Child", ({ reshare }) => {
         reshare({ message: "Hey!" });
         return ``;
@@ -60,8 +56,6 @@ describe("sharing API", () => {
     });
 
     it('Should not update "message" property', (done) => {
-      document.body.innerHTML = "";
-
       Component("Child", ({ share }) => {
         share({ message: "Hey!" });
         return ``;
@@ -80,8 +74,6 @@ describe("sharing API", () => {
 
   describe("method use()", () => {
     it('Should use "message" property', (done) => {
-      document.body.innerHTML = "";
-
       Component("Child", ({ use }) => {
         return use<string>("message") || "";
       });
@@ -97,8 +89,6 @@ describe("sharing API", () => {
     });
 
     it('Should not use "message" property', (done) => {
-      document.body.innerHTML = "";
-
       Component("Child", ({ share }) => {
         share({ message: "Hey" });
         return "";
