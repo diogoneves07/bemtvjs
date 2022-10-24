@@ -1,6 +1,7 @@
 import { KEY_ATTRIBUTE_NAME } from "./globals";
 import { ComponentThis } from "./components-this";
 import { getManagerElData } from "./work-with-manager-el";
+import { ManagerEl } from "./manager-el";
 
 export function getComponentThisData(componentThis: ComponentThis) {
   return componentThis.__data;
@@ -26,9 +27,7 @@ export function isMounted(componentThis: ComponentThis) {
   return getComponentThisData(componentThis).mounted;
 }
 
-export function getElementsForElsManager(this: ComponentThis) {
-  const els = getComponentThisData(this).els;
-
+export function getElementsForElsManager(els: ManagerEl<Element>[]) {
   for (const el of els) {
     el.it =
       Array.from(document.querySelectorAll(`[${KEY_ATTRIBUTE_NAME}]`)).find(

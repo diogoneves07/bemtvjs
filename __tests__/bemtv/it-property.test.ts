@@ -64,7 +64,7 @@ describe("ManagerEl.it property", () => {
     }).render();
   });
 
-  it("Should replace the HTML elements “span” with “strong”", (done) => {
+  it("Should replace the HTML element “span” with “strong”", (done) => {
     Component("App", ({ el }) => {
       const [appEl, key] = el();
       let t = `span[${key} class="today" ~ Click me!]`;
@@ -97,6 +97,25 @@ describe("ManagerEl.it property", () => {
       }, 200);
 
       return () => t;
+    }).render();
+  });
+
+  it("Should use element by selector after a time", (done) => {
+    const div = document.createElement("div");
+    div.id = "app";
+    document.body.appendChild(div);
+
+    Component("App", ({ el }) => {
+      setTimeout(() => {
+        const appEl = el("#app");
+
+        setTimeout(() => {
+          expect(appEl.it).toBe(div);
+          done();
+        }, 200);
+      }, 100);
+
+      return "Hello";
     }).render();
   });
 });

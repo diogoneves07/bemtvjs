@@ -22,12 +22,8 @@ export class ComponentThis {
     mounted: false,
     listeners: new Set(),
     firstElement: null,
-    mountedFns: new Set<LifeCycleCallback>().add(
-      getElementsForElsManager.bind(this)
-    ),
-    updatedFns: new Set<LifeCycleCallback>().add(
-      getElementsForElsManager.bind(this)
-    ),
+    mountedFns: new Set<LifeCycleCallback>(),
+    updatedFns: new Set<LifeCycleCallback>(),
     els: [],
     sharedData: {},
     parent: null,
@@ -61,7 +57,17 @@ export class ComponentThis {
 
   constructor(name: string, parent?: ComponentThis) {
     this.name = name;
-    this.__data.parent = parent || null;
+
+    const d = this.__data;
+    d.parent = parent || null;
+
+    const els = () => {
+      getElementsForElsManager(d.els);
+    };
+
+    d.updatedFns.add(els);
+    d.mountedFns.add(els);
+
     return this;
   }
 
@@ -146,13 +152,12 @@ export class ComponentThis {
     )[0];
 
     const managerEl = ManagerElFactory<E>(keyWithoutTokens);
-
-    this.__data.els.push(managerEl);
-
-    if (!selectorOrElement) return [managerEl, key];
-
     const data = getComponentThisData(this);
     const { mounted } = data;
+
+    data.els.push(managerEl);
+
+    if (!selectorOrElement) return [managerEl, key];
 
     if (mounted) {
       managerEl.it = getElement(selectorOrElement) as E;
