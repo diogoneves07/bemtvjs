@@ -4,7 +4,7 @@ import { ComponentThis } from "./components-this";
 
 type GlobalComponentsMap = Map<string, ComponentFn>;
 
-type ComponentName = `${Capitalize<string>}${string}`;
+type ComponentName = `${Capitalize<string>}${string}` | string;
 
 export const GLOBAL_COMPONENTS_MAP: GlobalComponentsMap = new Map();
 
@@ -46,12 +46,15 @@ export function Component<N extends ComponentName, C extends ComponentFn>(
   componentName: N,
   componentFn: C
 ) {
-  if (GLOBAL_COMPONENTS_MAP.has(componentName)) {
-    throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} This component "${componentName}" name is already in use!`;
+  const names = componentName.split(" ");
+
+  for (const n of names) {
+    if (GLOBAL_COMPONENTS_MAP.has(n)) {
+      throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} This component "${n}" name is already in use!`;
+    }
+
+    GLOBAL_COMPONENTS_MAP.set(n, componentFn);
   }
-
-  GLOBAL_COMPONENTS_MAP.set(componentName, componentFn);
-
-  return new ComponentInstance(componentName);
+  return new ComponentInstance(names[0]);
 }
 export const _ = Component;
