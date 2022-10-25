@@ -40,14 +40,12 @@ export default function render(
 
   window.requestAnimationFrame(() => {
     const [keysAndNodes, n] = getPossibleNewNodes(brackethtml.html);
-    const nodes: Node[] = [...n];
 
     for (const key of Object.keys(keysAndNodes)) {
-      nodes.push(...keysAndNodes[key]);
       setComponentManagerNodes(key, keysAndNodes[key]);
     }
 
-    for (const node of new Set(nodes)) {
+    for (const node of n) {
       if (!node.isConnected) {
         parent.appendChild(node);
       }

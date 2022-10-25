@@ -40,12 +40,14 @@ export function removeDiffBetweenChildNodes(
     removeNodeFromComponentManagerNodes(node);
   }
 
+  let lastNode: undefined | Node;
   for (let index = 0; index < length; index++) {
     const newNode = newChildNodesArray[index];
     const oldNode = oldChildNodesArray[index];
 
     if (!oldNode) {
-      !newNode.isConnected && parentElement.appendChild(newNode);
+      !newNode.isConnected &&
+        parentElement.insertBefore(newNode, lastNode?.nextSibling || null);
       appendNodeToComponentManagerNodes(newNode);
       continue;
     }
@@ -53,16 +55,20 @@ export function removeDiffBetweenChildNodes(
     if (newNode.nodeType !== oldNode.nodeType) {
       parentElement.replaceChild(newNode, oldNode);
       replaceNodeInComponentManagerNodes(newNode, oldNode);
+      lastNode = newNode;
       continue;
     }
     if ("tagName" in newNode) {
       if ((newNode as Element).tagName !== (oldNode as Element).tagName) {
         parentElement.replaceChild(newNode, oldNode);
         replaceNodeInComponentManagerNodes(newNode, oldNode);
+        lastNode = newNode;
 
         continue;
       }
     }
+    lastNode = oldNode;
+
     if (newNode instanceof Text) {
       if (newNode.textContent !== oldNode.textContent) {
         oldNode.textContent = newNode.textContent;

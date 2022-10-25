@@ -2,21 +2,14 @@ import { AVOIDS_EMPTY_TEMPLATE, TAG_HOST_NAME } from "./globals";
 const SIMPLE_DIV = document.createElement("div");
 const SIMPLE_DOCUMENT_FRAGMENT = document.createDocumentFragment();
 
-function removeUnnecessaryEmptyTextNodes(a: Node[]) {
-  if (a.length > 1) {
-    const r = a.filter((n) => {
-      const t = n.textContent;
-      if (n instanceof Text) {
-        n.textContent = n.textContent?.trim() || null;
-        n.textContent = n.textContent || " ";
-      }
-      return n instanceof Text && !t?.trim() && t !== AVOIDS_EMPTY_TEMPLATE
-        ? false
-        : true;
-    });
-    return r.length === 0 ? [a[0]] : r;
-  }
-  return a;
+function removeUnnecessarySpace(a: Node[]) {
+  return a.map((n) => {
+    if (n.textContent && n.textContent?.trim() === "") {
+      n.textContent = "";
+      return n;
+    }
+    return n;
+  });
 }
 export default function getPossibleNewNodes(
   newHtml: string
@@ -32,17 +25,18 @@ export default function getPossibleNewNodes(
       ...(Array.from(host.childNodes) as Node[])
     );
 
-    keysAndNodes[host.id] = removeUnnecessaryEmptyTextNodes(
+    keysAndNodes[host.id] = removeUnnecessarySpace(
       Array.from(SIMPLE_DOCUMENT_FRAGMENT.childNodes)
     );
 
     host.parentElement?.replaceChild(SIMPLE_DOCUMENT_FRAGMENT, host);
   }
 
-  let allElementsOrganized = removeUnnecessaryEmptyTextNodes(
+  let allElementsOrganized = removeUnnecessarySpace(
     Array.from(SIMPLE_DIV.childNodes)
   );
 
   SIMPLE_DIV.innerHTML = "";
+
   return [keysAndNodes, allElementsOrganized];
 }
