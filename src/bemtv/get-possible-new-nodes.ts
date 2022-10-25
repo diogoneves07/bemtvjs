@@ -1,4 +1,4 @@
-import { AVOIDS_EMPTY_TEMPLATE, TAG_HOST_NAME } from "./globals";
+import { TAG_HOST_NAME } from "./globals";
 const SIMPLE_DIV = document.createElement("div");
 const SIMPLE_DOCUMENT_FRAGMENT = document.createDocumentFragment();
 
