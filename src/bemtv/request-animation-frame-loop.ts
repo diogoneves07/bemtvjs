@@ -13,10 +13,11 @@ import shouldComponentBeUnmounted from "./should-component-be-unmounted";
 
 const componentsToDelete: Set<ComponentManager> = new Set();
 
-const framesLimit = 20;
-const timeoutForLoop = 1000 / framesLimit;
-const alternativeFramesLimit = 5;
-const alternativeTimeoutForLoop = 1000 / alternativeFramesLimit;
+export const FRAMES_LIMIT = 20;
+export const ALTERNATIVE_FRAMES_LIMIT = 5;
+
+const timeoutForLoop = 1000 / FRAMES_LIMIT;
+const alternativeTimeoutForLoop = 1000 / ALTERNATIVE_FRAMES_LIMIT;
 
 (function requestAnimationFrameLoop() {
   componentsToDelete.clear();

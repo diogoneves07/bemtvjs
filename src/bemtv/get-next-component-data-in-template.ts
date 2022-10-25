@@ -7,19 +7,20 @@ type ComponentData = {
   children: string;
 };
 
-function getAloneRightBracket(template: string) {
-  let check = false;
+function getComponentRightBracket(template: string) {
+  let isPair = false;
   let count = 0;
   for (const char of template) {
-    if (char === "[") {
-      check = true;
-    } else if (char === "]") {
-      if (check) return count;
-      check = false;
-    }
+    if (char === "[") isPair = !isPair;
+
+    if (isPair && char === "]") break;
+
+    if (char === "]") isPair = !isPair;
+
     count++;
   }
-  return -1;
+
+  return count;
 }
 
 export default function getNextComponentDataInTemplate(
@@ -29,7 +30,7 @@ export default function getNextComponentDataInTemplate(
 
   if (start === -1) return false;
 
-  const end = start + getAloneRightBracket(allTemplate.slice(start)) + 1;
+  const end = start + getComponentRightBracket(allTemplate.slice(start)) + 1;
   const template = allTemplate.slice(start, end);
 
   const leftBracketIndex = template.indexOf("[");

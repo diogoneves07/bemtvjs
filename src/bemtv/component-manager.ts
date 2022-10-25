@@ -69,15 +69,16 @@ export default class ComponentManager {
   }
   shouldTemplateBeUpdate() {
     const shouldForceUpdate = this.shouldForceUpdate;
+    let check = false;
 
     if (shouldForceUpdate) {
       this.shouldForceUpdate = false;
       return true;
     }
-
-    return Date.now() >= this.updateOnlyAfterThisTime
-      ? this.lastTemplateValue !== this.getCurrentTemplate()
-      : false;
+    if (Date.now() >= this.updateOnlyAfterThisTime) {
+      check = this.lastTemplateValue !== this.getCurrentTemplate();
+    }
+    return check;
   }
   addComponentChild(c: ComponentManager) {
     this.componentsInTemplate.add(c);

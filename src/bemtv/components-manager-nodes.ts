@@ -24,13 +24,13 @@ function findAndSetComponentThisFirstElement(
 export function appendNodeToComponentManagerNodes(node: Node) {
   const keys = getNodeComponentKeys(node);
 
-  if (!keys) return;
+  if (keys) {
+    for (const m of ALL_COMPONENTS_MANAGER) {
+      if (!keys.includes(m.key)) continue;
 
-  for (const m of ALL_COMPONENTS_MANAGER) {
-    if (!keys.includes(m.key)) continue;
-
-    m.nodes.push(node);
-    findAndSetComponentThisFirstElement(m);
+      m.nodes.push(node);
+      findAndSetComponentThisFirstElement(m);
+    }
   }
 }
 
@@ -53,14 +53,16 @@ export function replaceNodeInComponentManagerNodes(
   oldNode: Node
 ) {
   const keys = getNodeComponentKeys(oldNode);
-  if (!keys) return;
+  if (keys) {
+    for (const m of ALL_COMPONENTS_MANAGER) {
+      if (keys.includes(m.key)) {
+        const index = m.nodes.findIndex((n) => n === oldNode);
 
-  for (const m of ALL_COMPONENTS_MANAGER) {
-    if (!keys.includes(m.key)) continue;
+        m.nodes.splice(index, 1, newNode);
 
-    m.nodes = m.nodes.map((n) => (n === oldNode ? newNode : oldNode));
-
-    findAndSetComponentThisFirstElement(m);
+        findAndSetComponentThisFirstElement(m);
+      }
+    }
   }
 }
 
@@ -69,12 +71,12 @@ export function setComponentManagerNodes(key: string, nodes: Node[]) {
     (o) => o.key === key
   );
 
-  if (!componentManager) return;
+  if (componentManager) {
+    for (const node of nodes) {
+      setNodeComponentKeys(node, key);
+    }
 
-  for (const node of nodes) {
-    setNodeComponentKeys(node, key);
+    componentManager.nodes = nodes;
+    findAndSetComponentThisFirstElement(componentManager);
   }
-
-  componentManager.nodes = nodes;
-  findAndSetComponentThisFirstElement(componentManager);
 }

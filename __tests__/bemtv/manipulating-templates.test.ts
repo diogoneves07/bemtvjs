@@ -4,6 +4,16 @@ import { resetTestEnvironment } from "./utilities/reset-test-environment";
 resetTestEnvironment();
 
 describe("Checks if changes to templates are applied to the DOM correctly", () => {
+  it("Should allow containing nested components", (done) => {
+    Component("Strong", () => "strong[Click me!]");
+    Component("Button", ({ children }) => `button[${children}]`);
+    Component("App", () => `Button[ Strong[] ]`).render();
+
+    setTimeout(() => {
+      expect(document.body.children[0].tagName.toLowerCase()).toBe("button");
+      done();
+    }, 200);
+  });
   it("Should remove component Child nodes", (done) => {
     Component("Child", () => "strong[Not Hey!]");
 

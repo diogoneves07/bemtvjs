@@ -20,6 +20,8 @@ let setTimeoutId: number | undefined;
   );
 });
 
+setTimeout(() => (userInactive = true), 2000);
+
 export function isUserInactive() {
   return userInactive;
 }
