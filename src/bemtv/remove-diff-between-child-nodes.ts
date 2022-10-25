@@ -45,7 +45,7 @@ export function removeDiffBetweenChildNodes(
     const oldNode = oldChildNodesArray[index];
 
     if (!oldNode) {
-      parentElement.appendChild(newNode);
+      !newNode.isConnected && parentElement.appendChild(newNode);
       appendNodeToComponentManagerNodes(newNode);
       continue;
     }

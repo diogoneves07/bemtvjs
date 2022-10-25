@@ -48,7 +48,9 @@ export default function render(
     }
 
     for (const node of new Set(nodes)) {
-      parent.appendChild(node);
+      if (!node.isConnected) {
+        parent.appendChild(node);
+      }
     }
 
     BRACKETHTML_CSS_IN_JS.applyLastCSSCreated(brackethtml.css);
