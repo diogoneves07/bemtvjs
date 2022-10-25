@@ -1,5 +1,6 @@
 import { Component } from "../../src/main";
 import { resetTestEnvironment } from "./utilities/reset-test-environment";
+import { simulateMousedown } from "./utilities/simulate-mousedown";
 
 resetTestEnvironment();
 
@@ -29,15 +30,6 @@ describe("Inject event handlers to component instance", () => {
     Component("App", ({ el, mousedown$ }) => {
       const [appEl, key] = el<HTMLButtonElement>();
 
-      const simulateMousedown = (e: Element) => {
-        e.dispatchEvent(
-          new MouseEvent("mousedown", {
-            view: window,
-            bubbles: true,
-            cancelable: true,
-          })
-        );
-      };
       const mousedownFn = jest.fn();
 
       mousedown$(mousedownFn);

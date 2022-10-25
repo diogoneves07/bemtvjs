@@ -4,7 +4,7 @@ import { TEMPLATE_SYMBOLS } from "../../src/brackethtml/globals";
 describe("Checks usage rules for Brackethtml", () => {
   it("Should return only html button tag", () => {
     const b = brackethtmlTranspiler("button[]");
-    expect(b.html.replace(/[ ]/g, "")).toBe("<button></button>");
+    expect(b.html.replace(/[\s]/g, "")).toBe("<button></button>");
     expect(b.css).toBe("");
   });
   it("Should return html button tag and CSS-In-JS", () => {
@@ -19,7 +19,7 @@ describe("Checks usage rules for Brackethtml", () => {
   });
   it("Should return html button tag and children", () => {
     const b = brackethtmlTranspiler("button[color:blue; span[Hello]]");
-    expect(b.html.replace(/[ ]/g, "")).toContain("color:blue;");
+    expect(b.html.replace(/[\s]/g, "")).toContain("color:blue;");
     expect(b.css).toBe("");
   });
 
@@ -27,7 +27,7 @@ describe("Checks usage rules for Brackethtml", () => {
     const b = brackethtmlTranspiler(
       'button[data-test="test" color:blue; ~  span[Hello]]'
     );
-    expect(b.html.replace(/[ ]/g, "")).toContain("<span>Hello</span>");
+    expect(b.html.replace(/[\s]/g, "")).toContain("<span>Hello</span>");
     expect(b.html).toContain("<button data-test");
     expect(b.css).not.toBe("");
   });
@@ -43,9 +43,9 @@ describe("Checks usage rules for Brackethtml", () => {
     const b = brackethtmlTranspiler("button[]");
     const bra = brackethtmlTranspiler("img[] img[]");
 
-    expect(b.html.replace(/[ ]/g, "")).toBe("<button></button>");
+    expect(b.html.replace(/[\s]/g, "")).toBe("<button></button>");
     // Should be have two img tags to test the cache
-    expect(bra.html.replace(/[ ]/g, "")).toBe("<img/><img/>");
+    expect(bra.html.replace(/[\s]/g, "")).toBe("<img/><img/>");
   });
 
   it("Should contain “~” symbol in button tag", () => {

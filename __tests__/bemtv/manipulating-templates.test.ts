@@ -1,3 +1,4 @@
+import { ALTERNATIVE_TIMEOUT_FOR_LOOP } from "../../src/bemtv/request-animation-frame-loop";
 import { Component } from "../../src/main";
 import { resetTestEnvironment } from "./utilities/reset-test-environment";
 
@@ -128,18 +129,18 @@ describe("Checks if changes to templates are applied to the DOM correctly", () =
     let parentText = "";
     let childText = "";
 
+    setTimeout(() => {
+      parentText = "He";
+      childText = "llo";
+    }, 50);
+
     Component("Child", () => () => childText);
 
     Component("App", () => () => `${parentText} Child[]`).render();
 
     setTimeout(() => {
-      parentText = "He";
-      childText = "llo";
-    }, 100);
-
-    setTimeout(() => {
-      expect(document.body.textContent?.replace(/[ ]/g, "")).toBe("Hello");
+      expect(document.body.textContent?.replace(/[\s]/g, "")).toBe("Hello");
       done();
-    }, 200);
+    }, ALTERNATIVE_TIMEOUT_FOR_LOOP + 100);
   });
 });

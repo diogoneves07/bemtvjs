@@ -17,7 +17,7 @@ export const FRAMES_LIMIT = 20;
 export const ALTERNATIVE_FRAMES_LIMIT = 5;
 
 const timeoutForLoop = 1000 / FRAMES_LIMIT;
-const alternativeTimeoutForLoop = 1000 / ALTERNATIVE_FRAMES_LIMIT;
+export const ALTERNATIVE_TIMEOUT_FOR_LOOP = 1000 / ALTERNATIVE_FRAMES_LIMIT;
 
 (function requestAnimationFrameLoop() {
   componentsToDelete.clear();
@@ -67,7 +67,7 @@ const alternativeTimeoutForLoop = 1000 / ALTERNATIVE_FRAMES_LIMIT;
 
     setTimeout(
       () => requestAnimationFrameLoop(),
-      isUserInactive() ? alternativeTimeoutForLoop : timeoutForLoop
+      isUserInactive() ? ALTERNATIVE_TIMEOUT_FOR_LOOP : timeoutForLoop
     );
   });
 })();
