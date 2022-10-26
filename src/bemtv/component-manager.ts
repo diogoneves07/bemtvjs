@@ -2,6 +2,7 @@ import { AVOIDS_EMPTY_TEMPLATE, LIBRARY_NAME, TAG_HOST_NAME } from "./globals";
 import { ComponentThis } from "./components-this";
 import { ComponentTemplateCallback } from "./components";
 import { ALL_COMPONENTS_MANAGER } from "./component-manager-store";
+import normalizeRouterShortcut from "./normalize-router-shortcut";
 
 export type TemplateCallback = () => string;
 
@@ -60,9 +61,9 @@ export default class ComponentManager {
   }
 
   getCurrentTemplateWithHost() {
-    return `${TAG_HOST_NAME}[id = "${
-      this.key
-    }" ~ ${this.getCurrentTemplate()}]`;
+    return `${TAG_HOST_NAME}[id = "${this.key}" ~ ${normalizeRouterShortcut(
+      this.getCurrentTemplate()
+    )}]`;
   }
   updateLastTemplateValueProperty() {
     this.lastTemplateValue = this.getCurrentTemplate();

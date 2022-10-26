@@ -4,3 +4,4 @@ export type { ManagerEl } from "./bemtv/manager-el";
 export type { ComponentThis } from "./bemtv/components-this";
 export { Component, _, hasComponent } from "./bemtv/components";
 export { default as render } from "./bemtv/render";
+export { router, r } from "./router/main";
