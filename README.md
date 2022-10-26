@@ -27,7 +27,7 @@ and orchestrated “automagically” by a
 ## Why Bemtv?
 
 Slightly opinionated, minimalistic, lightweight(<img alt="npm bundle size" height='20px' padding="0" src="https://img.shields.io/bundlephobia/minzip/bemtv?style=flat-square">) even with a markup language
-and a CSS-in-JS library **integrated into the template**,
+and a CSS-in-JS library **integrated into the template**, and a Router,
 fine-grained updates to the real DOM via a template change detection loop that
 allows effortless reactivity.
 
@@ -59,6 +59,16 @@ _("Counter", ({ click$ }) => {
 <hr />
 
 <br>
+
+<details>
+  <summary><h2>Novos lançamentos</h2></summary>
+  <br>
+
+- **v0.5.0**
+  - [Router](#router) added!
+
+</details>
+
 <details>
   <summary><h2>Table of contents</h2></summary>
 
@@ -95,6 +105,10 @@ _("Counter", ({ click$ }) => {
   - [Bootstrapping a Bemtv App](#bootstrapping-a-bemtv-app)
   - [Code-Splitting](#code-splitting)
   - [Using fallback](#using-fallback)
+  - [Router](#router)
+    - [Creating a route](#creating-a-route)
+    - [Rendering routes](#rendering-routes)
+    - [Creating links to routes](#creating-links-to-routes)
 - [And That’s It](#and-thats-it)
 
 </details>
@@ -870,6 +884,85 @@ _("App", () => () => {
 > This function is optimized so that we can use it directly in the template.
 
 > **This function will trigger auto-import if the component is auto-import**.
+
+### Router
+
+A Router is used for navigation between views of various components
+in a Bemtv application, allows you to change the browser's URL and keeps the UI synchronized with the URL.
+
+To use the router, we should import the Router object:
+
+```javascript
+import { r, router } from "bemtv";
+```
+
+Note the `r` and `router` objects they are the same object the `r` is just a writing shortcut.
+
+> Examples will prefer to use `r`, but feel free to choose.
+
+#### Creating a route
+
+To create a route we must add a function to the Router object.
+
+This function takes the same arguments as the function [`match()`](#using-fallback) and has the same behavior in relation to the components.
+
+The function name must be written in CamelCase, but when the route is added to the URL it will be in kebab-case.
+
+The object is a Proxy, so we don't need to use the `=` assignment sign, we can just call the function:
+
+```javascript
+import { r } from "bemtv";
+
+r.FirstPage("strong[Hey!]");
+```
+
+#### Rendering routes
+
+To use the created routes we must have a place where its content can be rendered, for that we can use the Router component that does not need to be imported and can be used through the `#` symbol:
+
+```javascript
+import { _ } from "bemtv";
+
+_("App", () => `#[]`);
+```
+
+The Router component is a normal component and can be reused many times. Once a route has been accessed, its content will be rendered in the Router component.
+
+#### Creating links to routes
+
+To create links that, when accessed, will take the user to the route, we can use the `#` symbol plus the route name, similar to a component:
+
+```javascript
+import { _ } from "bemtv";
+
+_("HelloWorld", () => `#FirstPage[I am a link!]`);
+```
+
+Everything inside the `#FirstPage[]` component will be wrapped in an `a` tag with the `href` attribute pointing to the route.
+
+ex:
+
+```html
+<a href="#/first-page">I am a link!</a>
+```
+
+There are situations where we may want to take the user to a certain route after a DOM event or something similar, for that we can use the return of the route function which is a function that whenever it is called will take the user to the route:
+
+```javascript
+import { r, _ } from "bemtv";
+
+const goToFirstPage = r.FirstPage("strong[Hey!]");
+
+_("App", ({ click$ }) => {
+  click$(goToFirstPage);
+
+  return `
+     #[]
+     br[] br[]
+     button[Click me!]
+  `;
+});
+```
 
 ## And that’s it
 

@@ -22,7 +22,7 @@ e orquestrados “automagicamente” por um
 ## Por que Bemtv?
 
 Ligeiramente opinativo, minimalista, leve(<img alt="npm bundle size" height='20px' padding="0" src="https://img.shields.io/bundlephobia/minzip/bemtv?style=flat-square">) mesmo com uma linguagem de marcação
-e uma biblioteca CSS-in-JS **integrada ao template**,
+e uma biblioteca CSS-in-JS **integrada ao template**, e um Router,
 atualizações refinadas para o DOM real por meio de um loop de detecção de alteração no template que
 permite reatividade sem esforço do desenvolvedor.
 
@@ -54,6 +54,16 @@ _("Counter", ({ click$ }) => {
 <hr />
 
 <br>
+
+<details>
+  <summary><h2>Novos lançamentos</h2></summary>
+  <br>
+
+- **v0.5.0**
+  - [Roteador(Router)](#roteadorrouter) adicionado!
+
+</details>
+
 <details>
   <summary><h2>Índice</h2></summary>
 
@@ -90,6 +100,10 @@ _("Counter", ({ click$ }) => {
   - [Inicializando(Bootstrapping) um App Bemtv](#inicializandobootstrapping-um-app-bemtv)
   - [Dividindo o Código (Code-Splitting)](#dividindo-o-código-code-splitting)
   - [Usando fallback(Plano B)](#usando-fallbackplano-b)
+  - [Roteador(Router)](#roteadorrouter)
+    - [Criando uma rota](#criando-uma-rota)
+    - [Renderizando rotas](#renderizando-rotas)
+    - [Criando links para rotas](#criando-links-para-rotas)
 - [Fechamento](#fechamento)
 
 </details>
@@ -235,7 +249,7 @@ const btn = `button[class="hello" font-family:'Courier New'; ~ Click me!]`;
 
 #### Caracteres especiais
 
-Alguns caracteres devem ser escapados para serem usados ​​sem que a Brackethtml os interprete: `~`, `[` e `]`.
+Alguns caracteres devem ser escapados para serem usados ​​sem que a Brackethtml os interprete: `~`, `[`, `]`, `#`, e `@`.
 
 Para escapá-los basta envolvê-los entre parênteses "()":
 
@@ -253,6 +267,14 @@ const btn = `button[Click (]) me!]`;
 
 ```javascript
 const btn = `button[Click ([]) me!]`;
+```
+
+```javascript
+const btn = `button[Click (#) me!]`;
+```
+
+```javascript
+const btn = `button[Click (@) me!]`;
 ```
 
 > A partir de agora você já consegue interpretar e usar a Brackethtml. Esperamos que sua produtividade aumente consideravelmente.
@@ -863,6 +885,83 @@ _("App", () => () => {
 > Esta função está otimizada para que possamos usá-la diretamente no template.
 
 > **Esta função acionará a importação automática se o componente for autoimportável**.
+
+### Roteador(Router)
+
+Um Router é usado para navegação entre visualizações de vários componentes
+em uma aplicação Bemtv, permite alterar a URL do navegador e mantém a UI sincronizada com a URL.
+
+Para fazer uso do roteador, devemos importar o objeto Router
+
+```javascript
+import { r, router } from "bemtv";
+```
+
+Observe os objetos `r` e `router` eles são o mesmo objeto o `r` é apenas um atalho de escrita.
+
+> Os exemplos preferirão usar `r`, mas sinta-se à vontade para escolher
+
+#### Criando uma rota
+
+Para criar uma rota devemos adicionar uma função ao objeto Router.
+
+Esta função recebe os mesmos argumentos da função [`match()`](#usando-fallbackplano-b) e tem o mesmo comportamento em relação aos componentes.
+
+O nome da função deve ser escrito em CamelCase, mas quando a rota for adicionada à URL ela estará em kebab-case.
+
+O objeto é um Proxy, então não precisamos usar o sinal de atribuição `=`, podemos apenas chamar a função:
+
+```javascript
+import { r } from "bemtv";
+
+r.FirstPage("strong[Hey!]");
+```
+
+#### Renderizando rotas
+
+Para utilizar as rotas criadas devemos ter um local onde seu conteúdo possa ser renderizado, para isso podemos utilizar o componente Router que não precisa ser importado e pode ser utilizado através do símbolo `#`:
+
+```javascript
+import { _ } from "bemtv";
+
+_("App", () => `#[]`);
+```
+
+O componente Router é um componente normal e pode ser reutilizado várias vezes. Uma vez que uma rota tenha sido acessada, seu conteúdo será renderizado dentro dele.
+
+#### Criando links para rotas
+
+Para criar links que, ao serem acessados, levarão o usuário à rota, podemos usar o símbolo `#` mais o nome da rota, semelhante a um componente:
+
+```javascript
+import { _ } from "bemtv";
+
+_("HelloWorld", () => `#FirstPage[I am a link!]`);
+```
+
+Tudo dentro do componente `#FirstPage[]` ​​será envolto em uma tag `a` com o atributo `href` apontando para a rota ex:
+
+```html
+<a href="#/first-page">I am a link!</a>
+```
+
+Existem situações em que podemos querer levar o usuário para uma determinada rota após um evento DOM ou algo semelhante, para isso podemos usar o retorno da função rota que é uma função que sempre que for chamada levará o usuário para a rota:
+
+```javascript
+import { r, _ } from "bemtv";
+
+const goToFirstPage = r.FirstPage("strong[Hey!]");
+
+_("App", ({ click$ }) => {
+  click$(goToFirstPage);
+
+  return `
+     #[]
+     br[] br[]
+     button[Click me!]
+  `;
+});
+```
 
 ## Fechamento
 
