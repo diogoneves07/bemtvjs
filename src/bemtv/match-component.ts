@@ -9,15 +9,15 @@ const CACHE: Map<string, true> = new Map();
  * @param component
  * The component and its children
  *
- * @param alternative
- * The alternative if the component is not available
+ * @param fallback
+ * The fallback if the component is not available
  *
  * @returns
  * The component if available or the second argument
  */
 export function matchComponent(
-  component: `${string}[${string}]`,
-  alternative: string = ""
+  component: `${string}[${string}]` | string,
+  fallback: string = ""
 ) {
   if (CACHE.has(component)) return component;
 
@@ -32,5 +32,5 @@ export function matchComponent(
 
   autoImportComponent(componentName);
 
-  return alternative;
+  return fallback;
 }
