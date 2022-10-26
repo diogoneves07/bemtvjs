@@ -56,7 +56,7 @@ _("Counter", ({ click$ }) => {
 <br>
 
 <details>
-  <summary><h2>Novos lançamentos</h2></summary>
+  <summary><h2>Lançamentos</h2></summary>
   <br>
 
 - **v0.5.0**
