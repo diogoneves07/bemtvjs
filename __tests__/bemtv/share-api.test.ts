@@ -1,5 +1,5 @@
 import { Component } from "../../src/main";
-import { resetTestEnvironment } from "./utilities/reset-test-environment";
+import { resetTestEnvironment } from "../test-utilities//reset-test-environment";
 
 resetTestEnvironment();
 

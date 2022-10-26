@@ -1,6 +1,6 @@
 import { render } from "../../src/main";
-import { resetTestEnvironment } from "./utilities/reset-test-environment";
-import { createCounterComponent } from "./utilities/Counter";
+import { resetTestEnvironment } from "../test-utilities//reset-test-environment";
+import { createCounterComponent } from "../test-utilities//Counter";
 
 resetTestEnvironment();
 

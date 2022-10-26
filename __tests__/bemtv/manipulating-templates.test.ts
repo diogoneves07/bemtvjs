@@ -1,6 +1,5 @@
-import { ALTERNATIVE_TIMEOUT_FOR_LOOP } from "../../src/bemtv/request-animation-frame-loop";
 import { Component } from "../../src/main";
-import { resetTestEnvironment } from "./utilities/reset-test-environment";
+import { resetTestEnvironment } from "../test-utilities/reset-test-environment";
 
 resetTestEnvironment();
 
@@ -81,6 +80,7 @@ describe("Checks if changes to templates are applied to the DOM correctly", () =
       done();
     }, 200);
   });
+
   it("Should remove diff between SVG elments attributes", (done) => {
     Component("App", () => {
       const firstValue = `svg[ xmlns="http://www.w3.org/2000/svg"  ~ circle[class="red" ~ ]]`;
@@ -132,7 +132,7 @@ describe("Checks if changes to templates are applied to the DOM correctly", () =
     setTimeout(() => {
       parentText = "He";
       childText = "llo";
-    }, 50);
+    });
 
     Component("Child", () => () => childText);
 
@@ -141,6 +141,6 @@ describe("Checks if changes to templates are applied to the DOM correctly", () =
     setTimeout(() => {
       expect(document.body.textContent?.replace(/[\s]/g, "")).toBe("Hello");
       done();
-    }, ALTERNATIVE_TIMEOUT_FOR_LOOP + 100);
+    }, 200);
   });
 });

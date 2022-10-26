@@ -1,6 +1,6 @@
 import { Component } from "../../src/main";
-import { resetTestEnvironment } from "./utilities/reset-test-environment";
-import { simulateMousedown } from "./utilities/simulate-mousedown";
+import { resetTestEnvironment } from "../test-utilities//reset-test-environment";
+import { simulateMousedown } from "../test-utilities//simulate-mousedown";
 
 resetTestEnvironment();
 
