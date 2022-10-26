@@ -1,11 +1,11 @@
 import { resetDocumentBodyAndRemoveComponents } from "../test-utilities/reset-test-environment";
-import { Component, router } from "../../src/main";
+import { Component, router, r } from "../../src/main";
 
 resetDocumentBodyAndRemoveComponents("App");
 
 describe("Check router functionality", () => {
   it("Should go to the route", () => {
-    const goToFirstRoute = router.FirstRoute("");
+    const goToFirstRoute = r.FirstRoute("");
     goToFirstRoute();
     expect(window.location.hash).toBe("#/first-route");
   });
