@@ -49,24 +49,22 @@ export function removeDiffBetweenChildNodes(
       !newNode.isConnected &&
         parentElement.insertBefore(newNode, lastNode?.nextSibling || null);
       appendNodeToComponentManagerNodes(newNode);
-      continue;
-    }
-
-    if (newNode.nodeType !== oldNode.nodeType) {
-      parentElement.replaceChild(newNode, oldNode);
-      replaceNodeInComponentManagerNodes(newNode, oldNode);
       lastNode = newNode;
       continue;
     }
-    if ("tagName" in newNode) {
-      if ((newNode as Element).tagName !== (oldNode as Element).tagName) {
-        parentElement.replaceChild(newNode, oldNode);
-        replaceNodeInComponentManagerNodes(newNode, oldNode);
-        lastNode = newNode;
+    const checkToReplaceNode =
+      newNode.nodeType !== oldNode.nodeType ||
+      ("tagName" in newNode &&
+        (newNode as Element).tagName !== (oldNode as Element).tagName);
 
-        continue;
-      }
+    if (checkToReplaceNode) {
+      parentElement.replaceChild(newNode, oldNode);
+      replaceNodeInComponentManagerNodes(newNode, oldNode);
+      lastNode = newNode;
+
+      continue;
     }
+
     lastNode = oldNode;
 
     if (newNode instanceof Text) {
