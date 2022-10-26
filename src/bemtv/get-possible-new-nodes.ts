@@ -4,7 +4,7 @@ const SIMPLE_DOCUMENT_FRAGMENT = document.createDocumentFragment();
 
 function removeUnnecessarySpace(a: Node[]) {
   return a.map((n) => {
-    if (n.textContent && n.textContent?.trim() === "") {
+    if (n instanceof Text && n.textContent && n.textContent?.trim() === "") {
       n.textContent = "";
       return n;
     }
@@ -28,7 +28,6 @@ export default function getPossibleNewNodes(
     keysAndNodes[host.id] = removeUnnecessarySpace(
       Array.from(SIMPLE_DOCUMENT_FRAGMENT.childNodes)
     );
-
     host.parentElement?.replaceChild(SIMPLE_DOCUMENT_FRAGMENT, host);
   }
 
