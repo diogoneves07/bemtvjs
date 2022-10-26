@@ -957,10 +957,10 @@ _("App", ({ click$ }) => {
   click$(goToFirstPage);
 
   return `
-     #[]
-     br[] br[]
-     button[Click me!]
-  `;
+      button[Click me!]
+      br[] br[]
+
+      #[]`;
 });
 ```
 
