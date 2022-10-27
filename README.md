@@ -257,29 +257,10 @@ const btn = `button[class="hello" font-family:'Courier New'; ~ Click me!]`;
 Some characters must be escaped to be used without Brackethtml interpreting them
 : `~`, `[`, `]`, `#` e `@`.
 
-To escape them just wrap them in parentheses "()":
+To escape them just wrap them in parentheses `(` `)`:
 
 ```javascript
 const btn = `button[Click (~) me!]`;
-```
-
-```javascript
-const btn = `button[Click ([) me!]`;
-```
-
-```javascript
-const btn = `button[Click (]) me!]`;
-```
-
-```javascript
-const btn = `button[Click ([]) me!]`;
-```
-```javascript
-const btn = `button[Click (#) me!]`;
-```
-
-```javascript
-const btn = `button[Click (@) me!]`;
 ```
 
 > From now on you can interpret and use Brackethtml. We expect your productivity to increase considerably.
