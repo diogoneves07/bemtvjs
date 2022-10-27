@@ -144,13 +144,6 @@ In the example above, notice that the `templateCreator()` function
 is a **Closure**, which means it has access to the function scope external to it.
 With that, whenever it is called it will return the _“Template string”_ with the most recent value of the variable `count`.
 
-<del>
-After creating the component, Bemtv starts calling the `templateCreator()` function every time before the next browser repaint and compares the _“Template string”_ with its previous value to determine if the template has changed.
-</del>
-
-<br/>
-<br/>
-
 As of **v0.3.0**, Bemtv uses a more sophisticated system to determine if there have been any changes to the template, continues using the browser repaint as a base, but reduces the number of checks as the user interacts with the page and the time the component takes to generate the template, this makes Bemtv much more efficient.
 
 At first, we might think that this will overload the browser, however, there are best practices that we should follow to avoid this:
@@ -231,7 +224,7 @@ const btn = `button[color:blue; ~ Click me!]`;
 - Everything before the `~` symbol is considered attributes and/or CSS-in-JS:
 
 ```javascript
-const btn = `button[padding:50px; ~]`;
+const btn = `button[padding:50px; ~ ]`;
 ```
 
 - Tag attributes must always come before CSS-in-JS:

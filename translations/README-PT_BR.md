@@ -139,13 +139,6 @@ No exemplo acima, observe que a função `templateCreator()` ela
 é um **Closure**, o que significa que ela tem acesso ao escopo da função externa a ela.
 Com isso, sempre que for chamada ela retornará a _“Template string”_ com o valor mais recente da variável `count`.
 
-<del>
-Após criar o componente, Bemtv começa a chamar a função `templateCreator()` toda vez antes da próxima repaint (repintura) do navegador e compara a _“Template string”_ com o seu valor anterior para determinar se há alteração no template.
-</del>
-
-<br/>
-<br/>
-
 A partir da **v0.3.0**, a Bemtv utiliza um sistema mais sofisticado para determinar se houve alguma alteração no template, continua usando como base a repintura do navegador, mas reduz o número de verificações à medida que o usuário interage com a página e o tempo que o componente leva para gerar o template, isso torna a Bemtv muito mais eficiente.
 
 A princípio, podemos pensar que isso sobrecarregará o navegador, no entanto, existem boas práticas que devemos seguir para evitar isso:
@@ -226,7 +219,7 @@ const btn = `button[color:blue; ~ Click me!]`;
 - Tudo antes do símbolo `~` é considerado atributos e/ou CSS-in-JS:
 
 ```javascript
-const btn = `button[padding:50px; ~]`;
+const btn = `button[padding:50px; ~ ]`;
 ```
 
 - Os atributos da tag devem sempre vim antes do CSS-in-JS:
