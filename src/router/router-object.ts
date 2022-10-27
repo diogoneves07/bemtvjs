@@ -1,5 +1,5 @@
 import { _ } from "../main";
-import { routeToKebabCase } from "./routes-case-";
+import { routeToKebabCase } from "./routes-case";
 
 type GoToRoute = () => void;
 type RouteFn = {

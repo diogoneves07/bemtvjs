@@ -1,6 +1,6 @@
 import { routerProxy } from "./router-object";
 import { match, _ } from "../main";
-import { routeToCamelCase } from "./routes-case-";
+import { routeToCamelCase } from "./routes-case";
 
 const initialRouterTemplate = () => ``;
 
