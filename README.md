@@ -109,6 +109,7 @@ _("Counter", ({ click$ }) => {
     - [Creating a route](#creating-a-route)
     - [Rendering routes](#rendering-routes)
     - [Creating links to routes](#creating-links-to-routes)
+    - [Route fallback argument](#route-fallback-argument)
 - [And That’s It](#and-thats-it)
 
 </details>
@@ -943,6 +944,16 @@ _("App", ({ click$ }) => {
 
       #[]`;
 });
+```
+
+#### Route fallback argument
+
+As said, the route function works in the same way as the [`match()`](#using-fallback) function in relation to components, so we can pass a second argument that will be used as the route value if the first argument cannot be used:
+
+```javascript
+import { r } from "bemtv";
+
+r.UserPage("UserData[]", "ErrorPage[]");
 ```
 
 ## And that’s it

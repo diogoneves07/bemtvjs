@@ -104,6 +104,7 @@ _("Counter", ({ click$ }) => {
     - [Criando uma rota](#criando-uma-rota)
     - [Renderizando rotas](#renderizando-rotas)
     - [Criando links para rotas](#criando-links-para-rotas)
+    - [Argumento de fallback(Plano B) da rota](#argumento-de-fallbackplano-b-da-rota)
 - [Fechamento](#fechamento)
 
 </details>
@@ -934,6 +935,16 @@ _("App", ({ click$ }) => {
 
       #[]`;
 });
+```
+
+#### Argumento de fallback(Plano B) da rota
+
+Como dito, a função rota funciona da mesma forma que a função [`match()`](#usando-fallbackplano-b) em relação aos componentes, então podemos passar um segundo argumento que será usado como valor da rota caso o primeiro argumento não possa ser usado:
+
+```javascript
+import { r } from "bemtv";
+
+r.UserPage("UserData[]", "ErrorPage[]");
 ```
 
 ## Fechamento
