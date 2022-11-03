@@ -11,3 +11,11 @@ export const REGEX_CUSTOM_ATTR_KEY = /\|\~[\S\s][^\|\~]*\~\|/g;
 export default function generateKey() {
   return `${SCAPE_FOR_KEYS.start}key-${count++}${SCAPE_FOR_KEYS.end}`;
 }
+
+export function isElKey(s: string) {
+  return s.slice(0, 2) === SCAPE_FOR_KEYS.start;
+}
+
+export function getElKeyValue(s: string) {
+  return s.slice(2, -2).trim();
+}
