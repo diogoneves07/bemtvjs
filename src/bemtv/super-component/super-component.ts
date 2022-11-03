@@ -211,7 +211,8 @@ export class SuperComponent<Vars extends Record<string, any>> {
         const v = treatValueInTemplate(values);
 
         if (!v) {
-          throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} In the "${data.componentRunning?.name}" component the template has a value that is not string, number or uses pipes: ${values}`;
+          console.error(values);
+          throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} In the “${data.componentRunning?.name}” component the template has a value that is not string, number or uses pipes: ${values}`;
         }
         data.initialTemplate = () => v;
         break;

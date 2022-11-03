@@ -1,18 +1,14 @@
-import { LIBRARY_NAME_IN_ERRORS_MESSAGE } from "../../globals";
-import toKebabCase from "../../utilities/to-kebab-case";
 import { ComponentThis } from "../components-this";
-import { PIPE_SYMBOL } from "../pipes/main";
-import { ComponentProps } from "../types/super-component-data";
 import {
   dispatchInitedLifeCycle,
   getComponentThisData,
 } from "../work-with-components-this";
+import getVarsInTemplate from "./get-vars-in-template";
 import { SuperComponent } from "./super-component";
 import {
   addListenerToComponent,
   getSuperComponentData,
   setRunningComponent,
-  getComponentVars,
 } from "./work-with-super-component";
 
 export function bindComponentToSuperComponent(
@@ -21,67 +17,18 @@ export function bindComponentToSuperComponent(
 ) {
   const data = getSuperComponentData(sComp);
 
-  const templatePropertyValues: Map<string, string> = new Map();
-
-  const getVarsInTemplate = (p: string) => {
-    const prefix = p[0];
-    const property = p.slice(1);
-    const getLastValue = templatePropertyValues.get(property);
-
-    if (getLastValue) return getLastValue;
-
-    const vars = getComponentVars(sComp) as ComponentProps["vars"];
-    const props = vars.props;
-
-    const hasPathToProp = property.includes(".");
-    const pathToProp = hasPathToProp ? property.split(".") : false;
-
-    let value: any;
-
-    if (prefix === "@") {
-      const varsAndProps = { ...vars, ...props };
-      let propName = property;
-
-      value = pathToProp
-        ? pathToProp.reduce((o, p) => {
-            propName = p;
-            return o[p];
-          }, varsAndProps)
-        : varsAndProps[property];
-
-      value = ` ${toKebabCase(propName)} = "${value}" `;
-    } else {
-      value = pathToProp
-        ? pathToProp.reduce((o, p) => o[p], vars)
-        : vars[property];
-    }
-
-    if (Object.hasOwn(value, PIPE_SYMBOL)) {
-      for (const pipe of value[PIPE_SYMBOL]) {
-        value = pipe(value);
-      }
-
-      templatePropertyValues.set(property, value);
-
-      return value;
-    }
-
-    if (typeof value !== "string" && typeof value !== "number") {
-      console.error(value);
-      throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} In the "${c.name}" component the template has a value that is not string, number or uses pipes: ${value}`;
-    }
-
-    templatePropertyValues.set(property, value.toString());
-
-    return value;
-  };
+  let templatePropertyValues: Map<string, string> = new Map();
 
   const template = () => {
     setRunningComponent(sComp, c);
-    let templateValue = data.initialTemplate() as string;
+    const t = data.initialTemplate() as string;
 
-    templateValue = templateValue.replaceAll(/[$|@][.\w]*/g, getVarsInTemplate);
-
+    const templateValue = getVarsInTemplate(
+      t,
+      sComp,
+      c,
+      templatePropertyValues
+    );
     setRunningComponent(sComp);
     return templateValue;
   };
