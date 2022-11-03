@@ -18,7 +18,7 @@ import insertEventListener from "./insert-event-listener";
 export interface ComponentThis extends Listeners {}
 
 export class ComponentThis {
-  __data: ComponentThisData = {
+  protected __data: ComponentThisData = {
     mounted: false,
     listeners: new Set(),
     firstElement: null,
@@ -109,7 +109,7 @@ export class ComponentThis {
    *
    * @returns
    * A key that can be used before the component's opening square bracket, so the component will
-   * receive the declared props
+   * receive the declared props.
    */
   defineProps<T extends Record<string, any>>(props: T) {
     if (!this.__data.propsDefined) this.__data.propsDefined = new Map();
@@ -125,7 +125,7 @@ export class ComponentThis {
    * Creates an instance to manage a real DOM element.
    *
    * @returns
-   * The instance to manage the real DOM element;
+   * The instance to manage the real DOM element.
    */
   el<E extends Element = Element>(): [
     managerEl: ReturnType<typeof ManagerElFactory<E>>,
@@ -139,7 +139,7 @@ export class ComponentThis {
    * The element of instance
    *
    * @returns
-   * The instance to manage the real DOM element;
+   * The instance to manage the real DOM element.
    */
   el<E extends Element = Element>(
     selectorOrElement?: string | Element
@@ -174,7 +174,7 @@ export class ComponentThis {
   }
 
   /**
-   * Calls(only once) the callback after template elements are added to the DOM:
+   * Calls(only once) the callback after template elements are added to the DOM.
    *
    * @param fn
    * The callback
@@ -186,7 +186,7 @@ export class ComponentThis {
 
   /**
    * Calls(only once) the callback whenever the template changes
-   * and the changes are applied to the DOM:
+   * and the changes are applied to the DOM.
    *
    * @param fn
    * The callback

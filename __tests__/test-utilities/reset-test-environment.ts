@@ -1,4 +1,4 @@
-import { GLOBAL_COMPONENTS_MAP } from "../../src/bemtv/components";
+import { GLOBAL_COMPONENTS_MAP } from "../../src/bemtv/components-main";
 
 export function resetTestEnvironment() {
   beforeEach(() => {

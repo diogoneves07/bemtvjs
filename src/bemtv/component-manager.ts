@@ -1,6 +1,6 @@
 import { AVOIDS_EMPTY_TEMPLATE, LIBRARY_NAME, TAG_HOST_NAME } from "./globals";
 import { ComponentThis } from "./components-this";
-import { ComponentTemplateCallback } from "./components";
+import { ComponentTemplateCallback } from "./components-main";
 import { ALL_COMPONENTS_MANAGER } from "./component-manager-store";
 import normalizeRouterShortcut from "./normalize-router-shortcut";
 

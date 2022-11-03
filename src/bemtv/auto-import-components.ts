@@ -1,4 +1,4 @@
-import { getComponentFn } from "./components";
+import { getComponentFn } from "./components-main";
 
 type AutoImportCallback = () => void;
 

@@ -1,5 +1,5 @@
 import { autoImportComponent } from "./auto-import-components";
-import { hasComponent } from "./components";
+import { hasComponent } from "./components-main";
 import normalizeComponentName from "./normalize-component-name";
 
 const CACHE: Map<string, true> = new Map();
