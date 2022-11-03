@@ -6,6 +6,7 @@ export const TEMPLATE_SYMBOLS = {
   brackets: "[]",
   hash: "#",
   atSign: "@",
+  money: "$",
 };
 
 export const TEMPLATE_SYMBOLS_KEYS = Object.keys(TEMPLATE_SYMBOLS);
