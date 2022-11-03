@@ -26,7 +26,7 @@ export default function render(
   if (typeof insert === "string") {
     const el = insert ? document.querySelector(insert) : null;
     if (!el) {
-      throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} This selector "${insert}" is invalid or the element does not exist!`;
+      throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} This selector ”${insert}” is invalid or the element does not exist!`;
     }
     parent = el;
   } else {

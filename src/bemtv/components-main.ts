@@ -78,7 +78,7 @@ export function Component<C extends ComponentName>(
 
   for (const n of names) {
     if (GLOBAL_COMPONENTS_MAP.has(n)) {
-      throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} This component "${n}" name is already in use!`;
+      throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} This component “${n}” name is already in use!`;
     }
 
     GLOBAL_COMPONENTS_MAP.set(n, componentFnOrVars as ComponentFn);

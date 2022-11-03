@@ -24,7 +24,7 @@ export default function brackethtmlToHTML(pureTemplate: string) {
   let lastMutableTemplate = "";
   do {
     if (lastMutableTemplate === mutableTemplate) {
-      throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} Template is invalid! There are no equality of brackets "[" and "]".`;
+      throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} Template is invalid! There are no equality of brackets “[“ and “]”.`;
     }
 
     lastMutableTemplate = mutableTemplate;

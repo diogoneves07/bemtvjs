@@ -79,7 +79,7 @@ function processEachTemplate(
         continue;
       }
 
-      throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} The component "${realComponentName}" was not created!`;
+      throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} The component “${realComponentName}” was not created!`;
     }
 
     const componentThisParent = parent ? parent.componentThis : undefined;
