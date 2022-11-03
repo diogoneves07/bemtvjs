@@ -1,19 +1,21 @@
 import { _ } from "../main";
 import { routeToKebabCase } from "./routes-case";
 
+type RouteValue = string | { title: string; use: string };
 type GoToRoute = () => void;
 type RouteFn = {
-  (main: string, fallback?: string): GoToRoute;
-  routeValues?: string[] | string;
+  (main: RouteValue, fallback?: RouteValue): GoToRoute;
+  routeValues?: RouteValue[];
 };
+
 const routerObject: Record<string, RouteFn> = {};
 
 export const routerProxy = new Proxy(routerObject, {
   get(t, name) {
     if (name in t) return (t as any)[name];
     if (typeof name === "string") {
-      const routeFn: RouteFn = (main: string, fallback?: string) => {
-        routeFn.routeValues = fallback ? [main, fallback] : main;
+      const routeFn: RouteFn = (main: RouteValue, fallback?: RouteValue) => {
+        routeFn.routeValues = fallback ? [main, fallback] : [main];
 
         const routePath = name;
 

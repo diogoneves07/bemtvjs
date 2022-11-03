@@ -19,13 +19,32 @@ const changeRouterTemplate = () => {
   const routeValues = routerProxy[routeName].routeValues;
 
   if (routeValues) {
-    if (Array.isArray(routeValues)) {
+    const [route, fallback] = routeValues;
+    const isRouteObject = typeof route === "object";
+    const isFallbackObject = typeof fallback === "object";
+
+    const routeComponent = !isRouteObject ? route : route.use;
+
+    const fallbackComponent = !isFallbackObject
+      ? fallback
+      : fallback && fallback.use;
+
+    if (routeValues.length > 1) {
       routerTemplate = () => {
-        return match(routeValues[0], routeValues[1]);
+        const m = match(routeComponent, fallbackComponent);
+
+        if (m === routeComponent) {
+          isRouteObject && (document.title = route.title);
+        } else {
+          isFallbackObject && (document.title = fallback.title);
+        }
+        return m;
       };
     } else {
+      if (isRouteObject) document.title = route.title;
+
       routerTemplate = () => {
-        return routeValues;
+        return routeComponent;
       };
     }
 

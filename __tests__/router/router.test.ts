@@ -10,6 +10,16 @@ describe("Check router functionality", () => {
     expect(window.location.hash).toBe("#/first-route");
   });
 
+  it("Should go to the route and change document title", (done) => {
+    const goToFirstRoute = r.MyRoute({ title: "My route", use: "" });
+    goToFirstRoute();
+    setTimeout(() => {
+      expect(window.location.hash).toBe("#/my-route");
+      expect(document.title.trim()).toBe("My route");
+      done();
+    }, 50);
+  });
+
   it("Should use route fallback", (done) => {
     router.SecondRoute("Unknown[]", "Loading...")();
     Component("App", () => "#[]").render();
