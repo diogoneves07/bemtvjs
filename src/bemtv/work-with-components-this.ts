@@ -7,6 +7,11 @@ export function getComponentThisData(componentThis: ComponentThis) {
   return (componentThis as any).__data as ComponentThis["__data"];
 }
 
+export function dispatchInitedLifeCycle(componentThis: ComponentThis) {
+  const data = getComponentThisData(componentThis);
+  data.initFns.forEach((f) => f());
+  data.initFns.clear();
+}
 export function dispatchUpdatedLifeCycle(componentThis: ComponentThis) {
   getComponentThisData(componentThis).updatedFns?.forEach((f) => f());
 }

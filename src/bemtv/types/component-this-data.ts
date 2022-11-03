@@ -11,6 +11,7 @@ export interface ComponentThisData {
   defineFirstElement: (node: Element | null) => void;
   propsDefined?: Map<string, Props>;
   mountedFns: Set<LifeCycleCallback>;
+  initFns: Set<LifeCycleCallback>;
   unmountedFns?: Set<LifeCycleCallback>;
   updatedFns: Set<LifeCycleCallback>;
   mounted: boolean;

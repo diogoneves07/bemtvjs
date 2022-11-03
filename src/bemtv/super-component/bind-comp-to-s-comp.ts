@@ -3,7 +3,10 @@ import toKebabCase from "../../utilities/to-kebab-case";
 import { ComponentThis } from "../components-this";
 import { PIPE_SYMBOL } from "../pipes/main";
 import { ComponentProps } from "../types/super-component-data";
-import { getComponentThisData } from "../work-with-components-this";
+import {
+  dispatchInitedLifeCycle,
+  getComponentThisData,
+} from "../work-with-components-this";
 import { SuperComponent } from "./super-component";
 import {
   addListenerToComponent,
@@ -135,5 +138,6 @@ export function bindComponentToSuperComponent(
     templatePropertyValues,
   });
 
+  dispatchInitedLifeCycle(c);
   return template;
 }

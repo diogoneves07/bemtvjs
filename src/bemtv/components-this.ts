@@ -23,6 +23,7 @@ export class ComponentThis {
     listeners: new Set(),
     firstElement: null,
     mountedFns: new Set<LifeCycleCallback>(),
+    initFns: new Set<LifeCycleCallback>(),
     updatedFns: new Set<LifeCycleCallback>(),
     els: [],
     sharedData: {},
@@ -171,6 +172,17 @@ export class ComponentThis {
     }
 
     return managerEl;
+  }
+
+  /**
+   * Calls(only once) the callback when the component is initialized.
+   *
+   * @param fn
+   * The callback
+   */
+  onInit(fn: () => void) {
+    this.__data.initFns.add(fn);
+    return this;
   }
 
   /**
