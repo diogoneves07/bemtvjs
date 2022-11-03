@@ -8,16 +8,13 @@ import {
   isMounted,
 } from "./work-with-components-this";
 import { BRACKETHTML_CSS_IN_JS } from "../brackethtml/globals";
-import { isUserInactive } from "./is-user-inactive";
 import shouldComponentBeUnmounted from "./should-component-be-unmounted";
 
 const componentsToDelete: Set<ComponentManager> = new Set();
 
-export const FRAMES_LIMIT = 20;
-export const ALTERNATIVE_FRAMES_LIMIT = 5;
+const framesLimit = 20;
 
-const timeoutForLoop = 1000 / FRAMES_LIMIT;
-export const ALTERNATIVE_TIMEOUT_FOR_LOOP = 1000 / ALTERNATIVE_FRAMES_LIMIT;
+const timeoutForLoop = 1000 / framesLimit;
 
 (function requestAnimationFrameLoop() {
   componentsToDelete.clear();
@@ -65,9 +62,6 @@ export const ALTERNATIVE_TIMEOUT_FOR_LOOP = 1000 / ALTERNATIVE_FRAMES_LIMIT;
 
     if (hasChanges) BRACKETHTML_CSS_IN_JS.applyLastCSSCreated();
 
-    setTimeout(
-      () => requestAnimationFrameLoop(),
-      isUserInactive() ? ALTERNATIVE_TIMEOUT_FOR_LOOP : timeoutForLoop
-    );
+    setTimeout(() => requestAnimationFrameLoop(), timeoutForLoop);
   });
 })();
