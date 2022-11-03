@@ -4,20 +4,24 @@ import { getManagerElData } from "./work-with-manager-el";
 import { ManagerEl } from "./manager-el";
 
 export function getComponentThisData(componentThis: ComponentThis) {
-  return componentThis.__data;
+  return (componentThis as any).__data as ComponentThis["__data"];
 }
+
 export function dispatchUpdatedLifeCycle(componentThis: ComponentThis) {
   getComponentThisData(componentThis).updatedFns?.forEach((f) => f());
 }
 
 export function dispatchMountedLifeCycle(componentThis: ComponentThis) {
-  getComponentThisData(componentThis).mounted = true;
-
-  getComponentThisData(componentThis).mountedFns?.forEach((f) => f());
+  const data = getComponentThisData(componentThis);
+  data.mounted = true;
+  data.mountedFns.forEach((f) => f());
+  data.mountedFns.clear();
 }
 
 export function dispatchUnmountedLifeCycle(componentThis: ComponentThis) {
-  getComponentThisData(componentThis).unmountedFns?.forEach((f) => f());
+  const data = getComponentThisData(componentThis);
+  data.unmountedFns?.forEach((f) => f());
+  data.unmountedFns?.clear();
 }
 
 export function getComponentThisProps(parent: ComponentThis, key: string) {
