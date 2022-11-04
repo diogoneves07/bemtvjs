@@ -3,6 +3,7 @@ import insertEventListener from "./insert-event-listener";
 import isEventListener from "./is-event-listener";
 import { ManagerEl } from "./manager-el";
 import { getManagerElData } from "./work-with-manager-el";
+import isString from "../utilities/is-string";
 
 export function ManagerElFactory<E extends Element = Element>(key: string) {
   const managerEl = new ManagerEl<E>(key);
@@ -10,13 +11,14 @@ export function ManagerElFactory<E extends Element = Element>(key: string) {
 
   return new Proxy(managerEl, {
     get(target, name) {
-      if (name in target) return (target as any)[name];
-      if (typeof name === "string" && isEventListener(name)) {
+      const propName = name as string;
+      if (propName in target) return (target as any)[propName];
+      if (isString(propName) && isEventListener(propName)) {
         const newEventListener = (
           ...args: [fn: Function, options: AddEventListenerOptions]
         ) => {
           const listenerObject: ComponentListener = {
-            listener: name.slice(0, -1),
+            listener: propName.slice(0, -1),
             args,
           };
 
@@ -38,7 +40,7 @@ export function ManagerElFactory<E extends Element = Element>(key: string) {
             listenerObject.removeListener();
           };
         };
-        (target as any)[name] = newEventListener;
+        (target as any)[propName] = newEventListener;
         return newEventListener;
       }
     },

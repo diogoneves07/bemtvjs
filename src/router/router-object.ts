@@ -1,4 +1,5 @@
 import { _ } from "../main";
+import isString from "../utilities/is-string";
 import { routeToKebabCase } from "./routes-case";
 
 type RouteValue = string | { title: string; use: string };
@@ -12,12 +13,13 @@ const routerObject: Record<string, RouteFn> = {};
 
 export const routerProxy = new Proxy(routerObject, {
   get(t, name) {
-    if (name in t) return (t as any)[name];
-    if (typeof name === "string") {
+    const propName = name as string;
+    if (propName in t) return (t as any)[propName];
+    if (isString(propName)) {
       const routeFn: RouteFn = (main: RouteValue, fallback?: RouteValue) => {
         routeFn.routeValues = fallback ? [main, fallback] : [main];
 
-        const routePath = name;
+        const routePath = propName;
 
         _("Router:" + routePath, ({ children }) => {
           return `<a href="#/${routeToKebabCase(routePath)}">${children}</a>`;
@@ -27,7 +29,7 @@ export const routerProxy = new Proxy(routerObject, {
         };
       };
 
-      t[name] = routeFn;
+      t[propName] = routeFn;
 
       return routeFn;
     }

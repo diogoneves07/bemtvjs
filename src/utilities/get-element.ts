@@ -1,6 +1,8 @@
+import isString from "./is-string";
+
 export default function getElement(elementSelector: Node | string) {
-  if (typeof elementSelector === "string") {
-    return document.querySelector(elementSelector);
+  if (isString(elementSelector)) {
+    return document.querySelector(elementSelector as string);
   }
   return elementSelector;
 }

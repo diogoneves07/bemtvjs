@@ -8,11 +8,11 @@ import { SuperComponent } from "./super-component";
 
 // const varsPrefix = "$";
 const varsLikeAttrPrefix = "@";
-const regexTemplateVars = /[$|@][\.\w][^\(\)\s]*/g;
+const regexTemplateVars = /[$|@][\.\w]*[^\(\)\s][\w]/g;
 
-function errorMessage(value: any, c: ComponentThis) {
-  console.error(value);
-  throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} In the “${c.name}” component the template has a value that is not string or number: “${value}”`;
+function errorMessage(varValue: any, c: ComponentThis) {
+  console.error(varValue);
+  throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} In the “${c.name}” component the template has a value that is not string or number: “${varValue}”`;
 }
 export default function getVarsInTemplate(
   template: string,
@@ -29,52 +29,53 @@ export default function getVarsInTemplate(
 
     const vars = getComponentVars(sComp) as ComponentProps["vars"];
     const props = vars.props;
-
     const hasPathToProp = varName.includes(".");
     const pathToProp = hasPathToProp ? varName.split(".") : false;
 
-    let value: any;
+    let varValue: any;
 
     if (prefix === varsLikeAttrPrefix) {
       const varsAndProps = { ...vars, ...props };
 
       let propName = varName;
 
-      value = pathToProp
-        ? pathToProp.reduce((o, p) => {
-            propName = p;
-            return o[p];
-          }, varsAndProps)
-        : varsAndProps[varName];
+      const findPropName = (p: string[]) => {
+        return p.reduce((o, p) => {
+          propName = p;
+          return o[p];
+        }, varsAndProps);
+      };
 
-      value = ` ${toKebabCase(propName)} = "${value}" `;
+      varValue = pathToProp ? findPropName(pathToProp) : varsAndProps[varName];
+
+      varValue = ` ${toKebabCase(propName)} = "${varValue}" `;
     } else {
-      value = pathToProp
+      varValue = pathToProp
         ? pathToProp.reduce((o, p) => o[p], vars)
         : vars[varName];
     }
 
-    if (value === undefined || value === null) {
+    if (varValue === undefined || varValue === null) {
       throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} In the “${c.name}” component the template has a property that not exit: “${prefix}${varName}”`;
     }
 
-    if (Object.hasOwn(value, PIPE_SYMBOL)) {
-      for (const pipe of value[PIPE_SYMBOL]) {
-        value = pipe(value);
+    if (Object.hasOwn(varValue, PIPE_SYMBOL)) {
+      for (const pipe of varValue[PIPE_SYMBOL]) {
+        varValue = pipe(varValue);
       }
 
-      templatePropertyValues.set(varName, value);
+      templatePropertyValues.set(varName, varValue);
 
-      return value;
+      return varValue;
     }
 
-    if (typeof value !== "string" && typeof value !== "number") {
-      errorMessage(value, c);
+    if (typeof varValue !== "string" && typeof varValue !== "number") {
+      errorMessage(varValue, c);
     }
 
-    templatePropertyValues.set(varName, value.toString());
+    templatePropertyValues.set(varName, varValue.toString());
 
-    return value;
+    return varValue;
   });
 
   return templateValue;

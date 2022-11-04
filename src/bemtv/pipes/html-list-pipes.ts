@@ -1,16 +1,17 @@
+import isStringOrNumber from "../../utilities/is-string-or-number";
 import { pipe } from "./main";
 
 function transformToHTMLList<T extends any[] | Set<any>>(
   value: T,
   ordered = true
 ) {
+  if (isStringOrNumber(value)) return value.toString();
+
   let v = value as string[];
 
   let parentTag = ordered ? "ol" : "ul";
 
   if (v instanceof Set) v = [...v];
-
-  if (typeof v === "string") return v;
 
   v = v.slice();
 

@@ -3,6 +3,7 @@ import { ComponentThis } from "./components-this";
 import insertEventListener from "./insert-event-listener";
 import isEventListener from "./is-event-listener";
 import { getComponentThisData } from "./work-with-components-this";
+import isString from "../utilities/is-string";
 
 export default function ComponentThisFactory(
   name: string,
@@ -15,6 +16,7 @@ export default function ComponentThisFactory(
 
   const propxyComponentThis = new Proxy(componentThis, {
     get(target, name) {
+      const propName = name as string;
       if (name in target) {
         if (typeof (target as any)[name] === "function") {
           return (target as any)[name].bind(componentThis);
@@ -22,12 +24,12 @@ export default function ComponentThisFactory(
         return (target as any)[name];
       }
 
-      if (typeof name === "string" && isEventListener(name)) {
+      if (isString(propName) && isEventListener(propName)) {
         const newEventListener = (
           ...args: [fn: Function, options: AddEventListenerOptions]
         ) => {
           const listenerObject: ComponentListener = {
-            listener: name.slice(0, -1),
+            listener: propName.slice(0, -1),
             args,
           };
 

@@ -8,6 +8,7 @@ import { setComponentManagerNodes } from "./components-manager-nodes";
 import { dispatchMountedLifeCycle } from "./work-with-components-this";
 import { BRACKETHTML_CSS_IN_JS } from "../brackethtml/globals";
 import getPossibleNewNodes from "./get-possible-new-nodes";
+import isString from "../utilities/is-string";
 
 /**
  * Renders the template somewhere on the page.
@@ -23,14 +24,14 @@ export default function render(
 ) {
   let parent: Element;
 
-  if (typeof insert === "string") {
-    const el = insert ? document.querySelector(insert) : null;
+  if (isString(insert)) {
+    const el = insert ? document.querySelector(insert as string) : null;
     if (!el) {
       throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} This selector ”${insert}” is invalid or the element does not exist!`;
     }
     parent = el;
   } else {
-    parent = insert;
+    parent = insert as Element;
   }
 
   const { newTemplate: pureTemplate, componentsThis } =

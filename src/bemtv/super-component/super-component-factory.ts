@@ -8,6 +8,7 @@ import {
   getSuperComponentData,
   removeListenerFromComponents,
 } from "./work-with-super-component";
+import isString from "../../utilities/is-string";
 
 export function SuperComponentFactory<Vars extends Record<string, any>>(
   name: string,
@@ -18,33 +19,33 @@ export function SuperComponentFactory<Vars extends Record<string, any>>(
 
   const propxyComponentThis = new Proxy(superComponent, {
     get(target, propertyName) {
-      let name = propertyName as string;
+      let propName = propertyName as string;
       const t = target as Record<string, any>;
 
-      if (name.slice(0, 2) === "on") {
-        if (t[name]) return t[name];
+      if (propName.slice(0, 2) === "on") {
+        if (t[propName]) return t[propName];
 
         return (callback: LifeCycleCallback) => {
-          addLifeCycleToComponents(superComponent, name, callback);
+          addLifeCycleToComponents(superComponent, propName, callback);
         };
       }
 
-      if (name in target) {
-        if (typeof t[name] === "function") {
-          if (name === "$") {
-            return t[name];
+      if (propName in target) {
+        if (typeof t[propName] === "function") {
+          if (propName === "$") {
+            return t[propName];
           }
-          return t[name].bind(superComponent);
+          return t[propName].bind(superComponent);
         }
-        return t[name];
+        return t[propName];
       }
 
-      if (typeof name === "string" && isEventListener(name)) {
+      if (isString(propName) && isEventListener(propName)) {
         const newEventListener = (
           ...args: [fn: Function, options: AddEventListenerOptions]
         ) => {
           const listenerObject: SuperComponentListener = {
-            listener: name,
+            listener: propName,
             args,
           };
 
@@ -58,7 +59,7 @@ export function SuperComponentFactory<Vars extends Record<string, any>>(
           };
         };
 
-        t[name] = newEventListener;
+        t[propName] = newEventListener;
 
         return newEventListener;
       }

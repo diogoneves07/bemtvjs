@@ -1,12 +1,15 @@
+import isStringOrNumber from "../../utilities/is-string-or-number";
 import { pipe } from "./main";
 
 function transformToDescriptionList<T extends Record<string, any>>(
   value: T
 ): string {
+  if (isStringOrNumber(value)) return value.toString();
+
   let v = value as Record<string, any>;
-  if (typeof v === "string") return v;
 
   if (v instanceof Map) v = Object.fromEntries(v);
+
   v = { ...v };
   let str = ``;
 
