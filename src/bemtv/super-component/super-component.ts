@@ -4,7 +4,6 @@ import { LIBRARY_NAME_IN_ERRORS_MESSAGE } from "./../../globals";
 import { ManagerEl } from "./../manager-el";
 import { KEY_ATTRIBUTE_NAME } from "./../globals";
 import { ALL_COMPONENTS_MANAGER } from "./../component-manager-store";
-import ComponentInstance from "./../component-instance";
 import { ComponentThis } from "./../components-this";
 import render from "./../render";
 import {
@@ -16,6 +15,7 @@ import { SuperComponentData } from "./../types/super-component-data";
 import generateKey, { getElKeyValue, isElKey } from "./../generate-el-key";
 import ComponentManager from "./../component-manager";
 import { treatValueInTemplate } from "./treat-value-in-template";
+import concatTemplateStringArrays from "../../utilities/concat-template-string-arrays";
 
 type ReauseSomeMethods = Omit<
   ComponentThis,
@@ -30,8 +30,8 @@ type ReauseSomeMethods = Omit<
 >;
 
 type ComponentVars<V extends Record<string, any>> = V & {
-  children: string;
-  props: Record<string, any>;
+  readonly children: string;
+  readonly props: Record<string, any>;
 };
 export interface SuperComponent<
   Vars extends Record<string, any> = Record<string, any>
@@ -77,13 +77,14 @@ export class SuperComponent<Vars extends Record<string, any>> {
         if (!data.$disableProxy) {
           resetTemplatePropertyValues(t, k);
         }
+
         (target as any)[k] = n;
         return true;
       },
     });
   }
 
-  fn<T extends Function>(callback: T) {
+  keepIns<T extends Function>(callback: T) {
     const keepInstance = this.__data.componentRunning;
     return () => {
       setRunningComponent(this, keepInstance);
@@ -94,8 +95,9 @@ export class SuperComponent<Vars extends Record<string, any>> {
   }
 
   css = (...args: Parameters<typeof css>) => {
-    this.__data.classes.push(css(...args));
-    return this;
+    const c = css(...args);
+    this.__data.classes.push(c);
+    return c;
   };
 
   keyEl() {
@@ -189,10 +191,12 @@ export class SuperComponent<Vars extends Record<string, any>> {
 
   children(fn: (children: string) => string) {
     this.__data.fns.push(["children", [fn]]);
+    return this;
   }
 
   props(fn: (props: Record<string, any>) => Record<string, any>) {
     this.__data.fns.push(["props", [fn]]);
+    return this;
   }
 
   template(t: string | TemplateStringsArray | (() => string), ...exps: any[]) {
@@ -202,11 +206,7 @@ export class SuperComponent<Vars extends Record<string, any>> {
         data.initialTemplate = t;
         break;
       case "object":
-        const values: string[] = [];
-
-        exps.forEach((value, index) => values.push(t[index], value));
-
-        values.push(t[t.length - 1]);
+        const values: string[] = concatTemplateStringArrays(t, exps);
 
         const v = treatValueInTemplate(values);
 
@@ -224,8 +224,8 @@ export class SuperComponent<Vars extends Record<string, any>> {
     return this;
   }
 
-  render = ((selectorOrElement?: string | Element | undefined) => {
+  render = (selectorOrElement?: string | Element | undefined) => {
     render(this.__data.componentName + "[]", selectorOrElement);
     return this;
-  }) as ComponentInstance["render"];
+  };
 }
