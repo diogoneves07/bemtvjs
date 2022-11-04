@@ -1,5 +1,6 @@
 import { TagProps } from "./types/template";
 import { BRACKETHTML_CSS_IN_JS } from "./globals";
+import isSelfClosingTag from "./is-self-closing-tag";
 
 const reusableObject = {} as TagProps;
 const reusableArray: string[] = [];
@@ -19,18 +20,22 @@ function reuseArray(attrsAndCSS: string, children: string) {
   return reusableArray;
 }
 
-/**
- * ? Attention: To improve the performance this function reuses the object it returns,
- * ? its object must be used and discarded.
- */
 export default function createTagObject(tagName: string, tagContent: string) {
   const tagObject = reuseObject(tagName, reusableObject);
+  let c = tagContent;
 
-  if (!tagContent) return tagObject;
+  if (!c) return tagObject;
 
-  let values = tagContent.includes(" ~")
-    ? tagContent.split(" ~")
-    : reuseArray("", tagContent);
+  const selfClosingTag = isSelfClosingTag(tagName);
+
+  let hasTildeSymbol = c.includes(" ~");
+
+  if (selfClosingTag && !hasTildeSymbol) {
+    c += " ~";
+    hasTildeSymbol = true;
+  }
+
+  let values = hasTildeSymbol ? c.split(" ~") : reuseArray("", c);
 
   let [attrsAndCSS, children] = values;
 
@@ -52,5 +57,6 @@ export default function createTagObject(tagName: string, tagContent: string) {
     ? BRACKETHTML_CSS_IN_JS.gooberCSS`${css}`
     : "";
   tagObject.css = css;
+
   return tagObject;
 }
