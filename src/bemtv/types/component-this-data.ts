@@ -1,5 +1,4 @@
 import { ComponentThis } from "../components-this";
-import { ManagerEl } from "../manager-el";
 import { ComponentListener } from "./listeners";
 
 export type Props = Record<string, any>;
@@ -15,7 +14,6 @@ export interface ComponentThisData {
   unmountedFns?: Set<LifeCycleCallback>;
   updatedFns: Set<LifeCycleCallback>;
   mounted: boolean;
-  els: ManagerEl[];
   sharedData: Record<string, any>;
   parent: ComponentThis | null;
 }
