@@ -1,5 +1,5 @@
-import { Props } from "./component-this-data";
-import { ComponentThis } from "../components-this";
+import { Props } from "./component-inst-data";
+import { ComponentInst } from "../components-inst";
 import { SuperComponent } from "../super-component/super-component";
 
 export type SuperComponentListener = {
@@ -18,10 +18,10 @@ export interface SuperComponentData {
   initVarsKeys: string[];
   initialTemplate: () => string;
   listeners: Set<SuperComponentListener>;
-  lifeCycles: Map<string, ((c: ComponentThis) => void)[]>;
+  lifeCycles: Map<string, ((c: ComponentInst) => void)[]>;
   removeListeners: Map<SuperComponentListener, (() => void)[]>;
-  componentRunning: ComponentThis | null;
-  components: Map<ComponentThis, ComponentProps>;
+  componentRunning: ComponentInst | null;
+  components: Map<ComponentInst, ComponentProps>;
   $disableProxy: Boolean;
   classes: string[];
   fns: [fn: string, args: any[]][];

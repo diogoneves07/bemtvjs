@@ -2,7 +2,7 @@ import { LIBRARY_NAME_IN_ERRORS_MESSAGE } from "./../../globals";
 import toKebabCase from "../../utilities/to-kebab-case";
 import { PIPE_SYMBOL } from "../pipes/main";
 import { ComponentProps } from "../types/super-component-data";
-import { ComponentThis } from "../components-this";
+import { ComponentInst } from "../components-inst";
 import { getComponentVars } from "./work-with-super-component";
 import { SuperComponent } from "./super-component";
 
@@ -10,14 +10,14 @@ import { SuperComponent } from "./super-component";
 const varsLikeAttrPrefix = "@";
 const regexTemplateVars = /(\$|\@)[\.\w]*[^\(\)\s][\w]/g;
 
-function errorMessage(varValue: any, c: ComponentThis) {
+function errorMessage(varValue: any, c: ComponentInst) {
   console.error(varValue);
   throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} In the “${c.name}” component the template has a value that is not string or number: “${varValue}”`;
 }
 export default function getVarsInTemplate(
   template: string,
   sComp: SuperComponent,
-  c: ComponentThis,
+  c: ComponentInst,
   templatePropertyValues: Map<string, string>
 ) {
   let templateValue = template.replaceAll(regexTemplateVars, (name) => {

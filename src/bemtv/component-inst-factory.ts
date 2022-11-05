@@ -1,25 +1,25 @@
 import { ComponentListener } from "./types/listeners";
-import { ComponentThis } from "./components-this";
+import { ComponentInst } from "./components-inst";
 import insertEventListener from "./insert-event-listener";
 import isEventListener from "./is-event-listener";
-import { getComponentThisData } from "./work-with-components-this";
+import { getComponentInstData } from "./work-with-components-inst";
 import isString from "../utilities/is-string";
 
-export default function ComponentThisFactory(
+export default function ComponentInstFactory(
   name: string,
-  parent?: ComponentThis
+  parent?: ComponentInst
 ) {
-  const componentThis = new ComponentThis(name, parent);
+  const componentInst = new ComponentInst(name, parent);
 
-  const componentThisData = getComponentThisData(componentThis);
-  const listeners = componentThisData.listeners;
+  const componentInstData = getComponentInstData(componentInst);
+  const listeners = componentInstData.listeners;
 
-  const propxyComponentThis = new Proxy(componentThis, {
+  const propxyComponentInst = new Proxy(componentInst, {
     get(target, name) {
       const propName = name as string;
       if (name in target) {
         if (typeof (target as any)[name] === "function") {
-          return (target as any)[name].bind(componentThis);
+          return (target as any)[name].bind(componentInst);
         }
         return (target as any)[name];
       }
@@ -35,9 +35,9 @@ export default function ComponentThisFactory(
 
           listeners.add(listenerObject);
 
-          if (componentThisData.firstElement) {
+          if (componentInstData.firstElement) {
             return insertEventListener(
-              componentThisData.firstElement,
+              componentInstData.firstElement,
               listenerObject.listener,
               ...args
             );
@@ -59,5 +59,5 @@ export default function ComponentThisFactory(
       }
     },
   });
-  return propxyComponentThis;
+  return propxyComponentInst;
 }

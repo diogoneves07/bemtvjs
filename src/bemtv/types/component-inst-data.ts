@@ -1,10 +1,10 @@
-import { ComponentThis } from "../components-this";
+import { ComponentInst } from "../components-inst";
 import { ComponentListener } from "./listeners";
 
 export type Props = Record<string, any>;
 export type LifeCycleCallback = () => void;
 
-export interface ComponentThisData {
+export interface ComponentInstData {
   listeners: Set<ComponentListener>;
   firstElement: Element | null;
   defineFirstElement: (node: Element | null) => void;
@@ -15,5 +15,5 @@ export interface ComponentThisData {
   updatedFns: Set<LifeCycleCallback>;
   mounted: boolean;
   sharedData: Record<string, any>;
-  parent: ComponentThis | null;
+  parent: ComponentInst | null;
 }

@@ -1,8 +1,8 @@
-import { ComponentThis } from "../components-this";
+import { ComponentInst } from "../components-inst";
 import {
   dispatchInitedLifeCycle,
-  getComponentThisData,
-} from "../work-with-components-this";
+  getComponentInstData,
+} from "../work-with-components-inst";
 import getVarsInTemplate from "./get-vars-in-template";
 import { SuperComponent } from "./super-component";
 import {
@@ -13,11 +13,11 @@ import {
 
 export function bindComponentToSuperComponent(
   sComp: SuperComponent,
-  c: ComponentThis
+  c: ComponentInst
 ) {
   const data = getSuperComponentData(sComp);
 
-  const cData = getComponentThisData(c);
+  const cData = getComponentInstData(c);
   let templatePropertyValues: Map<string, string> = new Map();
 
   const template = () => {

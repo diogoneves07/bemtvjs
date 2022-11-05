@@ -2,16 +2,16 @@ import { Listeners } from "./types/listeners";
 import reshareProps from "./reshare-props";
 import useSharedProp from "./use-shared-prop";
 import {
-  ComponentThisData,
+  ComponentInstData,
   LifeCycleCallback,
   Props,
-} from "./types/component-this-data";
+} from "./types/component-inst-data";
 import insertEventListener from "./insert-event-listener";
 
-export interface ComponentThis extends Listeners {}
+export interface ComponentInst extends Listeners {}
 
-export class ComponentThis {
-  protected __data: ComponentThisData = {
+export class ComponentInst {
+  protected __data: ComponentInstData = {
     mounted: false,
     listeners: new Set(),
     firstElement: null,
@@ -41,14 +41,12 @@ export class ComponentThis {
   /** The component properties */
   readonly props: Props = {};
   /** The component properties */
-  readonly p: Props = this.props;
-  /** The component name */
   readonly name: string;
 
   /** The component children */
   children: string = "";
 
-  constructor(name: string, parent?: ComponentThis) {
+  constructor(name: string, parent?: ComponentInst) {
     this.name = name;
 
     const d = this.__data;

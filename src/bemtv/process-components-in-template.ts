@@ -1,12 +1,12 @@
 import { LIBRARY_NAME_IN_ERRORS_MESSAGE } from "../globals";
 import ComponentManager from "./component-manager";
-import { ComponentThis } from "./components-this";
+import { ComponentInst } from "./components-inst";
 import { ComponentFn, getComponentFn } from "./components-main";
-import ComponentThisFactory from "./component-this-factory";
+import ComponentInstFactory from "./component-inst-factory";
 import normalizeComponentName from "./normalize-component-name";
 import getKeyInComponentName from "./get-key-in-component-name";
 import getNextComponentDataInTemplate from "./get-next-component-data-in-template";
-import { getComponentThisProps } from "./work-with-components-this";
+import { getComponentInstProps } from "./work-with-components-inst";
 import {
   autoImportComponent,
   isComponentAlreadyImported,
@@ -16,11 +16,11 @@ import {
 type NextComponentData = ReturnType<typeof getNextComponentDataInTemplate>;
 
 function assignPropsToComponentChild(
-  child: ComponentThis,
+  child: ComponentInst,
   componentName: string,
-  parent: ComponentThis
+  parent: ComponentInst
 ) {
-  const childProps = getComponentThisProps(
+  const childProps = getComponentInstProps(
     parent,
     getKeyInComponentName(componentName)
   );
@@ -82,23 +82,23 @@ function processEachTemplate(
       throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} The component “${realComponentName}” was not created!`;
     }
 
-    const componentThisParent = parent ? parent.componentThis : undefined;
+    const componentInstParent = parent ? parent.componentInst : undefined;
     const componentFn = getComponentFn(realComponentName) as ComponentFn;
-    const componentThis = ComponentThisFactory(
+    const componentInst = ComponentInstFactory(
       realComponentName,
-      componentThisParent
+      componentInstParent
     );
 
-    componentThis.children = children;
+    componentInst.children = children;
 
-    if (componentThisParent) {
-      assignPropsToComponentChild(componentThis, name, componentThisParent);
+    if (componentInstParent) {
+      assignPropsToComponentChild(componentInst, name, componentInstParent);
     }
 
-    const result = componentFn(componentThis);
+    const result = componentFn(componentInst);
 
     const componentManager = new ComponentManager(
-      componentThis,
+      componentInst,
       parent,
       result
     );
@@ -138,7 +138,7 @@ export default function processComponentsInTemplate(
     componentsManager
   );
 
-  const componentsThis = componentsManager.map((o) => o.componentThis);
+  const componentsThis = componentsManager.map((o) => o.componentInst);
 
   dynamicImportComponents.forEach(autoImportComponent);
 

@@ -4,12 +4,12 @@ import {
   getNodeComponentKeys,
   setNodeComponentKeys,
 } from "./nodes-component-keys";
-import { getComponentThisData } from "./work-with-components-this";
+import { getComponentInstData } from "./work-with-components-inst";
 
-function findAndSetComponentThisFirstElement(
+function findAndSetComponentInstFirstElement(
   componentManager: ComponentManager
 ) {
-  const d = getComponentThisData(componentManager.componentThis);
+  const d = getComponentInstData(componentManager.componentInst);
 
   d.defineFirstElement(null);
 
@@ -29,7 +29,7 @@ export function appendNodeToComponentManagerNodes(node: Node) {
       if (!keys.includes(m.key)) continue;
 
       m.nodes.push(node);
-      findAndSetComponentThisFirstElement(m);
+      findAndSetComponentInstFirstElement(m);
     }
   }
 }
@@ -43,7 +43,7 @@ export function removeNodeFromComponentManagerNodes(node: Node) {
 
       m.nodes = m.nodes.filter((n) => n !== node);
 
-      findAndSetComponentThisFirstElement(m);
+      findAndSetComponentInstFirstElement(m);
     }
   }
 }
@@ -60,7 +60,7 @@ export function replaceNodeInComponentManagerNodes(
 
         m.nodes.splice(index, 1, newNode);
 
-        findAndSetComponentThisFirstElement(m);
+        findAndSetComponentInstFirstElement(m);
       }
     }
   }
@@ -77,6 +77,6 @@ export function setComponentManagerNodes(key: string, nodes: Node[]) {
     }
 
     componentManager.nodes = nodes;
-    findAndSetComponentThisFirstElement(componentManager);
+    findAndSetComponentInstFirstElement(componentManager);
   }
 }

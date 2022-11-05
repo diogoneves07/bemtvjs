@@ -1,6 +1,6 @@
 import isEventListener from "./../is-event-listener";
 import { SuperComponent } from "./super-component";
-import { LifeCycleCallback } from "./../types/component-this-data";
+import { LifeCycleCallback } from "../types/component-inst-data";
 import { SuperComponentListener } from "./../types/super-component-data";
 import {
   addLifeCycleToComponents,
@@ -18,7 +18,7 @@ export function SuperComponentFactory<Vars extends Record<string, any>>(
   const data = getSuperComponentData(superComponent);
   const { listeners } = data;
 
-  const propxyComponentThis = new Proxy(superComponent, {
+  const propxyComponentInst = new Proxy(superComponent, {
     get(target, propertyName) {
       if (!isString(propertyName)) return false;
 
@@ -72,7 +72,7 @@ export function SuperComponentFactory<Vars extends Record<string, any>>(
     },
   });
 
-  data.sCompProxy = propxyComponentThis;
+  data.sCompProxy = propxyComponentInst;
 
-  return propxyComponentThis;
+  return propxyComponentInst;
 }

@@ -2,7 +2,7 @@ import { css } from "goober";
 
 import { LIBRARY_NAME_IN_ERRORS_MESSAGE } from "./../../globals";
 import { ManagerEl } from "./../manager-el";
-import { ComponentThis } from "./../components-this";
+import { ComponentInst } from "../components-inst";
 import render from "./../render";
 import {
   resetTemplatePropertyValues,
@@ -13,11 +13,11 @@ import { SuperComponentData } from "./../types/super-component-data";
 import generateKey from "./../generate-el-key";
 import { treatValueInTemplate } from "./treat-value-in-template";
 import concatTemplateStringArrays from "../../utilities/concat-template-string-arrays";
-import { getComponentThisData } from "../work-with-components-this";
+import { getComponentInstData } from "../work-with-components-inst";
 import createElManager from "./create-el-manager";
 
 type ReauseSomeMethods = Omit<
-  ComponentThis,
+  ComponentInst,
   | "__data"
   | "el"
   | "defineProps"
@@ -99,7 +99,7 @@ export class SuperComponent<Vars extends Record<string, any>> {
     const data = this.__data;
     data.classes.push(classValue);
     for (const [c] of data.components) {
-      const { firstElement } = getComponentThisData(c);
+      const { firstElement } = getComponentInstData(c);
 
       if (firstElement) {
         firstElement.classList.add(classValue);

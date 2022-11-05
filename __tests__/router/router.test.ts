@@ -10,7 +10,7 @@ beforeEach(() => {
    * before using the Router again.
    * */
   for (const m of ALL_COMPONENTS_MANAGER) {
-    m.componentThis = null as any;
+    m.componentInst = null as any;
   }
   ALL_COMPONENTS_MANAGER.clear();
 });

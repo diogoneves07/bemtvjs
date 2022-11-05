@@ -25,7 +25,7 @@ export default function processUpdatedTemplate(
     const name = componentData.name;
 
     const index = childComponents.findIndex(
-      (o) => o.componentThis.name === name
+      (o) => o.componentInst.name === name
     );
 
     if (index > -1) {

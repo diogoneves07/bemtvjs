@@ -6,7 +6,7 @@ import {
   dispatchMountedLifeCycle,
   dispatchUpdatedLifeCycle,
   isMounted,
-} from "./work-with-components-this";
+} from "./work-with-components-inst";
 import { BRACKETHTML_CSS_IN_JS } from "../brackethtml/globals";
 import shouldComponentBeUnmounted from "./should-component-be-unmounted";
 
@@ -22,7 +22,7 @@ const timeoutForLoop = 1000 / framesLimit;
   requestAnimationFrame(() => {
     let hasChanges = false;
     for (const componentManager of ALL_COMPONENTS_MANAGER) {
-      if (!isMounted(componentManager.componentThis)) continue;
+      if (!isMounted(componentManager.componentInst)) continue;
 
       if (!componentManager.shouldTemplateBeUpdate()) {
         shouldComponentBeUnmounted(componentManager);
@@ -44,18 +44,18 @@ const timeoutForLoop = 1000 / framesLimit;
           newComponentsManager.length ||
           componentsManagerUpdated.length
         ) {
-          dispatchUpdatedLifeCycle(componentManager.componentThis);
+          dispatchUpdatedLifeCycle(componentManager.componentInst);
         }
 
         for (const c of componentsManagerUpdated) {
-          dispatchUpdatedLifeCycle(c.componentThis);
+          dispatchUpdatedLifeCycle(c.componentInst);
         }
 
         for (const c of newComponentsManager) {
           if (keysAndNodes[c.key]) {
             setComponentManagerNodes(c.key, keysAndNodes[c.key]);
           }
-          dispatchMountedLifeCycle(c.componentThis);
+          dispatchMountedLifeCycle(c.componentInst);
         }
       }
     }

@@ -1,7 +1,7 @@
 import getElement from "../../utilities/get-element";
 import ComponentManager from "../component-manager";
 import { ALL_COMPONENTS_MANAGER } from "../component-manager-store";
-import { ComponentThis } from "../components-this";
+import { ComponentInst } from "../components-inst";
 import { getElKeyValue, isElKey } from "../generate-el-key";
 import { KEY_ATTRIBUTE_NAME } from "../globals";
 import { ManagerEl } from "../manager-el";
@@ -9,7 +9,7 @@ import { ManagerElFactory } from "../manager-el-factory";
 
 export default function createElManager<E extends Element = Element>(
   keyOrSelectorOrElement: string | Element,
-  c: ComponentThis | null
+  c: ComponentInst | null
 ): ManagerEl<E> {
   const managerEl = ManagerElFactory<E>();
 
@@ -30,7 +30,7 @@ export default function createElManager<E extends Element = Element>(
 
   for (const m of ALL_COMPONENTS_MANAGER) {
     componentManager = m;
-    if (m.componentThis === c) break;
+    if (m.componentInst === c) break;
   }
 
   if (!componentManager) return managerEl;

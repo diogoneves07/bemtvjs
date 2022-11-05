@@ -1,5 +1,5 @@
 import { AVOIDS_EMPTY_TEMPLATE, LIBRARY_NAME, TAG_HOST_NAME } from "./globals";
-import { ComponentThis } from "./components-this";
+import { ComponentInst } from "./components-inst";
 import { ComponentTemplateCallback } from "./components-main";
 import { ALL_COMPONENTS_MANAGER } from "./component-manager-store";
 import normalizeRouterShortcut from "./normalize-router-shortcut";
@@ -11,7 +11,7 @@ function avoidEmptyTemplate(template: string) {
 }
 
 export default class ComponentManager {
-  componentThis: ComponentThis;
+  componentInst: ComponentInst;
   key: string;
   lastTemplateValue: string;
   getCurrentTemplate: TemplateCallback;
@@ -23,7 +23,7 @@ export default class ComponentManager {
   componentsInTemplate: Set<ComponentManager> = new Set();
 
   constructor(
-    componentThis: ComponentThis,
+    componentInst: ComponentInst,
     parent: ComponentManager | null,
     callbackOrText: ComponentTemplateCallback | string
   ) {
@@ -44,7 +44,7 @@ export default class ComponentManager {
 
     this.key = `${LIBRARY_NAME}${ALL_COMPONENTS_MANAGER.size}`;
 
-    this.componentThis = componentThis;
+    this.componentInst = componentInst;
 
     this.parent = parent;
 

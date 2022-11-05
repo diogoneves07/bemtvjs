@@ -1,6 +1,6 @@
-import { ComponentThis } from "./../components-this";
+import { ComponentInst } from "../components-inst";
 import { SuperComponent } from "./super-component";
-import { LifeCycleCallback } from "./../types/component-this-data";
+import { LifeCycleCallback } from "../types/component-inst-data";
 import {
   ComponentProps,
   SuperComponentListener,
@@ -18,7 +18,7 @@ export function getComponentVars(sComp: SuperComponent) {
 
 export function setRunningComponent(
   sComp: SuperComponent,
-  c?: ComponentThis | null
+  c?: ComponentInst | null
 ) {
   const data = getSuperComponentData(sComp);
 
@@ -50,7 +50,7 @@ export function addLifeCycleToComponents(
   callback: LifeCycleCallback
 ) {
   const data = getSuperComponentData(sComp);
-  const lifeCallback = (c: ComponentThis) => {
+  const lifeCallback = (c: ComponentInst) => {
     setRunningComponent(sComp, c);
     callback();
     setRunningComponent(sComp);
@@ -73,7 +73,7 @@ export function addLifeCycleToComponents(
 export function addListenerToComponent(
   sComp: SuperComponent,
   l: SuperComponentListener,
-  c: ComponentThis
+  c: ComponentInst
 ) {
   const [listenerFn, listenerObject] = l.args;
 
