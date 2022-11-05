@@ -1,5 +1,6 @@
 import { _ } from "../main";
 import isString from "../utilities/is-string";
+import { changeRouterTemplate } from "./router";
 import { routeToKebabCase } from "./routes-case";
 
 type RouteValue = string | { title: string; use: string };
@@ -21,11 +22,12 @@ export const routerProxy = new Proxy(routerObject, {
 
         const routePath = propName;
 
-        _("Router:" + routePath, ({ children }) => {
-          return `<a href="#/${routeToKebabCase(routePath)}">${children}</a>`;
-        });
+        _("Router:" + routePath).template(
+          () => `<a href="#/${routeToKebabCase(routePath)}">$children</a>`
+        );
         return () => {
           window.location.hash = `/${routeToKebabCase(routePath)}`;
+          changeRouterTemplate();
         };
       };
 

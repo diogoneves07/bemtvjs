@@ -10,15 +10,23 @@ export function useRouterTemplate() {
   return routerTemplate();
 }
 
-const changeRouterTemplate = () => {
+let lastHash: string = "";
+export const changeRouterTemplate = () => {
+  if (lastHash === window.location.hash) return;
+
   const path = window.location.hash.split("/");
 
-  if (!path[1]) return;
+  if (!path[1]) {
+    routerTemplate = initialRouterTemplate;
+
+    return;
+  }
 
   const routeName = routeToCamelCase(path[1]);
   const routeValues = routerProxy[routeName].routeValues;
 
   if (routeValues) {
+    lastHash = window.location.hash;
     const [route, fallback] = routeValues;
     const isRouteObject = typeof route === "object";
     const isFallbackObject = typeof fallback === "object";
