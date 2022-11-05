@@ -3,7 +3,7 @@ export {
   orderedListPipe as olPipe,
   unorderedListPipe as ulPipe,
 } from "./bemtv/pipes/html-list-pipes";
-export { descriptionListPipe as dlPipe } from "./bemtv/pipes/description-List-pipe";
+export { descriptionListPipe as dlPipe } from "./bemtv/pipes/description-list-pipe";
 
 export { matchComponent as match } from "./bemtv/match-component";
 export { autoImportComponents } from "./bemtv/auto-import-components";
