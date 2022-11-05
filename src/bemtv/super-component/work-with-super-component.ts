@@ -50,17 +50,24 @@ export function addLifeCycleToComponents(
   callback: LifeCycleCallback
 ) {
   const data = getSuperComponentData(sComp);
+  const lifeCallback = (c: ComponentThis) => {
+    setRunningComponent(sComp, c);
+    callback();
+    setRunningComponent(sComp);
+  };
 
-  for (const c of data.components) (c as any)[name](callback);
+  for (const [c] of data.components) {
+    (c as any)[name](() => lifeCallback(c));
+  }
 
   const h = data.lifeCycles.get(name);
 
   if (h) {
-    h.push(callback);
+    h.push(lifeCallback);
     return;
   }
 
-  data.lifeCycles.set(name, [callback]);
+  data.lifeCycles.set(name, [lifeCallback]);
 }
 
 export function addListenerToComponent(

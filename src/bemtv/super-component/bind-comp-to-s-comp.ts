@@ -17,10 +17,12 @@ export function bindComponentToSuperComponent(
 ) {
   const data = getSuperComponentData(sComp);
 
+  const cData = getComponentThisData(c);
   let templatePropertyValues: Map<string, string> = new Map();
 
   const template = () => {
     setRunningComponent(sComp, c);
+
     const t = data.initialTemplate() as string;
 
     const templateValue = getVarsInTemplate(
@@ -36,7 +38,7 @@ export function bindComponentToSuperComponent(
   let componentFirstElement: undefined | Element;
 
   const addClassesToComponent = () => {
-    const { firstElement } = getComponentThisData(c);
+    const { firstElement } = cData;
 
     if (componentFirstElement === firstElement) return;
 
@@ -60,8 +62,12 @@ export function bindComponentToSuperComponent(
 
   for (const l of data.lifeCycles) {
     for (const callback of l[1]) {
-      withoutTypes[l[0]](callback);
+      withoutTypes[l[0]](() => callback(c));
     }
+  }
+
+  if (data.propsDefined) {
+    cData.propsDefined = data.propsDefined;
   }
 
   for (const [fnName, args] of data.fns) {

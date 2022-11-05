@@ -2,8 +2,6 @@ import { css } from "goober";
 
 import { LIBRARY_NAME_IN_ERRORS_MESSAGE } from "./../../globals";
 import { ManagerEl } from "./../manager-el";
-import { KEY_ATTRIBUTE_NAME } from "./../globals";
-import { ALL_COMPONENTS_MANAGER } from "./../component-manager-store";
 import { ComponentThis } from "./../components-this";
 import render from "./../render";
 import {
@@ -12,10 +10,11 @@ import {
   updateComponentVars,
 } from "./work-with-super-component";
 import { SuperComponentData } from "./../types/super-component-data";
-import generateKey, { getElKeyValue, isElKey } from "./../generate-el-key";
-import ComponentManager from "./../component-manager";
+import generateKey from "./../generate-el-key";
 import { treatValueInTemplate } from "./treat-value-in-template";
 import concatTemplateStringArrays from "../../utilities/concat-template-string-arrays";
+import { getComponentThisData } from "../work-with-components-this";
+import createElManager from "./create-el-manager";
 
 type ReauseSomeMethods = Omit<
   ComponentThis,
@@ -27,6 +26,7 @@ type ReauseSomeMethods = Omit<
   | "reshare"
   | "use"
   | "props"
+  | "name"
 >;
 
 type ComponentVars<V extends Record<string, any>> = V & {
@@ -38,7 +38,7 @@ export interface SuperComponent<
 > extends ReauseSomeMethods {}
 
 export class SuperComponent<Vars extends Record<string, any>> {
-  protected __data: SuperComponentData = {
+  protected __data = {
     componentName: "",
     initVars: {},
     initVarsKeys: ["children", "props"],
@@ -51,7 +51,7 @@ export class SuperComponent<Vars extends Record<string, any>> {
     $disableProxy: false,
     classes: [],
     fns: [],
-  };
+  } as unknown as SuperComponentData;
 
   $: ComponentVars<Vars>;
 
@@ -84,7 +84,7 @@ export class SuperComponent<Vars extends Record<string, any>> {
     });
   }
 
-  keepIns<T extends Function>(callback: T) {
+  keepInst<T extends Function>(callback: T) {
     const keepInstance = this.__data.componentRunning;
     return () => {
       setRunningComponent(this, keepInstance);
@@ -95,14 +95,18 @@ export class SuperComponent<Vars extends Record<string, any>> {
   }
 
   css = (...args: Parameters<typeof css>) => {
-    const c = css(...args);
-    this.__data.classes.push(c);
-    return c;
-  };
+    const classValue = css(...args);
+    const data = this.__data;
+    data.classes.push(classValue);
+    for (const [c] of data.components) {
+      const { firstElement } = getComponentThisData(c);
 
-  keyEl() {
-    return generateKey();
-  }
+      if (firstElement) {
+        firstElement.classList.add(classValue);
+      }
+    }
+    return classValue;
+  };
 
   /**
    * Creates an instance to manage a real DOM element.
@@ -110,35 +114,31 @@ export class SuperComponent<Vars extends Record<string, any>> {
    * @returns
    * The instance to manage the real DOM element;
    */
-  el(selectorOrElement: string | Element) {
-    const c = this.__data.componentRunning;
-    const fallback = new ManagerEl("");
+  useEl<E extends Element = Element>(
+    selectorOrElement: string | Element
+  ): () => ManagerEl<E>;
 
-    if (!c) return fallback;
+  useEl<E extends Element = Element>(): [
+    elKey: string,
+    getEl: () => ManagerEl<E>
+  ];
 
-    if (selectorOrElement instanceof Element) return c.el(selectorOrElement);
+  useEl<E extends Element = Element>(selectorOrElement?: string | Element) {
+    if (selectorOrElement)
+      return () =>
+        createElManager<E>(selectorOrElement, this.__data.componentRunning);
 
-    if (!isElKey(selectorOrElement)) return c.el(selectorOrElement);
+    let elManager: undefined | ManagerEl;
 
-    const elKey = getElKeyValue(selectorOrElement);
-    let componentManager: ComponentManager | undefined;
-
-    for (const m of ALL_COMPONENTS_MANAGER) {
-      componentManager = m;
-      if (m.componentThis === c) break;
-    }
-
-    if (!componentManager) return fallback;
-
-    let element = componentManager.nodes.find((n) => {
-      if (!(n instanceof Element)) return false;
-      if (!n.hasAttribute(KEY_ATTRIBUTE_NAME)) return false;
-      if (!n.getAttribute(KEY_ATTRIBUTE_NAME)?.includes(elKey)) return false;
-
-      return true;
-    }) as Element;
-
-    return c.el(element);
+    const key = generateKey();
+    return [
+      key,
+      () => {
+        if (elManager && elManager.it) return elManager;
+        elManager = createElManager<E>(key, this.__data.componentRunning);
+        return elManager;
+      },
+    ];
   }
 
   /**
@@ -149,7 +149,7 @@ export class SuperComponent<Vars extends Record<string, any>> {
    */
   share<T extends Record<string, any>>(o: T) {
     this.__data.fns.push(["share", [o]]);
-    return this;
+    return this.__data.sCompProxy;
   }
 
   /**
@@ -160,7 +160,7 @@ export class SuperComponent<Vars extends Record<string, any>> {
    */
   reshare<T extends Record<string, any>>(o: T) {
     this.__data.fns.push(["reshare", [o]]);
-    return this;
+    return this.__data.sCompProxy;
   }
 
   /**
@@ -182,21 +182,26 @@ export class SuperComponent<Vars extends Record<string, any>> {
    *
    * @returns
    * A key that can be used before the component's opening square bracket, so the component will
-   * receive the declared props
+   * receive the declared props.
    */
   defineProps<T extends Record<string, any>>(props: T) {
-    this.__data.fns.push(["defineProps", [props]]);
-    return this;
+    if (!this.__data.propsDefined) this.__data.propsDefined = new Map();
+
+    const key = this.__data.propsDefined.size.toString();
+
+    this.__data.propsDefined.set(key, props);
+
+    return "_" + key;
   }
 
   children(fn: (children: string) => string) {
     this.__data.fns.push(["children", [fn]]);
-    return this;
+    return this.__data.sCompProxy;
   }
 
   props(fn: (props: Record<string, any>) => Record<string, any>) {
     this.__data.fns.push(["props", [fn]]);
-    return this;
+    return this.__data.sCompProxy;
   }
 
   template(t: string | TemplateStringsArray | (() => string), ...exps: any[]) {
@@ -221,11 +226,11 @@ export class SuperComponent<Vars extends Record<string, any>> {
         break;
     }
 
-    return this;
+    return this.__data.sCompProxy;
   }
 
   render = (selectorOrElement?: string | Element | undefined) => {
     render(this.__data.componentName + "[]", selectorOrElement);
-    return this;
+    return this.__data.sCompProxy;
   };
 }

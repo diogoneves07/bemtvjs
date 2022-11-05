@@ -15,11 +15,15 @@ export function SuperComponentFactory<Vars extends Record<string, any>>(
   vars: Vars
 ) {
   const superComponent = new SuperComponent<Vars>(name, vars);
-  const { listeners } = getSuperComponentData(superComponent);
+  const data = getSuperComponentData(superComponent);
+  const { listeners } = data;
 
   const propxyComponentThis = new Proxy(superComponent, {
     get(target, propertyName) {
+      if (!isString(propertyName)) return false;
+
       let propName = propertyName as string;
+
       const t = target as Record<string, any>;
 
       if (propName.slice(0, 2) === "on") {
@@ -35,12 +39,13 @@ export function SuperComponentFactory<Vars extends Record<string, any>>(
           if (propName === "$") {
             return t[propName];
           }
+
           return t[propName].bind(superComponent);
         }
         return t[propName];
       }
 
-      if (isString(propName) && isEventListener(propName)) {
+      if (isEventListener(propName)) {
         const newEventListener = (
           ...args: [fn: Function, options: AddEventListenerOptions]
         ) => {
@@ -66,5 +71,8 @@ export function SuperComponentFactory<Vars extends Record<string, any>>(
       return false;
     },
   });
+
+  data.sCompProxy = propxyComponentThis;
+
   return propxyComponentThis;
 }

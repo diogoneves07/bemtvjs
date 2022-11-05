@@ -8,7 +8,7 @@ import { SuperComponent } from "./super-component";
 
 // const varsPrefix = "$";
 const varsLikeAttrPrefix = "@";
-const regexTemplateVars = /[$|@][\.\w]*[^\(\)\s][\w]/g;
+const regexTemplateVars = /(\$|\@)[\.\w]*[^\(\)\s][\w]/g;
 
 function errorMessage(varValue: any, c: ComponentThis) {
   console.error(varValue);
@@ -23,6 +23,7 @@ export default function getVarsInTemplate(
   let templateValue = template.replaceAll(regexTemplateVars, (name) => {
     const prefix = name[0];
     const varName = name.slice(1);
+
     const getLastValue = templatePropertyValues.get(varName);
 
     if (getLastValue) return getLastValue;
@@ -56,7 +57,7 @@ export default function getVarsInTemplate(
     }
 
     if (varValue === undefined || varValue === null) {
-      throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} In the “${c.name}” component the template has a property that not exit: “${prefix}${varName}”`;
+      throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} In the “${c.name}” component the template has a variable that not exist: “${prefix}${varName}”`;
     }
 
     if (Object.hasOwn(varValue, PIPE_SYMBOL)) {
