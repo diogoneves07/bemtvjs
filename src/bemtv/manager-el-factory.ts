@@ -5,8 +5,8 @@ import { ManagerEl } from "./manager-el";
 import { getManagerElData } from "./work-with-manager-el";
 import isString from "../utilities/is-string";
 
-export function ManagerElFactory<E extends Element = Element>(key: string) {
-  const managerEl = new ManagerEl<E>(key);
+export function ManagerElFactory<E extends Element = Element>() {
+  const managerEl = new ManagerEl<E>();
   const listeners = getManagerElData(managerEl).listeners;
 
   return new Proxy(managerEl, {

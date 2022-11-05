@@ -1,13 +1,6 @@
 import { Listeners } from "./types/listeners";
-import generateKey, { REGEX_CUSTOM_ATTR_KEY_VALUE } from "./generate-el-key";
-import getElement from "../utilities/get-element";
-import { ManagerElFactory } from "./manager-el-factory";
 import reshareProps from "./reshare-props";
 import useSharedProp from "./use-shared-prop";
-import {
-  getComponentThisData,
-  getElementsForElsManager,
-} from "./work-with-components-this";
 import {
   ComponentThisData,
   LifeCycleCallback,
@@ -25,7 +18,6 @@ export class ComponentThis {
     mountedFns: new Set<LifeCycleCallback>(),
     initFns: new Set<LifeCycleCallback>(),
     updatedFns: new Set<LifeCycleCallback>(),
-    els: [],
     sharedData: {},
     parent: null,
     defineFirstElement(newValue: Element | null) {
@@ -62,13 +54,6 @@ export class ComponentThis {
     const d = this.__data;
     d.parent = parent || null;
 
-    const els = () => {
-      getElementsForElsManager(d.els);
-    };
-
-    d.updatedFns.add(els);
-    d.mountedFns.add(els);
-
     return this;
   }
 
@@ -102,76 +87,6 @@ export class ComponentThis {
    */
   use<ReturnType = any>(key: string) {
     return useSharedProp(this, key) as ReturnType;
-  }
-
-  /**
-   * @param props
-   * An object.
-   *
-   * @returns
-   * A key that can be used before the component's opening square bracket, so the component will
-   * receive the declared props.
-   */
-  defineProps<T extends Record<string, any>>(props: T) {
-    if (!this.__data.propsDefined) this.__data.propsDefined = new Map();
-
-    const key = this.__data.propsDefined.size.toString();
-
-    this.__data.propsDefined.set(key, props);
-
-    return "_" + key;
-  }
-
-  /**
-   * Creates an instance to manage a real DOM element.
-   *
-   * @returns
-   * The instance to manage the real DOM element.
-   */
-  el<E extends Element = Element>(): [
-    managerEl: ReturnType<typeof ManagerElFactory<E>>,
-    key: string
-  ];
-
-  /**
-   * Creates an instance to manage a real DOM element.
-   *
-   * @param selectorOrElement
-   * The element of instance
-   *
-   * @returns
-   * The instance to manage the real DOM element.
-   */
-  el<E extends Element = Element>(
-    selectorOrElement?: string | Element
-  ): ReturnType<typeof ManagerElFactory<E>>;
-
-  el<E extends Element = Element>(selectorOrElement?: string | Element) {
-    const key = generateKey();
-    const keyWithoutTokens = (
-      key.match(REGEX_CUSTOM_ATTR_KEY_VALUE) as string[]
-    )[0];
-
-    const managerEl = ManagerElFactory<E>(keyWithoutTokens);
-    const data = getComponentThisData(this);
-    const { mounted } = data;
-
-    data.els.push(managerEl);
-
-    if (!selectorOrElement) return [managerEl, key];
-
-    if (mounted) {
-      managerEl.it = getElement(selectorOrElement) as E;
-    } else {
-      data.mountedFns = new Set<any>([
-        () => {
-          managerEl.it = getElement(selectorOrElement) as E;
-        },
-        ...data.mountedFns,
-      ]);
-    }
-
-    return managerEl;
   }
 
   /**
