@@ -1,7 +1,4 @@
-import { KEY_ATTRIBUTE_NAME } from "./globals";
 import { ComponentThis } from "./components-this";
-import { getManagerElData } from "./work-with-manager-el";
-import { ManagerEl } from "./manager-el";
 
 export function getComponentThisData(componentThis: ComponentThis) {
   return (componentThis as any).__data as ComponentThis["__data"];
@@ -13,7 +10,13 @@ export function dispatchInitedLifeCycle(componentThis: ComponentThis) {
   data.initFns.clear();
 }
 export function dispatchUpdatedLifeCycle(componentThis: ComponentThis) {
-  getComponentThisData(componentThis).updatedFns?.forEach((f) => f());
+  const data = getComponentThisData(componentThis);
+
+  data.updatedFns?.forEach((f) => f());
+
+  if (componentThis.name === "Router") {
+    data.parent && dispatchUpdatedLifeCycle(data.parent);
+  }
 }
 
 export function dispatchMountedLifeCycle(componentThis: ComponentThis) {
@@ -34,14 +37,4 @@ export function getComponentThisProps(parent: ComponentThis, key: string) {
 }
 export function isMounted(componentThis: ComponentThis) {
   return getComponentThisData(componentThis).mounted;
-}
-
-export function getElementsForElsManager(els: ManagerEl<Element>[]) {
-  for (const el of els) {
-    el.it =
-      Array.from(document.querySelectorAll(`[${KEY_ATTRIBUTE_NAME}]`)).find(
-        (n) =>
-          n.getAttribute(KEY_ATTRIBUTE_NAME)?.includes(getManagerElData(el).key)
-      ) || null;
-  }
 }
