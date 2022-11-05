@@ -1,7 +1,19 @@
+import { ALL_COMPONENTS_MANAGER } from "./../../src/bemtv/component-manager-store";
 import { resetDocumentBodyAndRemoveComponents } from "../test-utilities/reset-test-environment";
 import { Component, router, r } from "../../src/main";
 
 resetDocumentBodyAndRemoveComponents("App");
+
+beforeEach(() => {
+  /**
+   * It is necessary to remove the link between the components already created
+   * before using the Router again.
+   * */
+  for (const m of ALL_COMPONENTS_MANAGER) {
+    m.componentThis = null as any;
+  }
+  ALL_COMPONENTS_MANAGER.clear();
+});
 
 describe("Check router functionality", () => {
   it("Should go to the route", () => {
@@ -21,57 +33,77 @@ describe("Check router functionality", () => {
   });
 
   it("Should use route fallback", (done) => {
-    router.SecondRoute("Unknown[]", "Loading...")();
-    Component("App", () => "#[]").render();
+    const { onUpdate, template, render } = Component("App");
 
-    setTimeout(() => {
+    onUpdate(() => {
       expect(document.body.textContent?.trim()).toBe("Loading...");
       expect(window.location.hash).toBe("#/second-route");
       done();
-    }, 100);
-  });
+    });
 
+    template`#[]`;
+
+    render();
+
+    router.SecondRoute("Unknown[]", "Loading...")();
+  });
   it("Should create route link", (done) => {
     router.ThirdRoute("Hello world!");
 
-    Component("App", () => "#[] #ThirdRoute[link]").render();
+    const { onMount, template, render } = Component("App");
 
-    setTimeout(() => {
+    onMount(() => {
       const a = document.body.children[0] as HTMLAnchorElement;
       expect(a.tagName.toLowerCase()).toBe("a");
       expect(a.getAttribute("href")).toBe("#/third-route");
       done();
-    }, 100);
+    });
+
+    template`#[] #ThirdRoute[link]`;
+
+    render();
   });
 
   it("Should use route", (done) => {
-    router.FourthRoute("Hey!")();
-    Component("App", () => "#[]").render();
+    const { onUpdate, template, render } = Component("App");
 
-    setTimeout(() => {
+    onUpdate(() => {
       expect(document.body.textContent?.trim()).toBe("Hey!");
       expect(window.location.hash).toBe("#/fourth-route");
       done();
-    }, 100);
+    });
+
+    template`#[]`;
+
+    render();
+    router.FourthRoute("Hey!")();
   });
-
   it("Should not find the route", (done) => {
-    window.location.hash = "/unknown";
-    Component("App", () => "#[]").render();
+    const { onUpdate, template, render } = Component("App");
 
-    setTimeout(() => {
+    onUpdate(() => {
       expect(document.body.textContent?.trim()).toBe("");
       done();
-    }, 100);
+    });
+
+    template`#[]`;
+
+    render();
+    window.location.hash = "/unknown";
   });
 
   it("Should route be invalid", (done) => {
-    window.location.hash = "unknown";
-    Component("App", () => "#[]").render();
+    const { onMount, template, render } = Component("App");
 
-    setTimeout(() => {
+    onMount(() => {
       expect(document.body.textContent?.trim()).toBe("");
       done();
-    }, 100);
+    });
+
+    template`#[]`;
+
+    render();
+
+    window.location.hash = "unknown";
   });
 });

@@ -1,7 +1,7 @@
 import { Component } from "../../src/main";
 
-it("should throw an error, because the component does not exist", () => {
+it("Should throw an error because the component does not exit", () => {
   expect(() => {
-    Component("App", () => "NotExist[]").render();
+    Component("App").template`NotExist[]`.render();
   }).toThrow();
 });

@@ -9,16 +9,15 @@ describe("ManagerEl.it property", () => {
     div.id = "app";
     document.body.appendChild(div);
 
-    Component("App", ({ el }) => {
-      const appEl = el("#app");
+    const { useEl, onMount, render } = Component("App");
+    const el = useEl("#app");
 
-      setTimeout(() => {
-        expect(appEl.it).toBe(div);
-        done();
-      }, 200);
+    onMount(() => {
+      expect(el().it).toBe(div);
+      done();
+    });
 
-      return () => ``;
-    }).render();
+    render();
   });
 
   it("Should use div element in ManagerEl", (done) => {
@@ -26,78 +25,89 @@ describe("ManagerEl.it property", () => {
 
     document.body.appendChild(div);
 
-    Component("App", ({ el }) => {
-      const appEl = el(div);
+    const { useEl, onMount, render } = Component("App");
+    const el = useEl(div);
 
-      setTimeout(() => {
-        expect(appEl.it).toBe(div);
-        done();
-      }, 200);
+    onMount(() => {
+      expect(el().it).toBe(div);
+      done();
+    });
 
-      return () => ``;
-    }).render();
+    render();
   });
 
   it("Should get element from template and use in ManagerEl", (done) => {
-    Component("App", ({ el }) => {
-      const [appEl, key] = el();
+    const { useEl, onMount, template, render } = Component("App");
 
-      setTimeout(() => {
-        expect(appEl.it?.tagName?.toLowerCase()).toBe("button");
-        done();
-      }, 200);
+    const [appKey, el] = useEl();
 
-      return () => `button[ ${key} Click me!]`;
-    }).render();
+    onMount(() => {
+      const appEl = el();
+      expect(appEl.it?.tagName?.toLowerCase()).toBe("button");
+      done();
+    });
+
+    template(() => `button[ ${appKey} Click me!]`);
+
+    render();
   });
 
   it("Should be null", (done) => {
-    Component("App", ({ el }) => {
-      const [appEl] = el();
+    const { useEl, onMount, template, render } = Component("App");
 
-      setTimeout(() => {
-        expect(appEl.it).toBeNull();
-        done();
-      }, 200);
+    const [, el] = useEl();
 
-      return () => `button[Click me!]`;
-    }).render();
+    onMount(() => {
+      const appEl = el();
+      expect(appEl.it).toBeNull();
+      done();
+    });
+
+    template(() => `button[ Click me!]`);
+
+    render();
   });
 
   it("Should replace the HTML element “span” with “strong”", (done) => {
-    Component("App", ({ el }) => {
-      const [appEl, key] = el();
-      let t = `span[${key} class="today" ~ Click me!]`;
+    const { useEl, onMount, onUpdate, template, render } = Component("App");
 
-      setTimeout(() => {
-        t = `strong[${key} class="today" ~ Click me!]`;
-      }, 100);
+    const [appKey, el] = useEl();
 
-      setTimeout(() => {
-        expect(appEl.it?.tagName?.toLowerCase()).toBe("strong");
-        done();
-      }, 200);
+    let t = `span[${appKey} class="today" ~ Click me!]`;
 
-      return () => t;
-    }).render();
+    onMount(() => {
+      t = `strong[${appKey} class="today" ~ Click me!]`;
+    });
+
+    onUpdate(() => {
+      expect(el().it?.tagName?.toLowerCase()).toBe("strong");
+      done();
+    });
+
+    template(() => t);
+
+    render();
   });
 
   it("Should update element attributes", (done) => {
-    Component("App", ({ el }) => {
-      const [appEl, key] = el();
-      let t = `span[${key} class="today" color:red; ~ Click me!]`;
+    const { useEl, onMount, onUpdate, template, render } = Component("App");
 
-      setTimeout(() => {
-        t = `span[${key} class="today tomorrow" color:red; ~ Click me!]`;
-      }, 100);
+    const [appKey, el] = useEl();
 
-      setTimeout(() => {
-        expect(appEl.it?.tagName?.toLowerCase()).toBe("span");
-        done();
-      }, 200);
+    let t = `span[${appKey} class="today" color:red; ~ Click me!]`;
 
-      return () => t;
-    }).render();
+    onMount(() => {
+      t = `span[${appKey} class="today tomorrow" color:red; ~ Click me!]`;
+    });
+
+    onUpdate(() => {
+      expect(el().it?.tagName?.toLowerCase()).toBe("span");
+      done();
+    });
+
+    template(() => t);
+
+    render();
   });
 
   it("Should use element by selector after a time", (done) => {
@@ -105,17 +115,19 @@ describe("ManagerEl.it property", () => {
     div.id = "app";
     document.body.appendChild(div);
 
-    Component("App", ({ el }) => {
+    const { useEl, onMount, template, render } = Component("App");
+
+    onMount(() => {
+      const el = useEl("#app");
+
       setTimeout(() => {
-        const appEl = el("#app");
+        expect(el().it).toBe(div);
+        done();
+      }, 50);
+    });
 
-        setTimeout(() => {
-          expect(appEl.it).toBe(div);
-          done();
-        }, 200);
-      }, 100);
+    template`Hello`;
 
-      return "Hello";
-    }).render();
+    render();
   });
 });

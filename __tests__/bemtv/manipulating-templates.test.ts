@@ -3,147 +3,198 @@ import { resetTestEnvironment } from "../test-utilities/reset-test-environment";
 
 resetTestEnvironment();
 
-describe("Checks if changes to templates are applied to the DOM correctly", () => {
+describe("Checks if templates are correctly applied to the DOM", () => {
   it("Should allow containing nested components", (done) => {
-    Component("Strong", () => "strong[Click me!]");
-    Component("Button", ({ children }) => `button[${children}]`);
+    Component("Strong").template(() => "strong[Click me!]");
 
-    Component("App", ({ onMount }) => {
-      onMount(() => {
-        expect(document.body.children[0].tagName.toLowerCase()).toBe("button");
-        done();
-      });
-      return `Button[ Strong[] ]`;
-    }).render();
+    Component("Button").template(() => `button[$children]`);
+
+    const { onMount, template, render } = Component("App");
+
+    onMount(() => {
+      expect(document.body.children[0].tagName.toLowerCase()).toBe("button");
+      done();
+    });
+
+    template(() => `Button[ Strong[] ]`);
+
+    render();
   });
   it("Should remove component Child nodes", (done) => {
-    Component("Child", () => "strong[Not Hey!]");
+    Component("Child").template`strong[Not Hey!]`;
 
-    Component("App", ({ onUpdate }) => {
-      let t = "Child[]";
-      setTimeout(() => (t = "Hey!"), 100);
+    const { onMount, onUpdate, template, render } = Component("App");
+    let t = "Child[]";
 
-      onUpdate(() => {
-        expect(document.body.textContent?.trim()).toBe("Hey!");
-        done();
-      });
-      return () => t;
-    }).render();
+    onMount(() => {
+      t = "Hey!";
+    });
+
+    onUpdate(() => {
+      expect(document.body.textContent?.trim()).toBe("Hey!");
+      done();
+    });
+
+    template(() => t);
+
+    render();
   });
 
   it("Should replace component Text node with strong element", (done) => {
-    Component("App", ({ onUpdate }) => {
-      let t = "Hello";
-      setTimeout(() => (t = "strong[Hello]"), 100);
+    const { onMount, onUpdate, template, render } = Component("App");
+    let t = "Hello";
 
-      onUpdate(() => {
-        expect(document.body.children[0].tagName.toLowerCase()).toBe("strong");
-        done();
-      });
-      return () => t;
-    }).render();
+    onMount(() => {
+      t = "strong[Hey!]";
+    });
+
+    onUpdate(() => {
+      expect(document.body.children[0].tagName.toLowerCase()).toBe("strong");
+      done();
+    });
+
+    template(() => t);
+
+    render();
   });
 
   it("Should replace component empty Text node with strong element", (done) => {
-    Component("App", ({ onUpdate }) => {
-      let t = "";
-      setTimeout(() => (t = "strong[Hello]"), 100);
+    const { onMount, onUpdate, template, render } = Component("App");
+    let t = "";
 
-      onUpdate(() => {
-        expect(document.body.children[0].tagName.toLowerCase()).toBe("strong");
-        done();
-      });
-      return () => t;
-    }).render();
+    onMount(() => {
+      t = "strong[Hey!]";
+    });
+
+    onUpdate(() => {
+      expect(document.body.children[0].tagName.toLowerCase()).toBe("strong");
+      done();
+    });
+
+    template(() => t);
+
+    render();
   });
 
   it("Should replace component span element with strong element", (done) => {
-    Component("App", ({ onUpdate }) => {
-      let t = "span[Hey]";
-      setTimeout(() => (t = "strong[Hello]"), 100);
+    const { onMount, onUpdate, template, render } = Component("App");
+    let t = "span[Hey]";
 
-      onUpdate(() => {
-        expect(document.body.children[0].tagName.toLowerCase()).toBe("strong");
-        done();
-      });
-      return () => t;
-    }).render();
+    onMount(() => {
+      t = "strong[Hey!]";
+    });
+
+    onUpdate(() => {
+      expect(document.body.children[0].tagName.toLowerCase()).toBe("strong");
+      done();
+    });
+
+    template(() => t);
+
+    render();
   });
 
   it("Should remove diff between elments attributes", (done) => {
-    Component("App", ({ onUpdate }) => {
-      let t = "span[ class='test' ~ Hey]";
-      setTimeout(() => (t = "strong[class='hello' ~ Hello]"), 100);
+    const { onMount, onUpdate, template, render } = Component("App");
+    let t = 'span[ class="test" ~ Hey]';
 
-      onUpdate(() => {
-        expect(document.body.children[0].tagName.toLowerCase()).toBe("strong");
-        done();
-      });
-      return () => t;
-    }).render();
+    onMount(() => {
+      t = 'strong[class="hello" ~ Hello]';
+    });
+
+    onUpdate(() => {
+      const strongElement = document.body.children[0];
+
+      expect(strongElement.tagName.toLowerCase()).toBe("strong");
+      expect(strongElement.className.toLowerCase()).toBe("hello");
+      done();
+    });
+
+    template(() => t);
+
+    render();
   });
 
   it("Should remove diff between SVG elments attributes", (done) => {
-    Component("App", ({ onUpdate }) => {
-      const firstValue = `svg[ xmlns="http://www.w3.org/2000/svg"  ~ circle[class="red" ~ ]]`;
-      const secondValue = `svg[ xmlns="http://www.w3.org/2000/svg" ~ circle[class="blue" ~ ]]`;
-      let t = firstValue;
-      setTimeout(() => (t = secondValue), 100);
+    const { onMount, onUpdate, template, render } = Component("App");
 
-      onUpdate(() => {
-        expect(document.getElementsByTagName("circle")[0]).toBeTruthy();
-        expect(
-          document.getElementsByTagName("circle")[0].getAttribute("class")
-        ).toBe("blue");
-        done();
-      });
-      return () => t;
-    }).render();
+    const firstValue = `svg[ xmlns="http://www.w3.org/2000/svg"  ~ circle[class="red" ~ ]]`;
+    const secondValue = `svg[ xmlns="http://www.w3.org/2000/svg" ~ circle[class="blue" ~ ]]`;
+
+    let t = firstValue;
+
+    onMount(() => {
+      t = secondValue;
+    });
+
+    onUpdate(() => {
+      expect(document.getElementsByTagName("circle")[0]).toBeTruthy();
+      expect(
+        document.getElementsByTagName("circle")[0].getAttribute("class")
+      ).toBe("blue");
+      done();
+    });
+
+    template(() => t);
+
+    render();
   });
 
   it("should remove most elements", (done) => {
-    Component("App", ({ onUpdate }) => {
-      let t = "span[Hey] span[Hey] span[Hey] span[Hey] span[Hey] span[Hey]";
-      setTimeout(() => (t = "span[Hello]"), 100);
+    const { onMount, onUpdate, template, render } = Component("App");
+    let t = "span[Hey] span[Hey] span[Hey] span[Hey] span[Hey] span[Hey]";
 
-      onUpdate(() => {
-        expect(document.body.children[0].textContent?.trim()).toBe("Hello");
-        done();
-      });
-      return () => t;
-    }).render();
+    onMount(() => {
+      t = "span[Hello]";
+    });
+
+    onUpdate(() => {
+      expect(document.body.children[0].textContent?.trim()).toBe("Hello");
+      done();
+    });
+
+    template(() => t);
+
+    render();
   });
 
   it("Should replace text in component span element", (done) => {
-    Component("App", ({ onUpdate }) => {
-      let t = "span[Hey]";
-      setTimeout(() => (t = "span[Hello]"), 100);
+    const { onMount, onUpdate, template, render } = Component("App");
+    let t = "span[Hey]";
 
-      onUpdate(() => {
-        expect(document.body.children[0].textContent?.trim()).toBe("Hello");
-        done();
-      });
-      return () => t;
-    }).render();
+    onMount(() => {
+      t = "span[Hello]";
+    });
+
+    onUpdate(() => {
+      expect(document.body.children[0].textContent?.trim()).toBe("Hello");
+      done();
+    });
+
+    template(() => t);
+
+    render();
   });
 
   it("Should component parent and child update", (done) => {
+    Component("Child").template(() => childText);
+
+    const { onMount, onUpdate, template, render } = Component("App");
     let parentText = "";
     let childText = "";
 
-    setTimeout(() => {
+    onMount(() => {
       parentText = "He";
       childText = "llo";
     });
 
-    Component("Child", () => () => childText);
+    onUpdate(() => {
+      expect(document.body.textContent?.replace(/[\s]/g, "")).toBe("Hello");
+      done();
+    });
 
-    Component("App", ({ onUpdate }) => {
-      onUpdate(() => {
-        expect(document.body.textContent?.replace(/[\s]/g, "")).toBe("Hello");
-        done();
-      });
-      return () => `${parentText} Child[]`;
-    }).render();
+    template(() => `${parentText} Child[]`);
+
+    render();
   });
 });

@@ -5,77 +5,94 @@ resetTestEnvironment();
 
 describe("Template first element", () => {
   it("Should define button as first element and add “onclick” listener to it", (done) => {
-    Component("App", ({ click$ }) => {
-      const fn = jest.fn();
-      click$(fn);
+    const { click$, onMount, template, render } = Component("App");
 
-      setTimeout(() => {
-        const btn = document.body.getElementsByTagName("button")[0];
-        btn.click();
-        expect(fn).toBeCalledTimes(1);
-        done();
-      }, 100);
-      return `button[Click me!]`;
-    }).render();
+    const clickFn = jest.fn();
+
+    click$(clickFn);
+
+    onMount(() => {
+      const btn = document.body.getElementsByTagName("button")[0];
+      btn.click();
+
+      expect(clickFn).toBeCalledTimes(1);
+      done();
+    });
+
+    template(() => `button[Click me!]`);
+
+    render();
   });
 
   it(`
      Should define strong and then button as first element and add “onclick” listener to it
   `, (done) => {
-    Component("App", ({ click$ }) => {
-      const fn = jest.fn();
-      let t = `strong[Hello!]`;
-      click$(fn);
+    const { click$, onMount, onUpdate, template, render } = Component("App");
 
-      setTimeout(() => {
-        t = `button[Click me!]`;
-      }, 100);
+    const clickFn = jest.fn();
+    let t = `strong[Hello!]`;
 
-      setTimeout(() => {
-        const btn = document.body.getElementsByTagName("button")[0];
-        btn.click();
-        expect(fn).toBeCalledTimes(1);
-        done();
-      }, 200);
+    click$(clickFn);
 
-      return () => t;
-    }).render();
+    onMount(() => {
+      t = `button[Click me!]`;
+    });
+
+    onUpdate(() => {
+      const btn = document.body.getElementsByTagName("button")[0];
+      btn.click();
+      expect(clickFn).toBeCalledTimes(1);
+      done();
+    });
+
+    template(() => t);
+
+    render();
   });
 
-  it(`Should add “onclick” listener to button element after mounted time`, (done) => {
-    Component("App", ({ click$ }) => {
-      const fn = jest.fn();
+  it(`Should add “onclick” listener to button element after a time mounted`, (done) => {
+    const { click$, onMount, template, render } = Component("App");
 
-      setTimeout(() => click$(fn), 100);
+    const clickFn = jest.fn();
 
+    onMount(() => {
+      const btn = document.body.getElementsByTagName("button")[0];
+
+      setTimeout(() => click$(clickFn));
       setTimeout(() => {
-        const btn = document.body.getElementsByTagName("button")[0];
         btn.click();
-        expect(fn).toBeCalledTimes(1);
-        done();
-      }, 200);
 
-      return `button[Click me!]`;
-    }).render();
+        expect(clickFn).toBeCalledTimes(1);
+        done();
+      });
+    });
+
+    template(() => `button[Click me!]`);
+
+    render();
   });
 
   it(`
      Should remove “onclick” listener from button element immediately after added
   `, (done) => {
-    Component("App", ({ click$ }) => {
-      const fn = jest.fn();
+    const { click$, onMount, template, render } = Component("App");
 
-      const removeOnClickListener = click$(fn);
-      removeOnClickListener();
+    const clickFn = jest.fn();
 
-      setTimeout(() => {
-        const btn = document.body.getElementsByTagName("button")[0];
-        btn.click();
-        expect(fn).toBeCalledTimes(0);
-        done();
-      }, 200);
+    const removeOnClickListener = click$(clickFn);
 
-      return `button[Click me!]`;
-    }).render();
+    removeOnClickListener();
+
+    onMount(() => {
+      const btn = document.body.getElementsByTagName("button")[0];
+      btn.click();
+
+      expect(clickFn).toBeCalledTimes(0);
+      done();
+    });
+
+    template(() => `button[Click me!]`);
+
+    render();
   });
 });

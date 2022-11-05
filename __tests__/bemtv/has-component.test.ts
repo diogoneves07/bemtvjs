@@ -2,12 +2,12 @@ import { Component, hasComponent } from "../../src/main";
 
 describe("Checks if component exists", () => {
   it("Should component exist", () => {
-    Component("Message", () => `Hello world!`);
+    Component("Message");
     expect(hasComponent("Message")).toBeTruthy();
   });
 
   it("Should not component exist", () => {
-    Component("Text", () => `Hello world!`);
+    Component("Text");
     expect(hasComponent("Text")).toBeTruthy();
   });
 });

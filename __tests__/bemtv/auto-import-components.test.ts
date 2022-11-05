@@ -7,30 +7,31 @@ autoImportComponents({
      * This is almost a mock for the dynamic import
      * as the expected result is the creation of the component
      * */
-    Component("Counter", () => {
-      let count = 0;
-      setTimeout(() => count++, 1000);
-      return () => `button[Cliked: ${count}]`;
-    });
+    const { template } = Component("Counter");
+
+    template`button[Cliked: 0]`;
   },
 });
 
 describe("Auto import components", () => {
   it("Should import the component and use it in the template", (done) => {
-    Component("App", () => {
-      let c = "";
+    const { onMount, onUpdate, template, render } = Component("App");
+    let templateValue = "";
 
+    onMount(() => {
       setTimeout(() => {
-        c = "Counter[]";
+        templateValue = "Counter[]";
       }, 100);
+    });
 
-      return () => c;
-    }).render();
-
-    setTimeout(() => {
+    onUpdate(() => {
       expect(document.body.children.length).toBe(1);
       done();
-    }, 400);
+    });
+
+    template(() => templateValue);
+
+    render();
   });
 
   test("The component should be an auto-import component", () => {

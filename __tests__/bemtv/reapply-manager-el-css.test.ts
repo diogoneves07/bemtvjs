@@ -7,48 +7,60 @@ describe(`
    Checks the reapplication of CSS classes to the element of the “ManagerEl.it” property
 `, () => {
   it("Should reapply the class inserted via the “ManagerEl.css()” method", (done) => {
-    Component("App", ({ el }) => {
-      const [appEl, key] = el();
-      let t = `span[${key} Click me!]`;
+    const { useEl, onMount, onUpdate, template, render } = Component("App");
 
+    const [key, el] = useEl();
+
+    let t = `span[${key} Hey!]`;
+
+    onMount(() => {
+      const appEl = el();
       appEl.css`color:blue;`;
 
-      setTimeout(() => {
-        t = `span[${key} Click me!]`;
-      }, 100);
+      t = `span[${key} Hi!]`;
+    });
 
-      setTimeout(() => {
-        expect(
-          window.getComputedStyle(appEl.it as Element).getPropertyValue("color")
-        ).toBe("blue");
-        done();
-      }, 200);
+    onUpdate(() => {
+      const appEl = el();
 
-      return () => t;
-    }).render();
+      expect(
+        window.getComputedStyle(appEl.it as Element).getPropertyValue("color")
+      ).toBe("blue");
+      done();
+    });
+
+    template(() => t);
+
+    render();
   });
 
   it(`
      Should apply the class inserted through the “ManagerEl.css()” method to the new element
   `, (done) => {
-    Component("App", ({ el }) => {
-      const [appEl, key] = el();
-      let t = `span[${key} Click me!]`;
+    const { useEl, onMount, onUpdate, template, render } = Component("App");
 
+    const [key, el] = useEl();
+
+    let t = `span[${key} Hey!]`;
+
+    onMount(() => {
+      const appEl = el();
       appEl.css`color:blue;`;
 
-      setTimeout(() => {
-        t = `strong[${key} Click me!]`;
-      }, 100);
+      t = `strong[${key} Hey!]`;
+    });
 
-      setTimeout(() => {
-        expect(
-          window.getComputedStyle(appEl.it as Element).getPropertyValue("color")
-        ).toBe("blue");
-        done();
-      }, 200);
+    onUpdate(() => {
+      const appEl = el();
 
-      return () => t;
-    }).render();
+      expect(
+        window.getComputedStyle(appEl.it as Element).getPropertyValue("color")
+      ).toBe("blue");
+      done();
+    });
+
+    template(() => t);
+
+    render();
   });
 });

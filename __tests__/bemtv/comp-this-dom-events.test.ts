@@ -1,72 +1,50 @@
 import { Component } from "../../src/main";
 import { resetTestEnvironment } from "../test-utilities//reset-test-environment";
-import { simulateMousedown } from "../test-utilities//simulate-mousedown";
 
 resetTestEnvironment();
 
 describe("Inject event handlers to component instance", () => {
   it("Should add onclick event listener to element", (done) => {
-    Component("App", ({ el, click$ }) => {
-      const [appEl, key] = el<HTMLButtonElement>();
-      const clickFn = jest.fn();
+    const { click$, onMount, useEl, template, render } = Component("App");
+    const [btnKey, el] = useEl<HTMLButtonElement>();
 
-      click$(clickFn);
+    const clickFn = jest.fn();
 
-      setTimeout(() => {
-        appEl.it?.click();
-        appEl.it?.click();
-      }, 100);
+    click$(clickFn);
 
-      setTimeout(() => {
-        expect(clickFn).toBeCalledTimes(2);
-        done();
-      }, 200);
-
-      return () => `button[${key} Click me!]`;
-    }).render();
-  });
-
-  it("Should add mousedown event listener to element", (done) => {
-    Component("App", ({ el, mousedown$ }) => {
-      const [appEl, key] = el<HTMLButtonElement>();
-
-      const mousedownFn = jest.fn();
-
-      mousedown$(mousedownFn);
-
-      setTimeout(() => {
-        simulateMousedown(appEl.it as Element);
-        simulateMousedown(appEl.it as Element);
-      }, 100);
-
-      setTimeout(() => {
-        expect(mousedownFn).toBeCalledTimes(2);
-        done();
-      }, 200);
-
-      return () => `button[${key} Click me!]`;
-    }).render();
-  });
-
-  it("Should remove onclick event listener from element", (done) => {
-    Component("App", ({ el, click$ }) => {
-      const [appEl, key] = el<HTMLButtonElement>();
-      const clickFn = jest.fn();
-
-      const removeClickListener = click$(clickFn);
-
-      setTimeout(() => {
-        appEl.it?.click();
-        removeClickListener();
-        appEl.it?.click();
-      }, 100);
-
+    onMount(() => {
+      const btnEl = el();
+      btnEl.it?.click();
       setTimeout(() => {
         expect(clickFn).toBeCalledTimes(1);
         done();
-      }, 200);
+      }, 50);
+    });
 
-      return () => `button[${key} Click me!]`;
-    }).render();
+    template(() => `button[ ${btnKey} Click me!]`);
+
+    render();
+  });
+
+  it("Should remove onclick event listener from element", (done) => {
+    const { click$, onMount, useEl, template, render } = Component("App");
+    const [btnKey, el] = useEl<HTMLButtonElement>();
+    const clickFn = jest.fn();
+    const removeClickListener = click$(clickFn);
+
+    onMount(() => {
+      const btnEl = el();
+
+      btnEl.it?.click();
+      removeClickListener();
+      btnEl.it?.click();
+
+      expect(clickFn).toBeCalledTimes(1);
+      done();
+    });
+
+    template(() => `button[${btnKey} Click me!]`);
+
+    render();
   });
 });

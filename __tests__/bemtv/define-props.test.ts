@@ -1,15 +1,17 @@
 import { Component } from "../../src/main";
 
 it("Should pass the props to the child component", (done) => {
-  Component("Child", ({ p }) => p.message);
+  Component("Child").template`$props.message`;
 
-  Component("App", ({ defineProps }) => {
-    let p = defineProps({ message: "Hey!" });
-    return () => `Child${p}[]`;
-  }).render();
+  const { defineProps, onMount, template, render } = Component("App");
 
-  setTimeout(() => {
+  let p = defineProps({ message: "Hey!" });
+
+  template(() => `Child${p}[]`);
+  render();
+
+  onMount(() => {
     expect(document.body?.textContent?.trim()).toBe("Hey!");
     done();
-  }, 100);
+  });
 });

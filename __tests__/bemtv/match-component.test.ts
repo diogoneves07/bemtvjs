@@ -8,23 +8,28 @@ describe("Shows an alternative if the component is not available", () => {
   test("Component is available", (done) => {
     createCounterComponent();
 
-    Component("App", () => {
-      return () => `${match("Counter[]", "is available")} `;
-    }).render();
-    setTimeout(() => {
+    const { onMount, template, render } = Component("App");
+
+    onMount(() => {
       expect(document.body.children.length).toBe(1);
       done();
-    }, 100);
+    });
+
+    template(() => `${match("Counter[]", "is available")} `);
+
+    render();
   });
 
   test("Component is not available", (done) => {
-    Component("App", () => {
-      return () => `${match("Message[]", "is not available")} `;
-    }).render();
+    const { onMount, template, render } = Component("App");
 
-    setTimeout(() => {
+    onMount(() => {
       expect(document.body.textContent?.trim()).toBe("is not available");
       done();
-    }, 100);
+    });
+
+    template(() => `${match("Message[]", "is not available")} `);
+
+    render();
   });
 });

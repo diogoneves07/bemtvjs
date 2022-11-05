@@ -6,52 +6,64 @@ resetTestEnvironment();
 describe("Lifecycle Hooks", () => {
   test("onMount method", (done) => {
     const onMountFn = jest.fn();
+    const { onMount, render } = Component("App");
 
-    Component("App", ({ onMount }) => {
-      onMount(onMountFn);
-      return "Hello";
-    }).render();
+    onMount(onMountFn);
 
-    setTimeout(() => {
+    onMount(() => {
       expect(onMountFn).toBeCalledTimes(1);
       done();
-    }, 100);
+    });
+
+    render();
   });
 
   test("onUpdate method", (done) => {
     const onUpdateFn = jest.fn();
+    let t = `Hey!`;
 
-    Component("App", ({ onUpdate }) => {
-      onUpdate(onUpdateFn);
+    const { onMount, onUpdate, template, render } = Component("App");
 
-      let t = `Hello`;
-      setTimeout(() => (t = "Hey!"), 100);
-      return () => t;
-    }).render();
+    onMount(() => {
+      t = "Hi!";
+    });
 
-    setTimeout(() => {
+    onUpdate(onUpdateFn);
+
+    onUpdate(() => {
       expect(onUpdateFn).toBeCalledTimes(1);
       done();
-    }, 200);
+    });
+
+    template(() => t);
+
+    render();
   });
 
   test("onUnmount method", (done) => {
     const onUnmountFn = jest.fn();
 
-    Component("Child", ({ onUnmount }) => {
-      onUnmount(onUnmountFn);
-      return () => `Hello world`;
+    const { onUnmount } = Component("Child").template`Hey!`;
+
+    onUnmount(onUnmountFn);
+
+    const { onMount, onUpdate, template, render } = Component("App");
+    let t = `Child[]`;
+
+    onMount(() => {
+      t = "Hey!";
     });
 
-    Component("App", () => {
-      let t = `Child[]`;
-      setTimeout(() => (t = "Hey!"), 100);
-      return () => t;
-    }).render();
+    onUpdate(() => {
+      //* Should use setTimeout because onUpdate trigger first than onUnmount
+      setTimeout(() => {
+        expect(onUnmountFn).toBeCalledTimes(1);
+        done();
+      }, 50);
+    });
 
-    setTimeout(() => {
-      expect(onUnmountFn).toBeCalledTimes(1);
-      done();
-    }, 200);
+    template(() => t);
+
+    render();
   });
 });
