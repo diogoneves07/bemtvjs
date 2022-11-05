@@ -61,6 +61,9 @@ export function Component<C extends ComponentName>(
   componentFnOrVars: Record<string, any> | Function = {}
 ) {
   if (typeof componentFnOrVars === "object") {
+    if (GLOBAL_COMPONENTS_MAP.has(componentName)) {
+      throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} This component “${componentName}” name is already in use!`;
+    }
     Object.freeze(componentFnOrVars);
     const superComponent = SuperComponentFactory(
       componentName,
