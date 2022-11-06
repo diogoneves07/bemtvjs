@@ -1,10 +1,11 @@
+import { Listeners } from "./../types/listeners";
 import { css } from "goober";
 
 import { LIBRARY_NAME_IN_ERRORS_MESSAGE } from "./../../globals";
 import { ManagerEl } from "./../manager-el";
-import { ComponentInst } from "../components-inst";
 import render from "./../render";
 import {
+  getComponentInstFirstElement,
   resetTemplatePropertyValues,
   setRunningComponent,
   updateComponentVars,
@@ -13,21 +14,7 @@ import { SuperComponentData } from "./../types/super-component-data";
 import generateKey from "./../generate-el-key";
 import { treatValueInTemplate } from "./treat-value-in-template";
 import concatTemplateStringArrays from "../../utilities/concat-template-string-arrays";
-import { getComponentInstData } from "../work-with-components-inst";
 import createElManager from "./create-el-manager";
-
-type ReauseSomeMethods = Omit<
-  ComponentInst,
-  | "__data"
-  | "el"
-  | "defineProps"
-  | "children"
-  | "share"
-  | "reshare"
-  | "use"
-  | "props"
-  | "name"
->;
 
 type ComponentVars<V extends Record<string, any>> = V & {
   readonly children: string;
@@ -35,7 +22,33 @@ type ComponentVars<V extends Record<string, any>> = V & {
 };
 export interface SuperComponent<
   Vars extends Record<string, any> = Record<string, any>
-> extends ReauseSomeMethods {}
+> extends Listeners {
+  /**
+   * Calls(only once) the callback after template elements are added to the DOM.
+   *
+   * @param fn
+   * The callback
+   */
+  onMount(fn: () => void): this;
+
+  /**
+   * Calls(only once) the callback whenever the template changes
+   * and the changes are applied to the DOM.
+   *
+   * @param fn
+   * The callback
+   */
+  onUnmount(fn: () => void): this;
+
+  /**
+   * Calls the callback after all tempĺate elements have been removed from the DOM
+   * and component instance will be destroyed.
+   *
+   * @param fn
+   * The callback
+   */
+  onUpdate(fn: () => void): this;
+}
 
 export class SuperComponent<Vars extends Record<string, any>> {
   protected __data = {
@@ -43,9 +56,9 @@ export class SuperComponent<Vars extends Record<string, any>> {
     initVars: {},
     initVarsKeys: ["children", "props"],
     initialTemplate: () => "",
-    listeners: new Set(),
+    DOMListeners: new Set(),
     lifeCycles: new Map(),
-    removeListeners: new Map(),
+    removeDOMListeners: new Map(),
     componentRunning: null,
     components: new Map(),
     $disableProxy: false,
@@ -98,8 +111,8 @@ export class SuperComponent<Vars extends Record<string, any>> {
     const classValue = css(...args);
     const data = this.__data;
     data.classes.push(classValue);
-    for (const [c] of data.components) {
-      const { firstElement } = getComponentInstData(c);
+    for (const c of data.components.keys()) {
+      const firstElement = getComponentInstFirstElement(c);
 
       if (firstElement) {
         firstElement.classList.add(classValue);

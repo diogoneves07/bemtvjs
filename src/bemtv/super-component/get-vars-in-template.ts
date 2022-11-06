@@ -2,9 +2,9 @@ import { LIBRARY_NAME_IN_ERRORS_MESSAGE } from "./../../globals";
 import toKebabCase from "../../utilities/to-kebab-case";
 import { PIPE_SYMBOL } from "../pipes/main";
 import { ComponentProps } from "../types/super-component-data";
-import { ComponentInst } from "../components-inst";
 import { getComponentVars } from "./work-with-super-component";
 import { SuperComponent } from "./super-component";
+import ComponentInst from "../component-inst";
 
 // const varsPrefix = "$";
 const varsAttrPrefix = "@";

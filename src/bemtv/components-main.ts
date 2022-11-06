@@ -1,8 +1,8 @@
 import { SuperComponent } from "./super-component/super-component";
 import { LIBRARY_NAME_IN_ERRORS_MESSAGE } from "../globals";
-import { ComponentInst } from "./components-inst";
 import { SuperComponentFactory } from "./super-component/super-component-factory";
 import { bindComponentToSuperComponent } from "./super-component/bind-comp-to-s-comp";
+import ComponentInst from "./component-inst";
 
 type GlobalComponentsMap = Map<string, ComponentFn>;
 

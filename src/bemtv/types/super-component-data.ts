@@ -1,15 +1,20 @@
 import { Props } from "./component-inst-data";
-import { ComponentInst } from "../components-inst";
 import { SuperComponent } from "../super-component/super-component";
+import ComponentInst from "../component-inst";
 
-export type SuperComponentListener = {
-  listener: string;
-  args: [fn: Function, options: AddEventListenerOptions];
+export type SuperComponentDOMListener = {
+  type: string;
+  callback: Function;
+  options?: AddEventListenerOptions;
 };
 export type ComponentProps = {
   vars: Record<string, any>;
   template: SuperComponentData["initialTemplate"];
   templatePropertyValues: Map<string, string>;
+  removeFirstElementDOMListeners: Map<
+    SuperComponentDOMListener,
+    (() => void)[]
+  >;
 };
 
 export interface SuperComponentData {
@@ -17,9 +22,9 @@ export interface SuperComponentData {
   initVars: Record<string, any>;
   initVarsKeys: string[];
   initialTemplate: () => string;
-  listeners: Set<SuperComponentListener>;
+  DOMListeners: Set<SuperComponentDOMListener>;
   lifeCycles: Map<string, ((c: ComponentInst) => void)[]>;
-  removeListeners: Map<SuperComponentListener, (() => void)[]>;
+  removeDOMListeners: Map<SuperComponentDOMListener, (() => void)[]>;
   componentRunning: ComponentInst | null;
   components: Map<ComponentInst, ComponentProps>;
   $disableProxy: Boolean;

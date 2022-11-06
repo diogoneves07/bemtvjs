@@ -1,4 +1,4 @@
-export default function insertEventListener(
+export default function insertDOMListener(
   el: Element,
   name: string,
   fn: Function,

@@ -1,4 +1,4 @@
-import { ComponentInst } from "../components-inst";
+import ComponentInst from "../component-inst";
 import { ComponentListener } from "./listeners";
 
 export type Props = Record<string, any>;
@@ -6,8 +6,6 @@ export type LifeCycleCallback = () => void;
 
 export interface ComponentInstData {
   listeners: Set<ComponentListener>;
-  firstElement: Element | null;
-  defineFirstElement: (node: Element | null) => void;
   propsDefined?: Map<string, Props>;
   mountedFns: Set<LifeCycleCallback>;
   initFns: Set<LifeCycleCallback>;

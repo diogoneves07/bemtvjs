@@ -1,10 +1,9 @@
-import { ComponentInst } from "./components-inst";
-import { getComponentInstData } from "./work-with-components-inst";
+import ComponentInst from "./component-inst";
 export default function useSharedProp(
-  componentInst: ComponentInst,
+  c: ComponentInst,
   key: string
 ): unknown | undefined {
-  const { sharedData, parent } = getComponentInstData(componentInst);
+  const { sharedData, parent } = c;
 
   if (Object.hasOwn(sharedData, key)) return sharedData[key];
 

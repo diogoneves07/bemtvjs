@@ -1,11 +1,10 @@
-import { ComponentInst } from "./components-inst";
-import { getComponentInstData } from "./work-with-components-inst";
+import ComponentInst from "./component-inst";
 
 export default function reshareProps(
-  componentInst: ComponentInst,
+  c: ComponentInst,
   props: Record<string, any>
 ) {
-  const { sharedData, parent } = getComponentInstData(componentInst);
+  const { sharedData, parent } = c;
 
   const keys = Object.keys(props);
 

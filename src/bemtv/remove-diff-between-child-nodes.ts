@@ -3,7 +3,7 @@ import {
   appendNodeToComponentManagerNodes,
   removeNodeFromComponentManagerNodes,
   replaceNodeInComponentManagerNodes,
-} from "./components-manager-nodes";
+} from "./components-inst-nodes";
 import { reapplyCSSClasses } from "./work-with-manager-el";
 
 function removeDiffBetweenNodesAttrs(newNode: Element, oldNode: Element) {

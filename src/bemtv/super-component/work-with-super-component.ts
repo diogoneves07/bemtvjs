@@ -1,13 +1,22 @@
-import { ComponentInst } from "../components-inst";
 import { SuperComponent } from "./super-component";
 import { LifeCycleCallback } from "../types/component-inst-data";
 import {
   ComponentProps,
-  SuperComponentListener,
+  SuperComponentDOMListener,
 } from "./../types/super-component-data";
+import insertDOMListener from "../insert-dom-listener";
+import ComponentInst from "../component-inst";
 
 export function getSuperComponentData(sComp: SuperComponent) {
   return (sComp as any).__data as SuperComponent["__data"];
+}
+
+export function getComponentInstFirstElement(c: ComponentInst) {
+  for (const node of c.nodes) {
+    if (node instanceof Element) return node;
+  }
+
+  return null;
 }
 
 export function getComponentVars(sComp: SuperComponent) {
@@ -70,52 +79,75 @@ export function addLifeCycleToComponents(
   data.lifeCycles.set(name, [lifeCallback]);
 }
 
-export function addListenerToComponent(
+export function addDOMListenerToComponent(
+  firstElement: Element,
   sComp: SuperComponent,
-  l: SuperComponentListener,
+  DOMListenerObject: SuperComponentDOMListener,
   c: ComponentInst
 ) {
-  const [listenerFn, listenerObject] = l.args;
+  const { type, callback, options: DOMListenerOptions } = DOMListenerObject;
 
   const fn = (e: Event) => {
     setRunningComponent(sComp, c);
-    listenerFn(e);
+    callback(e);
     updateComponentVars(sComp);
     setRunningComponent(sComp);
   };
 
   const data = getSuperComponentData(sComp);
 
-  const removeListener = (c as any)[l.listener](
+  const removeDOMListener = insertDOMListener(
+    firstElement,
+    type,
     fn,
-    listenerObject
-  ) as () => void;
+    DOMListenerOptions
+  );
 
-  data.removeListeners.get(l)?.push(removeListener);
+  const componentData = data.components.get(c);
+
+  if (!componentData) return;
+
+  const bucket =
+    componentData.removeFirstElementDOMListeners.get(DOMListenerObject);
+
+  if (bucket) {
+    bucket.push(removeDOMListener);
+  } else {
+    componentData.removeFirstElementDOMListeners.set(DOMListenerObject, [
+      removeDOMListener,
+    ]);
+  }
 }
 
-export function addListenerToComponents(
+export function addDOMListenerToComponents(
   sComp: SuperComponent,
-  listener: SuperComponentListener
+  DOMListenerObject: SuperComponentDOMListener
 ) {
   const data = getSuperComponentData(sComp);
 
   const components = [...data.components.keys()];
 
-  data.removeListeners.set(listener, []);
-
   for (const c of components) {
-    addListenerToComponent(sComp, listener, c);
+    const firstElement = getComponentInstFirstElement(c);
+    if (firstElement) {
+      addDOMListenerToComponent(firstElement, sComp, DOMListenerObject, c);
+    }
   }
 }
 
-export function removeListenerFromComponents(
+export function removeDOMListenerFromComponents(
   sComp: SuperComponent,
-  listener: SuperComponentListener
+  DOMListenerObject: SuperComponentDOMListener
 ) {
-  getSuperComponentData(sComp)
-    .removeListeners.get(listener)
-    ?.forEach((fn) => fn());
+  const components = getSuperComponentData(sComp).components.values();
+
+  for (const o of components) {
+    const bucket = o.removeFirstElementDOMListeners.get(DOMListenerObject);
+    if (bucket) {
+      bucket.forEach((f) => f());
+      o.removeFirstElementDOMListeners.delete(DOMListenerObject);
+    }
+  }
 }
 
 export function resetTemplatePropertyValues(sComp: SuperComponent, p: string) {

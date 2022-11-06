@@ -1,5 +1,5 @@
 import { ComponentListener } from "./types/listeners";
-import insertEventListener from "./insert-event-listener";
+import insertDOMListener from "./insert-dom-listener";
 import isEventListener from "./is-event-listener";
 import { ManagerEl } from "./manager-el";
 import { getManagerElData } from "./work-with-manager-el";
@@ -17,27 +17,27 @@ export function ManagerElFactory<E extends Element = Element>() {
         const newEventListener = (
           ...args: [fn: Function, options: AddEventListenerOptions]
         ) => {
-          const listenerObject: ComponentListener = {
+          const DOMListenerObject: ComponentListener = {
             listener: propName.slice(0, -1),
             args,
           };
 
-          listeners.add(listenerObject);
+          listeners.add(DOMListenerObject);
 
           if (managerEl.it)
-            return insertEventListener(
+            return insertDOMListener(
               managerEl.it,
-              listenerObject.listener,
+              DOMListenerObject.listener,
               ...args
             );
 
           return () => {
-            if (!listenerObject.removeListener) {
-              listeners.delete(listenerObject);
+            if (!DOMListenerObject.removeListener) {
+              listeners.delete(DOMListenerObject);
               return;
             }
 
-            listenerObject.removeListener();
+            DOMListenerObject.removeListener();
           };
         };
         (target as any)[propName] = newEventListener;

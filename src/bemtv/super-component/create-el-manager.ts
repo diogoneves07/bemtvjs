@@ -1,7 +1,5 @@
 import getElement from "../../utilities/get-element";
-import ComponentManager from "../component-manager";
-import { ALL_COMPONENTS_MANAGER } from "../component-manager-store";
-import { ComponentInst } from "../components-inst";
+import ComponentInst from "../component-inst";
 import { getElKeyValue, isElKey } from "../generate-el-key";
 import { KEY_ATTRIBUTE_NAME } from "../globals";
 import { ManagerEl } from "../manager-el";
@@ -26,16 +24,10 @@ export default function createElManager<E extends Element = Element>(
   if (!c) return managerEl;
 
   const elKey = getElKeyValue(keyOrSelectorOrElement);
-  let componentManager: ComponentManager | undefined;
 
-  for (const m of ALL_COMPONENTS_MANAGER) {
-    componentManager = m;
-    if (m.componentInst === c) break;
-  }
+  if (!c) return managerEl;
 
-  if (!componentManager) return managerEl;
-
-  let element = componentManager.nodes.find((n) => {
+  let element = c.nodes.find((n) => {
     if (!(n instanceof Element)) return;
     if (!n.hasAttribute(KEY_ATTRIBUTE_NAME)) return;
     if (!n.getAttribute(KEY_ATTRIBUTE_NAME)?.includes(elKey)) return;

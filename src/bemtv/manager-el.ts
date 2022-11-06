@@ -1,7 +1,7 @@
 import { BEMTEVI_CSS_IN_JS } from "./globals";
 import { ComponentListener } from "./types/listeners";
 import { Listeners } from "./types/listeners";
-import insertEventListener from "./insert-event-listener";
+import insertDOMListener from "./insert-dom-listener";
 import { css } from "goober";
 import { applyElementCSS } from "./work-with-manager-el";
 
@@ -36,7 +36,7 @@ export class ManagerEl<E = Element> {
     }
 
     this.__data.listeners.forEach((o) => {
-      o.removeListener = insertEventListener(newIt, o.listener, ...o.args);
+      o.removeListener = insertDOMListener(newIt, o.listener, ...o.args);
       return o;
     });
 

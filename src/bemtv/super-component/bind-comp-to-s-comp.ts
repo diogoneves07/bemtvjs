@@ -1,76 +1,81 @@
-import { ComponentInst } from "../components-inst";
-import {
-  dispatchInitedLifeCycle,
-  getComponentInstData,
-} from "../work-with-components-inst";
+import ComponentInst from "../component-inst";
+import { dispatchInitedLifeCycle } from "../components-lifecycle";
 import getVarsInTemplate from "./get-vars-in-template";
 import { SuperComponent } from "./super-component";
 import {
-  addListenerToComponent,
+  addDOMListenerToComponent,
+  getComponentInstFirstElement,
   getSuperComponentData,
   setRunningComponent,
 } from "./work-with-super-component";
 
 export function bindComponentToSuperComponent(
   sComp: SuperComponent,
-  c: ComponentInst
+  cInst: ComponentInst
 ) {
-  const data = getSuperComponentData(sComp);
+  const sCompData = getSuperComponentData(sComp);
 
-  const cData = getComponentInstData(c);
   let templatePropertyValues: Map<string, string> = new Map();
 
   const template = () => {
-    setRunningComponent(sComp, c);
+    setRunningComponent(sComp, cInst);
 
-    const t = data.initialTemplate() as string;
+    const t = sCompData.initialTemplate() as string;
 
     const templateValue = getVarsInTemplate(
       t,
       sComp,
-      c,
+      cInst,
       templatePropertyValues
     );
     setRunningComponent(sComp);
     return templateValue;
   };
 
-  let componentFirstElement: undefined | Element;
+  let lastFirstElement: undefined | Element;
 
-  const addClassesToComponent = () => {
-    const { firstElement } = cData;
+  const updateFirstElement = () => {
+    const firstElement = getComponentInstFirstElement(cInst);
 
-    if (componentFirstElement === firstElement) return;
+    if (!firstElement || lastFirstElement === firstElement) return;
 
-    if (firstElement) {
-      componentFirstElement = firstElement;
-      for (const s of data.classes) {
-        if (!firstElement.classList.contains(s)) firstElement.classList.add(s);
+    lastFirstElement = firstElement;
+    for (const s of sCompData.classes) {
+      if (!firstElement.classList.contains(s)) firstElement.classList.add(s);
+    }
+
+    const cInstProps = sCompData.components.get(cInst);
+
+    if (cInstProps) {
+      const fnsIterator = cInstProps.removeFirstElementDOMListeners.values();
+      for (const fns of fnsIterator) {
+        fns.forEach((f) => f());
       }
+      cInstProps.removeFirstElementDOMListeners.clear();
+    }
+
+    for (const l of sCompData.DOMListeners) {
+      addDOMListenerToComponent(firstElement, sComp, l, cInst);
     }
   };
 
-  c.onUnmount(() => data.components.delete(c));
-  c.onMount(addClassesToComponent);
-  c.onUpdate(addClassesToComponent);
+  cInst.onUnmount(() => sCompData.components.delete(cInst));
+  cInst.onMount(updateFirstElement);
+  cInst.onUpdate(updateFirstElement);
 
-  let withoutTypes = c as any;
+  let withoutTypes = cInst as any;
 
-  for (const l of data.listeners) {
-    addListenerToComponent(sComp, l, c);
-  }
-
-  for (const l of data.lifeCycles) {
+  for (const l of sCompData.lifeCycles) {
     for (const callback of l[1]) {
-      withoutTypes[l[0]](() => callback(c));
+      withoutTypes[l[0]](() => callback(cInst));
     }
   }
 
-  if (data.propsDefined) {
-    cData.propsDefined = data.propsDefined;
+  if (sCompData.propsDefined) {
+    cInst.propsDefined = sCompData.propsDefined;
   }
 
-  for (const [fnName, args] of data.fns) {
+  for (const [fnName, args] of sCompData.fns) {
     switch (fnName) {
       case "children":
         withoutTypes.children = args[0](withoutTypes.children);
@@ -85,12 +90,17 @@ export function bindComponentToSuperComponent(
     }
   }
 
-  data.components.set(c, {
-    vars: { ...data.initVars, children: c.children, props: c.props },
+  sCompData.components.set(cInst, {
+    vars: {
+      ...sCompData.initVars,
+      children: cInst.children,
+      props: cInst.props,
+    },
     template,
     templatePropertyValues,
+    removeFirstElementDOMListeners: new Map(),
   });
 
-  dispatchInitedLifeCycle(c);
+  dispatchInitedLifeCycle(cInst);
   return template;
 }

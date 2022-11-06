@@ -1,12 +1,12 @@
 import isEventListener from "./../is-event-listener";
 import { SuperComponent } from "./super-component";
 import { LifeCycleCallback } from "../types/component-inst-data";
-import { SuperComponentListener } from "./../types/super-component-data";
+import { SuperComponentDOMListener } from "./../types/super-component-data";
 import {
   addLifeCycleToComponents,
-  addListenerToComponents,
+  addDOMListenerToComponents,
   getSuperComponentData,
-  removeListenerFromComponents,
+  removeDOMListenerFromComponents,
 } from "./work-with-super-component";
 import isString from "../../utilities/is-string";
 
@@ -16,7 +16,7 @@ export function SuperComponentFactory<Vars extends Record<string, any>>(
 ) {
   const superComponent = new SuperComponent<Vars>(name, vars);
   const data = getSuperComponentData(superComponent);
-  const { listeners } = data;
+  const { DOMListeners } = data;
 
   const propxyComponentInst = new Proxy(superComponent, {
     get(target, propertyName) {
@@ -47,20 +47,22 @@ export function SuperComponentFactory<Vars extends Record<string, any>>(
 
       if (isEventListener(propName)) {
         const newEventListener = (
-          ...args: [fn: Function, options: AddEventListenerOptions]
+          callback: Function,
+          options?: AddEventListenerOptions
         ) => {
-          const listenerObject: SuperComponentListener = {
-            listener: propName,
-            args,
+          const DOMListenerObject: SuperComponentDOMListener = {
+            type: propName.slice(0, -1),
+            options,
+            callback,
           };
 
-          listeners.add(listenerObject);
+          DOMListeners.add(DOMListenerObject);
 
-          addListenerToComponents(superComponent, listenerObject);
+          addDOMListenerToComponents(superComponent, DOMListenerObject);
 
           return () => {
-            listeners.delete(listenerObject);
-            removeListenerFromComponents(superComponent, listenerObject);
+            DOMListeners.delete(DOMListenerObject);
+            removeDOMListenerFromComponents(superComponent, DOMListenerObject);
           };
         };
 

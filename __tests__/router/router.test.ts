@@ -1,4 +1,4 @@
-import { ALL_COMPONENTS_MANAGER } from "./../../src/bemtv/component-manager-store";
+import { ALL_COMPONENTS_INST } from "./../../src/bemtv/component-inst-store";
 import { resetDocumentBodyAndRemoveComponents } from "../test-utilities/reset-test-environment";
 import { Component, router, r } from "../../src/main";
 
@@ -9,10 +9,10 @@ beforeEach(() => {
    * It is necessary to remove the link between the components already created
    * before using the Router again.
    * */
-  for (const m of ALL_COMPONENTS_MANAGER) {
-    m.componentInst = null as any;
+  for (const m of ALL_COMPONENTS_INST) {
+    m.parent = null;
   }
-  ALL_COMPONENTS_MANAGER.clear();
+  ALL_COMPONENTS_INST.clear();
 });
 
 describe("Check router functionality", () => {

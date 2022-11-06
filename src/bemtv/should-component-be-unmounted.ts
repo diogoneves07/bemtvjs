@@ -1,16 +1,16 @@
-import ComponentManager from "./component-manager";
-import { ALL_COMPONENTS_MANAGER } from "./component-manager-store";
-import { dispatchUnmountedLifeCycle } from "./work-with-components-inst";
+import ComponentInst from "./component-inst";
+import { ALL_COMPONENTS_INST } from "./component-inst-store";
+import { dispatchUnmountedLifeCycle } from "./components-lifecycle";
 
 export default function shouldComponentBeUnmounted(
-  componentManager: ComponentManager
+  componentInst: ComponentInst
 ) {
-  if (!componentManager.parent) return false;
-  if (componentManager.parent.hasComponentChild(componentManager)) return false;
+  if (!componentInst.parent) return false;
+  if (componentInst.parent.hasComponentChild(componentInst)) return false;
 
-  dispatchUnmountedLifeCycle(componentManager.componentInst);
+  dispatchUnmountedLifeCycle(componentInst);
 
-  ALL_COMPONENTS_MANAGER.delete(componentManager);
+  ALL_COMPONENTS_INST.delete(componentInst);
 
   return true;
 }

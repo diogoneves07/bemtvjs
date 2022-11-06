@@ -1,32 +1,30 @@
-import ComponentManager from "./component-manager";
+import ComponentInst from "./component-inst";
 import getNextComponentDataInTemplate from "./get-next-component-data-in-template";
 import processComponentsInTemplate from "./process-components-in-template";
 
 type UpdatedTemplateObject = {
   template: string;
-  newComponentsManager: ComponentManager[];
-  componentsManagerUpdated: ComponentManager[];
+  newComponentsManager: ComponentInst[];
+  componentsManagerUpdated: ComponentInst[];
 };
 export default function processUpdatedTemplate(
-  componentManager: ComponentManager
+  componentInst: ComponentInst
 ): UpdatedTemplateObject {
-  const childComponents = [...componentManager.getChildComponents()];
-  const newComponentsManager: ComponentManager[] = [];
-  const componentsManagerUpdated: ComponentManager[] = [];
+  const childComponents = [...componentInst.getChildComponents()];
+  const newComponentsManager: ComponentInst[] = [];
+  const componentsManagerUpdated: ComponentInst[] = [];
 
-  let template = componentManager.getCurrentTemplateWithHost();
+  let template = componentInst.getCurrentTemplateWithHost();
 
-  componentManager.updateLastTemplateValueProperty();
-  componentManager.resetComponentsChildContainer();
+  componentInst.updateLastTemplateValueProperty();
+  componentInst.resetComponentsChildContainer();
 
   let componentData: ReturnType<typeof getNextComponentDataInTemplate>;
 
   while ((componentData = getNextComponentDataInTemplate(template))) {
     const name = componentData.name;
 
-    const index = childComponents.findIndex(
-      (o) => o.componentInst.name === name
-    );
+    const index = childComponents.findIndex((o) => o.name === name);
 
     if (index > -1) {
       const childComponent = childComponents[index];
@@ -40,7 +38,7 @@ export default function processUpdatedTemplate(
 
       template = componentData.before + value + componentData.after;
 
-      componentManager.addComponentChild(childComponent);
+      componentInst.addComponentChild(childComponent);
 
       continue;
     }
@@ -51,11 +49,11 @@ export default function processUpdatedTemplate(
       dynamicImportComponents,
     } = processComponentsInTemplate(
       `${componentData.name}[${componentData.children}]`,
-      componentManager
+      componentInst
     );
 
     if (dynamicImportComponents.length > 0) {
-      componentManager.shouldForceUpdate = true;
+      componentInst.shouldForceUpdate = true;
     }
 
     newComponentsManager.push(...componentsManager);
