@@ -22,24 +22,24 @@ export default function render(
   template: string,
   insert: string | Element = document.body
 ) {
-  let parent: Element;
+  requestAnimationFrame(() => {
+    let parent: Element;
 
-  if (isString(insert)) {
-    const el = insert ? document.querySelector(insert as string) : null;
-    if (!el) {
-      throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} This selector ”${insert}” is invalid or the element does not exist!`;
+    if (isString(insert)) {
+      const el = insert ? document.querySelector(insert as string) : null;
+      if (!el) {
+        throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} This selector ”${insert}” is invalid or the element does not exist!`;
+      }
+      parent = el;
+    } else {
+      parent = insert as Element;
     }
-    parent = el;
-  } else {
-    parent = insert as Element;
-  }
 
-  const { newTemplate: pureTemplate, componentsManager } =
-    processComponentsInTemplate(template);
+    const { newTemplate: pureTemplate, componentsManager } =
+      processComponentsInTemplate(template);
 
-  const brackethtml = brackethtmlTranspiler(pureTemplate);
+    const brackethtml = brackethtmlTranspiler(pureTemplate);
 
-  window.requestAnimationFrame(() => {
     const [keysAndNodes, n] = getPossibleNewNodes(brackethtml.html);
 
     for (const key of Object.keys(keysAndNodes)) {

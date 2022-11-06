@@ -1,13 +1,16 @@
 import { _ } from "../main";
 import isString from "../utilities/is-string";
-import { changeRouterTemplate } from "./router";
+import { applyRouter } from "./router";
 import { routeToKebabCase } from "./routes-case";
 
-type RouteValue = string | { title: string; use: string };
+type RouteObject = { title?: string; use: string; concat?: string };
+type RouteValue = string | { title?: string; use: string; concat?: string };
+type RouteFallback = string | Omit<RouteObject, "concat">;
+
 type GoToRoute = () => void;
 type RouteFn = {
-  (main: RouteValue, fallback?: RouteValue): GoToRoute;
-  routeValues?: RouteValue[];
+  (main: RouteValue, fallback?: RouteFallback): GoToRoute;
+  routeValues?: [m: RouteValue, f?: RouteFallback];
 };
 
 const routerObject: Record<string, RouteFn> = {};
@@ -17,17 +20,23 @@ export const routerProxy = new Proxy(routerObject, {
     const propName = name as string;
     if (propName in t) return (t as any)[propName];
     if (isString(propName)) {
-      const routeFn: RouteFn = (main: RouteValue, fallback?: RouteValue) => {
+      const routeFn: RouteFn = (main: RouteValue, fallback?: RouteFallback) => {
         routeFn.routeValues = fallback ? [main, fallback] : [main];
 
-        const routePath = propName;
+        const routeName = propName;
+        const isRoot = routeName === "Root";
+        const isRouteObject = typeof main === "object";
+        let routePath = isRoot ? "" : routeToKebabCase(routeName);
 
-        _("Router:" + routePath).template(
-          () => `<a href="#/${routeToKebabCase(routePath)}">$children</a>`
+        if (isRouteObject && main.concat) {
+          routePath = routePath + "/" + main.concat;
+        }
+        _("Router:" + routeName).template(
+          () => `<a href="#/${routePath}">$children</a>`
         );
         return () => {
-          window.location.hash = `/${routeToKebabCase(routePath)}`;
-          changeRouterTemplate();
+          window.location.hash = isRoot ? "/" : `/${routePath}`;
+          applyRouter();
         };
       };
 

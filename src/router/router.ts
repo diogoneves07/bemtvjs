@@ -1,6 +1,7 @@
 import { routerProxy } from "./router-object";
 import { match, _ } from "../main";
 import { routeToCamelCase } from "./routes-case";
+import { dispatchRouteUnfound } from "./on-route-unfound";
 
 const initialRouterTemplate = () => ``;
 
@@ -11,23 +12,29 @@ export function useRouterTemplate() {
 }
 
 let lastHash: string = "";
-export const changeRouterTemplate = () => {
-  if (lastHash === window.location.hash) return;
+export const applyRouter = () => {
+  let currentHash = window.location.hash;
+  const isRoot = !currentHash || currentHash.length < 3;
 
-  const path = window.location.hash.split("/");
+  currentHash = isRoot ? "/root" : currentHash;
 
-  if (!path[1]) {
+  if (lastHash === currentHash) return;
+
+  let path = currentHash.split("/")[1];
+
+  if (!path) {
     routerTemplate = initialRouterTemplate;
 
     return;
   }
 
-  const routeName = routeToCamelCase(path[1]);
+  const routeName = routeToCamelCase(path);
   const routeValues = routerProxy[routeName].routeValues;
 
   if (routeValues) {
-    lastHash = window.location.hash;
+    lastHash = currentHash;
     const [route, fallback] = routeValues;
+
     const isRouteObject = typeof route === "object";
     const isFallbackObject = typeof fallback === "object";
 
@@ -42,14 +49,20 @@ export const changeRouterTemplate = () => {
         const m = match(routeComponent, fallbackComponent);
 
         if (m === routeComponent) {
-          isRouteObject && (document.title = route.title);
+          if (isRouteObject && Object.hasOwn(route, "title")) {
+            document.title = route.title as string;
+          }
         } else {
-          isFallbackObject && (document.title = fallback.title);
+          if (isFallbackObject && Object.hasOwn(fallback, "title")) {
+            document.title = fallback.title as string;
+          }
         }
         return m;
       };
     } else {
-      if (isRouteObject) document.title = route.title;
+      if (isRouteObject && Object.hasOwn(route, "title")) {
+        document.title = route.title as string;
+      }
 
       routerTemplate = () => {
         return routeComponent;
@@ -58,8 +71,14 @@ export const changeRouterTemplate = () => {
 
     return;
   }
+
   routerTemplate = initialRouterTemplate;
+
+  dispatchRouteUnfound();
 };
 
-window.addEventListener("DOMContentLoaded", changeRouterTemplate);
-window.addEventListener("popstate", changeRouterTemplate);
+// Runs the router before the first page paint.
+window.requestAnimationFrame(applyRouter);
+
+window.addEventListener("DOMContentLoaded", applyRouter);
+window.addEventListener("popstate", applyRouter);

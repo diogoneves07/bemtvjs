@@ -2,7 +2,7 @@ import { ALL_COMPONENTS_INST } from "./../../src/bemtv/component-inst-store";
 import { resetDocumentBodyAndRemoveComponents } from "../test-utilities/reset-test-environment";
 import { Component, router, r } from "../../src/main";
 
-resetDocumentBodyAndRemoveComponents("App");
+resetDocumentBodyAndRemoveComponents("App", "Router:Root");
 
 beforeEach(() => {
   /**
@@ -13,6 +13,8 @@ beforeEach(() => {
     m.parent = null;
   }
   ALL_COMPONENTS_INST.clear();
+
+  window.location.hash = "";
 });
 
 describe("Check router functionality", () => {
@@ -33,9 +35,9 @@ describe("Check router functionality", () => {
   });
 
   it("Should use route fallback", (done) => {
-    const { onUpdate, template, render } = Component("App");
+    const { onMount, template, render } = Component("App");
 
-    onUpdate(() => {
+    onMount(() => {
       expect(document.body.textContent?.trim()).toBe("Loading...");
       expect(window.location.hash).toBe("#/second-route");
       done();
@@ -45,7 +47,30 @@ describe("Check router functionality", () => {
 
     render();
 
-    router.SecondRoute("Unknown[]", "Loading...")();
+    router.SecondRoute(
+      { use: "Unknown[]", title: "" },
+      { use: "Loading...", title: "" }
+    )();
+  });
+
+  it("Should not use route fallback", (done) => {
+    Component("Home").template("Hello");
+    const { onMount, template, render } = Component("App");
+
+    onMount(() => {
+      expect(document.body.textContent?.trim()).toBe("Hello");
+      expect(window.location.hash).toBe("#/not-fallback");
+      done();
+    });
+
+    template`#[]`;
+
+    render();
+
+    router.NotFallback(
+      { use: "Home[]", title: "" },
+      { use: "Not", title: "" }
+    )();
   });
   it("Should create route link", (done) => {
     router.ThirdRoute("Hello world!");
@@ -65,9 +90,9 @@ describe("Check router functionality", () => {
   });
 
   it("Should use route", (done) => {
-    const { onUpdate, template, render } = Component("App");
+    const { onMount, template, render } = Component("App");
 
-    onUpdate(() => {
+    onMount(() => {
       expect(document.body.textContent?.trim()).toBe("Hey!");
       expect(window.location.hash).toBe("#/fourth-route");
       done();
@@ -79,9 +104,9 @@ describe("Check router functionality", () => {
     router.FourthRoute("Hey!")();
   });
   it("Should not find the route", (done) => {
-    const { onUpdate, template, render } = Component("App");
+    const { onMount, template, render } = Component("App");
 
-    onUpdate(() => {
+    onMount(() => {
       expect(document.body.textContent?.trim()).toBe("");
       done();
     });
@@ -105,5 +130,34 @@ describe("Check router functionality", () => {
     render();
 
     window.location.hash = "unknown";
+  });
+
+  it("Should show the Root route", (done) => {
+    router.Root("Hello world!");
+
+    const { onMount, template, render } = Component("App");
+
+    onMount(() => {
+      expect(document.body.textContent?.trim()).toBe("Hello world!");
+      done();
+    });
+
+    template`#[]`;
+
+    render();
+  });
+  it("Should go to the Root route", (done) => {
+    const { onMount, template, render } = Component("App");
+
+    onMount(() => {
+      expect(document.body.textContent?.trim()).toBe("Hello world!");
+      done();
+    });
+
+    template`#[]`;
+
+    render();
+
+    router.Root("Hello world!")();
   });
 });
