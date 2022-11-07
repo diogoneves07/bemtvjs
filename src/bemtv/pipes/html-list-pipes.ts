@@ -19,8 +19,13 @@ function transformToHTMLList<T extends any[] | Set<any>>(
     let c = transformToHTMLList(x, ordered);
 
     if (c.slice && c.slice(0, 3) === `${parentTag}[`) {
-      v[index - 1] = `${v[index - 1].slice(0, -1)} ${c} ]`;
+      const lastValue = v[index - 1];
+
+      v[index - 1] = `${lastValue.slice(0, -1)} ${c}${
+        lastValue.trim() ? "]" : ""
+      }`;
       v[index] = "";
+
       return;
     }
     v[index] = `li[${c}]`;
