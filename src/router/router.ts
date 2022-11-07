@@ -11,19 +11,21 @@ export function useRouterTemplate() {
   return routerTemplate();
 }
 
-let lastHash: string = "";
+let lastHash = "";
+let lastRouteUnfound = "";
 export const applyRouter = () => {
   let currentHash = window.location.hash;
   const isRoot = !currentHash || currentHash.length < 3;
 
   currentHash = isRoot ? "/root" : currentHash;
-
   if (lastHash === currentHash) return;
 
   let path = currentHash.split("/")[1];
 
   if (!path) {
     routerTemplate = initialRouterTemplate;
+    lastRouteUnfound !== currentHash && dispatchRouteUnfound();
+    lastRouteUnfound = currentHash;
 
     return;
   }
@@ -74,7 +76,9 @@ export const applyRouter = () => {
 
   routerTemplate = initialRouterTemplate;
 
-  dispatchRouteUnfound();
+  lastRouteUnfound !== currentHash && dispatchRouteUnfound();
+
+  lastRouteUnfound = currentHash;
 };
 
 // Runs the router before the first page paint.
