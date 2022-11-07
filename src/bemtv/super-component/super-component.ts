@@ -129,7 +129,7 @@ export class SuperComponent<Vars extends Record<string, any>> {
    */
   useEl<E extends Element = Element>(
     selectorOrElement: string | Element
-  ): () => ManagerEl<E>;
+  ): ManagerEl<E>;
 
   useEl<E extends Element = Element>(): [
     elKey: string,
@@ -137,9 +137,12 @@ export class SuperComponent<Vars extends Record<string, any>> {
   ];
 
   useEl<E extends Element = Element>(selectorOrElement?: string | Element) {
-    if (selectorOrElement)
-      return () =>
-        createElManager<E>(selectorOrElement, this.__data.componentRunning);
+    if (selectorOrElement) {
+      return createElManager<E>(
+        selectorOrElement,
+        this.__data.componentRunning
+      );
+    }
 
     let elManager: undefined | ManagerEl;
 
