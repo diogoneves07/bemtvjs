@@ -48,6 +48,12 @@ describe("Checks usage rules for Brackethtml", () => {
     expect(bra.html.replace(/[\s]/g, "")).toBe("<img/><img/>");
   });
 
+  test("Self-closing HTML tags do not need “~” to separate content", () => {
+    const b = brackethtmlTranspiler('img[ data-hey = "Hey!" ]');
+
+    expect(b.html.replace(/[\s]/g, "")).toBe('<imgdata-hey="Hey!"/>');
+  });
+
   it("Should contain “~” symbol in button tag", () => {
     const b = brackethtmlTranspiler("button[ (~) ]");
     expect(b.html).toContain("~");

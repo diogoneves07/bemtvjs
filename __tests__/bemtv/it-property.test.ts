@@ -13,7 +13,7 @@ describe("ManagerEl.it property", () => {
     const el = useEl("#app");
 
     onMount(() => {
-      expect(el().it).toBe(div);
+      expect(el.it).toBe(div);
       done();
     });
 
@@ -29,7 +29,7 @@ describe("ManagerEl.it property", () => {
     const el = useEl(div);
 
     onMount(() => {
-      expect(el().it).toBe(div);
+      expect(el.it).toBe(div);
       done();
     });
 
@@ -121,7 +121,7 @@ describe("ManagerEl.it property", () => {
       const el = useEl("#app");
 
       setTimeout(() => {
-        expect(el().it).toBe(div);
+        expect(el.it).toBe(div);
         done();
       }, 50);
     });

@@ -6,7 +6,6 @@ describe("Creating a component", () => {
     expect(hasComponent("HelloWorld")).toBeTruthy();
   });
   it("Should not create a component", () => {
-    console.log(hasComponent("HelloWorld"));
     expect(() => _("HelloWorld")).toThrow();
   });
 });
