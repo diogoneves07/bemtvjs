@@ -34,6 +34,19 @@ describe("Check router functionality", () => {
     }, 50);
   });
 
+  it("Should use route concat property", (done) => {
+    router.WithConcat({
+      use: "Hello world!",
+      title: "",
+      concat: "1234567/hey/89",
+    })();
+
+    setTimeout(() => {
+      expect(window.location.hash).toBe("#/with-concat/1234567/hey/89");
+      done();
+    }, 50);
+  });
+
   it("Should use route fallback", (done) => {
     const { onMount, template, render } = Component("App");
 
