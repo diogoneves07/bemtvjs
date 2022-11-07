@@ -22,19 +22,19 @@ export default function render(
   template: string,
   insert: string | Element = document.body
 ) {
-  requestAnimationFrame(() => {
-    let parent: Element;
+  let parent: Element;
 
-    if (isString(insert)) {
-      const el = insert ? document.querySelector(insert as string) : null;
-      if (!el) {
-        throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} This selector ”${insert}” is invalid or the element does not exist!`;
-      }
-      parent = el;
-    } else {
-      parent = insert as Element;
+  if (isString(insert)) {
+    const el = insert ? document.querySelector(insert as string) : null;
+    if (!el) {
+      throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} This selector ”${insert}” is invalid or the element does not exist!`;
     }
+    parent = el;
+  } else {
+    parent = insert as Element;
+  }
 
+  requestAnimationFrame(() => {
     const { newTemplate: pureTemplate, componentsManager } =
       processComponentsInTemplate(template);
 
