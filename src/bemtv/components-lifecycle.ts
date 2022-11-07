@@ -1,11 +1,11 @@
 import ComponentInst from "./component-inst";
 
 export function dispatchInitedLifeCycle(c: ComponentInst) {
-  c.initFns.forEach((f) => f());
-  c.initFns.clear();
+  c.initCallbacks?.forEach((f) => f());
+  c.initCallbacks?.clear();
 }
 export function dispatchUpdatedLifeCycle(c: ComponentInst) {
-  c.updatedFns?.forEach((f) => f());
+  c.updatedCallbacks?.forEach((f) => f());
 
   if (c.name === "Router") {
     c.parent && dispatchUpdatedLifeCycle(c.parent);
@@ -14,11 +14,11 @@ export function dispatchUpdatedLifeCycle(c: ComponentInst) {
 
 export function dispatchMountedLifeCycle(c: ComponentInst) {
   c.mounted = true;
-  c.mountedFns.forEach((f) => f());
-  c.mountedFns.clear();
+  c.mountedCallbacks?.forEach((f) => f());
+  c.mountedCallbacks?.clear();
 }
 
 export function dispatchUnmountedLifeCycle(c: ComponentInst) {
-  c.unmountedFns?.forEach((f) => f());
-  c.unmountedFns?.clear();
+  c.unmountedCallbacks?.forEach((f) => f());
+  c.unmountedCallbacks?.clear();
 }

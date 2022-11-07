@@ -7,10 +7,10 @@ export type LifeCycleCallback = () => void;
 export interface ComponentInstData {
   listeners: Set<ComponentListener>;
   propsDefined?: Map<string, Props>;
-  mountedFns: Set<LifeCycleCallback>;
-  initFns: Set<LifeCycleCallback>;
-  unmountedFns?: Set<LifeCycleCallback>;
-  updatedFns: Set<LifeCycleCallback>;
+  mountedCallbacks: Set<LifeCycleCallback>;
+  initCallbacks: Set<LifeCycleCallback>;
+  unmountedCallbacks?: Set<LifeCycleCallback>;
+  updatedCallbacks: Set<LifeCycleCallback>;
   mounted: boolean;
   sharedData: Record<string, any>;
   parent: ComponentInst | null;

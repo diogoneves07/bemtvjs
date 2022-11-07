@@ -7,7 +7,7 @@ import isString from "../utilities/is-string";
 
 export function ManagerElFactory<E extends Element = Element>() {
   const managerEl = new ManagerEl<E>();
-  const listeners = getManagerElData(managerEl).listeners;
+  const DOMlisteners = getManagerElData(managerEl).DOMlisteners;
 
   return new Proxy(managerEl, {
     get(target, name) {
@@ -22,7 +22,7 @@ export function ManagerElFactory<E extends Element = Element>() {
             args,
           };
 
-          listeners.add(DOMListenerObject);
+          DOMlisteners.add(DOMListenerObject);
 
           if (managerEl.it)
             return insertDOMListener(
@@ -33,7 +33,7 @@ export function ManagerElFactory<E extends Element = Element>() {
 
           return () => {
             if (!DOMListenerObject.removeListener) {
-              listeners.delete(DOMListenerObject);
+              DOMlisteners.delete(DOMListenerObject);
               return;
             }
 

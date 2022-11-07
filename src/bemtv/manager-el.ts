@@ -7,7 +7,7 @@ import { applyElementCSS } from "./work-with-manager-el";
 
 type CSSInJSParameters = Parameters<typeof BEMTEVI_CSS_IN_JS["gooberCSS"]>;
 export interface ManagerElData<E> {
-  listeners: Set<ComponentListener>;
+  DOMlisteners: Set<ComponentListener>;
   element: E | null;
   CSSClasses: string[];
   applyCSSWhenElementIsAvallable: CSSInJSParameters[];
@@ -18,7 +18,7 @@ export interface ManagerEl<E extends Element = Element> extends Listeners {}
 
 export class ManagerEl<E = Element> {
   protected readonly __data: ManagerElData<E> = {
-    listeners: new Set(),
+    DOMlisteners: new Set(),
     CSSClasses: [],
     applyCSSWhenElementIsAvallable: [],
     element: null,
@@ -30,12 +30,12 @@ export class ManagerEl<E = Element> {
     ALL_ELEMENTS_MANAGER.set(newIt as Element, this);
 
     if (this.__data.element) {
-      this.__data.listeners.forEach(
+      this.__data.DOMlisteners.forEach(
         (o) => o.removeListener && o.removeListener()
       );
     }
 
-    this.__data.listeners.forEach((o) => {
+    this.__data.DOMlisteners.forEach((o) => {
       o.removeListener = insertDOMListener(newIt, o.listener, ...o.args);
       return o;
     });

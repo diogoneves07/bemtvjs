@@ -3,7 +3,6 @@ import { ComponentTemplateCallback } from "./components-main";
 import { ALL_COMPONENTS_INST } from "./component-inst-store";
 import normalizeRouterShortcut from "./normalize-router-shortcut";
 import { LifeCycleCallback, Props } from "./types/component-inst-data";
-import { ComponentListener } from "./types/listeners";
 import reshareProps from "./reshare-props";
 import useSharedProp from "./use-shared-prop";
 
@@ -23,17 +22,20 @@ export default class ComponentInst {
   parent: ComponentInst | null;
   componentsInTemplate: Set<ComponentInst> = new Set();
 
-  propsDefined?: Map<string, Props>;
-  unmountedFns?: Set<LifeCycleCallback>;
   mounted: boolean = false;
+
+  propsDefined?: Map<string, Props>;
+
+  unmountedCallbacks?: Set<LifeCycleCallback>;
+  mountedCallbacks?: Set<LifeCycleCallback>;
+  initCallbacks?: Set<LifeCycleCallback>;
+  updatedCallbacks?: Set<LifeCycleCallback>;
+
   sharedData: Record<string, any> = {};
-  listeners = new Set<ComponentListener>();
-  mountedFns = new Set<LifeCycleCallback>();
-  initFns = new Set<LifeCycleCallback>();
-  updatedFns = new Set<LifeCycleCallback>();
 
   /** The component properties */
   readonly props: Props = {};
+
   /** The component properties */
   readonly name: string;
 
@@ -122,23 +124,29 @@ export default class ComponentInst {
   }
 
   onInit(fn: () => void) {
-    this.initFns.add(fn);
+    if (!this.initCallbacks) this.initCallbacks = new Set();
+    this.initCallbacks.add(fn);
+
     return this;
   }
 
   onMount(fn: () => void) {
-    this.mountedFns.add(fn);
+    if (!this.mountedCallbacks) this.mountedCallbacks = new Set();
+    this.mountedCallbacks.add(fn);
+
     return this;
   }
 
   onUnmount(fn: () => void) {
-    if (!this.unmountedFns) this.unmountedFns = new Set();
-    this.unmountedFns.add(fn);
+    if (!this.unmountedCallbacks) this.unmountedCallbacks = new Set();
+    this.unmountedCallbacks.add(fn);
     return this;
   }
 
   onUpdate(fn: () => void) {
-    this.updatedFns.add(fn);
+    if (!this.updatedCallbacks) this.updatedCallbacks = new Set();
+    this.updatedCallbacks.add(fn);
+
     return this;
   }
 }
