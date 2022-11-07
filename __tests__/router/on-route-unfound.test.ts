@@ -3,6 +3,10 @@ import { onRouteUnfound } from "../../src/main";
 
 beforeEach(() => {
   window.location.hash = "";
+  jest.spyOn(window, "requestAnimationFrame").mockImplementation((fn) => {
+    fn(Date.now());
+    return 1;
+  });
 });
 describe("onRouteUnfound", () => {
   it("Should trigger the callback twice", (done) => {
@@ -18,7 +22,7 @@ describe("onRouteUnfound", () => {
       expect(fn).toBeCalledTimes(2);
 
       done();
-    }, 50);
+    }, 100);
   });
 
   it("Should trigger the callback once", (done) => {
@@ -36,7 +40,7 @@ describe("onRouteUnfound", () => {
       expect(fn).toBeCalledTimes(1);
 
       done();
-    }, 50);
+    }, 100);
   });
 
   it("Should not trigger the callback", (done) => {
@@ -54,6 +58,6 @@ describe("onRouteUnfound", () => {
       expect(fn).toBeCalledTimes(0);
 
       done();
-    }, 50);
+    }, 100);
   });
 });
