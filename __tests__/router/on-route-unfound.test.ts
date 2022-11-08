@@ -12,17 +12,17 @@ describe("onRouteUnfound", () => {
   it("Should trigger the callback twice", (done) => {
     const fn = jest.fn();
 
-    onRouteUnfound(fn);
-
-    setTimeout(() => {
+    const remove = onRouteUnfound(() => {
       window.location.hash = "/aaaaaaaa";
+      fn();
     });
 
     setTimeout(() => {
       expect(fn).toBeCalledTimes(2);
+      remove();
 
       done();
-    }, 100);
+    }, 50);
   });
 
   it("Should trigger the callback once", (done) => {
@@ -30,17 +30,15 @@ describe("onRouteUnfound", () => {
 
     const fn = jest.fn();
 
-    onRouteUnfound(fn);
+    const remove = onRouteUnfound(fn);
 
-    setTimeout(() => {
-      window.location.hash = "/bbbbbbbb";
-    });
+    window.location.hash = "/bbbbbbbb";
 
     setTimeout(() => {
       expect(fn).toBeCalledTimes(1);
-
+      remove();
       done();
-    }, 100);
+    }, 50);
   });
 
   it("Should not trigger the callback", (done) => {
@@ -50,14 +48,12 @@ describe("onRouteUnfound", () => {
 
     removeListener();
 
-    setTimeout(() => {
-      window.location.hash = "/ccccccc";
-    });
+    window.location.hash = "/ccccccc";
 
     setTimeout(() => {
       expect(fn).toBeCalledTimes(0);
 
       done();
-    }, 100);
+    }, 50);
   });
 });
