@@ -1,5 +1,6 @@
 import ComponentInst from "../component-inst";
 import { dispatchInitedLifeCycle } from "../components-lifecycle";
+import { ComponentProps } from "../types/super-component-data";
 import getVarsInTemplate from "./get-vars-in-template";
 import { SuperComponent } from "./super-component";
 import {
@@ -15,21 +16,27 @@ export function bindComponentToSuperComponent(
 ) {
   const sCompData = getSuperComponentData(sComp);
 
-  let templatePropertyValues: Map<string, string> = new Map();
+  let componentVarsCache: Map<string, string> = new Map();
+
+  let lastTemplateValue = "";
+
+  let componentProps: ComponentProps | undefined;
 
   const template = () => {
     setRunningComponent(sComp, cInst);
 
-    const t = sCompData.initialTemplate() as string;
+    if (!componentProps) {
+      componentProps = sCompData.components.get(cInst) as ComponentProps;
+    }
 
-    const templateValue = getVarsInTemplate(
-      t,
-      sComp,
-      cInst,
-      templatePropertyValues
-    );
+    const { componentVarsCache } = componentProps;
+
+    if (!componentVarsCache.size) {
+      lastTemplateValue = getVarsInTemplate(sComp, cInst);
+    }
+
     setRunningComponent(sComp);
-    return templateValue;
+    return lastTemplateValue;
   };
 
   let lastFirstElement: undefined | Element;
@@ -44,7 +51,7 @@ export function bindComponentToSuperComponent(
       if (!firstElement.classList.contains(s)) firstElement.classList.add(s);
     }
 
-    const cInstProps = sCompData.components.get(cInst);
+    const cInstProps = componentProps || sCompData.components.get(cInst);
 
     if (cInstProps) {
       const fnsIterator = cInstProps.removeFirstElementDOMListeners.values();
@@ -97,10 +104,11 @@ export function bindComponentToSuperComponent(
       props: cInst.props,
     },
     template,
-    templatePropertyValues,
+    componentVarsCache,
     removeFirstElementDOMListeners: new Map(),
   });
 
   dispatchInitedLifeCycle(cInst);
+
   return template;
 }
