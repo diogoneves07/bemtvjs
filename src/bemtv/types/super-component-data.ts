@@ -10,7 +10,7 @@ export type SuperComponentDOMListener = {
 export type ComponentProps = {
   vars: Record<string, any>;
   template: SuperComponentData["initialTemplate"];
-  templatePropertyValues: Map<string, string>;
+  componentVarsCache: Map<string, string>;
   removeFirstElementDOMListeners: Map<
     SuperComponentDOMListener,
     (() => void)[]
@@ -27,9 +27,11 @@ export interface SuperComponentData {
   removeDOMListeners: Map<SuperComponentDOMListener, (() => void)[]>;
   componentRunning: ComponentInst | null;
   components: Map<ComponentInst, ComponentProps>;
-  $disableProxy: Boolean;
+  $disableProxies: Boolean;
   classes: string[];
   fns: [fn: string, args: any[]][];
   sCompProxy: SuperComponent;
   propsDefined?: Map<string, Props>;
+  disableVarsProxies(): void;
+  activateVarsProxies(): void;
 }
