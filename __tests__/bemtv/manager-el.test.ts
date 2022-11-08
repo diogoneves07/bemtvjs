@@ -3,8 +3,8 @@ import { resetTestEnvironment } from "../test-utilities//reset-test-environment"
 
 resetTestEnvironment();
 
-describe("ManagerEl", () => {
-  describe("ManagerEl.css method", () => {
+describe("ManageEl", () => {
+  describe("ManageEl.css method", () => {
     it("Should add style to element", (done) => {
       const { useEl, onMount, template, render } = Component("App");
       const [key, el] = useEl<HTMLButtonElement>();
@@ -58,7 +58,7 @@ describe("ManagerEl", () => {
     });
   });
 
-  describe("Inject event handlers to ManagerEl instance", () => {
+  describe("Inject event handlers to ManageEl instance", () => {
     it("Should add onclick event listener to element", (done) => {
       const { useEl, onMount, template, render } = Component("App");
       const [key, el] = useEl<HTMLButtonElement>();

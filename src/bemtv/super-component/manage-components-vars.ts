@@ -46,7 +46,7 @@ function cloneData(value: any) {
   return value;
 }
 
-export default function managerComponentsVars<O extends Record<string, any>>(
+export default function manageComponentsVars<O extends Record<string, any>>(
   o: O,
   sComp: SuperComponent
 ) {
@@ -74,7 +74,7 @@ export default function managerComponentsVars<O extends Record<string, any>>(
             : cloneData(value);
 
           if (isRealObject(target[name])) {
-            target[name] = managerComponentsVars(target[name], sComp);
+            target[name] = manageComponentsVars(target[name], sComp);
           }
         }
       }

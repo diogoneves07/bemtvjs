@@ -3,21 +3,21 @@ import { ComponentListener } from "./types/listeners";
 import { Listeners } from "./types/listeners";
 import insertDOMListener from "./insert-dom-listener";
 import { css } from "goober";
-import { applyElementCSS } from "./work-with-manager-el";
+import { applyElementCSS } from "./work-with-el-manager";
 
 type CSSInJSParameters = Parameters<typeof BEMTEVI_CSS_IN_JS["gooberCSS"]>;
-export interface ManagerElData<E> {
+export interface ManageElData<E> {
   DOMlisteners: Set<ComponentListener>;
   element: E | null;
   CSSClasses: string[];
   applyCSSWhenElementIsAvallable: CSSInJSParameters[];
 }
 
-export const ALL_ELEMENTS_MANAGER = new WeakMap<Element, ManagerEl>();
-export interface ManagerEl<E extends Element = Element> extends Listeners {}
+export const ALL_ELEMENTS_MANAGER = new WeakMap<Element, ManageEl>();
+export interface ManageEl<E extends Element = Element> extends Listeners {}
 
-export class ManagerEl<E = Element> {
-  protected readonly __data: ManagerElData<E> = {
+export class ManageEl<E = Element> {
+  protected readonly __data: ManageElData<E> = {
     DOMlisteners: new Set(),
     CSSClasses: [],
     applyCSSWhenElementIsAvallable: [],

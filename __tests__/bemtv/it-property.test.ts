@@ -3,8 +3,8 @@ import { resetTestEnvironment } from "../test-utilities//reset-test-environment"
 
 resetTestEnvironment();
 
-describe("ManagerEl.it property", () => {
-  it("Should use #app element in ManagerEl", (done) => {
+describe("ManageEl.it property", () => {
+  it("Should use #app element in ManageEl", (done) => {
     const div = document.createElement("div");
     div.id = "app";
     document.body.appendChild(div);
@@ -20,7 +20,7 @@ describe("ManagerEl.it property", () => {
     render();
   });
 
-  it("Should use div element in ManagerEl", (done) => {
+  it("Should use div element in ManageEl", (done) => {
     const div = document.createElement("div");
 
     document.body.appendChild(div);
@@ -36,7 +36,7 @@ describe("ManagerEl.it property", () => {
     render();
   });
 
-  it("Should get element from template and use in ManagerEl", (done) => {
+  it("Should get element from template and use in ManageEl", (done) => {
     const { useEl, onMount, template, render } = Component("App");
 
     const [appKey, el] = useEl();

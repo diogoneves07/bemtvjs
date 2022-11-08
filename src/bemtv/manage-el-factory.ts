@@ -1,15 +1,15 @@
 import { ComponentListener } from "./types/listeners";
 import insertDOMListener from "./insert-dom-listener";
 import isEventListener from "./is-event-listener";
-import { ManagerEl } from "./manager-el";
-import { getManagerElData } from "./work-with-manager-el";
+import { ManageEl } from "./manage-el";
+import { getManageElData } from "./work-with-el-manager";
 import isString from "../utilities/is-string";
 
-export function ManagerElFactory<E extends Element = Element>() {
-  const managerEl = new ManagerEl<E>();
-  const DOMlisteners = getManagerElData(managerEl).DOMlisteners;
+export function ManageElFactory<E extends Element = Element>() {
+  const elManager = new ManageEl<E>();
+  const DOMlisteners = getManageElData(elManager).DOMlisteners;
 
-  return new Proxy(managerEl, {
+  return new Proxy(elManager, {
     get(target, name) {
       const propName = name as string;
       if (propName in target) return (target as any)[propName];
@@ -24,9 +24,9 @@ export function ManagerElFactory<E extends Element = Element>() {
 
           DOMlisteners.add(DOMListenerObject);
 
-          if (managerEl.it)
+          if (elManager.it)
             return insertDOMListener(
-              managerEl.it,
+              elManager.it,
               DOMListenerObject.listener,
               ...args
             );

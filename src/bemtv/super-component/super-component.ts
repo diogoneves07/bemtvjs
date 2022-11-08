@@ -2,7 +2,7 @@ import { Listeners } from "./../types/listeners";
 import { css } from "goober";
 
 import { LIBRARY_NAME_IN_ERRORS_MESSAGE } from "./../../globals";
-import { ManagerEl } from "./../manager-el";
+import { ManageEl } from "../manage-el";
 import render from "./../render";
 import {
   getComponentInstFirstElement,
@@ -14,7 +14,7 @@ import generateKey from "./../generate-el-key";
 import { treatValueInTemplate } from "./treat-value-in-template";
 import concatTemplateStringArrays from "../../utilities/concat-template-string-arrays";
 import createElManager from "./create-el-manager";
-import managerComponentsVars from "./manager-components-vars";
+import manageComponentsVars from "./manage-components-vars";
 
 export type ComponentVars<V extends Record<string, any> = Record<string, any>> =
   V & {
@@ -87,7 +87,7 @@ export class SuperComponent<Vars extends Record<string, any>> {
     data.initVarsKeys.push(...Object.keys(vars));
 
     const sComp = this;
-    this.$ = managerComponentsVars({} as ComponentVars<Vars>, sComp);
+    this.$ = manageComponentsVars({} as ComponentVars<Vars>, sComp);
   }
 
   keepInst<T extends Function>(callback: T) {
@@ -124,11 +124,11 @@ export class SuperComponent<Vars extends Record<string, any>> {
    */
   useEl<E extends Element = Element>(
     selectorOrElement: string | Element
-  ): ManagerEl<E>;
+  ): ManageEl<E>;
 
   useEl<E extends Element = Element>(): [
     elKey: string,
-    getEl: () => ManagerEl<E>
+    getEl: () => ManageEl<E>
   ];
 
   useEl<E extends Element = Element>(selectorOrElement?: string | Element) {
@@ -139,7 +139,7 @@ export class SuperComponent<Vars extends Record<string, any>> {
       );
     }
 
-    let elManager: undefined | ManagerEl;
+    let elManager: undefined | ManageEl;
 
     const key = generateKey();
     return [

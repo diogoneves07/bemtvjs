@@ -2,30 +2,30 @@ import getElement from "../../utilities/get-element";
 import ComponentInst from "../component-inst";
 import { getElKeyValue, isElKey } from "../generate-el-key";
 import { KEY_ATTRIBUTE_NAME } from "../globals";
-import { ManagerEl } from "../manager-el";
-import { ManagerElFactory } from "../manager-el-factory";
+import { ManageEl } from "../manage-el";
+import { ManageElFactory } from "../manage-el-factory";
 
 export default function createElManager<E extends Element = Element>(
   keyOrSelectorOrElement: string | Element,
   c: ComponentInst | null
-): ManagerEl<E> {
-  const managerEl = ManagerElFactory<E>();
+): ManageEl<E> {
+  const elManager = ManageElFactory<E>();
 
   if (keyOrSelectorOrElement instanceof Element) {
-    managerEl.it = getElement(keyOrSelectorOrElement) as E | null;
-    return managerEl;
+    elManager.it = getElement(keyOrSelectorOrElement) as E | null;
+    return elManager;
   }
 
   if (!isElKey(keyOrSelectorOrElement)) {
-    managerEl.it = getElement(keyOrSelectorOrElement) as E | null;
-    return managerEl;
+    elManager.it = getElement(keyOrSelectorOrElement) as E | null;
+    return elManager;
   }
 
-  if (!c) return managerEl;
+  if (!c) return elManager;
 
   const elKey = getElKeyValue(keyOrSelectorOrElement);
 
-  if (!c) return managerEl;
+  if (!c) return elManager;
 
   let element = c.nodes.find((n) => {
     if (!(n instanceof Element)) return;
@@ -34,6 +34,6 @@ export default function createElManager<E extends Element = Element>(
 
     return true;
   }) as E;
-  managerEl.it = element;
-  return managerEl;
+  elManager.it = element;
+  return elManager;
 }
