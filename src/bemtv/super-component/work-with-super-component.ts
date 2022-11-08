@@ -49,13 +49,11 @@ export function updateComponentVars(sComp: SuperComponent) {
   const data = getSuperComponentData(sComp);
   const vars = getComponentVars(sComp) as ComponentProps["vars"];
 
-  data.$disableProxies = true;
-
+  data.disableVarsProxies();
   for (const p of data.initVarsKeys) {
     vars[p] = sComp.$[p] as any;
   }
-
-  data.$disableProxies = false;
+  data.activateVarsProxies();
 }
 
 export function addLifeCycleToComponents(
@@ -67,6 +65,7 @@ export function addLifeCycleToComponents(
   const lifeCallback = (c: ComponentInst) => {
     setRunningComponent(sComp, c);
     callback();
+    updateComponentVars(sComp);
     setRunningComponent(sComp);
   };
 
