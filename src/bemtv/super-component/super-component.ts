@@ -6,7 +6,6 @@ import { ManagerEl } from "./../manager-el";
 import render from "./../render";
 import {
   getComponentInstFirstElement,
-  resetTemplatePropertyValues,
   setRunningComponent,
   updateComponentVars,
 } from "./work-with-super-component";
@@ -15,14 +14,18 @@ import generateKey from "./../generate-el-key";
 import { treatValueInTemplate } from "./treat-value-in-template";
 import concatTemplateStringArrays from "../../utilities/concat-template-string-arrays";
 import createElManager from "./create-el-manager";
+import managerComponentsVars from "./manager-components-vars";
 
-type ComponentVars<V extends Record<string, any>> = V & {
-  readonly children: string;
-  readonly props: Record<string, any>;
-};
+export type ComponentVars<V extends Record<string, any> = Record<string, any>> =
+  V & {
+    readonly children: string;
+    readonly props: Record<string, any>;
+  };
 export interface SuperComponent<
   Vars extends Record<string, any> = Record<string, any>
 > extends Listeners {
+  onInit(fn: () => void): this;
+
   /**
    * Calls(only once) the callback after template elements are added to the DOM.
    *
@@ -51,7 +54,7 @@ export interface SuperComponent<
 }
 
 export class SuperComponent<Vars extends Record<string, any>> {
-  protected __data = {
+  protected __data: SuperComponentData = {
     componentName: "",
     initVars: {},
     initVarsKeys: ["children", "props"],
@@ -61,10 +64,17 @@ export class SuperComponent<Vars extends Record<string, any>> {
     removeDOMListeners: new Map(),
     componentRunning: null,
     components: new Map(),
-    $disableProxy: false,
+    $disableProxies: false,
+    disableVarsProxies() {
+      this.$disableProxies = true;
+    },
+    activateVarsProxies() {
+      this.$disableProxies = false;
+    },
     classes: [],
     fns: [],
-  } as unknown as SuperComponentData;
+    sCompProxy: null as any,
+  };
 
   $: ComponentVars<Vars>;
 
@@ -72,29 +82,12 @@ export class SuperComponent<Vars extends Record<string, any>> {
     const data = this.__data;
 
     Object.assign(data.initVars, vars);
+
     data.componentName = name;
     data.initVarsKeys.push(...Object.keys(vars));
 
-    const t = this;
-    this.$ = new Proxy({} as ComponentVars<Vars>, {
-      get(target, p) {
-        let k = p as string;
-        if (!data.$disableProxy) {
-          resetTemplatePropertyValues(t, k);
-        }
-        return target[k];
-      },
-      set(target, p, n) {
-        let k = p as string;
-
-        if (!data.$disableProxy) {
-          resetTemplatePropertyValues(t, k);
-        }
-
-        (target as any)[k] = n;
-        return true;
-      },
-    });
+    const sComp = this;
+    this.$ = managerComponentsVars({} as ComponentVars<Vars>, sComp);
   }
 
   keepInst<T extends Function>(callback: T) {
@@ -110,7 +103,9 @@ export class SuperComponent<Vars extends Record<string, any>> {
   css = (...args: Parameters<typeof css>) => {
     const classValue = css(...args);
     const data = this.__data;
+
     data.classes.push(classValue);
+
     for (const c of data.components.keys()) {
       const firstElement = getComponentInstFirstElement(c);
 
@@ -245,7 +240,7 @@ export class SuperComponent<Vars extends Record<string, any>> {
     return this.__data.sCompProxy;
   }
 
-  render = (selectorOrElement?: string | Element | undefined) => {
+  render = (selectorOrElement?: string | Element) => {
     render(this.__data.componentName + "[]", selectorOrElement);
     return this.__data.sCompProxy;
   };
