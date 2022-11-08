@@ -19,10 +19,11 @@ export function getComponentInstFirstElement(c: ComponentInst) {
   return null;
 }
 
+const EMPTY_OBJECT = {};
 export function getComponentVars(sComp: SuperComponent) {
   const data = getSuperComponentData(sComp);
   const c = data.componentRunning;
-  return c ? data.components.get(c)?.vars || {} : {};
+  return c ? data.components.get(c)?.vars || EMPTY_OBJECT : EMPTY_OBJECT;
 }
 
 export function setRunningComponent(
@@ -33,24 +34,28 @@ export function setRunningComponent(
 
   data.componentRunning = c || null;
 
-  const keys = data.initVarsKeys;
   const vars = getComponentVars(sComp) as ComponentProps["vars"];
 
-  data.$disableProxy = true;
-  keys.forEach((p) => ((sComp.$ as any)[p] = vars[p]));
-  data.$disableProxy = false;
+  data.disableVarsProxies();
+
+  for (const p of data.initVarsKeys) {
+    (sComp.$ as any)[p] = vars[p];
+  }
+
+  data.activateVarsProxies();
 }
 
 export function updateComponentVars(sComp: SuperComponent) {
   const data = getSuperComponentData(sComp);
   const vars = getComponentVars(sComp) as ComponentProps["vars"];
 
-  data.$disableProxy = true;
-  data.initVarsKeys.forEach((p) => {
-    vars[p] = sComp.$[p] as any;
-  });
+  data.$disableProxies = true;
 
-  data.$disableProxy = false;
+  for (const p of data.initVarsKeys) {
+    vars[p] = sComp.$[p] as any;
+  }
+
+  data.$disableProxies = false;
 }
 
 export function addLifeCycleToComponents(
@@ -125,9 +130,7 @@ export function addDOMListenerToComponents(
 ) {
   const data = getSuperComponentData(sComp);
 
-  const components = [...data.components.keys()];
-
-  for (const c of components) {
+  for (const c of data.components.keys()) {
     const firstElement = getComponentInstFirstElement(c);
     if (firstElement) {
       addDOMListenerToComponent(firstElement, sComp, DOMListenerObject, c);
@@ -150,7 +153,7 @@ export function removeDOMListenerFromComponents(
   }
 }
 
-export function resetTemplatePropertyValues(sComp: SuperComponent, p: string) {
+export function resetComponentVarsCache(sComp: SuperComponent) {
   const data = getSuperComponentData(sComp);
 
   if (!data.componentRunning) return;
@@ -159,5 +162,5 @@ export function resetTemplatePropertyValues(sComp: SuperComponent, p: string) {
 
   if (!c) return;
 
-  c.templatePropertyValues.delete(p);
+  c.componentVarsCache.clear();
 }
