@@ -12,10 +12,13 @@ export function useRouterTemplate() {
 }
 
 let lastHash = "";
-let lastRouteUnfound = "";
+let lastRouteUnfound = " ";
+
 export const applyRouter = () => {
-  let currentHash = window.location.hash;
-  const isRoot = !currentHash || currentHash.length < 3;
+  const locationHash = window.location.hash;
+  const isRoot = !locationHash || locationHash.length < 3;
+
+  let currentHash = locationHash;
 
   currentHash = isRoot ? "/root" : currentHash;
   if (lastHash === currentHash) return;
@@ -24,8 +27,10 @@ export const applyRouter = () => {
 
   if (!path) {
     routerTemplate = initialRouterTemplate;
-    lastRouteUnfound !== currentHash && dispatchRouteUnfound();
-    lastRouteUnfound = currentHash;
+
+    lastRouteUnfound = locationHash;
+
+    dispatchRouteUnfound();
 
     return;
   }
@@ -35,6 +40,8 @@ export const applyRouter = () => {
 
   if (routeValues) {
     lastHash = currentHash;
+    lastRouteUnfound = locationHash;
+
     const [route, fallback] = routeValues;
 
     const isRouteObject = typeof route === "object";
@@ -76,9 +83,11 @@ export const applyRouter = () => {
 
   routerTemplate = initialRouterTemplate;
 
-  lastRouteUnfound !== currentHash && dispatchRouteUnfound();
+  if (lastRouteUnfound !== locationHash) {
+    lastRouteUnfound = locationHash;
 
-  lastRouteUnfound = currentHash;
+    dispatchRouteUnfound();
+  }
 };
 
 // Runs the router before the first page paint.
