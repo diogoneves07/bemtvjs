@@ -2,13 +2,16 @@ import { LIBRARY_NAME_IN_ERRORS_MESSAGE } from "./../../globals";
 import toKebabCase from "../../utilities/to-kebab-case";
 import { PIPE_SYMBOL } from "../pipes/main";
 import { ComponentProps } from "../types/super-component-data";
-import { getComponentVars } from "./work-with-super-component";
+import {
+  getComponentVars,
+  getSuperComponentData,
+} from "./work-with-super-component";
 import { SuperComponent } from "./super-component";
 import ComponentInst from "../component-inst";
 
 // const varsPrefix = "$";
 const varsAttrPrefix = "@";
-const regexTemplateVars = /(\$|\@)[\.\w]*[^\(\)\s][\w][\?]?/g;
+const regexTemplateVars = /(\$|\@)[\.\w]*[\w][\?]?/g;
 
 function errorMessage(varValue: any, c: ComponentInst) {
   console.error(varValue);
@@ -18,15 +21,15 @@ function getVarsValues(
   name: string,
   sComp: SuperComponent,
   c: ComponentInst,
-  templatePropertyValues: Map<string, string>
+  componentVarsCache: Map<string, string>
 ) {
   const prefix = name[0];
   const isOpitional = name.includes("?");
   const varName = isOpitional ? name.slice(1, -1) : name.slice(1);
 
-  const getLastValue = templatePropertyValues.get(varName);
+  const getLastValue = componentVarsCache.has(varName);
 
-  if (getLastValue) return getLastValue;
+  if (getLastValue) return componentVarsCache.get(varName);
 
   const vars = getComponentVars(sComp) as ComponentProps["vars"];
   const props = vars.props;
@@ -58,10 +61,11 @@ function getVarsValues(
       : vars[varName];
   }
 
-  varValue = isOpitional ? "" : varValue;
-
   if (varValue === undefined || varValue === null) {
-    throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} In the “${c.name}” component the template has a variable that not exist or is (null or undefined): “${prefix}${varName}”`;
+    if (!isOpitional) {
+      throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} In the “${c.name}” component the template has a variable that not exist or is (null or undefined): “${prefix}${varName}”`;
+    }
+    varValue = "";
   }
 
   if (Object.hasOwn(varValue, PIPE_SYMBOL)) {
@@ -69,7 +73,7 @@ function getVarsValues(
       varValue = pipe(varValue);
     }
 
-    templatePropertyValues.set(varName, varValue);
+    componentVarsCache.set(varName, varValue);
 
     return varValue;
   }
@@ -78,19 +82,26 @@ function getVarsValues(
     errorMessage(varValue, c);
   }
 
-  templatePropertyValues.set(varName, varValue.toString());
+  componentVarsCache.set(varName, varValue.toString());
 
   return varValue;
 }
 export default function getVarsInTemplate(
-  template: string,
   sComp: SuperComponent,
-  c: ComponentInst,
-  templatePropertyValues: Map<string, string>
+  c: ComponentInst
 ) {
-  let templateValue = template.replaceAll(regexTemplateVars, (p) =>
-    getVarsValues(p, sComp, c, templatePropertyValues)
-  );
+  const sCompData = getSuperComponentData(sComp);
+  const { componentVarsCache } = sCompData.components.get(c) as ComponentProps;
+
+  sCompData.disableVarsProxies();
+
+  let templateValue = sCompData
+    .initialTemplate()
+    .replaceAll(regexTemplateVars, (p) =>
+      getVarsValues(p, sComp, c, componentVarsCache)
+    );
+
+  sCompData.activateVarsProxies();
 
   return templateValue;
 }
