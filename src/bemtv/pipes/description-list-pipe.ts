@@ -15,7 +15,7 @@ function transformToDescriptionList<T extends Record<string, any>>(
 
   for (const key of Object.keys(v)) {
     v[key] = transformToDescriptionList(v[key]);
-    str = `dt[${key}] dd[${v[key]}]`;
+    str += `dt[${key}] dd[${v[key]}]`;
   }
 
   return `dl[${str}]`;
