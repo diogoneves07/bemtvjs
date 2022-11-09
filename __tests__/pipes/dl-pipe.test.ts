@@ -10,13 +10,25 @@ describe("Check dlPipe", () => {
         user: {
           name: "unknown",
           age: 25,
+          user: {
+            name: "unknown",
+            age: 25,
+            user: {
+              name: "unknown",
+              age: 25,
+              user: {
+                name: "unknown",
+                age: 25,
+              },
+            },
+          },
         },
       }),
     });
 
     onMount(() => {
       expect(document.body.innerHTML.replace(/[\s]/g, "")).toBe(
-        "<dl><dt>user</dt><dd><dl><dt>age</dt><dd>25</dd></dl></dd></dl>"
+        "<dl><dt>user</dt><dd><dl><dt>name</dt><dd>unknown</dd><dt>age</dt><dd>25</dd><dt>user</dt><dd><dl><dt>name</dt><dd>unknown</dd><dt>age</dt><dd>25</dd><dt>user</dt><dd><dl><dt>name</dt><dd>unknown</dd><dt>age</dt><dd>25</dd><dt>user</dt><dd><dl><dt>name</dt><dd>unknown</dd><dt>age</dt><dd>25</dd></dl></dd></dl></dd></dl></dd></dl></dd></dl>"
       );
       done();
     });
