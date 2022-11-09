@@ -11,10 +11,11 @@ import {
 } from "./work-with-super-component";
 import { SuperComponentData } from "./../types/super-component-data";
 import generateKey from "./../generate-el-key";
-import { treatValueInTemplate } from "./treat-value-in-template";
 import concatTemplateStringArrays from "../../utilities/concat-template-string-arrays";
 import createElManager from "./create-el-manager";
 import manageComponentsVars from "./manage-components-vars";
+import isStringOrNumber from "../../utilities/is-string-or-number";
+import { treatArgsInTemplate } from "./treat-args-in-template";
 
 export type ComponentVars<V extends Record<string, any> = Record<string, any>> =
   V & {
@@ -222,14 +223,17 @@ export class SuperComponent<Vars extends Record<string, any>> {
         data.initialTemplate = t;
         break;
       case "object":
-        const values: string[] = concatTemplateStringArrays(t, exps);
+        let values = treatArgsInTemplate(concatTemplateStringArrays(t, exps));
 
-        const v = treatValueInTemplate(values);
+        const v = values.join("");
 
-        if (!v) {
-          console.error(values);
-          throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} In the “${data.componentRunning?.name}” component the template has a value that is not string, number or uses pipes: ${values}`;
+        for (const i of values) {
+          if (!isStringOrNumber(i)) {
+            console.error(values);
+            throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} In the “${data.componentName}” component the template with TemplateStringsArray has a value that is not string, number or uses pipes: “${values}”`;
+          }
         }
+
         data.initialTemplate = () => v;
         break;
       default:
