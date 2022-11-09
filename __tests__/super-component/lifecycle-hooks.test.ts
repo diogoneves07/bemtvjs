@@ -1,10 +1,24 @@
 import { Component } from "../../src/main";
-import { resetTestEnvironment } from "../test-utilities//reset-test-environment";
+import { resetTestEnvironment } from "../test-utilities/reset-test-environment";
 
 resetTestEnvironment();
 
 describe("Lifecycle Hooks", () => {
-  test("onMount method", (done) => {
+  test("onInit hook", (done) => {
+    const onInitFn = jest.fn();
+    const { onInit, render } = Component("App");
+
+    onInit(onInitFn);
+
+    onInit(() => {
+      expect(onInitFn).toBeCalledTimes(1);
+      done();
+    });
+
+    render();
+  });
+
+  test("onMount hook", (done) => {
     const onMountFn = jest.fn();
     const { onMount, render } = Component("App");
 
@@ -18,7 +32,7 @@ describe("Lifecycle Hooks", () => {
     render();
   });
 
-  test("onUpdate method", (done) => {
+  test("onUpdate hook", (done) => {
     const onUpdateFn = jest.fn();
     let t = `Hey!`;
 
@@ -40,7 +54,7 @@ describe("Lifecycle Hooks", () => {
     render();
   });
 
-  test("onUnmount method", (done) => {
+  test("onUnmount hook", (done) => {
     const onUnmountFn = jest.fn();
 
     const { onUnmount } = Component("Child").template`Hey!`;
@@ -64,6 +78,24 @@ describe("Lifecycle Hooks", () => {
 
     template(() => t);
 
+    render();
+  });
+
+  it("Should add a lifecycle hook after a time", (done) => {
+    const onUpdateFn = jest.fn();
+    const { onUpdate, template, render } = Component("App");
+    let t = "Hey!";
+
+    setTimeout(() => {
+      onUpdate(onUpdateFn);
+      onUpdate(() => {
+        expect(onUpdateFn).toBeCalledTimes(1);
+        done();
+      });
+      t = "Hi!";
+    }, 20);
+
+    template(() => t);
     render();
   });
 });
