@@ -5,12 +5,12 @@ it("Should keep the previous component instance after a time", (done) => {
     count: 0,
   });
 
-  let hasCliked = false;
+  let isolate = false;
 
   onMount(() => {
-    if (hasCliked) return;
+    if (isolate) return;
 
-    hasCliked = true;
+    isolate = true;
     $.count++;
 
     setTimeout(
