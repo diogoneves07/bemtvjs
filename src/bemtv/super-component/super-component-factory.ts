@@ -36,10 +36,6 @@ export function SuperComponentFactory<Vars extends Record<string, any>>(
 
       if (propName in target) {
         if (typeof t[propName] === "function") {
-          if (propName === "$") {
-            return t[propName];
-          }
-
           return t[propName].bind(superComponent);
         }
         return t[propName];
@@ -70,7 +66,6 @@ export function SuperComponentFactory<Vars extends Record<string, any>>(
 
         return newEventListener;
       }
-      return false;
     },
   });
 
