@@ -45,6 +45,14 @@ export default function createElManager<E extends Element = Element>(
     });
     return elManager;
   }
+
+  c.onUpdateWithHighPriority(() => {
+    const e = elManager.it;
+    const f = (findElementInComponentNodes(c.nodes, elKey) as E) || null;
+
+    if (e !== f) elManager.it = f;
+  });
+
   elManager.it = element;
 
   return elManager;
