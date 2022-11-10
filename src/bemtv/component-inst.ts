@@ -152,6 +152,14 @@ export default class ComponentInst {
     return this;
   }
 
+  onUpdateWithHighPriority(fn: () => void) {
+    const updatedCallbacks = this.updatedCallbacks;
+    this.updatedCallbacks = new Set<LifeCycleCallback>([
+      fn,
+      ...(updatedCallbacks || []),
+    ]);
+    return this;
+  }
   onUpdate(fn: () => void) {
     if (!this.updatedCallbacks) this.updatedCallbacks = new Set();
     this.updatedCallbacks.add(fn);
