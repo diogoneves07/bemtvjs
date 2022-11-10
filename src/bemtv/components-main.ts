@@ -48,21 +48,31 @@ export function hasComponent(name: ComponentName) {
 export function Component<
   C extends ComponentName,
   N extends Record<string, any>
->(componentName: ComponentName, vars?: N): SuperComponent<N>;
+>(
+  componentName: ComponentName | TemplateStringsArray,
+  vars?: N
+): SuperComponent<N>;
 
 export function Component<
   C extends ComponentName,
   N extends Record<string, any>
->(componentName: C, vars: N = {} as N): SuperComponent<N> {
-  if (GLOBAL_COMPONENTS_MAP.has(componentName)) {
-    throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} This component “${componentName}” name is already in use!`;
+>(
+  componentName: C | TemplateStringsArray,
+  vars: N = {} as N
+): SuperComponent<N> {
+  const c = (
+    Array.isArray(componentName) ? componentName.join("") : componentName
+  ) as string;
+
+  if (GLOBAL_COMPONENTS_MAP.has(c)) {
+    throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} This component “${c}” name is already in use!`;
   }
 
   Object.freeze(vars);
 
-  const superComponent = SuperComponentFactory(componentName, vars);
+  const superComponent = SuperComponentFactory(c, vars);
 
-  GLOBAL_COMPONENTS_MAP.set(componentName, (c) =>
+  GLOBAL_COMPONENTS_MAP.set(c, (c) =>
     bindComponentToSuperComponent(superComponent, c)
   );
 
