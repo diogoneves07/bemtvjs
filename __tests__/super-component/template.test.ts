@@ -1,4 +1,4 @@
-import { Component } from "../../src/main";
+import { Component, pipe } from "../../src/main";
 import { resetTestEnvironment } from "../test-utilities//reset-test-environment";
 
 resetTestEnvironment();
@@ -29,6 +29,20 @@ describe("Check the ways to define the template", () => {
       expect(() => {
         template`Counter is: ${list}`;
       }).toThrow();
+    });
+
+    test("Array using pipes in the template", () => {
+      const listPipe = pipe((data: number[]) => {
+        return data.join("");
+      });
+
+      const { template } = Component("App");
+
+      const list = listPipe([1, 2, 3, 4, 5]);
+
+      expect(() => {
+        template`Counter is: ${list}`;
+      }).not.toThrow();
     });
   });
 
