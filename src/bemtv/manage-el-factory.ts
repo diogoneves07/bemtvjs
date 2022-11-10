@@ -24,12 +24,15 @@ export function ManageElFactory<E extends Element = Element>() {
 
           DOMlisteners.add(DOMListenerObject);
 
-          if (elManager.it)
-            return insertDOMListener(
+          if (elManager.it) {
+            const r = insertDOMListener(
               elManager.it,
               DOMListenerObject.listener,
               ...args
             );
+            DOMListenerObject.removeListener = r;
+            return r;
+          }
 
           return () => {
             if (!DOMListenerObject.removeListener) {
