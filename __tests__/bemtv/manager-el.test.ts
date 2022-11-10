@@ -28,6 +28,32 @@ describe("ManageEl", () => {
       render();
     });
 
+    it("Should use “onInit” hook to add style to element", (done) => {
+      const { useEl, onInit, onMount, template, render } = Component("App");
+      const [key, el] = useEl<HTMLButtonElement>();
+
+      onInit(() => {
+        const appEl = el();
+        appEl.css`font-size:50px;`;
+      });
+      onMount(() => {
+        const appEl = el();
+
+        expect(document.getElementsByTagName("style").length).toBe(1);
+        expect(appEl.it?.classList.length).toBe(1);
+        expect(
+          getComputedStyle(appEl.it as HTMLButtonElement).getPropertyValue(
+            "font-size"
+          )
+        ).toBe("50px");
+        done();
+      });
+
+      template(() => `button[${key} Click me!]`);
+
+      render();
+    });
+
     it("Should add style to element after a time", (done) => {
       const { useEl, onMount, template, render } = Component("App");
       const [key, el] = useEl<HTMLButtonElement>();
