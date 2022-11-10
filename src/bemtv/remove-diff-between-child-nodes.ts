@@ -1,10 +1,8 @@
-import { KEY_ATTRIBUTE_NAME } from "./globals";
 import {
   appendNodeToComponentManagerNodes,
   removeNodeFromComponentManagerNodes,
   replaceNodeInComponentManagerNodes,
 } from "./components-inst-nodes";
-import { reapplyCSSClasses } from "./work-with-el-manager";
 
 function removeDiffBetweenNodesAttrs(newNode: Element, oldNode: Element) {
   const attrsLength = newNode.attributes.length;
@@ -17,10 +15,6 @@ function removeDiffBetweenNodesAttrs(newNode: Element, oldNode: Element) {
     if (newAttr.value === oldNode.getAttribute(attrName)) continue;
 
     oldNode.setAttribute(attrName, newAttr.value);
-
-    attrName === "class" &&
-      newNode.hasAttribute(KEY_ATTRIBUTE_NAME) &&
-      reapplyCSSClasses(oldNode);
   }
 }
 export function removeDiffBetweenChildNodes(
