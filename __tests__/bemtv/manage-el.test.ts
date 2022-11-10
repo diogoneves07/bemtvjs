@@ -1,5 +1,5 @@
 import { Component } from "../../src/main";
-import { resetTestEnvironment } from "../test-utilities//reset-test-environment";
+import { resetTestEnvironment } from "../test-utilities/reset-test-environment";
 
 resetTestEnvironment();
 
@@ -36,6 +36,7 @@ describe("ManageEl", () => {
         const appEl = el();
         appEl.css`font-size:50px;`;
       });
+
       onMount(() => {
         const appEl = el();
 
@@ -107,6 +108,30 @@ describe("ManageEl", () => {
       render();
     });
 
+    it("Should use “onInit” hook to add onclick event listener to element", (done) => {
+      const { useEl, onMount, onInit, template, render } = Component("App");
+      const [key, el] = useEl<HTMLButtonElement>();
+
+      const clickFn = jest.fn();
+
+      onInit(() => {
+        const appEl = el();
+        appEl.click$(clickFn);
+      });
+
+      onMount(() => {
+        const appEl = el();
+        appEl.it?.click();
+
+        expect(clickFn).toBeCalledTimes(1);
+        done();
+      });
+
+      template(() => `button[${key} Click me!]`);
+
+      render();
+    });
+
     it("Should remove onclick event listener from element", (done) => {
       const { useEl, onMount, template, render } = Component("App");
       const [key, el] = useEl<HTMLButtonElement>();
@@ -122,6 +147,35 @@ describe("ManageEl", () => {
         appEl.it?.click();
 
         expect(clickFn).toBeCalledTimes(1);
+        done();
+      });
+
+      template(() => `button[${key} Click me!]`);
+
+      render();
+    });
+
+    it("Should change the elements and remove the listeners from the previous", (done) => {
+      const button = document.createElement("button");
+      document.body.appendChild(button);
+
+      const { useEl, onMount, template, render } = Component("App");
+      const [key, el] = useEl<HTMLButtonElement>();
+
+      const clickFn = jest.fn();
+
+      onMount(() => {
+        const appEl = el();
+        const templateButton = appEl.it;
+        appEl.click$(clickFn);
+        templateButton?.click();
+        appEl.it = button;
+        appEl.it?.click();
+
+        templateButton?.click();
+        templateButton?.click();
+
+        expect(clickFn).toBeCalledTimes(2);
         done();
       });
 
@@ -156,20 +210,34 @@ describe("ManageEl", () => {
     it(`
   Should remove “onclick” listener from button element immediately after added
 `, (done) => {
-      const { useEl, onMount, template, render } = Component("App");
+      const { useEl, onMount, onInit, template, render } = Component("App");
       const [key, el] = useEl<HTMLButtonElement>();
 
-      const clickFn = jest.fn();
+      const clickFn1 = jest.fn();
+      const clickFn2 = jest.fn();
+      let onInitRemoveClickListener: undefined | Function;
 
-      onMount(() => {
+      onInit(() => {
         const appEl = el();
-        const removeClickListener = appEl.click$(clickFn);
+        const removeClickListener = appEl.click$(clickFn2);
 
         removeClickListener();
 
+        onInitRemoveClickListener = appEl.click$(clickFn2);
+      });
+      onMount(() => {
+        const appEl = el();
+        const removeClickListener = appEl.click$(clickFn1);
+
+        removeClickListener();
+
+        onInitRemoveClickListener && onInitRemoveClickListener();
+
         appEl.it?.click();
 
-        expect(clickFn).toBeCalledTimes(0);
+        expect(clickFn1).toBeCalledTimes(0);
+        expect(clickFn2).toBeCalledTimes(0);
+
         done();
       });
 
