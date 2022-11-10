@@ -5,7 +5,7 @@ resetTestEnvironment();
 
 describe("sharing API", () => {
   describe("method share()", () => {
-    it('Should share "message" property', (done) => {
+    it("Should share “message” property", (done) => {
       (() => {
         const { use, template } = Component("Child");
 
@@ -45,7 +45,7 @@ describe("sharing API", () => {
     });
   });
   describe("method reshare()", () => {
-    it('Should update "message" property', (done) => {
+    it("Should update “message” property", (done) => {
       (() => {
         const { reshare } = Component("Child");
 
@@ -66,7 +66,7 @@ describe("sharing API", () => {
       render();
     });
 
-    it('Should not update "message" property', (done) => {
+    it("Should not update “message” property", (done) => {
       (() => {
         const { share } = Component("Child");
 
@@ -89,7 +89,7 @@ describe("sharing API", () => {
   });
 
   describe("method use()", () => {
-    it('Should use "message" property', (done) => {
+    it("Should use “message” property", (done) => {
       (() => {
         const { use, template } = Component("Child");
 
@@ -110,7 +110,7 @@ describe("sharing API", () => {
       render();
     });
 
-    it('Should not use "message" property', (done) => {
+    it("Should not use “message” property", (done) => {
       (() => {
         const { share } = Component("Child");
 
@@ -127,6 +127,13 @@ describe("sharing API", () => {
       template(() => `Child[] ${use("message")}`);
 
       render();
+    });
+    test("Use “use()” method outside a DOMListener or hook", () => {
+      const { use, share } = Component("App");
+
+      share({ message: "Hey" });
+
+      expect(use("message")).toBe(undefined);
     });
   });
 });
