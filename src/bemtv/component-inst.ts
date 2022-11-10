@@ -130,6 +130,15 @@ export default class ComponentInst {
     return this;
   }
 
+  onMountWithHighPriority(fn: () => void) {
+    const mountedCallbacks = this.mountedCallbacks;
+    this.mountedCallbacks = new Set<LifeCycleCallback>([
+      fn,
+      ...(mountedCallbacks || []),
+    ]);
+    return this;
+  }
+
   onMount(fn: () => void) {
     if (!this.mountedCallbacks) this.mountedCallbacks = new Set();
     this.mountedCallbacks.add(fn);

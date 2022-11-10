@@ -5,6 +5,15 @@ import { KEY_ATTRIBUTE_NAME } from "../globals";
 import { ManageEl } from "../manage-el";
 import { ManageElFactory } from "../manage-el-factory";
 
+function findElementInComponentNodes(nodes: Node[], elKey: string) {
+  return nodes.find((n) => {
+    if (!(n instanceof Element)) return;
+    if (!n.hasAttribute(KEY_ATTRIBUTE_NAME)) return;
+    if (!n.getAttribute(KEY_ATTRIBUTE_NAME)?.includes(elKey)) return;
+
+    return true;
+  });
+}
 export default function createElManager<E extends Element = Element>(
   keyOrSelectorOrElement: string | Element,
   c: ComponentInst | null
@@ -25,15 +34,18 @@ export default function createElManager<E extends Element = Element>(
 
   const elKey = getElKeyValue(keyOrSelectorOrElement);
 
-  if (!c) return elManager;
+  let element = findElementInComponentNodes(c.nodes, elKey) as E;
 
-  let element = c.nodes.find((n) => {
-    if (!(n instanceof Element)) return;
-    if (!n.hasAttribute(KEY_ATTRIBUTE_NAME)) return;
-    if (!n.getAttribute(KEY_ATTRIBUTE_NAME)?.includes(elKey)) return;
-
-    return true;
-  }) as E;
+  if (!element) {
+    c.onMountWithHighPriority(() => {
+      if (!elManager.it) {
+        elManager.it =
+          (findElementInComponentNodes(c.nodes, elKey) as E) || null;
+      }
+    });
+    return elManager;
+  }
   elManager.it = element;
+
   return elManager;
 }
