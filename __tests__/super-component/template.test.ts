@@ -1,4 +1,4 @@
-import { Component, pipe } from "../../src/main";
+import { _, pipe } from "../../src/main";
 import { resetTestEnvironment } from "../test-utilities//reset-test-environment";
 
 resetTestEnvironment();
@@ -6,7 +6,7 @@ resetTestEnvironment();
 describe("Check the ways to define the template", () => {
   describe("Use TemplateStringsArray", () => {
     it("Should define the template", (done) => {
-      const { onMount, template, render } = Component("App");
+      const { onMount, template, render } = _("App");
 
       let count = 0;
 
@@ -21,7 +21,7 @@ describe("Check the ways to define the template", () => {
     });
 
     it("Should not define the template", () => {
-      const { template } = Component("App");
+      const { template } = _("App");
 
       // Untreated value or does not use pipes
       const list = [1, 2, 3, 4, 5];
@@ -36,7 +36,7 @@ describe("Check the ways to define the template", () => {
         return data.join("");
       });
 
-      const { template } = Component("App");
+      const { template } = _("App");
 
       const list = listPipe([1, 2, 3, 4, 5]);
 
@@ -48,7 +48,7 @@ describe("Check the ways to define the template", () => {
 
   describe("Use a function", () => {
     it("Should define the template", (done) => {
-      const { onMount, template, render } = Component("App");
+      const { onMount, template, render } = _("App");
 
       let count = 0;
 
@@ -65,7 +65,7 @@ describe("Check the ways to define the template", () => {
 
   describe("Use a string", () => {
     it("Should define the template", (done) => {
-      const { onMount, template, render } = Component("App");
+      const { onMount, template, render } = _("App");
 
       let count = 0;
 

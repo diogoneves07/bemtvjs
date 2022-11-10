@@ -1,13 +1,13 @@
-import { Component, hasComponent } from "../../src/main";
+import { _, hasComponent } from "../../src/main";
 
 describe("Checks if component exists", () => {
   it("Should component exist", () => {
-    Component("Message");
+    _("Message");
     expect(hasComponent("Message")).toBeTruthy();
   });
 
   it("Should not component exist", () => {
-    Component("Text");
+    _("Text");
     expect(hasComponent("Text")).toBeTruthy();
   });
 });

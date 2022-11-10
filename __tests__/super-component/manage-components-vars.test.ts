@@ -1,4 +1,4 @@
-import { Component, dlPipe, olPipe, ulPipe } from "../../src/main";
+import { _, dlPipe, olPipe, ulPipe } from "../../src/main";
 import { resetTestEnvironment } from "../test-utilities//reset-test-environment";
 
 resetTestEnvironment();
@@ -19,7 +19,7 @@ describe("Check the isolation of variables for each component", () => {
         dataMap: new Map(data.map((v) => [v, v * 10])),
       },
     };
-    const { $, onMount, render } = Component("App", {
+    const { $, onMount, render } = _("App", {
       user,
     });
 
@@ -71,7 +71,7 @@ describe("Check the isolation of variables for each component", () => {
         dataMap: dlPipe(new Map(data.map((v) => [v, v * 10]))),
       },
     });
-    const { $, onMount, render } = Component("App", {
+    const { $, onMount, render } = _("App", {
       user,
     });
 

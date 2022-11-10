@@ -1,7 +1,7 @@
-import { Component } from "../../src/main";
+import { _ } from "../../src/main";
 
 it("Should keep the previous component instance after a time", (done) => {
-  const { keepInst, $, onMount, render } = Component("App", {
+  const { keepInst, $, onMount, render } = _("App", {
     count: 0,
   });
 

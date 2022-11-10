@@ -45,18 +45,12 @@ export function hasComponent(name: ComponentName) {
  * The component creation instance.
  */
 
-export function Component<
-  C extends ComponentName,
-  N extends Record<string, any>
->(
+export function _<C extends ComponentName, N extends Record<string, any>>(
   componentName: ComponentName | TemplateStringsArray,
   vars?: N
 ): SuperComponent<N>;
 
-export function Component<
-  C extends ComponentName,
-  N extends Record<string, any>
->(
+export function _<C extends ComponentName, N extends Record<string, any>>(
   componentName: C | TemplateStringsArray,
   vars: N = {} as N
 ): SuperComponent<N> {
@@ -78,4 +72,3 @@ export function Component<
 
   return superComponent;
 }
-export const _ = Component;

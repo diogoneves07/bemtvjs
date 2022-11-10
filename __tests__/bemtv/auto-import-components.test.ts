@@ -1,5 +1,5 @@
 import { isComponentAutoImport } from "../../src/bemtv/auto-import-components";
-import { autoImportComponents, Component } from "../../src/main";
+import { autoImportComponents, _ } from "../../src/main";
 
 autoImportComponents({
   Counter() {
@@ -7,7 +7,7 @@ autoImportComponents({
      * This is almost a mock for the dynamic import
      * as the expected result is the creation of the component
      * */
-    const { template } = Component("Counter");
+    const { template } = _("Counter");
 
     template`button[Cliked: 0]`;
   },
@@ -15,7 +15,7 @@ autoImportComponents({
 
 describe("Auto import components", () => {
   it("Should import the component and use it in the template", (done) => {
-    const { onMount, onUpdate, template, render } = Component("App");
+    const { onMount, onUpdate, template, render } = _("App");
     let templateValue = "";
 
     onMount(() => {

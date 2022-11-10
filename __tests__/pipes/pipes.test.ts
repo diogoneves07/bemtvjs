@@ -1,4 +1,4 @@
-import { Component, pipe } from "../../src/main";
+import { _, pipe } from "../../src/main";
 import { resetTestEnvironment } from "../test-utilities/reset-test-environment";
 
 resetTestEnvironment();
@@ -7,7 +7,7 @@ describe("Check pipes", () => {
   it("Should create and use a pipe", (done) => {
     const myPipe = pipe((value) => value.join("-"));
 
-    const { onMount, template, render } = Component("App", {
+    const { onMount, template, render } = _("App", {
       list: myPipe(["hello", "world!"]),
     });
 
@@ -25,7 +25,7 @@ describe("Check pipes", () => {
     const pipe1 = pipe((value) => value.join("-"));
     const pipe2 = pipe((value) => value.replace("-", "@"));
 
-    const { onMount, template, render } = Component("App", {
+    const { onMount, template, render } = _("App", {
       list: pipe2(pipe1(["hello", "world!"])),
     });
 

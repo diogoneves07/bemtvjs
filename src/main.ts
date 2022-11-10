@@ -1,4 +1,4 @@
-export { Component, _, hasComponent } from "./bemtv/components-main";
+export { _, hasComponent } from "./bemtv/components-main";
 export { pipe } from "./bemtv/pipes/main";
 export {
   orderedListPipe as olPipe,

@@ -1,6 +1,6 @@
 import { ALL_COMPONENTS_INST } from "./../../src/bemtv/component-inst-store";
 import { resetDocumentBodyAndRemoveComponents } from "../test-utilities/reset-test-environment";
-import { Component, router, r } from "../../src/main";
+import { _, router, r } from "../../src/main";
 
 resetDocumentBodyAndRemoveComponents("App", "Router:Root");
 
@@ -48,7 +48,7 @@ describe("Check router functionality", () => {
   });
 
   it("Should use route fallback", (done) => {
-    const { onMount, template, render } = Component("App");
+    const { onMount, template, render } = _("App");
 
     onMount(() => {
       expect(document.body.textContent?.trim()).toBe("Loading...");
@@ -67,8 +67,8 @@ describe("Check router functionality", () => {
   });
 
   it("Should not use route fallback", (done) => {
-    Component("Home").template("Hello");
-    const { onMount, template, render } = Component("App");
+    _("Home").template("Hello");
+    const { onMount, template, render } = _("App");
 
     onMount(() => {
       expect(document.body.textContent?.trim()).toBe("Hello");
@@ -88,7 +88,7 @@ describe("Check router functionality", () => {
   it("Should create route link", (done) => {
     router.ThirdRoute("Hello world!");
 
-    const { onMount, template, render } = Component("App");
+    const { onMount, template, render } = _("App");
 
     onMount(() => {
       const a = document.body.children[0] as HTMLAnchorElement;
@@ -103,7 +103,7 @@ describe("Check router functionality", () => {
   });
 
   it("Should use route", (done) => {
-    const { onMount, template, render } = Component("App");
+    const { onMount, template, render } = _("App");
 
     onMount(() => {
       expect(document.body.textContent?.trim()).toBe("Hey!");
@@ -117,7 +117,7 @@ describe("Check router functionality", () => {
     router.FourthRoute("Hey!")();
   });
   it("Should not find the route", (done) => {
-    const { onMount, template, render } = Component("App");
+    const { onMount, template, render } = _("App");
 
     onMount(() => {
       expect(document.body.textContent?.trim()).toBe("");
@@ -131,7 +131,7 @@ describe("Check router functionality", () => {
   });
 
   it("Should route be invalid", (done) => {
-    const { onMount, template, render } = Component("App");
+    const { onMount, template, render } = _("App");
 
     onMount(() => {
       expect(document.body.textContent?.trim()).toBe("");
@@ -148,7 +148,7 @@ describe("Check router functionality", () => {
   it("Should show the Root route", (done) => {
     router.Root("Hello world!");
 
-    const { onMount, template, render } = Component("App");
+    const { onMount, template, render } = _("App");
 
     onMount(() => {
       expect(document.body.textContent?.trim()).toBe("Hello world!");
@@ -160,7 +160,7 @@ describe("Check router functionality", () => {
     render();
   });
   it("Should go to the Root route", (done) => {
-    const { onMount, template, render } = Component("App");
+    const { onMount, template, render } = _("App");
 
     onMount(() => {
       expect(document.body.textContent?.trim()).toBe("Hello world!");

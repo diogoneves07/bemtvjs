@@ -1,4 +1,4 @@
-import { Component } from "../../src/main";
+import { _ } from "../../src/main";
 import { resetTestEnvironment } from "../test-utilities//reset-test-environment";
 
 resetTestEnvironment();
@@ -9,7 +9,7 @@ describe("ManageEl.it property", () => {
     div.id = "app";
     document.body.appendChild(div);
 
-    const { useEl, onMount, render } = Component("App");
+    const { useEl, onMount, render } = _("App");
     const el = useEl("#app");
 
     onMount(() => {
@@ -25,7 +25,7 @@ describe("ManageEl.it property", () => {
 
     document.body.appendChild(div);
 
-    const { useEl, onMount, render } = Component("App");
+    const { useEl, onMount, render } = _("App");
     const el = useEl(div);
 
     onMount(() => {
@@ -37,7 +37,7 @@ describe("ManageEl.it property", () => {
   });
 
   it("Should get element from template and use in ManageEl", (done) => {
-    const { useEl, onMount, template, render } = Component("App");
+    const { useEl, onMount, template, render } = _("App");
 
     const [appKey, el] = useEl();
 
@@ -53,7 +53,7 @@ describe("ManageEl.it property", () => {
   });
 
   it("Should be null", (done) => {
-    const { useEl, onMount, template, render } = Component("App");
+    const { useEl, onMount, template, render } = _("App");
 
     const [, el] = useEl();
 
@@ -69,7 +69,7 @@ describe("ManageEl.it property", () => {
   });
 
   it("Should replace the HTML element “span” with “strong”", (done) => {
-    const { useEl, onMount, onUpdate, template, render } = Component("App");
+    const { useEl, onMount, onUpdate, template, render } = _("App");
 
     const [appKey, el] = useEl();
 
@@ -90,7 +90,7 @@ describe("ManageEl.it property", () => {
   });
 
   it("Should update element attributes", (done) => {
-    const { useEl, onMount, onUpdate, template, render } = Component("App");
+    const { useEl, onMount, onUpdate, template, render } = _("App");
 
     const [appKey, el] = useEl();
 
@@ -115,7 +115,7 @@ describe("ManageEl.it property", () => {
     div.id = "app";
     document.body.appendChild(div);
 
-    const { useEl, onMount, template, render } = Component("App");
+    const { useEl, onMount, template, render } = _("App");
 
     onMount(() => {
       const el = useEl("#app");

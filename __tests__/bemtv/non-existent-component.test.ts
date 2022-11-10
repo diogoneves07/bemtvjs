@@ -1,4 +1,4 @@
-import { Component } from "../../src/main";
+import { _ } from "../../src/main";
 
 beforeEach(() => {
   jest.spyOn(window, "requestAnimationFrame").mockImplementation((fn) => {
@@ -9,6 +9,6 @@ beforeEach(() => {
 
 it("Should throw an error because the component does not exit", () => {
   expect(() => {
-    Component("App").template`NotExist[]`.render();
+    _("App").template`NotExist[]`.render();
   }).toThrow();
 });

@@ -1,11 +1,11 @@
-import { Component } from "../../src/main";
+import { _ } from "../../src/main";
 import { resetTestEnvironment } from "../test-utilities//reset-test-environment";
 
 resetTestEnvironment();
 
 describe("Template first element", () => {
   it("Should define button as first element and add “onclick” listener to it", (done) => {
-    const { click$, onMount, template, render } = Component("App");
+    const { click$, onMount, template, render } = _("App");
 
     const clickFn = jest.fn();
 
@@ -27,7 +27,7 @@ describe("Template first element", () => {
   it(`
      Should define strong and then button as first element and add “onclick” listener to it
   `, (done) => {
-    const { click$, onMount, onUpdate, template, render } = Component("App");
+    const { click$, onMount, onUpdate, template, render } = _("App");
 
     const clickFn = jest.fn();
     let t = `strong[Hello!]`;
@@ -51,7 +51,7 @@ describe("Template first element", () => {
   });
 
   it(`Should add “onclick” listener to button element after a time mounted`, (done) => {
-    const { click$, onMount, template, render } = Component("App");
+    const { click$, onMount, template, render } = _("App");
 
     const clickFn = jest.fn();
 
@@ -75,7 +75,7 @@ describe("Template first element", () => {
   it(`
      Should remove “onclick” listener from button element immediately after added
   `, (done) => {
-    const { click$, onMount, template, render } = Component("App");
+    const { click$, onMount, template, render } = _("App");
 
     const clickFn = jest.fn();
 

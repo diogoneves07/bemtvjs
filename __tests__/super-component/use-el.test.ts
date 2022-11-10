@@ -1,11 +1,11 @@
-import { Component } from "../../src/main";
+import { _ } from "../../src/main";
 import { resetTestEnvironment } from "../test-utilities//reset-test-environment";
 
 resetTestEnvironment();
 
 describe("Check the “useEl()” method", () => {
   it("Should use the element in template", (done) => {
-    const { useEl, onMount, template, render } = Component("App");
+    const { useEl, onMount, template, render } = _("App");
     const [key, el] = useEl<HTMLButtonElement>();
 
     onMount(() => {
@@ -26,7 +26,7 @@ describe("Check the “useEl()” method", () => {
 
     document.body.appendChild(div);
 
-    const { useEl, onMount, template, render } = Component("App");
+    const { useEl, onMount, template, render } = _("App");
 
     const appEl = useEl<HTMLDivElement>(div);
 
@@ -48,7 +48,7 @@ describe("Check the “useEl()” method", () => {
     document.body.appendChild(div);
     div.id = "app";
 
-    const { useEl, onMount, template, render } = Component("App");
+    const { useEl, onMount, template, render } = _("App");
 
     const appEl = useEl<HTMLDivElement>("#app");
 

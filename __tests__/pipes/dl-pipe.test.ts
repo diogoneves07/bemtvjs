@@ -1,11 +1,11 @@
-import { Component, dlPipe } from "../../src/main";
+import { _, dlPipe } from "../../src/main";
 import { resetTestEnvironment } from "../test-utilities/reset-test-environment";
 
 resetTestEnvironment();
 
 describe("Check dlPipe", () => {
   test("With normal object", (done) => {
-    const { onMount, template, render } = Component("App", {
+    const { onMount, template, render } = _("App", {
       list: dlPipe({
         user: {
           name: "unknown",
@@ -39,7 +39,7 @@ describe("Check dlPipe", () => {
   });
 
   test("With Map", (done) => {
-    const { onMount, template, render } = Component("App", {
+    const { onMount, template, render } = _("App", {
       list: dlPipe(
         new Map(
           Object.entries({

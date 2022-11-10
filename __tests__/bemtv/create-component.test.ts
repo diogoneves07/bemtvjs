@@ -1,8 +1,8 @@
-import { Component, _, hasComponent } from "../../src/main";
+import { _, hasComponent } from "../../src/main";
 
 describe("Creating a component", () => {
   it("Should create a component", () => {
-    Component("HelloWorld");
+    _("HelloWorld");
     expect(hasComponent("HelloWorld")).toBeTruthy();
   });
   it("Should not create a component", () => {

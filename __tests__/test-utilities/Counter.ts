@@ -1,5 +1,5 @@
-import { Component } from "../../src/main";
+import { _ } from "../../src/main";
 
 export function createCounterComponent() {
-  Component("Counter").template`button[Cliked: 0]`;
+  _("Counter").template`button[Cliked: 0]`;
 }

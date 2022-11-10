@@ -1,4 +1,4 @@
-import { Component, olPipe } from "../../src/main";
+import { _, olPipe } from "../../src/main";
 import { resetTestEnvironment } from "../test-utilities/reset-test-environment";
 
 resetTestEnvironment();
@@ -31,7 +31,7 @@ describe("Check html list pipes", () => {
   ];
 
   test("With array", (done) => {
-    const { onMount, template, render } = Component("App", {
+    const { onMount, template, render } = _("App", {
       list: olPipe(fruitsList),
     });
 
@@ -48,7 +48,7 @@ describe("Check html list pipes", () => {
   });
 
   test("With Set", (done) => {
-    const { onMount, template, render } = Component("App", {
+    const { onMount, template, render } = _("App", {
       list: olPipe(new Set(fruitsList)),
     });
 

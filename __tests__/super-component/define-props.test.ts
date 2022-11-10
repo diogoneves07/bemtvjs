@@ -1,9 +1,9 @@
-import { Component } from "../../src/main";
+import { _ } from "../../src/main";
 
 it("Should pass the props to the child component", (done) => {
-  Component("Child").template`$props.message`;
+  _("Child").template`$props.message`;
 
-  const { defineProps, onMount, template, render } = Component("App");
+  const { defineProps, onMount, template, render } = _("App");
 
   let p = defineProps({ message: "Hey!" });
 
