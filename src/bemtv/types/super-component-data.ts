@@ -11,10 +11,7 @@ export type ComponentProps = {
   vars: Record<string, any>;
   template: SuperComponentData["initialTemplate"];
   componentVarsCache: Map<string, string>;
-  removeFirstElementDOMListeners: Map<
-    SuperComponentDOMListener,
-    (() => void)[]
-  >;
+  removeFirstElementDOMListeners: Map<SuperComponentDOMListener, () => void>;
 };
 
 export interface SuperComponentData {

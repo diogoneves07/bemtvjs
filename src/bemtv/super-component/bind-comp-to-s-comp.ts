@@ -55,9 +55,9 @@ export function bindComponentToSuperComponent(
 
     if (cInstProps) {
       const fnsIterator = cInstProps.removeFirstElementDOMListeners.values();
-      for (const fns of fnsIterator) {
-        fns.forEach((f) => f());
-      }
+
+      for (const fn of fnsIterator) fn();
+
       cInstProps.removeFirstElementDOMListeners.clear();
     }
 

@@ -111,16 +111,10 @@ export function addDOMListenerToComponent(
 
   if (!componentData) return;
 
-  const bucket =
-    componentData.removeFirstElementDOMListeners.get(DOMListenerObject);
-
-  if (bucket) {
-    bucket.push(removeDOMListener);
-  } else {
-    componentData.removeFirstElementDOMListeners.set(DOMListenerObject, [
-      removeDOMListener,
-    ]);
-  }
+  componentData.removeFirstElementDOMListeners.set(
+    DOMListenerObject,
+    removeDOMListener
+  );
 }
 
 export function addDOMListenerToComponents(
@@ -144,10 +138,11 @@ export function removeDOMListenerFromComponents(
   const components = getSuperComponentData(sComp).components.values();
 
   for (const o of components) {
-    const bucket = o.removeFirstElementDOMListeners.get(DOMListenerObject);
-    if (bucket) {
-      bucket.forEach((f) => f());
+    const removeDOMListener =
+      o.removeFirstElementDOMListeners.get(DOMListenerObject);
+    if (removeDOMListener) {
       o.removeFirstElementDOMListeners.delete(DOMListenerObject);
+      removeDOMListener();
     }
   }
 }
