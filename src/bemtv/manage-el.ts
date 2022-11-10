@@ -30,9 +30,9 @@ export class ManageEl<E = Element> {
     ALL_ELEMENTS_MANAGER.set(newIt as Element, this);
 
     if (this.__data.element) {
-      this.__data.DOMlisteners.forEach(
-        (o) => o.removeListener && o.removeListener()
-      );
+      this.__data.DOMlisteners.forEach((o) => {
+        o.removeListener && o.removeListener();
+      });
     }
 
     this.__data.DOMlisteners.forEach((o) => {
