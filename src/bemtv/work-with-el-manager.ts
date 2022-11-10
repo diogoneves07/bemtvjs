@@ -17,5 +17,7 @@ export function applyElementCSS(el: Element, args: CSSInJSParameters) {
 }
 export function reapplyCSSClasses(ref: Element) {
   const m = ALL_ELEMENTS_MANAGER.get(ref) as ManageEl;
-  if (m && m.it) m.it.classList.add(...getManageElData(m).CSSClasses);
+  if (m && m.it) {
+    m.it.classList.add(...getManageElData(m).CSSClasses);
+  }
 }
