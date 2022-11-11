@@ -23,6 +23,8 @@ export default class ComponentInst {
   componentsInTemplate: Set<ComponentInst> = new Set();
 
   mounted: boolean = false;
+  inited: boolean = false;
+  unmounted: boolean = false;
 
   propsDefined?: Map<string, Props>;
 
@@ -124,6 +126,8 @@ export default class ComponentInst {
   }
 
   onInit(fn: () => void) {
+    if (this.inited) return fn();
+
     if (!this.initCallbacks) this.initCallbacks = new Set();
     this.initCallbacks.add(fn);
 
@@ -131,6 +135,8 @@ export default class ComponentInst {
   }
 
   onMountWithHighPriority(fn: () => void) {
+    if (this.mounted) return fn();
+
     const mountedCallbacks = this.mountedCallbacks;
     this.mountedCallbacks = new Set<LifeCycleCallback>([
       fn,
@@ -140,6 +146,8 @@ export default class ComponentInst {
   }
 
   onMount(fn: () => void) {
+    if (this.mounted) return fn();
+
     if (!this.mountedCallbacks) this.mountedCallbacks = new Set();
     this.mountedCallbacks.add(fn);
 
@@ -147,6 +155,8 @@ export default class ComponentInst {
   }
 
   onUnmount(fn: () => void) {
+    if (this.unmounted) return fn();
+
     if (!this.unmountedCallbacks) this.unmountedCallbacks = new Set();
     this.unmountedCallbacks.add(fn);
     return this;

@@ -1,6 +1,7 @@
 import ComponentInst from "./component-inst";
 
 export function dispatchInitedLifeCycle(c: ComponentInst) {
+  c.inited = true;
   c.initCallbacks?.forEach((f) => f());
   c.initCallbacks?.clear();
 }
@@ -19,6 +20,7 @@ export function dispatchMountedLifeCycle(c: ComponentInst) {
 }
 
 export function dispatchUnmountedLifeCycle(c: ComponentInst) {
+  c.unmounted = true;
   c.unmountedCallbacks?.forEach((f) => f());
   c.unmountedCallbacks?.clear();
 }
