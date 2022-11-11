@@ -4,6 +4,13 @@ import { resetTestEnvironment } from "../test-utilities//reset-test-environment"
 resetTestEnvironment();
 
 describe("Check the ways to define the template", () => {
+  it("Should not allow using the function twice or more", () => {
+    const { template } = _("App");
+    expect(() => {
+      template`Counter is: 0`;
+      template`Counter is:0`;
+    }).toThrow();
+  });
   describe("Use TemplateStringsArray", () => {
     it("Should define the template", (done) => {
       const { onMount, template, render } = _("App");
