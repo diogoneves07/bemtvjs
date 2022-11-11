@@ -1,9 +1,9 @@
-import { _, olPipe } from "../../src/main";
+import { _, ulDT } from "../../src/main";
 import { resetTestEnvironment } from "../test-utilities/reset-test-environment";
 
 resetTestEnvironment();
 
-describe("Check html list pipes", () => {
+describe("Check html list discrete transform function", () => {
   const fruitsList = [
     "Fruits",
     [
@@ -32,12 +32,12 @@ describe("Check html list pipes", () => {
 
   test("With array", (done) => {
     const { onMount, template, render } = _("App", {
-      list: olPipe(fruitsList),
+      list: ulDT(fruitsList),
     });
 
     onMount(() => {
       expect(document.body.innerHTML.replace(/[\s]/g, "")).toBe(
-        "<ol><li>Fruits<ol><li>Cherry</li><li>Fig</li><li>Guava<ol><li>Cherry</li><li>Fig</li><li>Guava<ol><li>Cherry</li><li>Fig</li><li>Guava<ol><li>Cherry</li><li>Fig</li><li>Guava<ol><li>Cherry</li><li>Fig</li><li>Guava<ol><li>Cherry</li><li>Fig</li><li>Guava</li></ol></li></ol></li></ol></li></ol></li></ol></li></ol></li><ol><li>Cherry</li><li>Fig</li><li>Guava</li></ol></ol>"
+        "<ul><li>Fruits<ul><li>Cherry</li><li>Fig</li><li>Guava<ul><li>Cherry</li><li>Fig</li><li>Guava<ul><li>Cherry</li><li>Fig</li><li>Guava<ul><li>Cherry</li><li>Fig</li><li>Guava<ul><li>Cherry</li><li>Fig</li><li>Guava<ul><li>Cherry</li><li>Fig</li><li>Guava</li></ul></li></ul></li></ul></li></ul></li></ul></li></ul></li><ul><li>Cherry</li><li>Fig</li><li>Guava</li></ul></ul>"
       );
       done();
     });
@@ -49,12 +49,12 @@ describe("Check html list pipes", () => {
 
   test("With Set", (done) => {
     const { onMount, template, render } = _("App", {
-      list: olPipe(new Set(fruitsList)),
+      list: ulDT(new Set(fruitsList)),
     });
 
     onMount(() => {
       expect(document.body.innerHTML.replace(/[\s]/g, "")).toBe(
-        "<ol><li>Fruits<ol><li>Cherry</li><li>Fig</li><li>Guava<ol><li>Cherry</li><li>Fig</li><li>Guava<ol><li>Cherry</li><li>Fig</li><li>Guava<ol><li>Cherry</li><li>Fig</li><li>Guava<ol><li>Cherry</li><li>Fig</li><li>Guava<ol><li>Cherry</li><li>Fig</li><li>Guava</li></ol></li></ol></li></ol></li></ol></li></ol></li></ol></li><ol><li>Cherry</li><li>Fig</li><li>Guava</li></ol></ol>"
+        "<ul><li>Fruits<ul><li>Cherry</li><li>Fig</li><li>Guava<ul><li>Cherry</li><li>Fig</li><li>Guava<ul><li>Cherry</li><li>Fig</li><li>Guava<ul><li>Cherry</li><li>Fig</li><li>Guava<ul><li>Cherry</li><li>Fig</li><li>Guava<ul><li>Cherry</li><li>Fig</li><li>Guava</li></ul></li></ul></li></ul></li></ul></li></ul></li></ul></li><ul><li>Cherry</li><li>Fig</li><li>Guava</li></ul></ul>"
       );
       done();
     });

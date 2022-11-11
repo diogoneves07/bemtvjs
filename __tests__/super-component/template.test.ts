@@ -1,4 +1,4 @@
-import { _, pipe } from "../../src/main";
+import { _, discreteTransform } from "../../src/main";
 import { resetTestEnvironment } from "../test-utilities//reset-test-environment";
 
 resetTestEnvironment();
@@ -30,7 +30,7 @@ describe("Check the ways to define the template", () => {
     it("Should not define the template", () => {
       const { template } = _("App");
 
-      // Untreated value or does not use pipes
+      // Untreated value or does not use discrete transform function
       const list = [1, 2, 3, 4, 5];
 
       expect(() => {
@@ -38,14 +38,14 @@ describe("Check the ways to define the template", () => {
       }).toThrow();
     });
 
-    test("Array using pipes in the template", () => {
-      const listPipe = pipe((data: number[]) => {
+    test("Array using discrete transform function in the template", () => {
+      const listDT = discreteTransform((data: number[]) => {
         return data.join("");
       });
 
       const { template } = _("App");
 
-      const list = listPipe([1, 2, 3, 4, 5]);
+      const list = listDT([1, 2, 3, 4, 5]);
 
       expect(() => {
         template`Counter is: ${list}`;

@@ -1,12 +1,12 @@
-import { PIPE_SYMBOL } from "../pipes/main";
+import { DT_SYMBOL } from "../discrete-transformations/main";
 
 export function treatArgsInTemplate(values: any[]) {
   const newValues: any[] = [];
   for (const value of values) {
-    if (value && Object.hasOwn(value, PIPE_SYMBOL)) {
+    if (value && Object.hasOwn(value, DT_SYMBOL)) {
       let v = value;
-      for (const pipe of value[PIPE_SYMBOL]) {
-        v = pipe(v);
+      for (const discreteTransform of value[DT_SYMBOL]) {
+        v = discreteTransform(v);
       }
 
       newValues.push(v);

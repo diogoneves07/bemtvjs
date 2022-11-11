@@ -241,7 +241,7 @@ export class SuperComponent<Vars extends Record<string, any>> {
         for (const i of values) {
           if (!isStringOrNumber(i)) {
             console.error(values);
-            throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} In the “${data.componentName}” component the template with TemplateStringsArray has a value that is not string, number or uses pipes: “${values}”`;
+            throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} In the “${data.componentName}” component the template with TemplateStringsArray has a value that is not string, number or uses discrete transform functions: “${values}”`;
           }
         }
 

@@ -1,4 +1,4 @@
-import { PIPE_SYMBOL } from "../pipes/main";
+import { DT_SYMBOL } from "../discrete-transformations/main";
 import { SuperComponent } from "./super-component";
 import {
   getSuperComponentData,
@@ -16,10 +16,10 @@ function isRealObject(value: any) {
   return !Array.isArray(value) && typeof value === "object";
 }
 
-function insertPipeSymbol(v: any, p?: undefined | any) {
+function insertDiscreteTransformSymbol(v: any, p?: undefined | any) {
   p &&
     Object.defineProperties(v, {
-      [PIPE_SYMBOL]: {
+      [DT_SYMBOL]: {
         value: p,
         configurable: false,
       },
@@ -32,16 +32,20 @@ function insertPipeSymbol(v: any, p?: undefined | any) {
   return v;
 }
 function cloneData(value: any) {
-  let pipes: undefined | any;
+  let dtFns: undefined | any;
 
-  if (value && Object.hasOwn(value, PIPE_SYMBOL)) {
-    pipes = value[PIPE_SYMBOL];
+  if (value && Object.hasOwn(value, DT_SYMBOL)) {
+    dtFns = value[DT_SYMBOL];
   }
 
-  if (value instanceof Set) return insertPipeSymbol(new Set([...value]), pipes);
-  if (value instanceof Map) return insertPipeSymbol(new Map([...value]), pipes);
-  if (Array.isArray(value)) return insertPipeSymbol([...value], pipes);
-  if (typeof value === "object") return insertPipeSymbol({ ...value }, pipes);
+  if (value instanceof Set)
+    return insertDiscreteTransformSymbol(new Set([...value]), dtFns);
+  if (value instanceof Map)
+    return insertDiscreteTransformSymbol(new Map([...value]), dtFns);
+  if (Array.isArray(value))
+    return insertDiscreteTransformSymbol([...value], dtFns);
+  if (typeof value === "object")
+    return insertDiscreteTransformSymbol({ ...value }, dtFns);
 
   return value;
 }

@@ -1,6 +1,6 @@
-export const PIPE_SYMBOL = Symbol();
+export const DT_SYMBOL = Symbol();
 
-export function pipe<Fn extends (data: any) => string>(fn: Fn) {
+export function discreteTransform<Fn extends (data: any) => string>(fn: Fn) {
   function transform<T extends Parameters<Fn>[0]>(data: T): T;
   function transform<T extends Parameters<Fn>[0]>(
     data: T,
@@ -13,10 +13,10 @@ export function pipe<Fn extends (data: any) => string>(fn: Fn) {
   ) {
     if (immediately) return fn(data);
 
-    if (data[PIPE_SYMBOL]) {
-      !data[PIPE_SYMBOL].includes(fn) && data[PIPE_SYMBOL].push(fn);
+    if (data[DT_SYMBOL]) {
+      !data[DT_SYMBOL].includes(fn) && data[DT_SYMBOL].push(fn);
     } else {
-      Object.defineProperty(data, PIPE_SYMBOL, {
+      Object.defineProperty(data, DT_SYMBOL, {
         value: [fn],
         configurable: false,
       });

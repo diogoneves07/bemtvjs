@@ -1,5 +1,5 @@
 import isStringOrNumber from "../../utilities/is-string-or-number";
-import { pipe } from "./main";
+import { discreteTransform } from "./main";
 
 function transformToHTMLList<T extends any[] | Set<any>>(
   value: T,
@@ -34,10 +34,12 @@ function transformToHTMLList<T extends any[] | Set<any>>(
   return `${parentTag}[${v.join("")}]`;
 }
 
-export const orderedListPipe = pipe(<T extends any[] | Set<any>>(value: T) => {
-  return transformToHTMLList(value, true);
-});
-export const unorderedListPipe = pipe(
+export const orderedListDT = discreteTransform(
+  <T extends any[] | Set<any>>(value: T) => {
+    return transformToHTMLList(value, true);
+  }
+);
+export const unorderedListDT = discreteTransform(
   <T extends any[] | Set<any>>(value: T) => {
     return transformToHTMLList(value, false);
   }

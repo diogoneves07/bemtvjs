@@ -1,5 +1,5 @@
 import isStringOrNumber from "../../utilities/is-string-or-number";
-import { pipe } from "./main";
+import { discreteTransform } from "./main";
 
 function transformToDescriptionList<T extends Record<string, any>>(
   value: T
@@ -20,4 +20,4 @@ function transformToDescriptionList<T extends Record<string, any>>(
 
   return `dl[${str}]`;
 }
-export const descriptionListPipe = pipe(transformToDescriptionList);
+export const descriptionListDT = discreteTransform(transformToDescriptionList);

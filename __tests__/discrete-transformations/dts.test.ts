@@ -1,14 +1,14 @@
-import { _, pipe } from "../../src/main";
+import { _, discreteTransform } from "../../src/main";
 import { resetTestEnvironment } from "../test-utilities/reset-test-environment";
 
 resetTestEnvironment();
 
-describe("Check pipes", () => {
-  it("Should create and use a pipe", (done) => {
-    const myPipe = pipe((value) => value.join("-"));
+describe("Check discrete transform functions", () => {
+  it("Should create and use a discrete transform function", (done) => {
+    const myDT = discreteTransform((value) => value.join("-"));
 
     const { onMount, template, render } = _("App", {
-      list: myPipe(["hello", "world!"]),
+      list: myDT(["hello", "world!"]),
     });
 
     onMount(() => {
@@ -21,12 +21,12 @@ describe("Check pipes", () => {
     render();
   });
 
-  test("Value with multiple pipes", (done) => {
-    const pipe1 = pipe((value) => value.join("-"));
-    const pipe2 = pipe((value) => value.replace("-", "@"));
+  test("Value with multiple discrete transform functions", (done) => {
+    const dt1 = discreteTransform((value) => value.join("-"));
+    const dt2 = discreteTransform((value) => value.replace("-", "@"));
 
     const { onMount, template, render } = _("App", {
-      list: pipe2(pipe1(["hello", "world!"])),
+      list: dt2(dt1(["hello", "world!"])),
     });
 
     onMount(() => {

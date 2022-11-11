@@ -1,4 +1,4 @@
-import { _, dlPipe, olPipe, ulPipe } from "../../src/main";
+import { _, dlDT, olDT, ulDT } from "../../src/main";
 import { resetTestEnvironment } from "../test-utilities//reset-test-environment";
 
 resetTestEnvironment();
@@ -54,19 +54,19 @@ describe("Check the variables for each component", () => {
     render();
   });
 
-  test(`With data structures using pipes,
+  test(`With data structures using discrete transform function,
         should create clones for each data structure used by 
         the first instance and isolate from the second`, (done) => {
     const data = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-    const user = dlPipe({
+    const user = dlDT({
       name: "unknown",
       age: 23,
       home: {
         city: "unknown",
         country: "unknown",
-        dataArray: olPipe(data),
-        dataSet: ulPipe(new Set(data)),
-        dataMap: dlPipe(new Map(data.map((v) => [v, v * 10]))),
+        dataArray: olDT(data),
+        dataSet: ulDT(new Set(data)),
+        dataMap: dlDT(new Map(data.map((v) => [v, v * 10]))),
       },
     });
     const { $, onMount, render } = _("App", {

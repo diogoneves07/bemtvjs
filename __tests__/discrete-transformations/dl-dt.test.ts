@@ -1,12 +1,12 @@
-import { _, dlPipe } from "../../src/main";
+import { _, dlDT } from "../../src/main";
 import { resetTestEnvironment } from "../test-utilities/reset-test-environment";
 
 resetTestEnvironment();
 
-describe("Check dlPipe", () => {
+describe("Check dlDT", () => {
   test("With normal object", (done) => {
     const { onMount, template, render } = _("App", {
-      list: dlPipe({
+      list: dlDT({
         user: {
           name: "unknown",
           age: 25,
@@ -40,7 +40,7 @@ describe("Check dlPipe", () => {
 
   test("With Map", (done) => {
     const { onMount, template, render } = _("App", {
-      list: dlPipe(
+      list: dlDT(
         new Map(
           Object.entries({
             user: {

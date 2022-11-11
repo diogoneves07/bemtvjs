@@ -1,10 +1,10 @@
 export { _, hasComponent } from "./bemtv/components-main";
-export { pipe } from "./bemtv/pipes/main";
+export { discreteTransform } from "./bemtv/discrete-transformations/main";
 export {
-  orderedListPipe as olPipe,
-  unorderedListPipe as ulPipe,
-} from "./bemtv/pipes/html-list-pipes";
-export { descriptionListPipe as dlPipe } from "./bemtv/pipes/description-list-pipe";
+  orderedListDT as olDT,
+  unorderedListDT as ulDT,
+} from "./bemtv/discrete-transformations/html-list-dt";
+export { descriptionListDT as dlDT } from "./bemtv/discrete-transformations/description-list-dt";
 
 export { matchComponent as match } from "./bemtv/match-component";
 export { autoImportComponents } from "./bemtv/auto-import-components";
