@@ -3,10 +3,9 @@ import { resetTestEnvironment } from "../test-utilities//reset-test-environment"
 
 resetTestEnvironment();
 
-describe("Check the isolation of variables for each component", () => {
-  it(`
-    Should create clones for each data structure used by 
-    the first instance and isolate from the second`, (done) => {
+describe("Check the variables for each component", () => {
+  it(`Should create clones for each data structure used by 
+      the first instance and isolate from the second`, (done) => {
     const data = [1, 2, 3, 4, 5, 6, 7, 8, 9];
     const user = {
       name: "unknown",
@@ -55,10 +54,9 @@ describe("Check the isolation of variables for each component", () => {
     render();
   });
 
-  test(`
-    With data structures using pipes,
-    should create clones for each data structure used by 
-    the first instance and isolate from the second`, (done) => {
+  test(`With data structures using pipes,
+        should create clones for each data structure used by 
+        the first instance and isolate from the second`, (done) => {
     const data = [1, 2, 3, 4, 5, 6, 7, 8, 9];
     const user = dlPipe({
       name: "unknown",
@@ -101,6 +99,35 @@ describe("Check the isolation of variables for each component", () => {
       o.home.dataSet.add(10);
       o.home.dataMap.set(10, 10);
       isolate = true;
+    });
+
+    render();
+    render();
+  });
+
+  test(`Create dynamics components variables`, (done) => {
+    const { onMount, keepInst, $, render } = _("App", {
+      name: "Diogo Neves",
+    } as { name: string; count?: number });
+
+    let isolate = false;
+    onMount(() => {
+      if (isolate) {
+        expect($.count).toBeUndefined();
+        return;
+      }
+
+      isolate = true;
+
+      $.count = 10;
+      setTimeout(
+        keepInst(() => {
+          expect($.count).toBe(10);
+
+          done();
+        }),
+        50
+      );
     });
 
     render();
