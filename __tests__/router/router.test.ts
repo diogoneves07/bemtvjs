@@ -18,13 +18,13 @@ beforeEach(() => {
 });
 
 describe("Check router functionality", () => {
-  it("Should go to the route", () => {
+  it(" and render", () => {
     const goToFirstRoute = r.FirstRoute("");
     goToFirstRoute();
     expect(window.location.hash).toBe("#/first-route");
   });
 
-  it("Should go to the route and change document title", (done) => {
+  it(" and render and change document title", (done) => {
     const goToFirstRoute = r.MyRoute({ title: "My route", use: "" });
     goToFirstRoute();
     setTimeout(() => {
@@ -159,7 +159,7 @@ describe("Check router functionality", () => {
 
     render();
   });
-  it("Should go to the Root route", (done) => {
+  it("Should go to the route and render", (done) => {
     const { onMount, template, render } = _("App");
 
     onMount(() => {
@@ -171,6 +171,6 @@ describe("Check router functionality", () => {
 
     render();
 
-    router.Root("Hello world!")();
+    router.Any("Hello world!")();
   });
 });
