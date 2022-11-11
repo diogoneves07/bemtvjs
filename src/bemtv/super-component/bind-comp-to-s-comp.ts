@@ -23,6 +23,8 @@ export function bindComponentToSuperComponent(
   let componentProps: ComponentProps | undefined;
 
   const template = () => {
+    const { isTemplateFunction } = sCompData;
+
     setRunningComponent(sComp, cInst);
 
     if (!componentProps) {
@@ -31,7 +33,7 @@ export function bindComponentToSuperComponent(
 
     const { componentVarsCache } = componentProps;
 
-    if (!componentVarsCache.size) {
+    if (isTemplateFunction || componentVarsCache.size === 0) {
       lastTemplateValue = getVarsInTemplate(sComp, cInst);
     }
 

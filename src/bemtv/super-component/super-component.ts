@@ -60,6 +60,8 @@ export class SuperComponent<Vars extends Record<string, any>> {
     componentsInitVars: {},
     componentsVarsKeys: ["children", "props"],
     componentsTemplate: () => "",
+    isTemplateFunction: false,
+    templateHasAlreadyBeenDefined: false,
     DOMListeners: new Set(),
     lifeCycles: new Map(),
     removeDOMListeners: new Map(),
@@ -218,9 +220,18 @@ export class SuperComponent<Vars extends Record<string, any>> {
 
   template(t: string | TemplateStringsArray | (() => string), ...exps: any[]) {
     const data = this.__data;
+
+    if (data.templateHasAlreadyBeenDefined) {
+      throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} In the “${data.componentName}” component use the “template()” function only once. \n\n“We currently see this as a way to make your code predictable and less error prone”`;
+    }
+    data.isTemplateFunction = false;
+    data.templateHasAlreadyBeenDefined = true;
+
     switch (typeof t) {
       case "function":
         data.componentsTemplate = t;
+        data.isTemplateFunction = true;
+
         break;
       case "object":
         let values = treatArgsInTemplate(concatTemplateStringArrays(t, exps));

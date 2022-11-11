@@ -19,6 +19,8 @@ export interface SuperComponentData {
   componentsInitVars: Record<string, any>;
   componentsVarsKeys: string[];
   componentsTemplate: () => string;
+  isTemplateFunction: boolean;
+  templateHasAlreadyBeenDefined: boolean;
   DOMListeners: Set<SuperComponentDOMListener>;
   lifeCycles: Map<string, ((c: ComponentInst) => void)[]>;
   removeDOMListeners: Map<SuperComponentDOMListener, (() => void)[]>;
