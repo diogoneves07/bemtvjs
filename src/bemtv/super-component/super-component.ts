@@ -59,7 +59,7 @@ export class SuperComponent<Vars extends Record<string, any>> {
     componentName: "",
     componentsInitVars: {},
     componentsVarsKeys: ["children", "props"],
-    initialTemplate: () => "",
+    componentsTemplate: () => "",
     DOMListeners: new Set(),
     lifeCycles: new Map(),
     removeDOMListeners: new Map(),
@@ -220,7 +220,7 @@ export class SuperComponent<Vars extends Record<string, any>> {
     const data = this.__data;
     switch (typeof t) {
       case "function":
-        data.initialTemplate = t;
+        data.componentsTemplate = t;
         break;
       case "object":
         let values = treatArgsInTemplate(concatTemplateStringArrays(t, exps));
@@ -234,10 +234,10 @@ export class SuperComponent<Vars extends Record<string, any>> {
           }
         }
 
-        data.initialTemplate = () => v;
+        data.componentsTemplate = () => v;
         break;
       default:
-        data.initialTemplate = () => t;
+        data.componentsTemplate = () => t;
         break;
     }
 

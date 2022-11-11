@@ -96,7 +96,7 @@ export default function getVarsInTemplate(
   sCompData.disableVarsProxies();
 
   let templateValue = sCompData
-    .initialTemplate()
+    .componentsTemplate()
     .replaceAll(regexTemplateVars, (p) =>
       getVarsValues(p, sComp, c, componentVarsCache)
     );
