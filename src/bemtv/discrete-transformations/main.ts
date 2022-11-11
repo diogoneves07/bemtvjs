@@ -7,12 +7,7 @@ export function discreteTransform<Fn extends (data: any) => string>(fn: Fn) {
     immediately: boolean
   ): string;
 
-  function transform<T extends Parameters<Fn>[0]>(
-    data: T,
-    immediately: boolean = false
-  ) {
-    if (immediately) return fn(data);
-
+  function transform<T extends Parameters<Fn>[0]>(data: T) {
     if (data[DT_SYMBOL]) {
       !data[DT_SYMBOL].includes(fn) && data[DT_SYMBOL].push(fn);
     } else {

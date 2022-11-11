@@ -21,3 +21,4 @@ function transformToDescriptionList<T extends Record<string, any>>(
   return `dl[${str}]`;
 }
 export const descriptionListDT = discreteTransform(transformToDescriptionList);
+export const toDL = transformToDescriptionList;

@@ -34,13 +34,12 @@ function transformToHTMLList<T extends any[] | Set<any>>(
   return `${parentTag}[${v.join("")}]`;
 }
 
-export const orderedListDT = discreteTransform(
-  <T extends any[] | Set<any>>(value: T) => {
-    return transformToHTMLList(value, true);
-  }
-);
-export const unorderedListDT = discreteTransform(
-  <T extends any[] | Set<any>>(value: T) => {
-    return transformToHTMLList(value, false);
-  }
-);
+export const toOL = <T extends any[] | Set<any>>(value: T) => {
+  return transformToHTMLList(value, true);
+};
+export const orderedListDT = discreteTransform(toOL);
+
+export const toUL = <T extends any[] | Set<any>>(value: T) => {
+  return transformToHTMLList(value, false);
+};
+export const unorderedListDT = discreteTransform(toUL);
