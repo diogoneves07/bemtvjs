@@ -99,7 +99,7 @@ export function bindComponentToSuperComponent(
 
   sCompData.components.set(cInst, {
     vars: {
-      ...sCompData.initVars,
+      ...sCompData.componentsInitVars,
       children: cInst.children,
       props: cInst.props,
     },

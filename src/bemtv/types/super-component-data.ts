@@ -16,8 +16,8 @@ export type ComponentProps = {
 
 export interface SuperComponentData {
   componentName: string;
-  initVars: Record<string, any>;
-  initVarsKeys: string[];
+  componentsInitVars: Record<string, any>;
+  componentsVarsKeys: string[];
   initialTemplate: () => string;
   DOMListeners: Set<SuperComponentDOMListener>;
   lifeCycles: Map<string, ((c: ComponentInst) => void)[]>;

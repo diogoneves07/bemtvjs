@@ -57,8 +57,8 @@ export interface SuperComponent<
 export class SuperComponent<Vars extends Record<string, any>> {
   protected __data: SuperComponentData = {
     componentName: "",
-    initVars: {},
-    initVarsKeys: ["children", "props"],
+    componentsInitVars: {},
+    componentsVarsKeys: ["children", "props"],
     initialTemplate: () => "",
     DOMListeners: new Set(),
     lifeCycles: new Map(),
@@ -82,10 +82,10 @@ export class SuperComponent<Vars extends Record<string, any>> {
   constructor(name: string, vars: Vars) {
     const data = this.__data;
 
-    Object.assign(data.initVars, vars);
+    Object.assign(data.componentsInitVars, vars);
 
     data.componentName = name;
-    data.initVarsKeys.push(...Object.keys(vars));
+    data.componentsVarsKeys.push(...Object.keys(vars));
 
     const sComp = this;
     this.$ = manageComponentsVars({} as ComponentVars<Vars>, sComp);

@@ -38,7 +38,7 @@ export function setRunningComponent(
 
   data.disableVarsProxies();
 
-  for (const p of data.initVarsKeys) {
+  for (const p of data.componentsVarsKeys) {
     (sComp.$ as any)[p] = vars[p];
   }
 
@@ -50,7 +50,7 @@ export function updateComponentVars(sComp: SuperComponent) {
   const vars = getComponentVars(sComp) as ComponentProps["vars"];
 
   data.disableVarsProxies();
-  for (const p of data.initVarsKeys) {
+  for (const p of data.componentsVarsKeys) {
     vars[p] = sComp.$[p] as any;
   }
   data.activateVarsProxies();
