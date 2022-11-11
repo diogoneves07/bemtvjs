@@ -62,13 +62,11 @@ export default function manageComponentsVars<O extends Record<string, any>>(
       const name = p as string;
       const target = t as any;
 
-      if (typeof p === "symbol") return target[p];
-
       if (!data.$disableProxies) {
         resetComponentVarsCache(sComp);
         const value = target[name];
 
-        if (!Object.hasOwn(value, SYMBOL_IS_PROXY)) {
+        if (value && !Object.hasOwn(value, SYMBOL_IS_PROXY)) {
           target[name] = Object.hasOwn(value, SYMBOL_IS_CLONE)
             ? value
             : cloneData(value);
@@ -81,9 +79,17 @@ export default function manageComponentsVars<O extends Record<string, any>>(
       return target[name];
     },
 
-    set(t, p, n) {
+    set(t, p, n, r) {
       const name = p as string;
       const target = t as any;
+
+      if (
+        sComp.$ === r &&
+        !Object.hasOwn(t, name) &&
+        !data.componentsVarsKeys.includes(name)
+      ) {
+        data.componentsVarsKeys.push(name);
+      }
 
       if (!data.$disableProxies) {
         resetComponentVarsCache(sComp);
