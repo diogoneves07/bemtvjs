@@ -1,15 +1,15 @@
 export { _, hasComponent } from "./bemtv/components-main";
-export { discreteTransform } from "./bemtv/discrete-transformations/main";
+export { tFn } from "./bemtv/transformation-functions/main";
 export {
-  orderedListDT as olDT,
-  unorderedListDT as ulDT,
+  tOrderedList as tOL,
+  tUnorderedList as tUL,
   toUL,
   toOL,
-} from "./bemtv/discrete-transformations/html-list-dt";
+} from "./bemtv/transformation-functions/html-list-dt";
 export {
-  descriptionListDT as dlDT,
+  tDescriptionList as tDL,
   toDL,
-} from "./bemtv/discrete-transformations/description-list-dt";
+} from "./bemtv/transformation-functions/description-list-dt";
 
 export { matchComponent as match } from "./bemtv/match-component";
 export { autoImportComponents } from "./bemtv/auto-import-components";

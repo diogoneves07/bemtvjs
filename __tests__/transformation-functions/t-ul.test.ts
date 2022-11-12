@@ -1,9 +1,9 @@
-import { _, ulDT } from "../../src/main";
+import { _, tUL } from "../../src/main";
 import { resetTestEnvironment } from "../test-utilities/reset-test-environment";
 
 resetTestEnvironment();
 
-describe("Check html list discrete transform function", () => {
+describe("Check html list ttFunction", () => {
   const fruitsList = [
     "Fruits",
     [
@@ -32,7 +32,7 @@ describe("Check html list discrete transform function", () => {
 
   test("With array", (done) => {
     const { onMount, template, render } = _("App", {
-      list: ulDT(fruitsList),
+      list: tUL(fruitsList),
     });
 
     onMount(() => {
@@ -49,7 +49,7 @@ describe("Check html list discrete transform function", () => {
 
   test("With Set", (done) => {
     const { onMount, template, render } = _("App", {
-      list: ulDT(new Set(fruitsList)),
+      list: tUL(new Set(fruitsList)),
     });
 
     onMount(() => {

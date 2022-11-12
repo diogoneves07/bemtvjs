@@ -1,4 +1,4 @@
-import { DT_SYMBOL } from "../discrete-transformations/main";
+import { DT_SYMBOL } from "../transformation-functions/main";
 import { SuperComponent } from "./super-component";
 import {
   getSuperComponentData,
@@ -16,7 +16,7 @@ function isRealObject(value: any) {
   return !Array.isArray(value) && typeof value === "object";
 }
 
-function insertDiscreteTransformSymbol(v: any, p?: undefined | any) {
+function insertTFnSymbol(v: any, p?: undefined | any) {
   p &&
     Object.defineProperties(v, {
       [DT_SYMBOL]: {
@@ -38,14 +38,10 @@ function cloneData(value: any) {
     dtFns = value[DT_SYMBOL];
   }
 
-  if (value instanceof Set)
-    return insertDiscreteTransformSymbol(new Set([...value]), dtFns);
-  if (value instanceof Map)
-    return insertDiscreteTransformSymbol(new Map([...value]), dtFns);
-  if (Array.isArray(value))
-    return insertDiscreteTransformSymbol([...value], dtFns);
-  if (typeof value === "object")
-    return insertDiscreteTransformSymbol({ ...value }, dtFns);
+  if (value instanceof Set) return insertTFnSymbol(new Set([...value]), dtFns);
+  if (value instanceof Map) return insertTFnSymbol(new Map([...value]), dtFns);
+  if (Array.isArray(value)) return insertTFnSymbol([...value], dtFns);
+  if (typeof value === "object") return insertTFnSymbol({ ...value }, dtFns);
 
   return value;
 }

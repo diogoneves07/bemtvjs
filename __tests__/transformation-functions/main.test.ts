@@ -1,11 +1,11 @@
-import { _, discreteTransform } from "../../src/main";
+import { _, tFn } from "../../src/main";
 import { resetTestEnvironment } from "../test-utilities/reset-test-environment";
 
 resetTestEnvironment();
 
-describe("Check discrete transform functions", () => {
-  it("Should create and use a discrete transform function", (done) => {
-    const myDT = discreteTransform((value) => value.join("-"));
+describe("Check ttFunctions", () => {
+  it("Should create and use a ttFunction", (done) => {
+    const myDT = tFn((value) => value.join("-"));
 
     const { onMount, template, render } = _("App", {
       list: myDT(["hello", "world!"]),
@@ -21,9 +21,9 @@ describe("Check discrete transform functions", () => {
     render();
   });
 
-  test("Value with multiple discrete transform functions", (done) => {
-    const dt1 = discreteTransform((value) => value.join("-"));
-    const dt2 = discreteTransform((value) => value.replace("-", "@"));
+  test("Value with multiple ttFunctions", (done) => {
+    const dt1 = tFn((value) => value.join("-"));
+    const dt2 = tFn((value) => value.replace("-", "@"));
 
     const { onMount, template, render } = _("App", {
       list: dt2(dt1(["hello", "world!"])),

@@ -1,12 +1,12 @@
-import { _, dlDT } from "../../src/main";
+import { _, tDL } from "../../src/main";
 import { resetTestEnvironment } from "../test-utilities/reset-test-environment";
 
 resetTestEnvironment();
 
-describe("Check dlDT", () => {
+describe("Check tDL", () => {
   test("With normal object", (done) => {
     const { onMount, template, render } = _("App", {
-      list: dlDT({
+      list: tDL({
         user: {
           name: "unknown",
           age: 25,
@@ -40,7 +40,7 @@ describe("Check dlDT", () => {
 
   test("With Map", (done) => {
     const { onMount, template, render } = _("App", {
-      list: dlDT(
+      list: tDL(
         new Map(
           Object.entries({
             user: {

@@ -1,4 +1,4 @@
-import { _, discreteTransform } from "../../src/main";
+import { _, tFn } from "../../src/main";
 import { resetTestEnvironment } from "../test-utilities//reset-test-environment";
 
 resetTestEnvironment();
@@ -30,7 +30,7 @@ describe("Check the ways to define the template", () => {
     it("Should not define the template", () => {
       const { template } = _("App");
 
-      // Untreated value or does not use discrete transform function
+      // Untreated value or does not use ttFunction
       const list = [1, 2, 3, 4, 5];
 
       expect(() => {
@@ -38,8 +38,8 @@ describe("Check the ways to define the template", () => {
       }).toThrow();
     });
 
-    test("Array using discrete transform function in the template", () => {
-      const listDT = discreteTransform((data: number[]) => {
+    test("Array using ttFunction in the template", () => {
+      const listDT = tFn((data: number[]) => {
         return data.join("");
       });
 

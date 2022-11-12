@@ -1,6 +1,6 @@
 export const DT_SYMBOL = Symbol();
 
-export function discreteTransform<Fn extends (data: any) => string>(fn: Fn) {
+export function tFn<Fn extends (data: any) => string>(fn: Fn) {
   function transform<T extends Parameters<Fn>[0]>(data: T): T;
   function transform<T extends Parameters<Fn>[0]>(
     data: T,

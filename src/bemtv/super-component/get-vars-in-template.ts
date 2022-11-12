@@ -1,6 +1,6 @@
 import { LIBRARY_NAME_IN_ERRORS_MESSAGE } from "./../../globals";
 import toKebabCase from "../../utilities/to-kebab-case";
-import { DT_SYMBOL } from "../discrete-transformations/main";
+import { DT_SYMBOL } from "../transformation-functions/main";
 import { ComponentProps } from "../types/super-component-data";
 import {
   getComponentVars,
@@ -69,8 +69,8 @@ function getVarsValues(
   }
 
   if (Object.hasOwn(varValue, DT_SYMBOL)) {
-    for (const discreteTransform of varValue[DT_SYMBOL]) {
-      varValue = discreteTransform(varValue);
+    for (const tFn of varValue[DT_SYMBOL]) {
+      varValue = tFn(varValue);
     }
 
     componentVarsCache.set(varName, varValue);

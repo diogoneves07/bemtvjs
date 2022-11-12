@@ -1,5 +1,5 @@
 import isStringOrNumber from "../../utilities/is-string-or-number";
-import { discreteTransform } from "./main";
+import { tFn } from "./main";
 
 function transformToHTMLList<T extends any[] | Set<any>>(
   value: T,
@@ -37,9 +37,9 @@ function transformToHTMLList<T extends any[] | Set<any>>(
 export const toOL = <T extends any[] | Set<any>>(value: T) => {
   return transformToHTMLList(value, true);
 };
-export const orderedListDT = discreteTransform(toOL);
+export const tOrderedList = tFn(toOL);
 
 export const toUL = <T extends any[] | Set<any>>(value: T) => {
   return transformToHTMLList(value, false);
 };
-export const unorderedListDT = discreteTransform(toUL);
+export const tUnorderedList = tFn(toUL);
