@@ -1,4 +1,4 @@
-export const DT_SYMBOL = Symbol();
+export const T_FNS_SYMBOL = Symbol();
 
 export function tFn<Fn extends (data: any) => string>(fn: Fn) {
   function transform<T extends Parameters<Fn>[0]>(data: T): T;
@@ -8,10 +8,10 @@ export function tFn<Fn extends (data: any) => string>(fn: Fn) {
   ): string;
 
   function transform<T extends Parameters<Fn>[0]>(data: T) {
-    if (data[DT_SYMBOL]) {
-      !data[DT_SYMBOL].includes(fn) && data[DT_SYMBOL].push(fn);
+    if (data[T_FNS_SYMBOL]) {
+      !data[T_FNS_SYMBOL].includes(fn) && data[T_FNS_SYMBOL].push(fn);
     } else {
-      Object.defineProperty(data, DT_SYMBOL, {
+      Object.defineProperty(data, T_FNS_SYMBOL, {
         value: [fn],
         configurable: false,
       });

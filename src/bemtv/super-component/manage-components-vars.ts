@@ -1,4 +1,4 @@
-import { DT_SYMBOL } from "../transformation-functions/main";
+import { T_FNS_SYMBOL } from "../transformation-functions/main";
 import { SuperComponent } from "./super-component";
 import {
   getSuperComponentData,
@@ -19,7 +19,7 @@ function isRealObject(value: any) {
 function insertTFnSymbol(v: any, p?: undefined | any) {
   p &&
     Object.defineProperties(v, {
-      [DT_SYMBOL]: {
+      [T_FNS_SYMBOL]: {
         value: p,
         configurable: false,
       },
@@ -34,8 +34,8 @@ function insertTFnSymbol(v: any, p?: undefined | any) {
 function cloneData(value: any) {
   let dtFns: undefined | any;
 
-  if (value && Object.hasOwn(value, DT_SYMBOL)) {
-    dtFns = value[DT_SYMBOL];
+  if (value && Object.hasOwn(value, T_FNS_SYMBOL)) {
+    dtFns = value[T_FNS_SYMBOL];
   }
 
   if (value instanceof Set) return insertTFnSymbol(new Set([...value]), dtFns);

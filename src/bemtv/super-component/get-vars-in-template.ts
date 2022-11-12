@@ -1,6 +1,6 @@
 import { LIBRARY_NAME_IN_ERRORS_MESSAGE } from "./../../globals";
 import toKebabCase from "../../utilities/to-kebab-case";
-import { DT_SYMBOL } from "../transformation-functions/main";
+import { T_FNS_SYMBOL } from "../transformation-functions/main";
 import { ComponentProps } from "../types/super-component-data";
 import {
   getComponentVars,
@@ -68,8 +68,8 @@ function getVarsValues(
     varValue = "";
   }
 
-  if (Object.hasOwn(varValue, DT_SYMBOL)) {
-    for (const tFn of varValue[DT_SYMBOL]) {
+  if (Object.hasOwn(varValue, T_FNS_SYMBOL)) {
+    for (const tFn of varValue[T_FNS_SYMBOL]) {
       varValue = tFn(varValue);
     }
 

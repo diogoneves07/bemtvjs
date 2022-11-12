@@ -1,11 +1,11 @@
-import { DT_SYMBOL } from "../transformation-functions/main";
+import { T_FNS_SYMBOL } from "../transformation-functions/main";
 
 export function treatArgsInTemplate(values: any[]) {
   const newValues: any[] = [];
   for (const value of values) {
-    if (value && Object.hasOwn(value, DT_SYMBOL)) {
+    if (value && Object.hasOwn(value, T_FNS_SYMBOL)) {
       let v = value;
-      for (const tFn of value[DT_SYMBOL]) {
+      for (const tFn of value[T_FNS_SYMBOL]) {
         v = tFn(v);
       }
 
