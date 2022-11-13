@@ -12,7 +12,13 @@ export function ManageElFactory<E extends Element = Element>() {
   return new Proxy(elManager, {
     get(target, name) {
       const propName = name as string;
-      if (propName in target) return (target as any)[propName];
+      let t = target as any;
+      if (propName in target) {
+        if (typeof t[propName] === "function") {
+          return t[propName].bind(elManager);
+        }
+        return t[propName];
+      }
       if (isString(propName) && isEventListener(propName)) {
         const newEventListener = (
           ...args: [fn: Function, options: AddEventListenerOptions]
