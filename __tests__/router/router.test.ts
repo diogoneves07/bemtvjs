@@ -1,6 +1,6 @@
 import { ALL_COMPONENTS_INST } from "./../../src/bemtv/component-inst-store";
 import { resetDocumentBodyAndRemoveComponents } from "../test-utilities/reset-test-environment";
-import { _, router, r } from "../../src/main";
+import { _, router } from "../../src/main";
 
 resetDocumentBodyAndRemoveComponents("App", "Router:Root");
 
@@ -19,13 +19,13 @@ beforeEach(() => {
 
 describe("Check router functionality", () => {
   it(" and render", () => {
-    const goToFirstRoute = r.FirstRoute("");
+    const goToFirstRoute = router.FirstRoute("");
     goToFirstRoute();
     expect(window.location.hash).toBe("#/first-route");
   });
 
   it(" and render and change document title", (done) => {
-    const goToFirstRoute = r.MyRoute({ title: "My route", use: "" });
+    const goToFirstRoute = router.MyRoute({ title: "My route", use: "" });
     goToFirstRoute();
     setTimeout(() => {
       expect(window.location.hash).toBe("#/my-route");
