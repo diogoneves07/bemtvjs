@@ -21,4 +21,4 @@ function transformToDescriptionList<T extends Record<string, any>>(
   return `dl[${str}]`;
 }
 export const tDescriptionList = tFn(transformToDescriptionList);
-export const toDL = transformToDescriptionList;
+export const toDl = transformToDescriptionList;

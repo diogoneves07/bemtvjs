@@ -1,17 +1,17 @@
 export { _, hasComponent } from "./bemtv/components-main";
 export { tFn } from "./bemtv/transformation-functions/main";
 export {
-  tOrderedList as tOL,
-  tUnorderedList as tUL,
-  toUL,
-  toOL,
+  tOrderedList as tOl,
+  tUnorderedList as tUl,
+  toUl,
+  toOl,
 } from "./bemtv/transformation-functions/html-list-dt";
 export {
-  tDescriptionList as tDL,
-  toDL,
+  tDescriptionList as tDl,
+  toDl,
 } from "./bemtv/transformation-functions/description-list-dt";
 
 export { matchComponent as match } from "./bemtv/match-component";
 export { autoImportComponents } from "./bemtv/auto-import-components";
 export { default as render } from "./bemtv/render";
-export { router, r, onRouteUnfound } from "./router/main";
+export { router, onRouteUnfound } from "./router/main";

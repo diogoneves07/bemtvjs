@@ -1,4 +1,4 @@
-import { _, tDL, tOL, tUL } from "../../src/main";
+import { _, tDl, tOl, tUl } from "../../src/main";
 import { resetTestEnvironment } from "../test-utilities//reset-test-environment";
 
 resetTestEnvironment();
@@ -58,15 +58,15 @@ describe("Check the variables for each component", () => {
         should create clones for each data structure used by 
         the first instance and isolate from the second`, (done) => {
     const data = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-    const user = tDL({
+    const user = tDl({
       name: "unknown",
       age: 23,
       home: {
         city: "unknown",
         country: "unknown",
-        dataArray: tOL(data),
-        dataSet: tUL(new Set(data)),
-        dataMap: tDL(new Map(data.map((v) => [v, v * 10]))),
+        dataArray: tOl(data),
+        dataSet: tUl(new Set(data)),
+        dataMap: tDl(new Map(data.map((v) => [v, v * 10]))),
       },
     });
     const { $, onMount, render } = _("App", {

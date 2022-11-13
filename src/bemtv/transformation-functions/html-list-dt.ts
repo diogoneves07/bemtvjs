@@ -34,12 +34,12 @@ function transformToHTMLList<T extends any[] | Set<any>>(
   return `${parentTag}[${v.join("")}]`;
 }
 
-export const toOL = <T extends any[] | Set<any>>(value: T) => {
+export const toOl = <T extends any[] | Set<any>>(value: T) => {
   return transformToHTMLList(value, true);
 };
-export const tOrderedList = tFn(toOL);
+export const tOrderedList = tFn(toOl);
 
-export const toUL = <T extends any[] | Set<any>>(value: T) => {
+export const toUl = <T extends any[] | Set<any>>(value: T) => {
   return transformToHTMLList(value, false);
 };
-export const tUnorderedList = tFn(toUL);
+export const tUnorderedList = tFn(toUl);

@@ -1,4 +1,4 @@
-import { _, tUL } from "../../src/main";
+import { _, tUl } from "../../src/main";
 import { resetTestEnvironment } from "../test-utilities/reset-test-environment";
 
 resetTestEnvironment();
@@ -32,7 +32,7 @@ describe("Check html list ttFunction", () => {
 
   test("With array", (done) => {
     const { onMount, template, render } = _("App", {
-      list: tUL(fruitsList),
+      list: tUl(fruitsList),
     });
 
     onMount(() => {
@@ -49,7 +49,7 @@ describe("Check html list ttFunction", () => {
 
   test("With Set", (done) => {
     const { onMount, template, render } = _("App", {
-      list: tUL(new Set(fruitsList)),
+      list: tUl(new Set(fruitsList)),
     });
 
     onMount(() => {
