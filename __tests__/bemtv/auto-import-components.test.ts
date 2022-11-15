@@ -7,7 +7,7 @@ autoImportComponents({
      * This is almost a mock for the dynamic import
      * as the expected result is the creation of the component
      * */
-    const { template } = _("Counter");
+    const { template } = _`Counter`();
 
     template`button[Cliked: 0]`;
   },
@@ -15,7 +15,7 @@ autoImportComponents({
 
 describe("Auto import components", () => {
   it("Should import the component and use it in the template", (done) => {
-    const { onMount, onUpdate, template, render } = _("App");
+    const { onMount, onUpdate, template, render } = _`App`();
     let templateValue = "";
 
     onMount(() => {

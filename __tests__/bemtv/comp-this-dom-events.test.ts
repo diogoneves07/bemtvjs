@@ -5,7 +5,7 @@ resetTestEnvironment();
 
 describe("Inject event handlers to component instance", () => {
   it("Should add onclick event listener to element", (done) => {
-    const { click$, onMount, useEl, template, render } = _("App");
+    const { click$, onMount, useEl, template, render } = _`App`();
     const [btnKey, el] = useEl<HTMLButtonElement>();
 
     const clickFn = jest.fn();
@@ -27,7 +27,7 @@ describe("Inject event handlers to component instance", () => {
   });
 
   it("Should remove onclick event listener from element", (done) => {
-    const { click$, onMount, useEl, template, render } = _("App");
+    const { click$, onMount, useEl, template, render } = _`App`();
     const [btnKey, el] = useEl<HTMLButtonElement>();
     const clickFn = jest.fn();
     const removeClickListener = click$(clickFn);

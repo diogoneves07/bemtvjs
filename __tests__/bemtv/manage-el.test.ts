@@ -6,7 +6,7 @@ resetTestEnvironment();
 describe("ManageEl", () => {
   describe("ManageEl.css method", () => {
     it("Should add style to element", (done) => {
-      const { useEl, onMount, template, render } = _("App");
+      const { useEl, onMount, template, render } = _`App`();
       const [key, el] = useEl<HTMLButtonElement>();
 
       onMount(() => {
@@ -29,7 +29,7 @@ describe("ManageEl", () => {
     });
 
     it("Should use “onInit” hook to add style to element", (done) => {
-      const { useEl, onInit, onMount, template, render } = _("App");
+      const { useEl, onInit, onMount, template, render } = _`App`();
       const [key, el] = useEl<HTMLButtonElement>();
 
       onInit(() => {
@@ -56,7 +56,7 @@ describe("ManageEl", () => {
     });
 
     it("Should add style to element after a time", (done) => {
-      const { useEl, onMount, template, render } = _("App");
+      const { useEl, onMount, template, render } = _`App`();
       const [key, el] = useEl<HTMLButtonElement>();
 
       onMount(() => {
@@ -87,7 +87,7 @@ describe("ManageEl", () => {
 
   describe("Inject event handlers to ManageEl instance", () => {
     it("Should add onclick event listener to element", (done) => {
-      const { useEl, onMount, template, render } = _("App");
+      const { useEl, onMount, template, render } = _`App`();
       const [key, el] = useEl<HTMLButtonElement>();
 
       const clickFn = jest.fn();
@@ -109,7 +109,7 @@ describe("ManageEl", () => {
     });
 
     it("Should use “onInit” hook to add onclick event listener to element", (done) => {
-      const { useEl, onMount, onInit, template, render } = _("App");
+      const { useEl, onMount, onInit, template, render } = _`App`();
       const [key, el] = useEl<HTMLButtonElement>();
 
       const clickFn = jest.fn();
@@ -133,7 +133,7 @@ describe("ManageEl", () => {
     });
 
     it("Should remove onclick event listener from element", (done) => {
-      const { useEl, onMount, template, render } = _("App");
+      const { useEl, onMount, template, render } = _`App`();
       const [key, el] = useEl<HTMLButtonElement>();
 
       const clickFn = jest.fn();
@@ -159,7 +159,7 @@ describe("ManageEl", () => {
       const button = document.createElement("button");
       document.body.appendChild(button);
 
-      const { useEl, onMount, template, render } = _("App");
+      const { useEl, onMount, template, render } = _`App`();
       const [key, el] = useEl<HTMLButtonElement>();
 
       const clickFn = jest.fn();
@@ -185,7 +185,7 @@ describe("ManageEl", () => {
     });
 
     it(`Should add “onclick” listener to button element after a time mounted`, (done) => {
-      const { useEl, onMount, template, render } = _("App");
+      const { useEl, onMount, template, render } = _`App`();
       const [key, el] = useEl<HTMLButtonElement>();
 
       const clickFn = jest.fn();
@@ -210,7 +210,7 @@ describe("ManageEl", () => {
     it(`
   Should remove “onclick” listener from button element immediately after added
 `, (done) => {
-      const { useEl, onMount, onInit, template, render } = _("App");
+      const { useEl, onMount, onInit, template, render } = _`App`();
       const [key, el] = useEl<HTMLButtonElement>();
 
       const clickFn1 = jest.fn();
@@ -249,7 +249,7 @@ describe("ManageEl", () => {
     it(`
   Should remove “onclick” listener with “capture:true” from button element immediately after added
 `, (done) => {
-      const { useEl, onMount, template, render } = _("App");
+      const { useEl, onMount, template, render } = _`App`();
       const [key, el] = useEl<HTMLButtonElement>();
 
       const clickFn = jest.fn();

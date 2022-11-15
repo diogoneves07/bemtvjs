@@ -31,7 +31,7 @@ describe("Check html list ttFunction", () => {
   ];
 
   test("With array", (done) => {
-    const { onMount, template, render } = _("App", {
+    const { onMount, template, render } = _`App`({
       list: tUl(fruitsList),
     });
 
@@ -48,7 +48,7 @@ describe("Check html list ttFunction", () => {
   });
 
   test("With Set", (done) => {
-    const { onMount, template, render } = _("App", {
+    const { onMount, template, render } = _`App`({
       list: tUl(new Set(fruitsList)),
     });
 

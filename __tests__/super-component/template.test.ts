@@ -5,7 +5,7 @@ resetTestEnvironment();
 
 describe("Check the ways to define the template", () => {
   it("Should not allow using the function twice or more", () => {
-    const { template } = _("App");
+    const { template } = _`App`();
     expect(() => {
       template`Counter is: 0`;
       template`Counter is:0`;
@@ -13,7 +13,7 @@ describe("Check the ways to define the template", () => {
   });
   describe("Use TemplateStringsArray", () => {
     it("Should define the template", (done) => {
-      const { onMount, template, render } = _("App");
+      const { onMount, template, render } = _`App`();
 
       let count = 0;
 
@@ -28,7 +28,7 @@ describe("Check the ways to define the template", () => {
     });
 
     it("Should not define the template", () => {
-      const { template } = _("App");
+      const { template } = _`App`();
 
       // Untreated value or does not use ttFunction
       const list = [1, 2, 3, 4, 5];
@@ -43,7 +43,7 @@ describe("Check the ways to define the template", () => {
         return data.join("");
       });
 
-      const { template } = _("App");
+      const { template } = _`App`();
 
       const list = listDT([1, 2, 3, 4, 5]);
 
@@ -55,7 +55,7 @@ describe("Check the ways to define the template", () => {
 
   describe("Use a function", () => {
     it("Should define the template", (done) => {
-      const { onMount, template, render } = _("App");
+      const { onMount, template, render } = _`App`();
 
       let count = 0;
 
@@ -72,7 +72,7 @@ describe("Check the ways to define the template", () => {
 
   describe("Use a string", () => {
     it("Should define the template", (done) => {
-      const { onMount, template, render } = _("App");
+      const { onMount, template, render } = _`App`();
 
       let count = 0;
 

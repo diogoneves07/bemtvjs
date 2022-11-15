@@ -1,14 +1,14 @@
 import { _ } from "../../src/main";
 
 it("Should change the props received", (done) => {
-  const { props } = _("Child").template`$props.message`;
+  const { props } = _`Child`().template`$props.message`;
 
   props((p) => {
     p.message = "Changed message!";
     return p;
   });
 
-  const { defineProps, onMount, template, render } = _("App");
+  const { defineProps, onMount, template, render } = _`App`();
 
   let p = defineProps({ message: "Hey!" });
 

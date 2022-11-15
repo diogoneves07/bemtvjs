@@ -12,7 +12,7 @@ beforeEach(() => {
 
 describe("Checks the use of variables within the template", () => {
   it("Should define and use the variables", (done) => {
-    const { onMount, template, render } = _("App", {
+    const { onMount, template, render } = _`App`({
       count: 0,
     });
 
@@ -27,7 +27,7 @@ describe("Checks the use of variables within the template", () => {
   });
 
   it("Should use the variable as attribute and value", (done) => {
-    const { onMount, template, render } = _("App", {
+    const { onMount, template, render } = _`App`({
       dataUser: 0,
     });
 
@@ -44,7 +44,7 @@ describe("Checks the use of variables within the template", () => {
   });
 
   it("Should get the variables value through chaining", (done) => {
-    const { onMount, template, render } = _("App", {
+    const { onMount, template, render } = _`App`({
       user: {
         data: {
           name: "unknown",
@@ -64,7 +64,7 @@ describe("Checks the use of variables within the template", () => {
   });
 
   it("Should not allow unknown variables", () => {
-    const { template, render } = _("App", {
+    const { template, render } = _`App`({
       user: {
         data: {
           name: "unknown",
@@ -80,7 +80,7 @@ describe("Checks the use of variables within the template", () => {
   });
 
   it("Should not allow bad values", () => {
-    const { template, render } = _("App", {
+    const { template, render } = _`App`({
       user: {
         data: ["unknown", 25],
       },
@@ -94,7 +94,7 @@ describe("Checks the use of variables within the template", () => {
   });
 
   it("Should allow optional variables", (done) => {
-    const { onMount, template, render } = _("App", {
+    const { onMount, template, render } = _`App`({
       user: {
         data: {
           name: "unknown",

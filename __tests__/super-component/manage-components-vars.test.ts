@@ -18,7 +18,7 @@ describe("Check the variables for each component", () => {
         dataMap: new Map(data.map((v) => [v, v * 10])),
       },
     };
-    const { $, onMount, render } = _("App", {
+    const { $, onMount, render } = _`App`({
       user,
     });
 
@@ -69,7 +69,7 @@ describe("Check the variables for each component", () => {
         dataMap: tDl(new Map(data.map((v) => [v, v * 10]))),
       },
     });
-    const { $, onMount, render } = _("App", {
+    const { $, onMount, render } = _`App`({
       user,
     });
 
@@ -106,7 +106,7 @@ describe("Check the variables for each component", () => {
   });
 
   test(`Create dynamics components variables`, (done) => {
-    const { onMount, keepInst, $, render } = _("App", {
+    const { onMount, keepInst, $, render } = _`App`({
       name: "Diogo Neves",
     } as { name: string; count?: number });
 

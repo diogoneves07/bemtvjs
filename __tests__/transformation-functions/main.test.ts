@@ -7,7 +7,7 @@ describe("Check ttFunctions", () => {
   it("Should create and use a ttFunction", (done) => {
     const myDT = tFn((value) => value.join("-"));
 
-    const { onMount, template, render } = _("App", {
+    const { onMount, template, render } = _`App`({
       list: myDT(["hello", "world!"]),
     });
 
@@ -25,7 +25,7 @@ describe("Check ttFunctions", () => {
     const dt1 = tFn((value) => value.join("-"));
     const dt2 = tFn((value) => value.replace("-", "@"));
 
-    const { onMount, template, render } = _("App", {
+    const { onMount, template, render } = _`App`({
       list: dt2(dt1(["hello", "world!"])),
     });
 

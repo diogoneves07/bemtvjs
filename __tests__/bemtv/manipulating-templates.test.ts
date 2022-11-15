@@ -5,11 +5,11 @@ resetTestEnvironment();
 
 describe("Checks if templates are correctly applied to the DOM", () => {
   it("Should allow containing nested components", (done) => {
-    _("Strong").template(() => "strong[Click me!]");
+    _`Strong`().template(() => "strong[Click me!]");
 
-    _("Button").template(() => `button[$children]`);
+    _`Button`().template(() => `button[$children]`);
 
-    const { onMount, template, render } = _("App");
+    const { onMount, template, render } = _`App`();
 
     onMount(() => {
       expect(document.body.children[0].tagName.toLowerCase()).toBe("button");
@@ -21,9 +21,9 @@ describe("Checks if templates are correctly applied to the DOM", () => {
     render();
   });
   it("Should remove component Child nodes", (done) => {
-    _("Child").template`strong[Not Hey!]`;
+    _`Child`().template`strong[Not Hey!]`;
 
-    const { onMount, onUpdate, template, render } = _("App");
+    const { onMount, onUpdate, template, render } = _`App`();
     let t = "Child[]";
 
     onMount(() => {
@@ -41,7 +41,7 @@ describe("Checks if templates are correctly applied to the DOM", () => {
   });
 
   it("Should replace component Text node with strong element", (done) => {
-    const { onMount, onUpdate, template, render } = _("App");
+    const { onMount, onUpdate, template, render } = _`App`();
     let t = "Hello";
 
     onMount(() => {
@@ -59,7 +59,7 @@ describe("Checks if templates are correctly applied to the DOM", () => {
   });
 
   it("Should replace component empty Text node with strong element", (done) => {
-    const { onMount, onUpdate, template, render } = _("App");
+    const { onMount, onUpdate, template, render } = _`App`();
     let t = "";
 
     onMount(() => {
@@ -77,7 +77,7 @@ describe("Checks if templates are correctly applied to the DOM", () => {
   });
 
   it("Should replace component span element with strong element", (done) => {
-    const { onMount, onUpdate, template, render } = _("App");
+    const { onMount, onUpdate, template, render } = _`App`();
     let t = "span[Hey]";
 
     onMount(() => {
@@ -95,7 +95,7 @@ describe("Checks if templates are correctly applied to the DOM", () => {
   });
 
   it("Should remove diff between elments attributes", (done) => {
-    const { onMount, onUpdate, template, render } = _("App");
+    const { onMount, onUpdate, template, render } = _`App`();
     let t = 'span[ class="test" ~ Hey]';
 
     onMount(() => {
@@ -116,7 +116,7 @@ describe("Checks if templates are correctly applied to the DOM", () => {
   });
 
   it("Should remove diff between SVG elments attributes", (done) => {
-    const { onMount, onUpdate, template, render } = _("App");
+    const { onMount, onUpdate, template, render } = _`App`();
 
     const firstValue = `svg[ xmlns="http://www.w3.org/2000/svg"  ~ circle[class="red" ~ ]]`;
     const secondValue = `svg[ xmlns="http://www.w3.org/2000/svg" ~ circle[class="blue" ~ ]]`;
@@ -141,7 +141,7 @@ describe("Checks if templates are correctly applied to the DOM", () => {
   });
 
   it("should remove most elements", (done) => {
-    const { onMount, onUpdate, template, render } = _("App");
+    const { onMount, onUpdate, template, render } = _`App`();
     let t = "span[Hey] span[Hey] span[Hey] span[Hey] span[Hey] span[Hey]";
 
     onMount(() => {
@@ -159,7 +159,7 @@ describe("Checks if templates are correctly applied to the DOM", () => {
   });
 
   it("Should replace text in component span element", (done) => {
-    const { onMount, onUpdate, template, render } = _("App");
+    const { onMount, onUpdate, template, render } = _`App`();
     let t = "span[Hey]";
 
     onMount(() => {
@@ -177,9 +177,9 @@ describe("Checks if templates are correctly applied to the DOM", () => {
   });
 
   it("Should component parent and child update", (done) => {
-    _("Child").template(() => childText);
+    _`Child`().template(() => childText);
 
-    const { onMount, onUpdate, template, render } = _("App");
+    const { onMount, onUpdate, template, render } = _`App`();
     let parentText = "";
     let childText = "";
 

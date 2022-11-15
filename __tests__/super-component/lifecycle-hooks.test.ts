@@ -6,7 +6,7 @@ resetTestEnvironment();
 describe("Lifecycle Hooks", () => {
   test("onInit hook", (done) => {
     const onInitFn = jest.fn();
-    const { onInit, render } = _("App");
+    const { onInit, render } = _`App`();
 
     onInit(onInitFn);
 
@@ -20,7 +20,7 @@ describe("Lifecycle Hooks", () => {
 
   test("onMount hook", (done) => {
     const onMountFn = jest.fn();
-    const { onMount, render } = _("App");
+    const { onMount, render } = _`App`();
 
     onMount(onMountFn);
 
@@ -36,7 +36,7 @@ describe("Lifecycle Hooks", () => {
     const onUpdateFn = jest.fn();
     let t = `Hey!`;
 
-    const { onMount, onUpdate, template, render } = _("App");
+    const { onMount, onUpdate, template, render } = _`App`();
 
     onMount(() => {
       t = "Hi!";
@@ -57,11 +57,11 @@ describe("Lifecycle Hooks", () => {
   test("onUnmount hook", (done) => {
     const onUnmountFn = jest.fn();
 
-    const { onUnmount } = _("Child").template`Hey!`;
+    const { onUnmount } = _`Child`().template`Hey!`;
 
     onUnmount(onUnmountFn);
 
-    const { onMount, onUpdate, template, render } = _("App");
+    const { onMount, onUpdate, template, render } = _`App`();
     let t = `Child[]`;
 
     onMount(() => {
@@ -83,7 +83,7 @@ describe("Lifecycle Hooks", () => {
 
   it("Should add a lifecycle hook after a time", (done) => {
     const onUpdateFn = jest.fn();
-    const { onUpdate, template, render } = _("App");
+    const { onUpdate, template, render } = _`App`();
     let t = "Hey!";
 
     setTimeout(() => {

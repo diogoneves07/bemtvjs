@@ -5,7 +5,7 @@ resetTestEnvironment();
 
 describe("Check the “css()” method", () => {
   it("Should add style to the first element", (done) => {
-    const { css, onMount, template, render } = _("App");
+    const { css, onMount, template, render } = _`App`();
 
     css`
       font-size: 50px;
@@ -27,7 +27,7 @@ describe("Check the “css()” method", () => {
   });
 
   it("Should add style to the first element after a time", (done) => {
-    const { css, onMount, template, render } = _("App");
+    const { css, onMount, template, render } = _`App`();
 
     setTimeout(() => {
       css`

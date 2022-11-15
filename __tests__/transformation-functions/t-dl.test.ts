@@ -5,7 +5,7 @@ resetTestEnvironment();
 
 describe("Check tDl", () => {
   test("With normal object", (done) => {
-    const { onMount, template, render } = _("App", {
+    const { onMount, template, render } = _`App`({
       list: tDl({
         user: {
           name: "unknown",
@@ -39,7 +39,7 @@ describe("Check tDl", () => {
   });
 
   test("With Map", (done) => {
-    const { onMount, template, render } = _("App", {
+    const { onMount, template, render } = _`App`({
       list: tDl(
         new Map(
           Object.entries({

@@ -7,12 +7,12 @@ describe("sharing API", () => {
   describe("method share()", () => {
     it("Should share “message” property", (done) => {
       (() => {
-        const { use, template } = _("Child");
+        const { use, template } = _`Child`();
 
         template(() => `${use("message")}`);
       })();
 
-      const { share, onMount, template, render } = _("App");
+      const { share, onMount, template, render } = _`App`();
 
       share({ message: "Hello" });
 
@@ -27,12 +27,12 @@ describe("sharing API", () => {
 
     test('Parent should not access the "user" property', (done) => {
       (() => {
-        const { share } = _("Child");
+        const { share } = _`Child`();
 
         share({ user: "World" });
       })();
 
-      const { use, onMount, template, render } = _("App");
+      const { use, onMount, template, render } = _`App`();
 
       onMount(() => {
         expect(document.body.textContent?.trim()).toBe("undefined");
@@ -47,12 +47,12 @@ describe("sharing API", () => {
   describe("method reshare()", () => {
     it("Should update “message” property", (done) => {
       (() => {
-        const { reshare } = _("Child");
+        const { reshare } = _`Child`();
 
         reshare({ message: "Hey!" });
       })();
 
-      const { share, use, onMount, template, render } = _("App");
+      const { share, use, onMount, template, render } = _`App`();
 
       share({ message: "" });
 
@@ -68,12 +68,12 @@ describe("sharing API", () => {
 
     it("Should not update “message” property", (done) => {
       (() => {
-        const { share } = _("Child");
+        const { share } = _`Child`();
 
         share({ message: "Hey!" });
       })();
 
-      const { reshare, use, onMount, template, render } = _("App");
+      const { reshare, use, onMount, template, render } = _`App`();
 
       reshare({ message: "" });
 
@@ -91,12 +91,12 @@ describe("sharing API", () => {
   describe("method use()", () => {
     it("Should use “message” property", (done) => {
       (() => {
-        const { use, template } = _("Child");
+        const { use, template } = _`Child`();
 
         template(() => `${use<string>("message")}`);
       })();
 
-      const { share, onMount, template, render } = _("App");
+      const { share, onMount, template, render } = _`App`();
 
       share({ message: "Hey" });
 
@@ -112,12 +112,12 @@ describe("sharing API", () => {
 
     it("Should not use “message” property", (done) => {
       (() => {
-        const { share } = _("Child");
+        const { share } = _`Child`();
 
         share({ message: "Hey" });
       })();
 
-      const { use, onMount, template, render } = _("App");
+      const { use, onMount, template, render } = _`App`();
 
       onMount(() => {
         expect(document.body.textContent?.trim()).toBe("undefined");
@@ -129,7 +129,7 @@ describe("sharing API", () => {
       render();
     });
     test("Use “use()” method outside a DOMListener or hook", () => {
-      const { use, share } = _("App");
+      const { use, share } = _`App`();
 
       share({ message: "Hey" });
 
