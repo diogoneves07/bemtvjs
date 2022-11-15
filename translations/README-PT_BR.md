@@ -1,35 +1,21 @@
 <p align='center'>
-  <img  src='https://github.com/diogoneves07/bentivejs/blob/main/assets/bemtv-logo.png'  alt='Bemtv logo'>
-</p>
-
-<br>
-
-<p align='center'>
-<a href="https://coveralls.io/github/diogoneves07/bemtvjs">
+  <img alt="npm bundle size" src="https://img.shields.io/bundlephobia/minzip/bemtv?style=for-the-badge">
+  <img  src='https://github.com/diogoneves07/bentivejs/blob/main/assets/bemtv-logo-2.png'  alt='Bemtv logo' height='200px'>
+  <a href="https://coveralls.io/github/diogoneves07/bemtvjs">
   <img alt="Coveralls" src="https://img.shields.io/coveralls/github/diogoneves07/bemtvjs?label=test%20coverage&style=for-the-badge">
   </a>
 </p>
 
 **Bemtv**(Abreviação do nome do pássaro [Bem-te-vi](https://pt.wikipedia.org/wiki/Bem-te-vi)) é uma biblioteca JavaScript que traz uma nova abordagem para a criação de UIs interativas.
 
-Basicamente, é a junção de
-[Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy),
-[Template literals (Template strings)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals)
-somados a açúcares sintáticos
-e orquestrados “automagicamente” por um
-[requestAnimationFrame](https://developer.mozilla.org/en-US/docs/Web/API/Window/requestAnimationFrame) loop.
-
 ## Por que Bemtv?
 
-Ligeiramente opinativo, minimalista, leve(<img alt="npm bundle size" height='20px' padding="0" src="https://img.shields.io/bundlephobia/minzip/bemtv?style=flat-square">) mesmo com uma linguagem de marcação
-e uma biblioteca CSS-in-JS **integrada ao template**, e um Router,
-atualizações refinadas para o DOM real por meio de um loop de detecção de alteração no template que
+Minimalista, leve(mesmo com uma linguagem de marcação e uma biblioteca CSS-in-JS **integrada ao template**), e um Router.
+
+Atualizações refinadas para o DOM real por meio de um loop de detecção de alteração no template que
 permite reatividade sem esforço do desenvolvedor.
 
-Atualmente, o principal objetivo é ser uma ferramenta especializada no desenvolvimento de **pequenas aplicações web**,
-permitindo ao desenvolvedor utilizar uma sintaxe agradável,
-direta e que possa ser aprendida em poucos minutos e não em horas,
-pense em: “Apenas adicionar a Bemtv ao seu index.html e se divertir construindo sua aplicação”.
+Pense em: “Apenas adicionar a Bemtv ao seu index.html e se divertir construindo sua aplicação”.
 
 ## Um breve olhar
 
@@ -38,79 +24,23 @@ Componente **Counter**:
 ```javascript
 import { _ } from "bemtv";
 
-_("Counter", ({ click$ }) => {
-  let count = 0;
+const { click$, $, css, template, render } = _`Counter`({ count: 0 });
 
-  click$(() => count++);
+click$(() => $.count++);
 
-  return () => `button[Cliked: ${count}]`;
-}).render();
+css`
+  padding: 20px;
+  color: blue;
+`;
+
+template`button[Cliked: $count ]`;
+
+render();
 ```
 
-<hr />
-
-> **Por favor, se você gostou do projeto, não vá embora sem deixar sua estrela! Ela nos encoraja a continuar desenvolvendo.**
-
-<hr />
-
-<br>
-
-<details>
-  <summary><h2>Lançamentos</h2></summary>
-  <br>
-
-- **v0.5.0**
-  - [Roteador(Router)](#roteadorrouter) adicionado!
-
-</details>
-
-<details>
-  <summary><h2>Índice</h2></summary>
-
-- [Instalação](#instalação)
-- [Funcionamento(Sob o capô)](#funcionamentosob-o-capô)
-- [Documentação](#documentação)
-  - [Introduzindo Brackethtml](#introduzindo-brackethtml)
-    - [Por que Brackethtml?](#por-que-brackethtml)
-    - [Brackethtml + CSS-in-JS (goober)](#brackethtml--css-in-js-goober)
-    - [Regras de uso](#regras-de-uso)
-    - [Caracteres especiais](#caracteres-especiais)
-  - [Componentes](#componentes)
-    - [Renderizando um Componente](#renderizando-um-componente)
-    - [Compondo Componentes](#compondo-componentes)
-    - [Verificando componentes disponíveis](#verificando-componentes-disponíveis)
-    - [Props](#props)
-    - [Filhos do componente](#filhos-do-componente)
-    - [Componentes com e sem estado](#componentes-com-e-sem-estado)
-      - [Com estado](#com-estado)
-      - [Sem estado](#sem-estado)
-    - [Compartilhando dados entre componentes](#compartilhando-dados-entre-componentes)
-      - [Compartilhando dados](#compartilhando-dados)
-      - [Usando os dados](#usando-os-dados)
-      - [Re-compartilhando dados](#re-compartilhando-dados)
-      - [Funcionamento(Sob o capô)](#funcionamentosob-o-capô-1)
-      - [Dados entre componentes](#dados-entre-componentesavançado)
-  - [Manipulando eventos](#manipulando-eventos)
-  - [Elementos DOM](#elementos-dom)
-    - [Manipulando eventos do elemento](#manipulando-eventos-do-elemento)
-  - [Ciclo de Vida(Lifecycle) Hooks](#ciclo-de-vidalifecycle-hooks)
-    - [onMount](#onmount)
-    - [onUpdate](#onupdate)
-    - [onUnmount](#onunmount)
-  - [Inicializando(Bootstrapping) um App Bemtv](#inicializandobootstrapping-um-app-bemtv)
-  - [Dividindo o Código (Code-Splitting)](#dividindo-o-código-code-splitting)
-  - [Usando fallback(Plano B)](#usando-fallbackplano-b)
-  - [Roteador(Router)](#roteadorrouter)
-    - [Criando uma rota](#criando-uma-rota)
-    - [Renderizando rotas](#renderizando-rotas)
-    - [Criando links para rotas](#criando-links-para-rotas)
-    - [Argumento de fallback(Plano B) da rota](#argumento-de-fallbackplano-b-da-rota)
-- [Fechamento](#fechamento)
-
-</details>
-<br>
-
 ## Instalação
+
+### NPM
 
 ```bash
 
@@ -118,47 +48,17 @@ npm i bemtv
 
 ```
 
-## Funcionamento(Sob o capô)
+## CDN Links
 
-A abordagem usada para criar componentes difere da convencional, basicamente usamos o poder de [Closures](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures) e orquestramos as chamadas com um [requestAnimationFrame](https://developer.mozilla.org/en-US/docs/Web/API/Window/requestAnimationFrame) loop:
-
-```javascript
-import { _ } from "bemtv";
-
-_("Counter", () => {
-  let count = 0;
-
-  setInterval(() => count++, 1000);
-
-  return function templateCreator() {
-    return `button[Cliked: ${count}]`;
-  };
-}).render();
+```html
+<script type="module">
+  import { _ } from "https://www.unpkg.com/bemtv/dist/bemtv.es.js";
+</script>
 ```
-
-No exemplo acima, observe que a função `templateCreator()` ela
-é um **Closure**, o que significa que ela tem acesso ao escopo da função externa a ela.
-Com isso, sempre que for chamada ela retornará a _“Template string”_ com o valor mais recente da variável `count`.
-
-A partir da **v0.3.0**, a Bemtv utiliza um sistema mais sofisticado para determinar se houve alguma alteração no template, continua usando como base a repintura do navegador, mas reduz o número de verificações à medida que o usuário interage com a página e o tempo que o componente leva para gerar o template, isso torna a Bemtv muito mais eficiente.
-
-A princípio, podemos pensar que isso sobrecarregará o navegador, no entanto, existem boas práticas que devemos seguir para evitar isso:
-
-- Tudo dentro do template deve ser strings, números ou cálculos leves.
-
-- A função que gera o template só deve ser usada para isso.
-
-Seguindo essas recomendações, sua aplicação não sofrerá sobrecarga.
 
 ## Documentação
 
-A Bemtv se esforça para ser minimalista e poderosa,
-a documentação é pequena o suficiente para caber neste README,
-mas cheia de recursos como sua própria linguagem de marcação,
-biblioteca CSS-in-JS ([goober](https://github.com/cristianbote/goober)) **integrada ao template**,
-sistema de gerenciamento de eventos do DOM,
-API inovadora para compartilhamento de dados entre componentes,
-métodos de ciclo de vida e açúcares sintáticos que trarão uma ótima experiência ao desenvolvedor!
+Bemtv permite ao desenvolvedor utilizar uma sintaxe agradável, limpa e que possa ser aprendida em poucos minutos e não em horas.
 
 ### Introduzindo Brackethtml
 
@@ -168,24 +68,7 @@ Considere esta declaração de variável:
 const btn = `button[Click me!]`;
 ```
 
-Essa sintaxe estranha é uma `string` normal, porém nossa biblioteca a entende e pode converter para HTML, chamamos de “Brackethtml”.
-
-O HTML equivalente seria:
-
-```javascript
-const btn = `<button>Click me!</button>`;
-```
-
-#### Por que Brackethtml?
-
-O objetivo principal é reduzir a redundância do HTML e ainda ser facilmente compreensível como HTML.
-
-Brackethtml suporta HTML normalmente e você pode até misturar os dois se precisar.
-
-Basicamente, nos exemplos anteriores,
-removemos a necessidade de uma tag de fechamento para a tag `button`.
-
-> Recomendamos que experimente porque é muito semelhante ao HTML e queremos que seja uma característica importante da nossa biblioteca.
+Essa sintaxe é uma `string` normal, a bemtv entende e pode converter para HTML, nós a chamamos de “Brackethtml” ela reduz a redundância de HTML e ainda pode ser facilmente entendida como HTML, além de suportar HTML normalmente.
 
 #### Brackethtml + CSS-in-JS ([goober](https://github.com/cristianbote/goober))
 
@@ -205,34 +88,16 @@ A lista abaixo descreve as regras de uso:
 const btn = `button[]`;
 ```
 
-- Se o símbolo `~` não estiver presente tudo que estiver dentro dos colchetes da tag será entendido como seus filhos:
+- O símbolo `~` deve ser usado dentro de tags que podem conter filhos para separar os atributos e CSS-in-JS dos seus filhos e deve ser usado entre espaços em branco:
 
 ```javascript
-const btn = `h1[ span[ Hello world! ] ]`;
+const btn = `h1[color:blue; ~ Hey!] img[src="my-avatar.png"]`;
 ```
 
-- O símbolo `~` é responsável por separar os atributos e CSS-in-JS dos filhos da tag e deve ser usado entre espaços em branco:
+- Os atributos da tag devem sempre vim antes do CSS-in-JS e usar apenas aspas duplas `"`:
 
 ```javascript
-const btn = `button[color:blue; ~ Click me!]`;
-```
-
-- Tudo antes do símbolo `~` é considerado atributos e/ou CSS-in-JS:
-
-```javascript
-const btn = `button[padding:50px; ~ ]`;
-```
-
-- Os atributos da tag devem sempre vim antes do CSS-in-JS:
-
-```javascript
-const btn = `button[data-username = "Bemtive" padding:50px; ~  Hello!]`;
-```
-
-- Os atributos devem usar apenas aspas duplas `"`:
-
-```javascript
-const btn = `button[class="hello" ~ Click me!]`;
+const btn = `button[data-username = "Bemtv" padding:50px; ~  Hello!]`;
 ```
 
 - O CSS-in-JS devem usar apenas aspas simples `'`:
@@ -243,7 +108,7 @@ const btn = `button[class="hello" font-family:'Courier New'; ~ Click me!]`;
 
 #### Caracteres especiais
 
-Alguns caracteres devem ser escapados para serem usados ​​sem que a Brackethtml os interprete: `~`, `[`, `]`, `#`, e `@`.
+Alguns caracteres devem ser escapados para serem usados ​​sem que a Brackethtml os interprete: `~`, `[`, `]`, `#`, `@`, e `$`.
 
 Para escapá-los basta envolvê-los entre parênteses `(` `)`:
 
@@ -251,105 +116,663 @@ Para escapá-los basta envolvê-los entre parênteses `(` `)`:
 const btn = `button[Click (~) me!]`;
 ```
 
-> A partir de agora você já consegue interpretar e usar a Brackethtml. Esperamos que sua produtividade aumente consideravelmente.
+### Criando componentes
 
-> Em um futuro próximo, seria incrível ter uma extensão que pudesse destacar a Brackethtml de acordo com suas regras, facilitando a separação visual de cada parte.
-
-### Componentes
-
-Componentes permitem você dividir a UI em partes independentes, reutilizáveis e pensar em cada parte isoladamente.
-
-Para criar um componente podemos importar o símbolo `_` que é um alias da função `Component` do mesmo módulo:
-
-```javascript
-import { _, Component } from "bemtv";
-
-// Eles funcionam da mesma maneira:
-
-_("Counter", () => {});
-
-Component("Counter", () => {});
-```
-
-> Ao longo desta documentação os exemplos darão preferência ao símbolo `_`, no entanto, fique à vontade para escolher em seus projetos.
-
-A função aceita dois argumentos:
-
-<dl>
-  <dt><code>name</code></dt>
-  <dd><br>
-      <p>Uma  <code>string</code> que é o nome do componente.</p>
-  </dd>
-</dl>
-
-Deve sempre começar com um caractere maiúsculo (CamelCase) e aceita todos os caracteres alfanuméricos e o símbolo `:`.
-
-Os nomes dos componentes funcionam como uma chave para acessar suas funções e, portanto, devem ser únicos, para evitar conflitos você pode usar o símbolo `:` para indicar um componente que esteja relacionado a algo:
-
-```javascript
-import { _, Component } from "bemtv";
-
-_("Jquery:Ajax", (self) => console.log(self.name));
-// ou
-
-_("Menu:Links", (self) => console.log(self.name));
-```
-
-<dl>
-  <dt><code>componentManager</code></dt>
-  <dd><br>
-     <p>A <code>function</code> responsável por gerenciar a instância do componente.</p>
-  </dd>
-</dl>
-
-Deve sempre retornar uma `string` ou uma função que retorna uma `string`.
-
-Esta função terá a instância do componente como seu primeiro e único argumento.
-
-```javascript
-import { _, Component } from "bemtv";
-
-_("Counter", (componentInstance) => console.log(componentInstance));
-```
-
-### Renderizando um Componente
-
-Após declarar o componente, a instância retornada possui um método `render()` que pode ser chamado para renderizar o componente em algum lugar da página:
+Para criar um componente podemos importar o símbolo/função `_`,
+ela recebe o nome do componente(usando tagged templates) como primeiro argumento que deve sempre começar
+com um caractere maiúsculo (CamelCase) e aceita todos os caracteres alfanuméricos e o símbolo `:`.
 
 ```javascript
 import { _ } from "bemtv";
 
-_("Counter", () => `h1[Hello world!]`).render();
+_`App`;
 ```
 
-Este método aceita opcionalmente um argumento que indica um elemento ou um seletor(usará [querySelector](https://developer.mozilla.org/pt-BR/docs/Web/API/Document/querySelector) para encontrar o elemento) para inserir o componente(O padrão é `document.body`) e retorna a mesma instância.
-
-Também podemos importar a função `render()` que funciona de maneira semelhante:
+Os nomes dos componentes devem ser únicos, para evitar conflitos podemos usar o símbolo `:` para indicar um componente que esteja relacionado a algo:
 
 ```javascript
-import { _, render } from "bemtv";
+import { _ } from "bemtv";
 
-_("Counter", () => `h1[Hello world!]`);
-
-render("Counter", "#app");
+_`Menu:Links`;
 ```
 
-A diferença é que ela recebe um template como primeiro argumento e opcionalmente um seletor como segundo.
+### Instância do componente
 
-### Compondo Componentes
-
-Componentes podem se referir a outros componentes em seu template. Isso nos permite usar a mesma abstração de componente para qualquer nível de detalhe.
-
-Por exemplo, nós podemos criar um componente App que renderiza Welcome muitas vezes:
+A função que cria componentes retorna outra função que opcionalmente recebe um argumento e retorna uma instância que usaremos para acessar métodos e propriedades especiais, um desses métodos é o `template()`:
 
 ```javascript
-import { _, render } from "bemtv";
+import { _ } from "bemtv";
 
-_("Welcome", () => `h1[Hello world!] br[]`);
+const { template } = _`App`();
+```
 
-_("App", () => `Welcome[] Welcome[] Welcome[]`);
+#### Definindo o template
 
-render("App", "#app");
+O método `template()` deve ser usado para definir o conteúdo que o componente renderiza.
+
+Ele aceita um argumento que deve ser uma `string`, `TemplateStringsArray` ou uma função:
+
+```javascript
+import { _ } from "bemtv";
+
+const { template } = _`App`();
+
+template`Hello world!`;
+```
+
+Só devemos usar uma função quando o conteúdo do template puder ser alterado por uma variável acima:
+
+```javascript
+import { _ } from "bemtv";
+
+let count = 0;
+
+const { template } = _`App`();
+
+setInterval(() => count++, 1000);
+
+template(() => `Count is: ${count}`);
+```
+
+#### Renderizando
+
+Para renderizar o componente podemos usar a função `render()` .
+
+Opcionalmente podemos passar um elemento DOM ou um Seletor para indicar o local que o componente deve ser renderizado, o padrão é `document.body`:
+
+```javascript
+import { _ } from "bemtv";
+
+const { template, render } = _`App`();
+
+template`Hello world!`;
+
+// Ela pode ser chamada inúmeras vezes
+render();
+```
+
+Outra alternativa é importar o método `render()` do módulo principal, ele funciona de forma semelhante, porém leva uma `string` como primeiro argumento e o local de renderização como segundo:
+
+```javascript
+import { render } from "bemtv";
+
+const { template } = _`App`();
+
+template`Hello world!`;
+
+render("App[]", "#my-content");
+```
+
+### Estilizando o componente
+
+Além do estilo que pode ser aplicado diretamente no template,
+uma ótima opção é utilizar o método `css()`:
+
+```javascript
+import { _ } from "bemtv";
+
+const { css, template } = _`App`();
+
+css`
+  color: blue;
+  font-size: 20px;
+`;
+
+template`h1[Hello world!]`;
+```
+
+### Variáveis isoladas e especiais
+
+Para criar um componente que renderiza valores de forma isolada em cada renderização devemos passar um segundo argumento para a função que cria componentes, este deve ser um objeto com as propriedades que devem ser isoladas:
+
+```javascript
+import { _ } from "bemtv";
+
+_`Counter`({ count: 0 });
+```
+
+Essas propriedades se comportam como variáveis especiais e ​​isoladas para cada renderização do componente.
+
+**Passaremos a nos referir a essas variáveis ​​como `compVars` (variáveis de ​​componentes)**
+
+### Super component
+
+Um dos objetivos da criação de componentes é poder usá-los muitas vezes em sua aplicação.
+A instância retornada após a criação de um componente é chamada de SuperComponent, pois internamente cada vez que o componente é utilizado é criada uma instância leve que gerencia essa nova renderização do componente, essas instâncias assumem “controle” sempre que ocorre uma ação nelas onde a reação é a execução de um callback passado anteriormente, normalmente em Hooks e eventos DOM.
+
+> Não se preocupe, ficará mais claro à medida que você passar pelos exemplos e praticar.
+
+### Hooks
+
+Cada instância do componente passa por uma série de etapas, podemos executa funções chamadas hooks em cada uma dessas etapas:
+
+```javascript
+import { _ } from "bemtv";
+
+const { onInit, onMount, onUpdate, onUnmount } = _`App`();
+
+onInit(() => {
+  // Chamada(apenas uma vez) quando a instância é inicializada.
+});
+onMount(() => {
+  // Chamada(apenas uma vez) depois que o template do componente foi montado no DOM.
+});
+onUpdate(() => {
+  // Chamada após a atualização do template ser aplicada ao DOM.
+});
+onUnmount(() => {
+  // Chamado(apenas uma vez) depois que o componente é removido/desmontado do template em que estava.
+});
+```
+
+### Manipulando eventos
+
+Os manipuladores de eventos podem ser usados da instância do componente sua nomenclatura é a mesma usada em [`addEventListener()`](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener), porém, eles devem terminar com um símbolo `$`, os argumentos recebidos também seguem os de `addEventListener()`:
+
+```javascript
+import { _ } from "bemtv";
+
+const { click$, mouseover$, $ } = _`Counter`({ count: 0 });
+
+click$(() => $.count++, { capture: true });
+
+mouseover$(() => console.log("Hey!"));
+```
+
+Bemtv irá gerenciar e adicioná-los ao primeiro elemento que encontrar no template.
+
+Para remover basta chamar a função retornada:
+
+```javascript
+import { _ } from "bemtv";
+
+const { click$ } = _`Hey`();
+
+const removeClickListener = click$(() => {});
+
+removeClickListener();
+```
+
+### Manipulando as `compVars`
+
+Após a criação do componente e das `compVas` elas ficam disponíveis através de um objeto e acessíveis pelo símbolo `$`, com ele podemos acessar, alterar os valores das propriedades e adicionar outras.
+
+Este é um objeto especial que só pode ser usado em callbacks conhecidos da instância do componente, normalmente será usado em Hooks e em callbacks nos eventos DOM.
+
+```javascript
+import { _ } from "bemtv";
+
+const { onInit, $ } = _`Counter`({ count: 0 });
+
+onInit(() => {
+  console.log($.count);
+});
+```
+
+A responsabilidade deste objeto é manter os valores isolados para cada renderização do componente e **somente quando necessário** criar clones de estruturas de dados como array, Map, Set e object:
+
+### Usando as `compVars` no template
+
+Para usar o `compVars` no template usaremos um atalho especial, usando `$` mais o nome/caminho da propriedade:
+
+```javascript
+import { _ } from "bemtv";
+
+const { $, template } = _`Hero`({
+  hero: {
+    name: "Black Panther",
+  },
+});
+
+template`button[Cliked: $hero.name ]`;
+```
+
+Para marcar a propriedade como opcional basta adicionar um `?` ao ​​final:
+
+```javascript
+template`button[Cliked: $hero.name? ]`;
+```
+
+### Variáveis que são atributos
+
+Se uma variável tiver o mesmo nome de um atributo e seu valor for destinado a ele, podemos usar o `@` e o nome da variável para que ela seja usada como nome e valor do atributo:
+
+```javascript
+import { _ } from "bemtv";
+
+const { $, template } = _`Img`({
+  src: "avatar.png",
+  data: {
+    alt: "User avatar",
+  },
+});
+
+template`img[ @src @data.alt ]`;
+```
+
+### Elementos DOM
+
+Para acessar um elemento DOM usamos o método `useEl()`, que retorna uma tupla onde o primeiro item é uma chave especial que deve ser aplicada a tag e o segundo é uma função:
+
+```javascript
+import { _ } from "bemtv";
+
+const { useEl, template } = _`Hey`();
+const [key, getEl] = useEl();
+
+template`h1[ ${key} Hey!]`;
+```
+
+> A chave pode ser usada em qualquer lugar dentro dos colchetes da tag.
+
+A função `getEl()` só deve ser chamada em callbacks conhecidos pela instância do componente,
+ao chamar a função obtemos uma instância que pode ser usada para manipular o elemento/tag que possui a chave:
+
+```javascript
+import { _ } from "bemtv";
+
+const { useEl, onMount template } = _`Hey`();
+const [key, getEl] = useEl();
+
+onMount(()=>{
+  const manageEl = getEl();
+})
+
+template`h1[ ${key} Hey!]`;
+```
+
+A `manageEl` contém propriedades e métodos úteis para lidar com o elemento DOM:
+
+<dl>
+  <dt><code>it</code></dt>
+  <dd><br>
+      <p>Permite acesso ao elemento DOM real, o valor padrão é <code>null</code> e é alterado assim que o elemento é adicionado ao DOM.</p>
+  </dd>
+</dl>
+
+<dl>
+  <dt><code>css</code></dt>
+  <dd><br>
+      <p>Permite adicionar CSS-in-JS ao elemento. </p>
+      <p>Este método pode ser chamado antes mesmo do elemento ser adicionado ao DOM, o estilo será agendado e aplicado assim que o elemento estiver disponível</p>
+  </dd>
+</dl>
+
+Opcionalmente, o método `useEl()` aceita um argumento que pode ser um elemento DOM ou um seletor(usará [querySelector](https://developer.mozilla.org/pt-BR/docs/Web/API/Document/querySelector) para encontrar o elemento), então o método retornará a instância:
+
+```javascript
+import { _ } from "bemtv";
+
+const { useEl } = _`Hey`();
+const manageEl = useEl("#my-app");
+```
+
+#### Manipulando eventos do elemento
+
+Assim como na instância do componente, os manipuladores eventos podem ser usados da instância do elemento.
+
+```javascript
+import { _ } from "bemtv";
+
+const { useEl, onMount, template } = _`Hey`();
+const [key, getEl] = useEl();
+
+onMount(() => {
+  const { click$ } = getEl();
+
+  click$(() => {});
+});
+
+template`button[ ${key} Click me!]`;
+```
+
+### Props
+
+Muitas vezes nossos componentes precisam receber dados de fora antes de renderizar, props é uma forma comum de componentes pai passarem valores para componentes filho.
+
+para passar props para um componente usamos o método `defineProps()`, ele recebe um objeto como argumento e retorna uma chave que pode ser usada antes do colchete de abertura do componente, então o componente receberá as props declaradas:
+
+```javascript
+import { _ } from "bemtv";
+
+const { defineProps, template } = _`Hey`();
+
+const p = defineProps({ src: "user.png" });
+
+template`Avatar${p}[]`;
+```
+
+#### Usando as props
+
+As `props` são acessíveis através do objeto `$`:
+
+```javascript
+import { _ } from "bemtv";
+
+const { onInit, $ } = _`Avatar`();
+
+onInit(() => {
+  console.log($.props.src);
+});
+```
+
+#### Manipulando as props
+
+Para manipular as props podemos usar a função `props()` que recebe uma função que tomará as props como primeiro argumento e deve retornar o resultado da manipulação que passará a ser as props:
+
+```javascript
+import { _ } from "bemtv";
+
+const { props, $ } = _`Avatar`();
+
+props((p) => {
+  p.src = "my-avatar.png";
+  return p;
+});
+```
+
+#### Props que são atributos
+
+Se uma prop tiver o mesmo nome de um atributo e seu valor for destinado a ele, podemos usar o `@` e o nome da prop para que ela seja usada como nome e valor do atributo:
+
+```javascript
+import { _ } from "bemtv";
+
+const { template } = _`Avatar`();
+
+template`img[ @src ]`;
+```
+
+### Filhos do componente
+
+Os `children` são acessíveis através do objeto `$` eles sempre serão uma `string`:
+
+```javascript
+import { _ } from "bemtv";
+
+const { onInit, $ } = _`Container`();
+
+onInit(() => {
+  console.log($.children);
+});
+```
+
+#### Manipulando children
+
+Para manipular os `children` podemos usar a função `children()` que recebe uma função que tomará os `children` como primeiro argumento e deve retornar o resultado da manipulação que passará a ser os `children`:
+
+```javascript
+import { _ } from "bemtv";
+
+const { children, $ } = _`Avatar`();
+
+children((c) => {
+  return c + "Hey!";
+});
+```
+
+### Compartilhando dados entre componentes
+
+A API de compartilhamento fornece uma maneira de compartilhar dados como esses entre o componente acima e todos os componentes abaixo dele, sem precisar passar explicitamente props entre cada nível.
+
+#### Compartilhando dados
+
+Para compartilhar os dados usamos o método `share()` que aceita um objeto com as propriedades a serem compartilhadas:
+
+```javascript
+import { _ } from "bemtv";
+
+const { share, $ } = _`App`();
+
+share({ message: "Hey!" });
+```
+
+#### Usando os dados
+
+Para usar as propriedades compartilhadas usamos o método `use()` que aceita uma `string` que é o nome da propriedade a ser usada:
+
+```javascript
+import { _ } from "bemtv";
+
+const { onInit, use, $ } = _`Message`();
+
+onInit(() => {
+  console.log(use("message")); // Hey!
+});
+```
+
+#### Re-compartilhando dados
+
+Para compartilhar e depois atualizar o valor de uma propriedade podemos usar o método `share()`:
+
+```javascript
+import { _ } from "bemtv";
+
+const { share, $ } = _`App`();
+
+share({ message: "Hey!" });
+```
+
+E o método `reshare()` que também aceita um objeto e atualiza os valores que foram compartilhados anteriormente:
+
+```javascript
+import { _ } from "bemtv";
+
+const { onInit, reshare, $ } = _`Message`();
+
+onInit(() => {
+  reshare({ message: "New message!" });
+});
+```
+
+> O método `reshare()` não disponibiliza novas propriedades, apenas atualiza as já existentes.
+
+### Funções de transformação
+
+Ao armazenar valores em estruturas de dados como array, Map, Set ou object podemos querer criar uma marcação (Brackethtml) e adicioná-la ao template, para isso podemos usar funções de transformação que injetam uma propriedade(usando Symbol) na estrutura de dados e informa à **Bemtv** para transformar a estrutura de dados somente quando usada no template.
+
+Para criar uma função de tranformação usamos a função `tFn()` que recebe como seu primeiro argumento uma função que deve tratar a estrutura de dados e retorna uma função.
+
+```javascript
+import { tFn } from "bemtv";
+
+const tListJoin = tFn((list) => list.join(" br[] "));
+```
+
+Para usar a função basta passar uma lista e ela retornará a mesma lista com um Symbol injetado:
+
+```javascript
+import { _ } from "bemtv";
+
+const tListJoin = tFn((list) => list.join(" br[] "));
+
+const { template } = _`Counter`({
+  list: tListJoin(["user1", "user2", "user3"]),
+});
+
+template`div[Users: $list ]`;
+```
+
+Sempre que essa lista for alterada(ex: `$.list.push(item)`), a Bemtv detectará e usará a função de transformação novamente e rederizará a alteração.
+
+> As funções de transformação podem ser incrivelmente poderosas porque com Brackethtml podemos até retornar a marcação com CSS-In-JS, com isso podemos focar na estrutura de dados.
+
+#### Funções de transformação built-in
+
+```javascript
+import { tOl, tUl, tDl } from "bemtv";
+
+// Funciona com arrays e Sets e os transforma em uma lista ordenada.
+tOl([] || new Set());
+
+// Funciona com arrays e Sets e os transforma em uma lista não ordenada.
+tUl([] || new Set());
+
+// Funciona com objects e Maps e os transforma em uma lista de definição.
+tDl({} || new Map());
+```
+
+Sempre que você criar uma função de transformação é uma boa prática exportar a função normal que faz a transformação imediatamente:
+
+```javascript
+import { toOl, toUl, toDl } from "bemtv";
+
+// Funciona com arrays e Sets e os transforma em uma lista ordenada imediatamente.
+toOl([] || new Set());
+
+// Funciona com arrays e Sets e os transforma em uma lista não ordenada imediatamente.
+toUl([] || new Set());
+
+// Funciona com objects e Maps e os transforma em uma lista de definição imediatamente.
+toDl({} || new Map());
+```
+
+### Mantendo a instância em execução
+
+Se dentro do hook ou do evento DOM precisarmos usar uma função que não executa imediatamente devemos usar a função `keepInst()`, ela envolve a função que deve ser executada e retorna um callback que quando executado executa a função envolvida:
+
+```javascript
+import { _ } from "bemtv";
+
+const { click$, keepInst, $, template } = _`Counter`({ count: 0 });
+
+click$(() => {
+  setTimeout(
+    keepInst(() => $.count++),
+    1000
+  );
+});
+
+template`button[Cliked: $count ]`;
+```
+
+### Componente baseado em função
+
+Bemtv permite uma segunda forma de criar componentes, usando uma função esta função será chamada sempre que o componente for usado e receberá como argumento uma nova instância do SuperComponent, portanto não precisamos usar `keepInst()`.
+
+A primeira forma que mostramos até agora chama-se **CleanComponent**, pois a construção do componente é visualmente mais limpa e a segunda forma é **FunctionalComponent** porque utiliza uma função para encapsular a construção do componente. Atualmente, damos preferência a CleanComponent, mas fique à vontade para escolher aquela que melhor se adapta a um determinado componente.
+
+Ao usar a FunctionalComponent, ela retornará uma instância que possui um método `render()`.
+
+**FunctionalComponent:**
+
+```javascript
+const { render } = _`Counter`(({ click$, css, template }) => {
+  let count = 0;
+
+  click$(() => count++);
+
+  css`
+    padding: 20px;
+    color: red;
+  `;
+
+  template(() => `button[Cliked: ${count} ]`);
+});
+
+render();
+```
+
+**CleanComponent:**
+
+```javascript
+import { _ } from "bemtv";
+
+const { click$, $, css, template, render } = _`Counter`({ count: 0 });
+
+click$(() => $.count++);
+
+css`
+  padding: 20px;
+  color: blue;
+`;
+
+template`button[Cliked: $count ]`;
+
+render();
+```
+
+### Roteador(Router)
+
+Um Router é usado para navegação entre visualizações de vários componentes
+em uma aplicação Bemtv, permite alterar a URL do navegador e mantém a UI sincronizada com a URL.
+
+#### Criando uma rota
+
+Para criar uma rota devemos adicionar uma função ao objeto Router que é um Proxy.
+
+Esta função recebe os mesmos argumentos da função [`match()`](#usando-fallbackplano-b) e tem o mesmo comportamento.
+
+O nome da função deve ser escrito em CamelCase, mas quando a rota for adicionada à URL ela estará em kebab-case:
+
+```javascript
+import { router } from "bemtv";
+
+router.FirstPage("strong[Hey!]");
+```
+
+##### Usando um objeto para a rota
+
+Podemos definir propriedades para definir o comportamento da rota:
+
+```javascript
+import { router } from "bemtv";
+
+router.FirstPage({
+  use: "Hello world!", // Obrigatório. O que a rota deve exibir.
+
+  title: "Hey!", // O título do documento.
+
+  concat: "1234567/hey/89", // Permite concatenar uma `string` no link da rota
+});
+```
+
+> Também podemos passar um objeto como segundo argumento da rota, mas ele não suporta a propriedade `concat`.
+
+#### Renderizando rotas
+
+Para utilizar as rotas criadas devemos ter um local onde seu conteúdo possa ser renderizado, para isso podemos utilizar o símbolo `#`:
+
+```javascript
+import { _ } from "bemtv";
+
+const { template } = _`App`();
+
+template`#[]`;
+```
+
+#### Criando links para rotas
+
+Para criar links que, ao serem acessados, levarão o usuário à rota, podemos usar o símbolo `#` mais o nome da rota, semelhante a um componente:
+
+```javascript
+import { _ } from "bemtv";
+
+const { template } = _`App`();
+
+template`#FirstPage[I am a link!]`;
+```
+
+Tudo dentro do componente `#FirstPage[]` ​​será envolto em uma tag `a` com o atributo `href` apontando para a rota.
+
+O retorno da função rota que é uma função que sempre que for chamada levará o usuário para a rota:
+
+```javascript
+import { router } from "bemtv";
+
+const goToFirstPage = router.FirstPage("strong[Hey!]");
+```
+
+#### Capturando erros
+
+Sempre que a rota for desconhecida, a Bemtv irá avisá-lo através da função `onRouteUnfound()` que aceita um ouvinte/callback como primeiro argumento:
+
+```javascript
+import { onRouteUnfound } from "bemtv";
+
+onRouteUnfound(() => {
+  console.log("Estamos em uma rota não conhecida :(");
+});
 ```
 
 ### Verificando componentes disponíveis
@@ -364,460 +787,20 @@ if (hasComponent("App")) {
 }
 ```
 
-### Props
-
-Muitas vezes nossos componentes precisam receber dados de fora antes de renderizar, props é uma forma comum de componentes pai passarem valores para componentes filho.
-
-Normalmente em outras bibliotecas e frameworks props são passados ​​como atributos do componente filho, porém, em nossa biblioteca isso não seria possível, pois, só seria possível passar valores do tipo `string` ou `number`.
-
-para passar props para um componente, usamos o método `defineProps()` que está disponível na instância do componente:
-
-```javascript
-import { _, render } from "bemtv";
-
-_("App", ({ defineProps }) => {
-  const key = defineProps({ message });
-
-  return `Message${key}[]`;
-});
-```
-
-O método `defineProps()` recebe um objeto como argumento e retorna uma chave que pode ser usada antes do colchete de abertura do componente, então o componente receberá as props declaradas:
-
-```javascript
-import { _, render } from "bemtv";
-
-_("Message", ({ props }) => {
-  const { message } = props;
-
-  return `h1[${message}] br[]`;
-});
-```
-
-Também poderíamos usar a propriedade `p` que é um alias de `props`:
-
-```javascript
-import { _, render } from "bemtv";
-
-_("Message", ({ p }) => {
-  const { message } = p;
-
-  return `h1[${message}] br[]`;
-});
-```
-
-### Filhos do componente
-
-Componentes também podem agrupar filhos, mas cabe ao componente que irá recebê-los decidir se irá adicioná-los ao seu template.
-
-O componente pode acessar seus filhos através da propriedade `children` que sempre será uma `string`:
-
-```javascript
-import { _, render } from "bemtv";
-
-_("Message", ({ children }) => `h1[${children}]`);
-
-_(
-  "App",
-  () => `
-    Message[ Hello ]  br[]
-    Message[ world ]  br[]
-    Message[ !!! ]`
-).render();
-```
-
-### Componentes com e sem estado
-
-Há uma distinção entre componentes com estado e sem estado:
-
-#### Com estado
-
-Componentes com estado são aqueles que retornam uma função porque seu template é mutável:
-
-```javascript
-import { _, render } from "bemtv";
-
-_("Counter", () => {
-  let count = 0;
-
-  setInterval(() => count++, 1000);
-
-  return () => `Counter: ${count}`;
-});
-```
-
-#### Sem estado
-
-Componentes sem estado são aqueles que retornam uma `string` porque seu template nunca mudará após ser gerado:
-
-```javascript
-import { _, render } from "bemtv";
-
-_("Welcome", ({ props }) => {
-  const { message } = props;
-
-  return `strong[${message}]`;
-});
-```
-
-### Compartilhando dados entre componentes
-
-Podemos usar props para passar dados do componente pai para seus filhos, mas esse uso pode ser complicado para certos tipos de props (como preferências locais ou tema de UI), que são utilizadas por muitos componentes dentro da aplicação.
-
-A API de compartilhamento fornece uma maneira de compartilhar dados como esses entre o componente acima e todos os componentes abaixo dele, sem precisar passar explicitamente props entre cada nível.
-
-#### Compartilhando dados
-
-Para compartilhar os dados usamos o método `share()` que aceita um objeto com as propriedades a serem compartilhadas:
-
-```javascript
-import { _, render } from "bemtv";
-
-_("Parent", ({ share }) => {
-  share({ message: " Hello world! " });
-
-  return `Child[]`;
-});
-```
-
-#### Usando os dados
-
-Para usar as propriedades compartilhadas usamos o método `use()` que aceita uma `string` que é o nome da propriedade a ser usada:
-
-```javascript
-import { _, render } from "bemtv";
-
-_("Child", ({ use }) => `strong[${use("message")}]`);
-```
-
-#### Re-compartilhando dados
-
-Em algumas situações, podemos precisar que o componente filho busque dados e atualize, no entanto, enquanto esses dados não estiverem disponíveis, o componente pai deve definir um valor padrão e, assim que os dados estiverem disponíveis, o componente filho deverá poder alterar.
-
-Para isso podemos usar o método `share()` combinado com o método `reshare()` que também aceita um objeto e atualiza os valores que foram compartilhados anteriormente:
-
-```javascript
-import { _, render } from "bemtv";
-
-_("Message", ({ reshare }) => {
-  let message = "";
-
-  setTimeout(() => {
-    message = "Hello world!";
-    reshare({ message });
-  }, 1000);
-  return () => `strong[The message is: ]`;
-});
-
-_("Parent", ({ share, use }) => {
-  share({ message: "" });
-  return () => `Message[] ${use("message")}`;
-});
-```
-
-> É importante lembrar que o método `reshare()` não disponibiliza novas propriedades, apenas atualiza as já existentes.
-
-#### Funcionamento(Sob o capô)
-
-O compartilhamento de dados funciona por hierarquia, o componente acima compartilha os dados consigo mesmo e com todos abaixo dele.
-
-Com isso, algumas questões podem surgir:
-
-**O que acontece se vários componentes que estão acima de outro compartilharem a mesma propriedade?**
-
-O componente abaixo consumirá a propriedade do componente acima mais próximo.
-
-> No entanto, é uma boa prática ao compartilhar dados entre componentes evitar repetir o nome das propriedades.
-
-O mesmo acontece ao re-compartilhar uma propriedade, o valor atualizado será o do componente acima mais próximo.
-
-<details>
-  <summary><h4>Dados entre componentes(Avançado)</h4></summary>
-
-[Closures](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures) podem dar acesso a valores contidos em componentes de forma que o valor retornado sempre estará atualizado.
-
-Primeiro vamos declarar um componente Counter:
-
-```javascript
-import { _ } from "bemtv";
-
-_("Counter", () => {
-  let count = 0;
-
-  const getCounterValue = () => count;
-
-  setInterval(() => count++, 1000);
-
-  return () => `Current value: ${count}`;
-});
-```
-
-Observe dentro dele a função `getCounterValue()` que, quando chamada, retornará o valor mais recente da variável `count`, no entanto, precisamos torná-la acessível de fora do componente, para isso usaremos o método `reshare()`:
-
-```javascript
-import { _ } from "bemtv";
-
-_("Counter", ({ reshare }) => {
-  let count = 0;
-
-  const getCounterValue = () => count;
-
-  setInterval(() => count++, 1000);
-
-  reshare({ getCounterValue });
-
-  return () => `Current value: ${count}`;
-});
-```
-
-O método `reshare()` fará o seguinte, se um componente acima compartilhou uma propriedade ou método `getCounterValue()`, atualize-o com este novo valor.
-
-Em seguida, criaremos um componente DoubleCounter que usará o método `getCounterValue()` para acessar o valor atual do contador:
-
-```javascript
-import { _ } from "bemtv";
-
-_("DoubleCounter", ({ use }) => {
-  return () => ` Double value: ${use("getCounterValue")() * 2}`;
-});
-```
-
-Podemos fazer uso do método dentro do template de DoubleCounter porque sua chamada resulta em computação leve, no entanto, se executarmos este código agora, o DoubleCounter não teria acesso a `getCounterValue()` porque ele só pode acessar dados compartilhados por ele mesmo ou por componentes acima dele.
-
-Para resolver isso temos que criar um componente que esteja acima de Counter e DoubleCounter:
-
-```javascript
-import { _ } from "bemtv";
-
-_("App", () => `Counter[] br[] DoubleCounter[] `).render();
-```
-
-O componente acima dos demais tem outra responsabilidade a de compartilhar os valores definindo assim os valores padrão:
-
-```javascript
-import { _ } from "bemtv";
-
-_("App", ({ share }) => {
-  share({ getCounterValue: () => 0 });
-
-  return () => `Counter[] br[] Current value * 2: DoubleCounter[] `;
-}).render();
-```
-
-As etapas acima descrevem que o componente acima define as propriedades e
-os componentes abaixo podem acessá-las e/ou alterá-las.
-
-</details>
-
-### Manipulando eventos
-
-Manipular eventos em Bemtv é muito semelhante a manipular eventos usando
-[addEventListener()](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener).
-
-Os manipuladores de eventos podem ser injetados na instância do componente como um método e sua nomenclatura é a mesma usada em `addEventListener()`, porém, eles devem terminar com um símbolo `$`.
-
-Ao injetar manipuladores de eventos na instância do componente, Bemtv irá adicioná-los ao primeiro elemento que encontrar no template:
-
-```javascript
-import { _ } from "bemtv";
-
-_("Counter", ({ reshare, click$ }) => {
-  let count = 0;
-
-  click$(() => count++, {} /* AddEventListenerOptions */);
-
-  return () => `button[Clicked: ${count}]`;
-});
-```
-
-Os argumentos recebidos também seguem os de `addEventListener()`.
-
-O Bemtv gerenciará os manipuladores de eventos e se o template mudar, se necessário, poderá adicioná-los novamente.
-
-### Elementos DOM
-
-Pode ser necessário acessar o elemento DOM, para isso podemos utilizar o método `el()`, que retorna uma tupla onde o primeiro item é um objeto e o segundo é a chave que deve ser aplicada ao elemento:
-
-```javascript
-import { _ } from "bemtv";
-
-_("Counter", ({ el }) => {
-  const [btnManager, btnKey] = el();
-
-  return () => `button[ ${btnKey}  My button]`;
-});
-```
-
-A chave pode ser usada em qualquer lugar dentro dos colchetes da tag.
-
-Opcionalmente, o método `el()` aceita um argumento que pode ser um elemento DOM ou um seletor(usará [querySelector](https://developer.mozilla.org/pt-BR/docs/Web/API/Document/querySelector) para encontrar o elemento), então o método retornará apenas um objeto:
-
-```javascript
-import { _ } from "bemtv";
-
-_("Counter", ({ el }) => {
-  const btnManager = el("#button");
-
-  return () => `button[ id='button' ~ My button]`;
-});
-```
-
-> Se for um seletor, o elemento estará disponível assim que o componente for montado
-
-O `btnManager` contém propriedades e métodos úteis para lidar com o elemento DOM:
-
-<dl>
-  <dt><code>it</code></dt>
-  <dd><br>
-      <p>Permite acesso ao elemento DOM real, o valor padrão é <code>null</code> e é alterado assim que o elemento é adicionado ao DOM.</p>
-  </dd>
-</dl>
-
-```javascript
-import { _ } from "bemtv";
-
-_("Counter", ({ el }) => {
-  const [btnKey, btnManager] = el();
-
-  setTimeout(() => btnManager.it.click());
-
-  return () => `button[ ${btnKey}  My button]`;
-}).render();
-```
-
-<dl>
-  <dt><code>css</code></dt>
-  <dd><br>
-      <p>Permite adicionar CSS-in-JS ao elemento. </p>
-      <p>Este método pode ser chamado antes mesmo do elemento ser adicionado ao DOM, o estilo será agendado e aplicado assim que o elemento estiver disponível</p>
-  </dd>
-</dl>
-
-```javascript
-import { _ } from "bemtv";
-
-_("Counter", ({ el }) => {
-  const [btnKey, btnManager] = el();
-
-  btnManager.css`color:blue;`;
-
-  return () => `button[ ${btnKey}  My button]`;
-}).render();
-```
-
-> Este método é idêntico ao método [goober - css()](https://goober.js.org/api/css/) (veja mais detalhes na documentação do goober)
-
-#### Manipulando eventos do elemento
-
-Assim como na instância do componente, os manipuladores eventos podem ser injetados na instância do elemento(`btnManager`) como um método e sua nomenclatura é a mesma usada em `addEventListener()`, porém, eles devem terminar com um símbolo `$`.
-
-```javascript
-import { _ } from "bemtv";
-
-_("Counter", ({ el }) => {
-  const [btnKey, btnManager] = el();
-
-  btnManager.click$(
-    () => console.log("Clicked!"),
-    {} /* AddEventListenerOptions */
-  );
-
-  return () => `button[ ${btnKey}  My button]`;
-}).render();
-```
-
-### Ciclo de Vida(Lifecycle) Hooks
-
-Cada instância do componente Bemtv passa por uma série de etapas como montar o template e atualizar o DOM quando os dados forem alterados. Ao longo do caminho, ela também executa funções chamadas ganchos de ciclo de vida, dando aos usuários a oportunidade de adicionar seu próprio código em estágios específicos.
-
-#### onMount
-
-Chamada apenas uma vez depois que os elementos do template são adicionados ao DOM:
-
-```javascript
-import { _ } from "bemtv";
-
-_("Counter", ({ onMount }) => {
-  onMount(() => console.log("Mounted!"));
-
-  return () => `button[ My button]`;
-}).render();
-```
-
-#### onUpdate
-
-Chamada sempre que o template é alterado e as alterações forem aplicadas ao DOM:
-
-```javascript
-import { _ } from "bemtv";
-
-_("Counter", ({ onMount }) => {
-  let count = 0;
-
-  setTimeout(() => (count = 1));
-
-  onUpdate(() => console.log("Updated!"));
-
-  return () => `button[value: ${count}]`;
-}).render();
-```
-
-#### onUnmount
-
-Chamada apenas uma vez depois que todos os elementos do modelo foram removidos do DOM e instância do componente será destruída:
-
-```javascript
-import { _ } from "bemtv";
-
-_("Counter", ({ onUnmount }) => {
-  onUnmount(() => console.log("Unmounted!"));
-
-  return () => `button[ My button]`;
-}).render();
-```
-
 ### Inicializando(Bootstrapping) um App Bemtv
 
-Na Bemtv, os componentes são declarados globalmente e usados ​​a partir de sua chave de declaração (o nome do componente), então podemos usar um componente sem importar seu módulo desde que ele já tenha sido importado em algum momento da aplicação.
-
-Para garantir que um componente foi importado, podemos simplesmente importá-lo para o módulo onde queremos usá-lo:
-
-```javascript
-import "./components/Counter";
-
-_("App", () => `Counter[]`).render();
-```
-
-> Observe que a importação visa apenas os efeitos colaterais do módulo, ou seja, a criação do componente.
-
-Essa prática funcionará muito bem, porém, pode ser tedioso fazer isso em todos os módulos que você irá precisar do componente, outra solução é criar um arquivo de inicialização e nele importar todos os componentes que irá precisar:
+Recomendamos criar um arquivo de inicialização e nele importar todos os componentes que irá precisar garantindo que todos os componetes já foram importados:
 
 `bootstrap.js`:
 
 ```javascript
 import "./components/Counter";
 import "./components/Message";
-import "./components/HelloWorld";
-import "./components/Menu";
-import "./components/Footer";
-import "./components/Header";
-```
-
-E no arquivo principal da sua aplicação, importe o arquivo que importa os componentes:
-
-`main.js`:
-
-```javascript
-import "./bootstrap";
-
-/* ... */
 ```
 
 ### Dividindo o Código (Code-Splitting)
 
-Para evitar o envio de componentes que a princípio podem ser desnecessários para o usuário, podemos usar [importações dinâmicas](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import)(dynamic import), que nos permite importar um módulo a qualquer momento em nossa aplicação.
-
-Para automatizar o processo de importação de componentes, a Bemtv oferece a função `autoImportComponents()` que aceita um objeto onde o nome das propriedades deve ser o nome dos componentes e seus valores devem ser uma função que importa o componente usando importação dinâmica:
+Para automatizar o processo de importação de componentes, a Bemtv oferece a função `autoImportComponents()` que aceita um objeto onde o nome das propriedades deve ser o nome dos componentes e seus valores devem ser uma função que importa o componente usando [importações dinâmicas](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import)(dynamic import):
 
 ```javascript
 import { autoImportComponents } from "bemtv";
@@ -826,126 +809,24 @@ autoImportComponents({
   Counter() {
     import("./components/Counter");
   },
-  Message() {
-    import("./components/Message");
-  },
 });
 ```
 
 A Bemtv fará a importação do componente assim que componente for utilizado em um template, porém, irá ignorar o componente até o momento em que estiver disponível.
-
-```javascript
-import { _ } from "bemtv";
-
-_("App", () => () => `A messagem é: Message[]`).render();
-```
-
-No exemplo acima, inicialmente a página exibiria “A mensagem é:”, pois o componente `Message` ainda não havia sido baixado, mas assim que estivesse disponível o template seria atualizado e a página também exibiria o template do componente `Message`.
 
 ### Usando fallback(Plano B)
 
 A função `match()` pode ser usada para apresentar uma alternativa enquanto um determinado componente não estiver disponível, ela aceita dois argumentos, o primeiro é o componente de interesse que se estiver disponível é retornado como valor, e o segundo argumento que deve ser uma `string` que só é usado como retorno se o componente não estiver disponível:
 
 ```javascript
-import { _, match } from "bemtv";
+import { _ } from "bemtv";
 
-_("App", () => () => {
-  return `
-        Dados: 
-        ${match("Data[]", "<div>Carregando...</div>")}`;
-}).render();
+const { template } = _`Hero`();
+
+template(() => `Dados: ${match("Data[]", "<div>Carregando...</div>")}`);
 ```
-
-> Esta função está otimizada para que possamos usá-la diretamente no template.
 
 > **Esta função acionará a importação automática se o componente for autoimportável**.
-
-### Roteador(Router)
-
-Um Router é usado para navegação entre visualizações de vários componentes
-em uma aplicação Bemtv, permite alterar a URL do navegador e mantém a UI sincronizada com a URL.
-
-Para fazer uso do roteador, devemos importar o objeto Router
-
-```javascript
-import { r, router } from "bemtv";
-```
-
-Observe os objetos `r` e `router` eles são o mesmo objeto o `r` é apenas um atalho de escrita.
-
-> Os exemplos preferirão usar `r`, mas sinta-se à vontade para escolher
-
-#### Criando uma rota
-
-Para criar uma rota devemos adicionar uma função ao objeto Router.
-
-Esta função recebe os mesmos argumentos da função [`match()`](#usando-fallbackplano-b) e tem o mesmo comportamento em relação aos componentes.
-
-O nome da função deve ser escrito em CamelCase, mas quando a rota for adicionada à URL ela estará em kebab-case.
-
-O objeto é um Proxy, então não precisamos usar o sinal de atribuição `=`, podemos apenas chamar a função:
-
-```javascript
-import { r } from "bemtv";
-
-r.FirstPage("strong[Hey!]");
-```
-
-#### Renderizando rotas
-
-Para utilizar as rotas criadas devemos ter um local onde seu conteúdo possa ser renderizado, para isso podemos utilizar o componente Router que não precisa ser importado e pode ser utilizado através do símbolo `#`:
-
-```javascript
-import { _ } from "bemtv";
-
-_("App", () => `#[]`);
-```
-
-O componente Router é um componente normal e pode ser reutilizado várias vezes. Uma vez que uma rota tenha sido acessada, seu conteúdo será renderizado dentro dele.
-
-#### Criando links para rotas
-
-Para criar links que, ao serem acessados, levarão o usuário à rota, podemos usar o símbolo `#` mais o nome da rota, semelhante a um componente:
-
-```javascript
-import { _ } from "bemtv";
-
-_("HelloWorld", () => `#FirstPage[I am a link!]`);
-```
-
-Tudo dentro do componente `#FirstPage[]` ​​será envolto em uma tag `a` com o atributo `href` apontando para a rota ex:
-
-```html
-<a href="#/first-page">I am a link!</a>
-```
-
-Existem situações em que podemos querer levar o usuário para uma determinada rota após um evento DOM ou algo semelhante, para isso podemos usar o retorno da função rota que é uma função que sempre que for chamada levará o usuário para a rota:
-
-```javascript
-import { r, _ } from "bemtv";
-
-const goToFirstPage = r.FirstPage("strong[Hey!]");
-
-_("App", ({ click$ }) => {
-  click$(goToFirstPage);
-
-  return `
-      button[Click me!]
-      br[] br[]
-
-      #[]`;
-});
-```
-
-#### Argumento de fallback(Plano B) da rota
-
-Como dito, a função rota funciona da mesma forma que a função [`match()`](#usando-fallbackplano-b) em relação aos componentes, então podemos passar um segundo argumento que será usado como valor da rota caso o primeiro argumento não possa ser usado:
-
-```javascript
-import { r } from "bemtv";
-
-r.UserPage("UserData[]", "ErrorPage[]");
-```
 
 ## Fechamento
 
