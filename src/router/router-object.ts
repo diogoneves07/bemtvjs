@@ -31,7 +31,7 @@ export const routerProxy = new Proxy(routerObject, {
         if (isRouteObject && main.concat) {
           routePath = routePath + "/" + main.concat;
         }
-        _("Router:" + routeName).template(
+        _`Router:${routeName}`().template(
           () => `<a href="#/${routePath}">$children</a>`
         );
         return () => {
