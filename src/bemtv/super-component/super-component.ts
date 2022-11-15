@@ -25,31 +25,35 @@ export type ComponentVars<V extends Record<string, any> = Record<string, any>> =
 export interface SuperComponent<
   Vars extends Record<string, any> = Record<string, any>
 > extends Listeners {
+  /**
+   * Calls the callback (only once) when the instance is initialized.
+   *
+   * @param fn
+   * The callback.
+   */
   onInit(fn: () => void): this;
 
   /**
-   * Calls(only once) the callback after template elements are added to the DOM.
+   * Calls(only once) the callback after the component template has been mounted in the DOM.
    *
    * @param fn
-   * The callback
+   * The callback.
    */
   onMount(fn: () => void): this;
 
   /**
-   * Calls(only once) the callback whenever the template changes
-   * and the changes are applied to the DOM.
+   * Calls the callback after the template update is applied to the DOM.
    *
    * @param fn
-   * The callback
+   * The callback.
    */
   onUnmount(fn: () => void): this;
 
   /**
-   * Calls the callback after all tempĺate elements have been removed from the DOM
-   * and component instance will be destroyed.
+   * Calls the callback after the component is removed/unmounted from the template it was in.
    *
    * @param fn
-   * The callback
+   * The callback.
    */
   onUpdate(fn: () => void): this;
 }
@@ -80,6 +84,10 @@ export class SuperComponent<Vars extends Record<string, any>> {
     isSigleInstance: false,
   };
 
+  /**
+   * Allows you to create `compVars`,
+   * which are properties that are isolated for each component render.
+   */
   $: ComponentVars<Vars>;
 
   constructor(name: string, vars?: Vars) {
@@ -98,6 +106,15 @@ export class SuperComponent<Vars extends Record<string, any>> {
     this.$ = manageComponentsVars({} as ComponentVars<Vars>, sComp);
   }
 
+  /**
+   * Allows you to keep the instance running for the execution of a callback.
+   * @param callback
+   *
+   * The callback.
+   * @returns
+   *
+   * A callback that when called executes the function passed.
+   */
   keepInst<T extends Function>(callback: T) {
     const keepInstance = this.__data.componentRunning;
     return () => {
@@ -108,6 +125,9 @@ export class SuperComponent<Vars extends Record<string, any>> {
     };
   }
 
+  /**
+   * Allows CSS-In-JS
+   */
   css = (...args: Parameters<typeof css>) => {
     const classValue = css(...args);
     const data = this.__data;
@@ -134,6 +154,13 @@ export class SuperComponent<Vars extends Record<string, any>> {
     selectorOrElement: string | Element
   ): ManageEl<E>;
 
+  /**
+   * Creates an instance to manage a real DOM element.
+   *
+   * @returns
+   * A Tuple where the first item is a special key that must be applied to the tag
+   * and the second is a function to get the instance.
+   */
   useEl<E extends Element = Element>(): [
     elKey: string,
     getEl: () => ManageEl<E>
@@ -213,16 +240,25 @@ export class SuperComponent<Vars extends Record<string, any>> {
     return "_" + key;
   }
 
+  /**
+   * Allows you to manipulate the children passed to the component.
+   */
   children(fn: (children: string) => string) {
     this.__data.fns.push(["children", [fn]]);
     return this.__data.sCompProxy;
   }
 
+  /**
+   * Allows you to manipulate the props passed to the component.
+   */
   props(fn: (props: Record<string, any>) => Record<string, any>) {
     this.__data.fns.push(["props", [fn]]);
     return this.__data.sCompProxy;
   }
 
+  /**
+   * Defines the component template.
+   */
   template(t: string | TemplateStringsArray | (() => string), ...exps: any[]) {
     const data = this.__data;
 
@@ -260,6 +296,12 @@ export class SuperComponent<Vars extends Record<string, any>> {
     return this.__data.sCompProxy;
   }
 
+  /**
+   * Renders the component somewhere on the page.
+   *
+   * @param selectorOrElement
+   * The element to insert the nodes.
+   */
   render = (selectorOrElement?: string | Element) => {
     render(this.__data.componentName + "[]", selectorOrElement);
     return this.__data.sCompProxy;

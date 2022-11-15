@@ -34,12 +34,26 @@ function transformToHTMLList<T extends any[] | Set<any>>(
   return `${parentTag}[${v.join("")}]`;
 }
 
+/**
+ * Works with arrays and Sets and transform them into an ordered list.
+ */
 export const toOl = <T extends any[] | Set<any>>(value: T) => {
   return transformToHTMLList(value, true);
 };
+
+/**
+ * Works with arrays and Sets and transform them into an ordered list immediately
+ */
 export const tOrderedList = tFn(toOl);
 
+/**
+ * Works with arrays and Sets and transform them into an unordered list.
+ */
 export const toUl = <T extends any[] | Set<any>>(value: T) => {
   return transformToHTMLList(value, false);
 };
+
+/**
+ * Works with arrays and Sets and transform them into an unordered list immediately.
+ */
 export const tUnorderedList = tFn(toUl);

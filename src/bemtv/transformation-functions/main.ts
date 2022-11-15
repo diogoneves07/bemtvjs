@@ -1,5 +1,8 @@
 export const T_FNS_SYMBOL = Symbol();
 
+/**
+ * Allows creation of transformation functions.
+ */
 export function tFn<Fn extends (data: any) => string>(fn: Fn) {
   function transform<T extends Parameters<Fn>[0]>(data: T): T;
   function transform<T extends Parameters<Fn>[0]>(

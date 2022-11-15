@@ -3,6 +3,9 @@ type RemoveRouteUnfound = () => void;
 
 const fns = new Set<RouteUnfound>();
 
+/**
+ * Allow capturing route not found error.
+ */
 export function onRouteUnfound(fn: RouteUnfound): RemoveRouteUnfound {
   fns.add(fn);
 

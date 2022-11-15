@@ -7,13 +7,13 @@ const CACHE: Map<string, true> = new Map();
 /**
  *
  * @param component
- * The component and its children
+ * The component and its children.
  *
  * @param fallback
- * The fallback if the component is not available
+ * The fallback if the component is not available.
  *
  * @returns
- * The component if available or the second argument
+ * The component if available or the second argument.
  */
 export function matchComponent(
   component: `${string}[${string}]` | string,

@@ -16,7 +16,7 @@ import isString from "../utilities/is-string";
  * @param template
  * A template.
  * @param insert
- * The element to insert the nodes
+ * The element to insert the nodes.
  */
 export default function render(
   template: string,

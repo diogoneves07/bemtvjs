@@ -20,5 +20,13 @@ function transformToDescriptionList<T extends Record<string, any>>(
 
   return `dl[${str}]`;
 }
+
+/**
+ * Works with objects and maps and transform them into a definition list.
+ */
 export const tDescriptionList = tFn(transformToDescriptionList);
+
+/**
+ *Works with objects and maps and transform them into a definition list immediately.
+ */
 export const toDl = transformToDescriptionList;
