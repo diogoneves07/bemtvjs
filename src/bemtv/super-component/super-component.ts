@@ -77,17 +77,22 @@ export class SuperComponent<Vars extends Record<string, any>> {
     classes: [],
     fns: [],
     sCompProxy: null as any,
+    isSigleInstance: false,
   };
 
   $: ComponentVars<Vars>;
 
-  constructor(name: string, vars: Vars) {
+  constructor(name: string, vars?: Vars) {
     const data = this.__data;
+    const isSigleInstance = vars === undefined;
+    const v = vars || {};
 
-    Object.assign(data.componentsInitVars, vars);
+    this.__data.isSigleInstance = isSigleInstance;
+
+    Object.assign(data.componentsInitVars, v);
 
     data.componentName = name;
-    data.componentsVarsKeys.push(...Object.keys(vars));
+    data.componentsVarsKeys.push(...Object.keys(v));
 
     const sComp = this;
     this.$ = manageComponentsVars({} as ComponentVars<Vars>, sComp);

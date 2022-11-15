@@ -26,11 +26,12 @@ export interface SuperComponentData {
   removeDOMListeners: Map<SuperComponentDOMListener, (() => void)[]>;
   componentRunning: ComponentInst | null;
   components: Map<ComponentInst, ComponentProps>;
-  $disableProxies: Boolean;
+  $disableProxies: boolean;
   classes: string[];
   fns: [fn: string, args: any[]][];
   sCompProxy: SuperComponent;
   propsDefined?: Map<string, Props>;
   disableVarsProxies(): void;
   activateVarsProxies(): void;
+  isSigleInstance: boolean;
 }

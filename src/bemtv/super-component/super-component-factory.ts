@@ -12,7 +12,7 @@ import isString from "../../utilities/is-string";
 
 export function SuperComponentFactory<Vars extends Record<string, any>>(
   name: string,
-  vars: Vars
+  vars?: Vars
 ) {
   const superComponent = new SuperComponent<Vars>(name, vars);
   const data = getSuperComponentData(superComponent);

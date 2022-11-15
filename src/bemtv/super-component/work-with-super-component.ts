@@ -32,6 +32,8 @@ export function setRunningComponent(
 ) {
   const data = getSuperComponentData(sComp);
 
+  if (data.isSigleInstance) return;
+
   data.componentRunning = c || null;
 
   const vars = getComponentVars(sComp) as ComponentProps["vars"];

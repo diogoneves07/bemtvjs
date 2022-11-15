@@ -3,6 +3,8 @@ import { LIBRARY_NAME_IN_ERRORS_MESSAGE } from "../globals";
 import { SuperComponentFactory } from "./super-component/super-component-factory";
 import { bindComponentToSuperComponent } from "./super-component/bind-comp-to-s-comp";
 import ComponentInst from "./component-inst";
+import render from "./render";
+import concatTemplateStringArrays from "../utilities/concat-template-string-arrays";
 
 type GlobalComponentsMap = Map<string, ComponentFn>;
 
@@ -45,30 +47,67 @@ export function hasComponent(name: ComponentName) {
  * The component creation instance.
  */
 
-export function _<C extends ComponentName, N extends Record<string, any>>(
-  componentName: ComponentName | TemplateStringsArray,
-  vars?: N
-): SuperComponent<N>;
+class ComponentsInst {
+  protected __name: string;
+  constructor(name: string) {
+    this.__name = name;
+  }
+  render(insert: string | Element = document.body) {
+    render(`${this.__name}[]`, insert);
+    return this;
+  }
+}
+type SuperComponentFn = (c: SuperComponent) => void;
 
-export function _<C extends ComponentName, N extends Record<string, any>>(
-  componentName: C | TemplateStringsArray,
-  vars: N = {} as N
-): SuperComponent<N> {
-  const c = (
-    Array.isArray(componentName) ? componentName.join("") : componentName
+export function _(n: TemplateStringsArray, ...args: string[]) {
+  const name = (
+    Array.isArray(n)
+      ? concatTemplateStringArrays(n as TemplateStringsArray, args).join("")
+      : n
   ) as string;
 
-  if (GLOBAL_COMPONENTS_MAP.has(c)) {
-    throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} This component “${c}” name is already in use!`;
+  function compType(): SuperComponent;
+
+  function compType(compFn: SuperComponentFn): ComponentsInst;
+
+  function compType<V extends Record<string, any>>(
+    compVars: V
+  ): SuperComponent<V>;
+
+  function compType(compVarsOrCompFn?: Record<string, any> | SuperComponentFn) {
+    if (typeof compVarsOrCompFn === "function") {
+      const compFn = compVarsOrCompFn;
+
+      if (GLOBAL_COMPONENTS_MAP.has(name)) {
+        throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} This component “${name}” name is already in use!`;
+      }
+
+      GLOBAL_COMPONENTS_MAP.set(name, (c) => {
+        const s = SuperComponentFactory(name);
+
+        compFn(s);
+
+        return bindComponentToSuperComponent(s, c);
+      });
+
+      return new ComponentsInst(name);
+    }
+
+    const vars = compVarsOrCompFn || {};
+
+    if (GLOBAL_COMPONENTS_MAP.has(name)) {
+      throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} This component “${name}” name is already in use!`;
+    }
+
+    Object.freeze(vars);
+
+    const superComponent = SuperComponentFactory(name, vars);
+    GLOBAL_COMPONENTS_MAP.set(name, (c) =>
+      bindComponentToSuperComponent(superComponent, c)
+    );
+
+    return superComponent;
   }
 
-  Object.freeze(vars);
-
-  const superComponent = SuperComponentFactory(c, vars);
-
-  GLOBAL_COMPONENTS_MAP.set(c, (c) =>
-    bindComponentToSuperComponent(superComponent, c)
-  );
-
-  return superComponent;
+  return compType;
 }
