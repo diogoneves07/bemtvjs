@@ -33,7 +33,7 @@ css`
   color: blue;
 `;
 
-template`button[Cliked: $count ]`;
+template`button[Clicked: $count ]`;
 
 render();
 ```
@@ -68,7 +68,7 @@ Considere esta declaração de variável:
 const btn = `button[Click me!]`;
 ```
 
-Essa sintaxe é uma `string` normal, a bemtv entende e pode converter para HTML, nós a chamamos de “Brackethtml” ela reduz a redundância de HTML e ainda pode ser facilmente entendida como HTML, além de suportar HTML normalmente.
+Essa sintaxe é chamada de “Brackethtml” ela de reduz a redundância do HTML e ainda pode ser facilmente entendida como HTML, além de suportar HTML normalmente.
 
 #### Brackethtml + CSS-in-JS ([goober](https://github.com/cristianbote/goober))
 
@@ -88,7 +88,7 @@ A lista abaixo descreve as regras de uso:
 const btn = `button[]`;
 ```
 
-- O símbolo `~` deve ser usado dentro de tags que podem conter filhos para separar os atributos e CSS-in-JS dos seus filhos e deve ser usado entre espaços em branco:
+- O símbolo `~` deve ser usado dentro de tags que podem conter filhos para separar atributos e CSS-in-JS de seus filhos e deve ser usado entre espaços em branco:
 
 ```javascript
 const btn = `h1[color:blue; ~ Hey!] img[src="my-avatar.png"]`;
@@ -178,7 +178,7 @@ template(() => `Count is: ${count}`);
 
 Para renderizar o componente podemos usar a função `render()` .
 
-Opcionalmente podemos passar um elemento DOM ou um Seletor para indicar o local que o componente deve ser renderizado, o padrão é `document.body`:
+Opcionalmente, podemos passar um elemento DOM ou um Seletor para indicar o local que o componente deve ser renderizado, o padrão é `document.body`:
 
 ```javascript
 import { _ } from "bemtv";
@@ -194,7 +194,7 @@ render();
 Outra alternativa é importar o método `render()` do módulo principal, ele funciona de forma semelhante, porém leva uma `string` como primeiro argumento e o local de renderização como segundo:
 
 ```javascript
-import { render } from "bemtv";
+import { _, render } from "bemtv";
 
 const { template } = _`App`();
 
@@ -295,7 +295,7 @@ removeClickListener();
 
 ### Manipulando as `compVars`
 
-Após a criação do componente e das `compVas` elas ficam disponíveis através de um objeto e acessíveis pelo símbolo `$`, com ele podemos acessar, alterar os valores das propriedades e adicionar outras.
+Após a criação do componente e das `compVars` elas ficam disponíveis através de um objeto e acessíveis pelo símbolo `$`, com ele podemos acessar, alterar os valores das propriedades e adicionar outras.
 
 Este é um objeto especial que só pode ser usado em callbacks conhecidos da instância do componente, normalmente será usado em Hooks e em callbacks nos eventos DOM.
 
@@ -324,13 +324,13 @@ const { $, template } = _`Hero`({
   },
 });
 
-template`button[Cliked: $hero.name ]`;
+template`button[Clicked: $hero.name ]`;
 ```
 
 Para marcar a propriedade como opcional basta adicionar um `?` ao ​​final:
 
 ```javascript
-template`button[Cliked: $hero.name? ]`;
+template`button[Clicked: $hero.name? ]`;
 ```
 
 ### Variáveis que são atributos
@@ -458,7 +458,7 @@ onInit(() => {
 
 #### Manipulando as props
 
-Para manipular as props podemos usar a função `props()` que recebe uma função que tomará as props como primeiro argumento e deve retornar o resultado da manipulação que passará a ser as props:
+Para manipular as props podemos usar a função `props()` que recebe uma função, esta função receberá as props como primeiro argumento e deve retornar o resultado da manipulação, que então se tornará as props:
 
 ```javascript
 import { _ } from "bemtv";
@@ -499,7 +499,7 @@ onInit(() => {
 
 #### Manipulando children
 
-Para manipular os `children` podemos usar a função `children()` que recebe uma função que tomará os `children` como primeiro argumento e deve retornar o resultado da manipulação que passará a ser os `children`:
+Para manipular os `children` podemos usar a função `children()` que recebe uma função, esta função receberá os `children` como primeiro argumento e deve retornar o resultado da manipulação, que então se tornará os `children`:
 
 ```javascript
 import { _ } from "bemtv";
@@ -571,7 +571,7 @@ onInit(() => {
 
 Ao armazenar valores em estruturas de dados como array, Map, Set ou object podemos querer criar uma marcação (Brackethtml) e adicioná-la ao template, para isso podemos usar funções de transformação que injetam uma propriedade(usando Symbol) na estrutura de dados e informa à **Bemtv** para transformar a estrutura de dados somente quando usada no template.
 
-Para criar uma função de tranformação usamos a função `tFn()` que recebe como seu primeiro argumento uma função que deve tratar a estrutura de dados e retorna uma função.
+Para criar uma função de transformação usamos a função `tFn()`, ela recebe como primeiro argumento uma função que faz a transformação da estrutura de dados e retorna outra função que envolve a função passada como argumento:
 
 ```javascript
 import { tFn } from "bemtv";
@@ -582,11 +582,11 @@ const tListJoin = tFn((list) => list.join(" br[] "));
 Para usar a função basta passar uma lista e ela retornará a mesma lista com um Symbol injetado:
 
 ```javascript
-import { _ } from "bemtv";
+import { _, tFn } from "bemtv";
 
 const tListJoin = tFn((list) => list.join(" br[] "));
 
-const { template } = _`Counter`({
+const { template } = _`List`({
   list: tListJoin(["user1", "user2", "user3"]),
 });
 
@@ -643,7 +643,7 @@ click$(() => {
   );
 });
 
-template`button[Cliked: $count ]`;
+template`button[Clicked: $count ]`;
 ```
 
 ### Componente baseado em função
@@ -657,6 +657,8 @@ Ao usar a FunctionalComponent, ela retornará uma instância que possui um méto
 **FunctionalComponent:**
 
 ```javascript
+import { _ } from "bemtv";
+
 const { render } = _`Counter`(({ click$, css, template }) => {
   let count = 0;
 
@@ -667,7 +669,7 @@ const { render } = _`Counter`(({ click$, css, template }) => {
     color: red;
   `;
 
-  template(() => `button[Cliked: ${count} ]`);
+  template(() => `button[Clicked: ${count} ]`);
 });
 
 render();
@@ -687,7 +689,7 @@ css`
   color: blue;
 `;
 
-template`button[Cliked: $count ]`;
+template`button[Clicked: $count ]`;
 
 render();
 ```
@@ -763,6 +765,10 @@ import { router } from "bemtv";
 const goToFirstPage = router.FirstPage("strong[Hey!]");
 ```
 
+#### Route root
+
+Caso defina uma rota com o nome `Root`, ela será renderizada sempre que não houver outra rota ativa.
+
 #### Capturando erros
 
 Sempre que a rota for desconhecida, a Bemtv irá avisá-lo através da função `onRouteUnfound()` que aceita um ouvinte/callback como primeiro argumento:
@@ -819,7 +825,7 @@ A Bemtv fará a importação do componente assim que componente for utilizado em
 A função `match()` pode ser usada para apresentar uma alternativa enquanto um determinado componente não estiver disponível, ela aceita dois argumentos, o primeiro é o componente de interesse que se estiver disponível é retornado como valor, e o segundo argumento que deve ser uma `string` que só é usado como retorno se o componente não estiver disponível:
 
 ```javascript
-import { _ } from "bemtv";
+import { _, match } from "bemtv";
 
 const { template } = _`Hero`();
 

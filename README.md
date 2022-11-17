@@ -18,7 +18,7 @@
 
 Minimalist, lightweight (even with a markup language and a CSS-in-JS library **integrated into the template**), and a Router.
 
-Fine-grained updates to the actual DOM via a template change detection loop that
+Fine-grained updates to the real DOM via a template change detection loop that
 allows effortless developer reactivity.
 
 Think about it: “Just add Bemtv to your index.html and have fun building your application”.
@@ -39,7 +39,7 @@ css`
   color: blue;
 `;
 
-template`button[Cliked: $count ]`;
+template`button[Clicked: $count ]`;
 
 render();
 ```
@@ -74,7 +74,7 @@ Consider this variable declaration:
 const btn = `button[Click me!]`;
 ```
 
-This syntax is a normal `string`, bemtv understands and can convert to HTML, we call it “Brackethtml” it reduces the redundancy of HTML and still can be easily understood as HTML, besides supporting HTML normally.
+This syntax is called “Brackethtml” it reduces the redundancy of HTML and still can be easily understood as HTML, in addition to supporting HTML normally.
 
 #### Brackethtml + CSS-in-JS ([goober](https://github.com/cristianbote/goober))
 
@@ -94,7 +94,7 @@ The list below describes the usage rules:
 const btn = `button[]`;
 ```
 
-- The `~` symbol must be used inside tags that can contain children to separate attributes and CSS-in-JS from their children and should be used between whitespace:
+- The `~` symbol must be used inside tags that may contain children to separate attributes and CSS-in-JS from their children, and must be used between whitespace:
 
 ```javascript
 const btn = `h1[color:blue; ~ Hey!] img[src="my-avatar.png"]`;
@@ -125,7 +125,7 @@ const btn = `button[Click (~) me!]`;
 ### Creating components
 
 To create a component we can import the symbol/function `_`,
-it takes the name of the component (using tagged templates) as the first argument which must always start
+it takes the name of the component(using tagged templates) as the first argument which must always start
 with an uppercase character (CamelCase) and accepts all alphanumeric characters and the `:` symbol.
 
 ```javascript
@@ -184,7 +184,7 @@ template(() => `Count is: ${count}`);
 
 To render the component we can use the `render()` function.
 
-Optionally we can pass a DOM element or a Selector to indicate where the component should be rendered, the default is `document.body`:
+Optionally, we can pass a DOM element or a Selector to indicate where the component should be rendered, the default is `document.body`:
 
 ```javascript
 import { _ } from "bemtv";
@@ -197,10 +197,10 @@ template`Hello world!`;
 render();
 ```
 
-Another alternative is to import the `render()` method from the main module, it works similarly, but takes a `string` as the first argument and the render location as the second:
+Another alternative is to import the `render()` method from the main module, it works similarly, but takes a `string` as the first argument and the element to render as the second:
 
 ```javascript
-import { render } from "bemtv";
+import { _, render } from "bemtv";
 
 const { template } = _`App`();
 
@@ -304,7 +304,7 @@ removeClickListener();
 
 ### Handling `compVars`
 
-After creating the component and the `compVas` they are available through an object and accessible by the `$` symbol, with which we can access, change the values ​​of the properties and add others.
+After creating the component and the `compVars` they are available through an object and accessible by the `$` symbol, with which we can access, change the values ​​of the properties and add others.
 
 This is a special object that can only be used in known callbacks of the component instance, it will normally be used in Hooks and in callbacks in DOM events.
 
@@ -333,13 +333,13 @@ const { $, template } = _`Hero`({
   },
 });
 
-template`button[Cliked: $hero.name ]`;
+template`button[Clicked: $hero.name ]`;
 ```
 
 To mark the property as optional just add a `?` to the end:
 
 ```javascript
-template`button[Cliked: $hero.name? `;
+template`button[Clicked: $hero.name? `;
 ```
 
 ### Variables that are attributes
@@ -467,7 +467,7 @@ onInit(() => {
 
 #### Handling the props
 
-To manipulate the props we can use the `props()` function that receives a function that will take the props as the first argument and must return the result of the manipulation that will become the props:
+To manipulate the props we can use the `props()` function that receives a function, this function will receive the props as the first argument and must return the result of the manipulation, which will then become the props:
 
 ```javascript
 import { _ } from "bemtv";
@@ -508,7 +508,7 @@ onInit(() => {
 
 #### Manipulating children
 
-To manipulate the `children` we can use the `children()` function which receives a function that will take the `children` as the first argument and must return the result of the manipulation that will become the `children`:
+To manipulate the `children` we can use the `children()` function that receives a function, this function will receive the `children` as the first argument and must return the result of the manipulation, which will then become the `children`:
 
 ```javascript
 import { _ } from "bemtv";
@@ -580,7 +580,7 @@ onInit(() => {
 
 When storing values ​​in data structures like array, Map, Set or object we may want to create a markup (Brackethtml) and add it to the template, for that we can use transform functions that inject a property (using Symbol) into the data structure and tells **Bemtv** to transform the data structure only when used in the template.
 
-To create a transformation function we use the `tFn()` function which takes as its first argument a function that must handle the data structure and returns a function.
+To create a transformation function we use the `tFn()` function, it receives as its first argument a function that transforms the data structure and returns another function that involves the function passed as an argument:
 
 ```javascript
 import { tFn } from "bemtv";
@@ -591,11 +591,11 @@ const tListJoin = tFn((list) => list.join(" br[] "));
 To use the function just pass a list and it will return the same list with a Symbol injected:
 
 ```javascript
-import { _ } from "bemtv";
+import { _, tFn } from "bemtv";
 
 const tListJoin = tFn((list) => list.join(" br[] "));
 
-const { template } = _`Counter`({
+const { template } = _`List`({
   list: tListJoin(["user1", "user2", "user3"]),
 });
 
@@ -604,7 +604,7 @@ template`div[Users: $list ]`;
 
 Whenever this list is changed (eg `$.list.push(item)`), Bemtv will detect and use the transform function again and rederize the change.
 
-> The transform functions can be incredibly powerful because with Brackethtml we can even return the CSS-In-JS markup so we can focus on the data structure.
+> The transform functions can be incredibly powerful because with Brackethtml we can even return the markup with CSS-In-JS, so we can focus on the data structure.
 
 #### Built-in transform functions
 
@@ -652,7 +652,7 @@ click$(() => {
   );
 });
 
-template`button[Cliked: $count ]`;
+template`button[Clicked: $count ]`;
 ```
 
 ### FunctionalComponent
@@ -666,6 +666,8 @@ When using the FunctionalComponent, it will return an instance that has a `rende
 **FunctionalComponent:**
 
 ```javascript
+import { _ } from "bemtv";
+
 const { render } = _`Counter`(({ click$, css, template }) => {
   let count = 0;
 
@@ -676,7 +678,7 @@ const { render } = _`Counter`(({ click$, css, template }) => {
     color: red;
   `;
 
-  template(() => `button[Cliked: ${count} ]`);
+  template(() => `button[Clicked: ${count} ]`);
 });
 
 render();
@@ -696,24 +698,10 @@ css`
   color: blue;
 `;
 
-template`button[Cliked: $count ]`;
+template`button[Clicked: $count ]`;
 
 render();
 ```
-
-### Using a fallback
-
-The `match()` function can be used to present an alternative while a certain component is not available, it accepts two arguments, the first is the component, if available, is returned as a value, and the second argument that must be a `string` that is only used as a return if the component is not available:
-
-```javascript
-import { _ } from "bemtv";
-
-const { template } = _`Hero`();
-
-template(() => `Dados: ${match("Data[]", "<div>Carregando...</div>")}`);
-```
-
-> **This function will trigger auto-import if the component is auto-import**.
 
 ### Router
 
@@ -786,6 +774,10 @@ import { router } from "bemtv";
 const goToFirstPage = router.FirstPage("strong[Hey!]");
 ```
 
+#### Route root
+
+If you define a route with the name `Root` it will be rendered whenever there was no other active route.
+
 #### Capturing errors
 
 Whenever the route is unknown, Bemtv will warn you through the `onRouteUnfound()` function which accepts a listener/callback as the first argument:
@@ -836,6 +828,20 @@ autoImportComponents({
 ```
 
 Bemtv will import the component as soon as the component is used in a template, however, it will ignore the component until it is available.
+
+### Using a fallback
+
+The `match()` function can be used to present an alternative while a certain component is not available, it accepts two arguments, the first is the component, if available, is returned as a value, and the second argument that must be a `string` that is only used as a return if the component is not available:
+
+```javascript
+import { _, match } from "bemtv";
+
+const { template } = _`Hero`();
+
+template(() => `Dados: ${match("Data[]", "<div>Carregando...</div>")}`);
+```
+
+> **This function will trigger auto-import if the component is auto-import**.
 
 ## And that’s it
 
