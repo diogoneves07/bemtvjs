@@ -44,7 +44,9 @@ export class ManageEl<E = Element> {
       this.__data.CSSClasses.push(applyElementCSS(newIt, callCSS));
     }
 
-    newIt && newIt.classList.add(...this.__data.CSSClasses);
+    this.__data.CSSClasses.length > 0 &&
+      newIt &&
+      newIt.classList.add(...this.__data.CSSClasses);
 
     this.__data.applyCSSWhenElementIsAvallable = [];
     this.__data.element = newIt;
