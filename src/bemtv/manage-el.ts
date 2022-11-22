@@ -25,31 +25,30 @@ export class ManageEl<E = Element> {
   };
 
   public set it(newIt: E | null) {
-    if (!newIt || this.__data.element === newIt) return;
+    const d = this.__data;
+    if (!newIt || d.element === newIt) return;
 
     ALL_ELEMENTS_MANAGER.set(newIt as Element, this);
 
-    if (this.__data.element) {
-      this.__data.DOMlisteners.forEach((o) => {
+    if (d.element) {
+      d.DOMlisteners.forEach((o) => {
         o.removeListener && o.removeListener();
       });
     }
 
-    this.__data.DOMlisteners.forEach((o) => {
+    d.DOMlisteners.forEach((o) => {
       o.removeListener = insertDOMListener(newIt, o.listener, ...o.args);
       return o;
     });
 
-    for (const callCSS of this.__data.applyCSSWhenElementIsAvallable.slice()) {
-      this.__data.CSSClasses.push(applyElementCSS(newIt, callCSS));
+    for (const callCSS of d.applyCSSWhenElementIsAvallable.slice()) {
+      d.CSSClasses.push(applyElementCSS(newIt, callCSS));
     }
 
-    this.__data.CSSClasses.length > 0 &&
-      newIt &&
-      newIt.classList.add(...this.__data.CSSClasses);
+    d.CSSClasses.length > 0 && newIt && newIt.classList.add(...d.CSSClasses);
 
-    this.__data.applyCSSWhenElementIsAvallable = [];
-    this.__data.element = newIt;
+    d.applyCSSWhenElementIsAvallable = [];
+    d.element = newIt;
   }
 
   /**
