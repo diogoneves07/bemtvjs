@@ -2,8 +2,8 @@
   <img alt="npm bundle size" src="https://img.shields.io/bundlephobia/minzip/bemtv?style=for-the-badge">
   <img  src='https://github.com/diogoneves07/bentivejs/blob/main/assets/bemtv-logo-2.png'  alt='Bemtv logo' height='200px'>
   <a href="https://coveralls.io/github/diogoneves07/bemtvjs">
-  <img alt="Coveralls" src="https://img.shields.io/coveralls/github/diogoneves07/bemtvjs?label=test%20coverage&style=for-the-badge">
-  </a>
+<img alt="Coveralls" src="https://img.shields.io/coverallsCoverage/github/diogoneves07/bemtvjs?label=Test%20coverage&style=for-the-badge">
+</a>
 </p>
 
 ## Translations:
