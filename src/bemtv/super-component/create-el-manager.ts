@@ -5,14 +5,22 @@ import { KEY_ATTRIBUTE_NAME } from "../globals";
 import { ManageEl } from "../manage-el";
 import { ManageElFactory } from "../manage-el-factory";
 
-function findElementInComponentNodes(nodes: Node[], elKey: string) {
-  return nodes.find((n) => {
-    if (!(n instanceof Element)) return;
-    if (!n.hasAttribute(KEY_ATTRIBUTE_NAME)) return;
-    if (!n.getAttribute(KEY_ATTRIBUTE_NAME)?.includes(elKey)) return;
+function findElementInComponentNodes(
+  nodes: Node[] | Element[],
+  elKey: string
+): Element | undefined {
+  for (const n of nodes) {
+    if (!(n instanceof Element)) continue;
 
-    return true;
-  });
+    const has = n.getAttribute(KEY_ATTRIBUTE_NAME);
+
+    if (has && has.includes(elKey)) return n;
+
+    const c = findElementInComponentNodes(Array.from(n.children), elKey);
+
+    if (c) return c;
+  }
+  return;
 }
 export default function createElManager<E extends Element = Element>(
   keyOrSelectorOrElement: string | Element,
