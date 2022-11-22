@@ -16,6 +16,7 @@ import createElManager from "./create-el-manager";
 import manageComponentsVars from "./manage-components-vars";
 import isStringOrNumber from "../../utilities/is-string-or-number";
 import { treatArgsInTemplate } from "./treat-args-in-template";
+import ComponentInst from "../component-inst";
 
 export type ComponentVars<V extends Record<string, any> = Record<string, any>> =
   V & {
@@ -174,14 +175,19 @@ export class SuperComponent<Vars extends Record<string, any>> {
       );
     }
 
-    let elManager: undefined | ManageEl;
-
+    const cache = new Map<ComponentInst, ManageEl>();
     const key = generateKey();
+
     return [
       key,
       () => {
-        if (elManager && elManager.it) return elManager;
-        elManager = createElManager<E>(key, this.__data.componentRunning);
+        const c = this.__data.componentRunning;
+
+        if (c && cache.has(c)) return cache.get(c);
+
+        const elManager = createElManager<E>(key, c);
+
+        c && cache.set(c, elManager);
         return elManager;
       },
     ];
