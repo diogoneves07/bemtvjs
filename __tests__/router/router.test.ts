@@ -1,8 +1,9 @@
 import { ALL_COMPONENTS_INST } from "./../../src/bemtv/component-inst-store";
 import { resetDocumentBodyAndRemoveComponents } from "../test-utilities/reset-test-environment";
-import { _, router } from "../../src/main";
+import { _ } from "../../src/main";
+import hasRoute from "../../src/bemtv/has-route";
 
-resetDocumentBodyAndRemoveComponents("App", "Router:Root");
+resetDocumentBodyAndRemoveComponents("App", "Router:Root", "Root");
 
 beforeEach(() => {
   /**
@@ -18,28 +19,40 @@ beforeEach(() => {
 });
 
 describe("Check router functionality", () => {
-  it(" and render", () => {
-    const goToFirstRoute = router.FirstRoute("");
-    goToFirstRoute();
+  it("Should go to route", () => {
+    const { renderRoute } = _`FirstRoute`();
+
+    renderRoute();
+
     expect(window.location.hash).toBe("#/first-route");
   });
 
-  it(" and render and change document title", (done) => {
-    const goToFirstRoute = router.MyRoute({ title: "My route", use: "" });
-    goToFirstRoute();
-    setTimeout(() => {
+  it("Should go to route and change document title", (done) => {
+    const { onMount, renderRoute, route, render } = _`MyRoute`();
+
+    route({
+      title: "My route",
+    });
+
+    renderRoute();
+
+    onMount(() => {
       expect(window.location.hash).toBe("#/my-route");
       expect(document.title.trim()).toBe("My route");
       done();
-    }, 50);
+    });
+
+    render();
   });
 
   it("Should use route concat property", (done) => {
-    router.WithConcat({
-      use: "Hello world!",
-      title: "",
+    const { renderRoute, route } = _`WithConcat`();
+
+    route({
       concat: "1234567/hey/89",
-    })();
+    });
+
+    renderRoute();
 
     setTimeout(() => {
       expect(window.location.hash).toBe("#/with-concat/1234567/hey/89");
@@ -47,63 +60,8 @@ describe("Check router functionality", () => {
     }, 50);
   });
 
-  it("Should use route fallback", (done) => {
-    const { onMount, template, render } = _`App`();
-
-    onMount(() => {
-      expect(document.body.textContent?.trim()).toBe("Loading...");
-      expect(window.location.hash).toBe("#/second-route");
-      done();
-    });
-
-    template`#[]`;
-
-    render();
-
-    router.SecondRoute(
-      { use: "Unknown[]", title: "" },
-      { use: "Loading...", title: "" }
-    )();
-  });
-
-  it("Should not use route fallback", (done) => {
-    _`Home`().template("Hello");
-    const { onMount, template, render } = _`App`();
-
-    onMount(() => {
-      expect(document.body.textContent?.trim()).toBe("Hello");
-      expect(window.location.hash).toBe("#/not-fallback");
-      done();
-    });
-
-    template`#[]`;
-
-    render();
-
-    router.NotFallback(
-      { use: "Home[]", title: "" },
-      { use: "Not", title: "" }
-    )();
-  });
-  it("Should create route link", (done) => {
-    router.ThirdRoute("Hello world!");
-
-    const { onMount, template, render } = _`App`();
-
-    onMount(() => {
-      const a = document.body.children[0] as HTMLAnchorElement;
-      expect(a.tagName.toLowerCase()).toBe("a");
-      expect(a.getAttribute("href")).toBe("#/third-route");
-      done();
-    });
-
-    template`#[] #ThirdRoute[link]`;
-
-    render();
-  });
-
   it("Should use route", (done) => {
-    const { onMount, template, render } = _`App`();
+    const { renderRoute, onMount, template } = _`FourthRoute`();
 
     onMount(() => {
       expect(document.body.textContent?.trim()).toBe("Hey!");
@@ -111,11 +69,36 @@ describe("Check router functionality", () => {
       done();
     });
 
-    template`#[]`;
+    template`Hey!`;
 
-    render();
-    router.FourthRoute("Hey!")();
+    _`App`().template`#[]`.render();
+
+    renderRoute();
   });
+
+  it("Should auto create route from templates", () => {
+    const { template } = _`EaseRoute`();
+
+    template`Hey!`;
+
+    _`App`().template` #EaseRoute[Link to ease route!]`;
+
+    expect(hasRoute("EaseRoute")).toBeTruthy();
+  });
+
+  it("Should auto create Root route", (done) => {
+    const { onMount, template } = _`Root`();
+
+    template`Hey!`;
+
+    _`App`().template` #[]`.render();
+
+    onMount(() => {
+      expect(document.body.textContent?.trim()).toBe("Hey!");
+      done();
+    });
+  });
+
   it("Should not find the route", (done) => {
     const { onMount, template, render } = _`App`();
 
@@ -143,34 +126,5 @@ describe("Check router functionality", () => {
     render();
 
     window.location.hash = "unknown";
-  });
-
-  it("Should show the Root route", (done) => {
-    router.Root("Hello world!");
-
-    const { onMount, template, render } = _`App`();
-
-    onMount(() => {
-      expect(document.body.textContent?.trim()).toBe("Hello world!");
-      done();
-    });
-
-    template`#[]`;
-
-    render();
-  });
-  it("Should go to the route and render", (done) => {
-    const { onMount, template, render } = _`App`();
-
-    onMount(() => {
-      expect(document.body.textContent?.trim()).toBe("Hello world!");
-      done();
-    });
-
-    template`#[]`;
-
-    render();
-
-    router.Any("Hello world!")();
   });
 });

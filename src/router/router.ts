@@ -1,7 +1,9 @@
-import { routerProxy } from "./router-object";
-import { match, _ } from "../main";
 import { routeToCamelCase } from "./routes-case";
 import { dispatchRouteUnfound } from "./on-route-unfound";
+import { ROUTES_OPTIONS } from "../bemtv/routes-store";
+import { hasComponent } from "../bemtv/components-main";
+import createRoute from "./create-route";
+import hasRoute from "../bemtv/has-route";
 
 const initialRouterTemplate = () => ``;
 
@@ -17,6 +19,10 @@ let lastRouteUnfound = " ";
 export const applyRouter = () => {
   const locationHash = window.location.hash;
   const isRoot = !locationHash || locationHash.length < 3;
+
+  if (isRoot && !hasRoute(`Root`) && hasComponent("Root")) {
+    createRoute("Root");
+  }
 
   let currentHash = locationHash;
 
@@ -36,47 +42,21 @@ export const applyRouter = () => {
   }
 
   const routeName = routeToCamelCase(path);
-  const routeValues = routerProxy[routeName].routeValues;
+  const routeOptions = ROUTES_OPTIONS.get(routeName);
 
-  if (routeValues) {
+  if (hasRoute(routeName)) {
     lastHash = currentHash;
     lastRouteUnfound = locationHash;
 
-    const [route, fallback] = routeValues;
+    const routeComponent = `${routeName}[]`;
 
-    const isRouteObject = typeof route === "object";
-    const isFallbackObject = typeof fallback === "object";
-
-    const routeComponent = !isRouteObject ? route : route.use;
-
-    const fallbackComponent = !isFallbackObject
-      ? fallback
-      : fallback && fallback.use;
-
-    if (routeValues.length > 1) {
-      routerTemplate = () => {
-        const m = match(routeComponent, fallbackComponent);
-
-        if (m === routeComponent) {
-          if (isRouteObject && Object.hasOwn(route, "title")) {
-            document.title = route.title as string;
-          }
-        } else {
-          if (isFallbackObject && Object.hasOwn(fallback, "title")) {
-            document.title = fallback.title as string;
-          }
-        }
-        return m;
-      };
-    } else {
-      if (isRouteObject && Object.hasOwn(route, "title")) {
-        document.title = route.title as string;
-      }
-
-      routerTemplate = () => {
-        return routeComponent;
-      };
+    if (routeOptions && Object.hasOwn(routeOptions, "title")) {
+      document.title = routeOptions.title as string;
     }
+
+    routerTemplate = () => {
+      return routeComponent;
+    };
 
     return;
   }

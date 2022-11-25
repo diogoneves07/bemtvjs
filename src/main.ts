@@ -14,4 +14,4 @@ export {
 export { matchComponent as match } from "./bemtv/match-component";
 export { autoImportComponents } from "./bemtv/auto-import-components";
 export { default as render } from "./bemtv/render";
-export { router, onRouteUnfound } from "./router/main";
+export { onRouteUnfound } from "./router/main";

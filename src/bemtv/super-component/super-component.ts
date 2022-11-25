@@ -1,3 +1,4 @@
+import { ROUTES_OPTIONS } from "./../routes-store";
 import { Listeners } from "./../types/listeners";
 import { css } from "goober";
 
@@ -17,6 +18,10 @@ import manageComponentsVars from "./manage-components-vars";
 import isStringOrNumber from "../../utilities/is-string-or-number";
 import { treatArgsInTemplate } from "./treat-args-in-template";
 import ComponentInst from "../component-inst";
+import autoCreateRoute, {
+  autoCreateRouteFromTemplates,
+} from "../auto-create-route";
+import { routeToKebabCase } from "../../router/routes-case";
 
 export type ComponentVars<V extends Record<string, any> = Record<string, any>> =
   V & {
@@ -299,6 +304,8 @@ export class SuperComponent<Vars extends Record<string, any>> {
         break;
     }
 
+    autoCreateRouteFromTemplates(data.componentsTemplate());
+
     return this.__data.sCompProxy;
   }
 
@@ -312,4 +319,33 @@ export class SuperComponent<Vars extends Record<string, any>> {
     render(this.__data.componentName + "[]", selectorOrElement);
     return this.__data.sCompProxy;
   };
+
+  route(routeOptions?: SuperComponentData["routeOptions"]) {
+    const d = this.__data;
+    const { componentName } = d;
+    const routeName = `Router:${componentName}`;
+
+    ROUTES_OPTIONS.set(componentName, routeOptions || {});
+
+    d.routeOptions = routeOptions;
+
+    autoCreateRoute(routeName);
+
+    return this.__data.sCompProxy;
+  }
+
+  renderRoute() {
+    const d = this.__data;
+    const { componentName } = d;
+    const isRoot = componentName === "Root";
+    const routeOptions = ROUTES_OPTIONS.get(componentName);
+    const concat =
+      routeOptions && routeOptions.concat ? `/${routeOptions.concat}` : "";
+
+    window.location.hash = isRoot
+      ? "/"
+      : `/${routeToKebabCase(componentName)}${concat}`;
+
+    return this.__data.sCompProxy;
+  }
 }

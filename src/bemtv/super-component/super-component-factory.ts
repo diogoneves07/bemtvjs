@@ -9,6 +9,7 @@ import {
   removeDOMListenerFromComponents,
 } from "./work-with-super-component";
 import isString from "../../utilities/is-string";
+import hasRoute from "../has-route";
 
 export function SuperComponentFactory<Vars extends Record<string, any>>(
   name: string,
@@ -36,6 +37,16 @@ export function SuperComponentFactory<Vars extends Record<string, any>>(
 
       if (propName in target) {
         if (typeof t[propName] === "function") {
+          if (!hasRoute(t.componentName)) {
+            switch (propName) {
+              case "renderRoute":
+              case "route":
+                t.route();
+
+                break;
+            }
+          }
+
           return t[propName].bind(superComponent);
         }
         return t[propName];

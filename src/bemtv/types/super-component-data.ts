@@ -34,4 +34,5 @@ export interface SuperComponentData {
   disableVarsProxies(): void;
   activateVarsProxies(): void;
   isSigleInstance: boolean;
+  routeOptions?: { title?: string; concat?: string };
 }

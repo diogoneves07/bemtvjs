@@ -177,11 +177,11 @@ describe("Checks if templates are correctly applied to the DOM", () => {
   });
 
   it("Should component parent and child update", (done) => {
-    _`Child`().template(() => childText);
-
     const { onMount, onUpdate, template, render } = _`App`();
     let parentText = "";
     let childText = "";
+
+    _`Child`().template(() => childText);
 
     onMount(() => {
       parentText = "He";

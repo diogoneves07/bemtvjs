@@ -1,4 +1,3 @@
-import { router } from "./../../src/router/main";
 import { onRouteUnfound } from "../../src/main";
 
 beforeEach(() => {
@@ -26,8 +25,6 @@ describe("onRouteUnfound", () => {
   });
 
   it("Should trigger the callback once", (done) => {
-    router.Root("Hey!");
-
     const fn = jest.fn();
 
     const remove = onRouteUnfound(fn);
