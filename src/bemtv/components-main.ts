@@ -88,7 +88,7 @@ export function _(componentName: TemplateStringsArray, ...args: string[]) {
       const compFn = compVarsOrCompFn;
 
       if (GLOBAL_COMPONENTS_MAP.has(name)) {
-        throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} This component “${name}” name is already in use!`;
+        throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} The “${name}” component already exists!`;
       }
 
       GLOBAL_COMPONENTS_MAP.set(name, (c) => {
@@ -117,7 +117,7 @@ export function _(componentName: TemplateStringsArray, ...args: string[]) {
     const vars = compVarsOrCompFn || {};
 
     if (GLOBAL_COMPONENTS_MAP.has(name)) {
-      throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} This component “${name}” name is already in use!`;
+      throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} The “${name}” component already exists!`;
     }
 
     Object.freeze(vars);
