@@ -700,75 +700,88 @@ render();
 Um Router é usado para navegação entre visualizações de vários componentes
 em uma aplicação Bemtv, permite alterar a URL do navegador e mantém a UI sincronizada com a URL.
 
-#### Criando uma rota
+A Bemtv utiliza um inovador sistema de criação automática de rotas, isso é possível porque os componentes
+podem se comportar como rotas/páginas.
 
-Para criar uma rota devemos adicionar uma função ao objeto Router que é um Proxy.
+#### Roteamento automático
 
-Esta função recebe os mesmos argumentos da função [`match()`](#usando-fallbackplano-b) e tem o mesmo comportamento.
+O Bemtv é capaz de descobrir automaticamente quando um componente “normal” também deve ser tratado como uma rota:
 
-O nome da função deve ser escrito em CamelCase, mas quando a rota for adicionada à URL ela estará em kebab-case:
+Um componente normal:
 
 ```javascript
-import { router } from "bemtv";
+import { _ } from "bemtv";
 
-router.FirstPage("strong[Hey!]");
+const { template } = _`AboutUs`();
+
+template`We are cool!`;
 ```
 
-##### Usando um objeto para a rota
+O componente responsável por rendrizar o App:
+
+```javascript
+import { _ } from "bemtv";
+
+const { template, render } = _`App`();
+
+template`
+      Welcome!  br[]br[]
+
+      #[] br[]br[]
+      
+      #AboutUs[ Link to about us ]`;
+
+render();
+```
+
+O segundo componente apresenta a utilização do simbolo `#[]`, é dentro dele que as rotas são renderizadas.
+
+Observe o `#AboutUs[...]`, é aqui que a “mágica” acontece.
+Primeiro, a Bemtv lerá o template de componente `App` e descobrirá que o componente `AboutUs`
+também é uma rota (graças ao `#` antes dele), e quando o template for renderizado, tudo dentro do componente `#AboutUs[...]` será envolvido em uma tag `a` com o atributo `href` apontando para a rota.
+
+O endereço da rota será o nome do componente em kebab-case: `/about-us`.
+
+Quando o usuário clicar no link, o componente `AboutUs` será renderizado em `#[]`.
+
+A Bemtv também descobrirá que o componente é uma rota sempre que acessarmos algum método do componente que se destine a rotas, mesmo que não seja chamado graças a Proxies.
+
+##### Definindo propriedades para a rota
 
 Podemos definir propriedades para definir o comportamento da rota:
 
 ```javascript
-import { router } from "bemtv";
+import { _ } from "bemtv";
 
-router.FirstPage({
-  use: "Hello world!", // Obrigatório. O que a rota deve exibir.
+const { route, template } = _`AboutUs`();
 
-  title: "Hey!", // O título do documento.
-
+route({
+  title: "About us!", // O título do documento.
   concat: "1234567/hey/89", // Permite concatenar uma `string` no link da rota
 });
+
+template`We are cool!`;
 ```
 
-> Também podemos passar um objeto como segundo argumento da rota, mas ele não suporta a propriedade `concat`.
+#### Indo para a rota
 
-#### Renderizando rotas
-
-Para utilizar as rotas criadas devemos ter um local onde seu conteúdo possa ser renderizado, para isso podemos utilizar o símbolo `#`:
+Para renderizar sem a rota sem uma ação do usuário, podemos usar o método `renderRoute()`:
 
 ```javascript
 import { _ } from "bemtv";
 
-const { template } = _`App`();
+const { renderRoute, template } = _`AboutUs`();
 
-template`#[]`;
+setTimeout(() => {
+  renderRoute();
+}, 3000);
+
+template`We are cool!`;
 ```
 
-#### Criando links para rotas
+#### Route/component Root
 
-Para criar links que, ao serem acessados, levarão o usuário à rota, podemos usar o símbolo `#` mais o nome da rota, semelhante a um componente:
-
-```javascript
-import { _ } from "bemtv";
-
-const { template } = _`App`();
-
-template`#FirstPage[I am a link!]`;
-```
-
-Tudo dentro do componente `#FirstPage[]` ​​será envolto em uma tag `a` com o atributo `href` apontando para a rota.
-
-O retorno da função rota que é uma função que sempre que for chamada levará o usuário para a rota:
-
-```javascript
-import { router } from "bemtv";
-
-const goToFirstPage = router.FirstPage("strong[Hey!]");
-```
-
-#### Route root
-
-Caso defina uma rota com o nome `Root`, ela será renderizada sempre que não houver outra rota ativa.
+Caso defina um componente com o nome `Root`, ele será renderizado sempre que não houver outra rota ativa.
 
 #### Capturando erros
 

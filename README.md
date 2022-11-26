@@ -708,75 +708,88 @@ render();
 A Router is used for navigation between views of various components
 in a Bemtv application, allows you to change the browser's URL and keeps the UI synchronized with the URL.
 
-#### Creating a route
+Bemtv uses an innovative automatic route creation system, this is possible because the components
+can behave like routes/pages.
 
-To create a route we must add a function to the Router object which is a Proxy.
+#### Automatic routing
 
-This function takes the same arguments as the `match()` function and has the same behavior.
+Bemtv is able to automatically figure out when a “normal” component should also be treated as a route:
 
-The function name must be written in CamelCase, but when the route is added to the URL it will be in kebab-case:
+A regular component:
 
 ```javascript
-import { router } from "bemtv";
+import { _ } from "bemtv";
 
-router.FirstPage("strong[Hey!]");
+const { template } = _`AboutUs`();
+
+template`We are cool!`;
 ```
 
-##### Using an object for the route
+The component responsible for rendering the App:
+
+```javascript
+import { _ } from "bemtv";
+
+const { template, render } = _`App`();
+
+template`
+      Welcome!  br[]br[]
+
+      #[] br[]br[]
+      
+      #AboutUs[ Link to about us ]`;
+
+render();
+```
+
+The second component uses the `#[]` symbol, it is within it that the routes are rendered.
+
+Note the `#AboutUs[...]`, this is where the “magic” happens.
+First, Bemtv will read the `App` component template and find that the `AboutUs` component
+is also a route (thanks to the `#` before it), and when the template is rendered, everything inside the `#AboutUs[...]` component will be wrapped in an `a` tag with the `href` attribute pointing to the route.
+
+The route address will be the component name in kebab-case: `/about-us`.
+
+When the user clicks on the link, the `AboutUs` component will be rendered in `#[]`.
+
+Bemtv will also figure out that the component is a route whenever we access some method of the component that targets routes, even if it is not called(thanks to Proxies).
+
+##### Defining properties for the route
 
 We can define properties to define the behavior of the route:
 
 ```javascript
-import { router } from "bemtv";
+import { _ } from "bemtv";
 
-router.FirstPage({
-  use: "Hello world!", // Required. What the route should display.
+const { route, template } = _`AboutUs`();
 
-  title: "Hey!", // The title of the document.
-
+route({
+  title: "About us!", // The title of the document.
   concat: "1234567/hey/89", // Allows you to concatenate a `string` in the route link
 });
+
+template`We are cool!`;
 ```
 
-> We can also pass an object as the second argument of the route, but it doesn't support the `concat` property.
+#### Going to the route
 
-#### Rendering routes
-
-To use the created routes we must have a place where its content can be rendered, for that we can use the `#` symbol:
+To render the route without a user action, we can use the `renderRoute()` method:
 
 ```javascript
 import { _ } from "bemtv";
 
-const { template } = _`App`();
+const { renderRoute, template } = _`AboutUs`();
 
-template`#[]`;
+setTimeout(() => {
+  renderRoute();
+}, 3000);
+
+template`We are cool!`;
 ```
 
-#### Creating links to routes
+#### Route/component Root
 
-To create links that, when accessed, will take the user to the route, we can use the `#` symbol plus the route name, similar to a component:
-
-```javascript
-import { _ } from "bemtv";
-
-const { template } = _`App`();
-
-template`#FirstPage[I am a link!]`;
-```
-
-Everything inside the `#FirstPage[]` component will be wrapped in an `a` tag with the `href` attribute linking to the route.
-
-The return of the route function which is a function that whenever it is called will take the user to the route:
-
-```javascript
-import { router } from "bemtv";
-
-const goToFirstPage = router.FirstPage("strong[Hey!]");
-```
-
-#### Route root
-
-If you define a route with the name `Root` it will be rendered whenever there was no other active route.
+If you create a component with the name `Root`, it will be rendered whenever there is no other active route.
 
 #### Capturing errors
 
