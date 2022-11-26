@@ -52,6 +52,30 @@ render();
 
 ## Installation
 
+### Quick Start(recommended)
+
+You can get started with a simple app by running the following in your terminal:
+
+Bemtv App Javascript:
+
+```bash
+npx degit diogoneves07/bemtv-templates/js my-app
+cd my-app
+npm i # or yarn or pnpm
+npm run dev # or yarn or pnpm
+```
+
+Bemtv App TypeScript:
+
+```bash
+npx degit diogoneves07/bemtv-templates/ts my-app
+cd my-app
+npm i # or yarn or pnpm
+npm run dev # or yarn or pnpm
+```
+
+This will create a minimal, client-rendered application powered by [Vite](https://vitejs.dev/).
+
 ### NPM
 
 ```bash
@@ -60,7 +84,7 @@ npm i bemtv
 
 ```
 
-## CDN Links
+### CDN Links
 
 ```html
 <script type="module">
