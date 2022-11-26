@@ -13,7 +13,7 @@ Bemtv utiliza um sistema de detecção de alterações no template, ao invés de
 
 > **IMPORTANTE: A Bemtv é um projeto recente que está melhorando a cada dia e buscando a estabilidade, leia os lançamentos para ficar informado do que mudou.**
 
-> Não se esqueça de dar sua estrelinha ao projeto, pois isso nos incentiva a continuar desenvolvendo.
+> Não se esqueça de dar sua estrela ao projeto, pois isso me incentiva a continuar desenvolvendo.
 
 ## Por que Bemtv?
 
@@ -860,4 +860,6 @@ template(() => `Dados: ${match("Data[]", "<div>Carregando...</div>")}`);
 
 Obrigado por chegar até aqui, se tiver alguma dúvida, sugestão ou quiser ajudar o projeto de outras formas, é só entrar em contato, em breve novidades e melhorias virão!
 
-Não se esqueça de dar a sua estrelinha para o projeto, pois isso nos incentiva a continuar desenvolvendo, até mais!
+Não se esqueça de dar sua estrela ao projeto, pois isso me incentiva a continuar desenvolvendo.
+
+Até mais!
