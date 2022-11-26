@@ -18,7 +18,7 @@ Bemtv uses a template change detection system instead of detecting changes to va
 
 > **IMPORTANT: Bemtv is a recent project that is improving every day and seeking stability, read the releases to stay informed of what has changed.**
 
-Don't forget to give your star to the project, as this encourages me to continue developing.
+> Don't forget to give your star to the project, as this encourages me to continue developing.
 
 ## Why Bemtv?
 
