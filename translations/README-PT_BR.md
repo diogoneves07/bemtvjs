@@ -9,6 +9,12 @@
 
 **Bemtv**(Abreviação do nome do pássaro [Bem-te-vi](https://pt.wikipedia.org/wiki/Bem-te-vi)) é uma biblioteca JavaScript que traz uma nova abordagem para a criação de UIs interativas.
 
+Bemtv utiliza um sistema de detecção de alterações no template, ao invés de detectar alterações em variáveis ​​ou propriedades.
+
+> **IMPORTANTE: A Bemtv é um projeto recente que está melhorando a cada dia e buscando a estabilidade, leia os lançamentos para ficar informado do que mudou.**
+
+> Não se esqueça de dar sua estrelinha ao projeto, pois isso nos incentiva a continuar desenvolvendo.
+
 ## Por que Bemtv?
 
 Minimalista, leve(mesmo com uma linguagem de marcação e uma biblioteca CSS-in-JS **integrada ao template**), e um Router.
@@ -56,6 +62,8 @@ npm i bemtv
   import { _ } from "https://www.unpkg.com/bemtv/dist/bemtv.es.js";
 </script>
 ```
+
+> O link CDN acima sempre fornecerá a versão mais recente da Bemtv.
 
 ## Documentação
 

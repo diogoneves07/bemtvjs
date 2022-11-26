@@ -14,6 +14,12 @@
 
 **Bemtv**(Abbreviation of the bird's name [Bem-te-vi](https://pt.wikipedia.org/wiki/Bem-te-vi)) is a JavaScript library that brings a new approach to creating interactive UIs.
 
+Bemtv uses a template change detection system instead of detecting changes to variables or properties.
+
+> **IMPORTANT: Bemtv is a recent project that is improving every day and seeking stability, read the releases to stay informed of what has changed.**
+
+> Don't forget to give the project your star up, as it encourages us to keep developing.
+
 ## Why Bemtv?
 
 Minimalist, lightweight (even with a markup language and a CSS-in-JS library **integrated into the template**), and a Router.
@@ -61,6 +67,8 @@ npm i bemtv
   import { _ } from "https://www.unpkg.com/bemtv/dist/bemtv.es.js";
 </script>
 ```
+
+> The CDN link above will always get you the latest version of Bemtv.
 
 ## Documentation
 
