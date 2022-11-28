@@ -797,7 +797,7 @@ template`We are cool!`;
 
 #### Indo para a rota
 
-Para renderizar sem a rota sem uma ação do usuário, podemos usar o método `renderRoute()`:
+Para renderizar a rota sem uma ação do usuário, podemos usar o método `renderRoute()`:
 
 ```javascript
 import { _ } from "bemtv";
