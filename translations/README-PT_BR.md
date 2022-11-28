@@ -839,17 +839,6 @@ if (hasComponent("App")) {
 }
 ```
 
-### Inicializando(Bootstrapping) um App Bemtv
-
-Recomendamos criar um arquivo de inicialização e nele importar todos os componentes que irá precisar garantindo que todos os componetes já foram importados:
-
-`bootstrap.js`:
-
-```javascript
-import "./components/Counter";
-import "./components/Message";
-```
-
 ### Dividindo o Código (Code-Splitting)
 
 Para automatizar o processo de importação de componentes, a Bemtv oferece a função `autoImportComponents()` que aceita um objeto onde o nome das propriedades deve ser o nome dos componentes e seus valores devem ser uma função que importa o componente usando [importações dinâmicas](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import)(dynamic import):

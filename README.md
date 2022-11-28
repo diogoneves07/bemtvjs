@@ -847,17 +847,6 @@ if (hasComponent("App")) {
 }
 ```
 
-### Bootstrapping a Bemtv App
-
-We recommend creating an initialization file and importing all the components you will need into it, ensuring that all components have already been imported:
-
-`bootstrap.js`:
-
-```javascript
-import "./components/Counter";
-import "./components/Message";
-```
-
 ### Code-Splitting
 
 To automate the component import process, Bemtv offers the `autoImportComponents()` function which accepts an object where the properties name must be the components name and their values ​​must be a function that imports the component using [dynamic imports](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import):
