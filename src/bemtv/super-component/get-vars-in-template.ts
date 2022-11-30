@@ -17,6 +17,7 @@ function errorMessage(varValue: any, c: ComponentInst) {
   console.error(varValue);
   throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} In the “${c.name}” component the template has a value that is not string or number: “${varValue}”`;
 }
+
 function getVarsValues(
   name: string,
   sComp: SuperComponent,
@@ -86,6 +87,7 @@ function getVarsValues(
 
   return varValue;
 }
+
 export default function getVarsInTemplate(
   sComp: SuperComponent,
   c: ComponentInst

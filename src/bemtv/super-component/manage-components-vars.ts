@@ -17,20 +17,22 @@ function isRealObject(value: any) {
 }
 
 function insertTFnSymbol(v: any, p?: undefined | any) {
-  p &&
-    Object.defineProperties(v, {
-      [T_FNS_SYMBOL]: {
-        value: p,
-        configurable: false,
-      },
-      [SYMBOL_IS_CLONE]: {
-        value: true,
-        configurable: false,
-      },
-    });
+  if (!p) return v;
+
+  Object.defineProperties(v, {
+    [T_FNS_SYMBOL]: {
+      value: p,
+      configurable: false,
+    },
+    [SYMBOL_IS_CLONE]: {
+      value: true,
+      configurable: false,
+    },
+  });
 
   return v;
 }
+
 function cloneData(value: any) {
   let dtFns: undefined | any;
 
@@ -66,20 +68,23 @@ export default function manageComponentsVars<O extends Record<string, any>>(
         resetComponentVarsCache(sComp);
         return target[name];
       }
-      if (!data.$disableProxies) {
-        resetComponentVarsCache(sComp);
-        const value = target[name];
 
-        if (value && !Object.hasOwn(value, SYMBOL_IS_PROXY)) {
-          target[name] = Object.hasOwn(value, SYMBOL_IS_CLONE)
-            ? value
-            : cloneData(value);
+      if (data.$disableProxies) return target[name];
 
-          if (isRealObject(target[name])) {
-            target[name] = manageComponentsVars(target[name], sComp);
-          }
+      resetComponentVarsCache(sComp);
+
+      const value = target[name];
+
+      if (value && !Object.hasOwn(value, SYMBOL_IS_PROXY)) {
+        target[name] = Object.hasOwn(value, SYMBOL_IS_CLONE)
+          ? value
+          : cloneData(value);
+
+        if (isRealObject(target[name])) {
+          target[name] = manageComponentsVars(target[name], sComp);
         }
       }
+
       return target[name];
     },
 
@@ -98,6 +103,7 @@ export default function manageComponentsVars<O extends Record<string, any>>(
       if (!data.$disableProxies) {
         resetComponentVarsCache(sComp);
       }
+
       target[name] = n;
       return true;
     },

@@ -16,8 +16,6 @@ export function bindComponentToSuperComponent(
 ) {
   const sCompData = getSuperComponentData(sComp);
 
-  let componentVarsCache: Map<string, string> = new Map();
-
   let lastTemplateValue = "";
 
   let componentProps: ComponentProps | undefined;
@@ -49,6 +47,7 @@ export function bindComponentToSuperComponent(
     if (!firstElement || lastFirstElement === firstElement) return;
 
     lastFirstElement = firstElement;
+
     for (const s of sCompData.classes) {
       if (!firstElement.classList.contains(s)) firstElement.classList.add(s);
     }
@@ -106,7 +105,7 @@ export function bindComponentToSuperComponent(
       props: cInst.props,
     },
     template,
-    componentVarsCache,
+    componentVarsCache: new Map<string, string>(),
     removeFirstElementDOMListeners: new Map(),
   });
 
