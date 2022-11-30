@@ -4,7 +4,7 @@
   "type": "module",
   "license": "MIT",
   "author": "Diogo Neves",
-  "description": "The coolest child of the best UI frameworks and libraries.",
+  "description": "Declarative and flexible UI library: Template-based reactivity, automatic routes/pages and SuperComponents.",
   "keywords": [
     "frontend",
     "UI",
