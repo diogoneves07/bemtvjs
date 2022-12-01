@@ -74,7 +74,7 @@ function getVarsValues(
       varValue = tFn(varValue);
     }
 
-    componentVarsCache.set(varName, varValue);
+    componentVarsCache.set(prefix + varName, varValue);
 
     return varValue;
   }
@@ -83,7 +83,7 @@ function getVarsValues(
     errorMessage(varValue, c);
   }
 
-  componentVarsCache.set(varName, varValue.toString());
+  componentVarsCache.set(prefix + varName, varValue.toString());
 
   return varValue;
 }
