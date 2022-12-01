@@ -1,7 +1,7 @@
+import { KEY_ATTRIBUTE_NAME } from "../../globals";
 import getElement from "../../utilities/get-element";
 import ComponentInst from "../component-inst";
 import { getElKeyValue, isElKey } from "../generate-el-key";
-import { KEY_ATTRIBUTE_NAME } from "../globals";
 import { ManageEl } from "../manage-el";
 import { ManageElFactory } from "../manage-el-factory";
 

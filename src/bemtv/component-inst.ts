@@ -1,10 +1,11 @@
-import { AVOIDS_EMPTY_TEMPLATE, LIBRARY_NAME, TAG_HOST_NAME } from "./globals";
+import { AVOIDS_EMPTY_TEMPLATE, TAG_HOST_NAME } from "./globals";
 import { ComponentTemplateCallback } from "./components-main";
 import { ALL_COMPONENTS_INST } from "./component-inst-store";
 import normalizeRouterShortcut from "./normalize-router-shortcut";
 import { LifeCycleCallback, Props } from "./types/component-inst-data";
 import reshareProps from "./reshare-props";
 import useSharedProp from "./use-shared-prop";
+import { LIBRARY_NAME } from "../globals";
 
 function avoidEmptyTemplate(template: string) {
   return template.trim() === "" ? AVOIDS_EMPTY_TEMPLATE : template;

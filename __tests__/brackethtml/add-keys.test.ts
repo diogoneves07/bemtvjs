@@ -1,6 +1,6 @@
 import generateKey from "../../src/bemtv/generate-el-key";
-import { KEY_ATTRIBUTE_NAME } from "../../src/bemtv/globals";
 import brackethtmlTranspiler from "../../src/brackethtml/brackethtml-transpiler";
+import { KEY_ATTRIBUTE_NAME } from "../../src/globals";
 
 describe("Checks the use of Brackethtml “keys” braces in tags", () => {
   it(`Should create “${KEY_ATTRIBUTE_NAME}” atrribute in html button tag`, () => {
