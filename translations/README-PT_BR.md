@@ -22,7 +22,13 @@ Minimalista, leve(mesmo com uma linguagem de marcação e uma biblioteca CSS-in-
 Atualizações refinadas para o DOM real por meio de um loop de detecção de alteração no template que
 permite reatividade sem esforço do desenvolvedor.
 
-Pense em: “Apenas adicionar a Bemtv ao seu index.html e se divertir construindo sua aplicação”.
+---
+
+<p align="center">
+<i> “Antes de brincar com a Bemtv, pense duas vezes e se você curte demais, não se surpreenda.”</i>
+</p>
+
+---
 
 ## Um breve olhar
 

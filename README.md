@@ -27,7 +27,13 @@ Minimalist, lightweight (even with a markup language and a CSS-in-JS library **i
 Fine-grained updates to the real DOM via a template change detection loop that
 allows effortless developer reactivity.
 
-Think about it: “Just add Bemtv to your index.html and have fun building your application”.
+---
+
+<p align="center">
+<i> “Before you play with Bemtv, do think twice and if you enjoy too much, don't be surprised.”</i>
+</p>
+
+---
 
 ## A brief look
 
