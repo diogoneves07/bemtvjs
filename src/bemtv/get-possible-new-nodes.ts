@@ -1,4 +1,6 @@
 import { TAG_HOST_NAME } from "./globals";
+import { setNodeComponentKeys } from "./nodes-component-keys";
+
 const SIMPLE_DIV = document.createElement("div");
 const SIMPLE_DOCUMENT_FRAGMENT = document.createDocumentFragment();
 
@@ -11,6 +13,14 @@ function removeUnnecessarySpace(a: Node[]) {
     return n;
   });
 }
+
+function setChildNodesKeys(key: string, nodes: Node[]) {
+  for (const n of nodes) {
+    setNodeComponentKeys(n, key);
+    n.childNodes && setChildNodesKeys(key, Array.from(n.childNodes));
+  }
+}
+
 export default function getPossibleNewNodes(
   newHtml: string
 ): [keysAndNodes: Record<string, Node[]>, nodes: Node[]] {
@@ -25,9 +35,13 @@ export default function getPossibleNewNodes(
       ...(Array.from(host.childNodes) as Node[])
     );
 
-    keysAndNodes[host.id] = removeUnnecessarySpace(
+    const childNodes = removeUnnecessarySpace(
       Array.from(SIMPLE_DOCUMENT_FRAGMENT.childNodes)
     );
+
+    setChildNodesKeys(host.id, childNodes);
+
+    keysAndNodes[host.id] = childNodes;
     host.parentElement?.replaceChild(SIMPLE_DOCUMENT_FRAGMENT, host);
   }
 

@@ -8,14 +8,30 @@ import {
 } from "./work-with-super-component";
 import { SuperComponent } from "./super-component";
 import ComponentInst from "../component-inst";
+import { generateForcedBindAttr } from "../generate-forced-el-attrs";
 
-// const varsPrefix = "$";
-const varsAttrPrefix = "@";
-const regexTemplateVars = /(\$|\@)[\.\w]*[\w][\?]?/g;
+//const VARS_PREFIX = "$";
+const VARS_AND_ATTR_PREFIX = "@";
+const BIND_PROPS_PREFIX = "<";
+
+const regexTemplateVars = /(\$|\@)[\.\w]*[\w][\?\<]?[\w]*/g;
 
 function errorMessage(varValue: any, c: ComponentInst) {
   console.error(varValue);
   throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} In the “${c.name}” component the template has a value that is not string or number: “${varValue}”`;
+}
+
+function isBindingElementProps(p: string) {
+  if (!p.includes(BIND_PROPS_PREFIX)) return false;
+
+  const [varName, elPropertyOrAttr] = p.split(BIND_PROPS_PREFIX);
+  const varNameWithoutPrefix = varName.slice(1);
+
+  const forcedBindAttr = generateForcedBindAttr(
+    `${elPropertyOrAttr}:${varNameWithoutPrefix}`
+  );
+
+  return `${forcedBindAttr}`;
 }
 
 function getVarsValues(
@@ -24,6 +40,10 @@ function getVarsValues(
   c: ComponentInst,
   componentVarsCache: Map<string, string>
 ) {
+  const bindingElementProps = isBindingElementProps(name);
+
+  if (bindingElementProps) return bindingElementProps;
+
   const prefix = name[0];
   const isOpitional = name.includes("?");
   const varName = isOpitional ? name.slice(1, -1) : name.slice(1);
@@ -33,13 +53,14 @@ function getVarsValues(
   if (getLastValue) return componentVarsCache.get(varName);
 
   const vars = getComponentVars(sComp) as ComponentProps["vars"];
+
   const props = vars.props;
   const hasPathToProp = varName.includes(".");
   const pathToProp = hasPathToProp ? varName.split(".") : false;
 
   let varValue: any;
 
-  if (prefix === varsAttrPrefix) {
+  if (prefix === VARS_AND_ATTR_PREFIX) {
     const varsAndProps = { ...vars, ...props };
 
     let propName = varName;
@@ -57,9 +78,8 @@ function getVarsValues(
       varValue = ` ${toKebabCase(propName)} = "${varValue}" `;
     }
   } else {
-    varValue = pathToProp
-      ? pathToProp.reduce((o, p) => o[p], vars)
-      : vars[varName];
+    if (pathToProp) varValue = pathToProp.reduce((o, p) => o && o[p], vars);
+    else varValue = vars[varName];
   }
 
   if (varValue === undefined || varValue === null) {
@@ -93,12 +113,17 @@ export default function getVarsInTemplate(
   c: ComponentInst
 ) {
   const sCompData = getSuperComponentData(sComp);
-  const { componentVarsCache } = sCompData.components.get(c) as ComponentProps;
+  const { componentVarsCache } = sCompData.componentsInst.get(
+    c
+  ) as ComponentProps;
 
   sCompData.disableVarsProxies();
 
   let templateValue = sCompData
     .componentsTemplate()
+    .replaceAll(regexTemplateVars, (p) =>
+      getVarsValues(p, sComp, c, componentVarsCache)
+    )
     .replaceAll(regexTemplateVars, (p) =>
       getVarsValues(p, sComp, c, componentVarsCache)
     );

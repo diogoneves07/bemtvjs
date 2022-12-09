@@ -1,12 +1,12 @@
 import { ComponentListener } from "./types/listeners";
 import insertDOMListener from "./insert-dom-listener";
 import isEventListener from "./is-event-listener";
-import { ManageEl } from "./manage-el";
+import { ElementInst } from "./element-inst";
 import { getManageElData } from "./work-with-el-manager";
 import isString from "../utilities/is-string";
 
 export function ManageElFactory<E extends Element = Element>() {
-  const elManager = new ManageEl<E>();
+  const elManager = new ElementInst<E>();
   const DOMlisteners = getManageElData(elManager).DOMlisteners;
 
   return new Proxy(elManager, {

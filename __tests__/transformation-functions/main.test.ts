@@ -23,14 +23,14 @@ describe("Check ttFunctions", () => {
 
   test("Value with multiple ttFunctions", (done) => {
     const dt1 = tFn((value) => value.join("-"));
-    const dt2 = tFn((value) => value.replace("-", "@"));
+    const dt2 = tFn((value) => value.replace("-", "T"));
 
     const { onMount, template, render } = _`App`({
       list: dt2(dt1(["hello", "world!"])),
     });
 
     onMount(() => {
-      expect(document.body?.textContent?.trim()).toBe("hello@world!");
+      expect(document.body?.textContent?.trim()).toBe("helloTworld!");
       done();
     });
 

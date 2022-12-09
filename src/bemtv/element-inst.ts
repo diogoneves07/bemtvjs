@@ -13,10 +13,10 @@ export interface ManageElData<E> {
   applyCSSWhenElementIsAvallable: CSSInJSParameters[];
 }
 
-export const ALL_ELEMENTS_MANAGER = new WeakMap<Element, ManageEl>();
-export interface ManageEl<E extends Element = Element> extends Listeners {}
+export const ALL_ELEMENTS_MANAGER = new WeakMap<Element, ElementInst>();
+export interface ElementInst<E extends Element = Element> extends Listeners {}
 
-export class ManageEl<E = Element> {
+export class ElementInst<E = Element> {
   protected readonly __data: ManageElData<E> = {
     DOMlisteners: new Set(),
     CSSClasses: [],

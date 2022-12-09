@@ -81,6 +81,7 @@ function processEachTemplate(
     const componentFn = getComponentFn(realComponentName) as ComponentFn;
 
     const componentInst = new ComponentInst(realComponentName, parent);
+
     componentInst.children = children;
 
     if (parent) {

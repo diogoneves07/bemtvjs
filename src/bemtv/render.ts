@@ -40,13 +40,15 @@ export default function render(
 
     const brackethtml = brackethtmlTranspiler(pureTemplate);
 
-    const [keysAndNodes, n] = getPossibleNewNodes(brackethtml.html);
+    const [keysAndNodes, possibleNewNodes] = getPossibleNewNodes(
+      brackethtml.html
+    );
 
     for (const key of Object.keys(keysAndNodes)) {
       setComponentManagerNodes(key, keysAndNodes[key]);
     }
 
-    for (const node of n) {
+    for (const node of possibleNewNodes) {
       if (!node.isConnected) {
         parent.appendChild(node);
       }

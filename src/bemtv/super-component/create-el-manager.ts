@@ -1,9 +1,13 @@
 import { KEY_ATTRIBUTE_NAME } from "../../globals";
 import getElement from "../../utilities/get-element";
 import ComponentInst from "../component-inst";
-import { getElKeyValue, isElKey } from "../generate-el-key";
-import { ManageEl } from "../manage-el";
-import { ManageElFactory } from "../manage-el-factory";
+import {
+  getForcedAttrValue,
+  isForcedAttr,
+  normalizeElKeyAttr,
+} from "../generate-forced-el-attrs";
+import { ElementInst } from "../element-inst";
+import { ManageElFactory } from "../element-inst-factory";
 
 function findElementInComponentNodes(
   nodes: Node[] | Element[],
@@ -25,7 +29,7 @@ function findElementInComponentNodes(
 export default function createElManager<E extends Element = Element>(
   keyOrSelectorOrElement: string | Element,
   c: ComponentInst | null
-): ManageEl<E> {
+): ElementInst<E> {
   const elManager = ManageElFactory<E>();
 
   if (keyOrSelectorOrElement instanceof Element) {
@@ -33,14 +37,14 @@ export default function createElManager<E extends Element = Element>(
     return elManager;
   }
 
-  if (!isElKey(keyOrSelectorOrElement)) {
+  if (!isForcedAttr(keyOrSelectorOrElement)) {
     elManager.it = getElement(keyOrSelectorOrElement) as E | null;
     return elManager;
   }
 
   if (!c) return elManager;
 
-  const elKey = getElKeyValue(keyOrSelectorOrElement);
+  const elKey = normalizeElKeyAttr(getForcedAttrValue(keyOrSelectorOrElement));
 
   let element = findElementInComponentNodes(c.nodes, elKey) as E;
 

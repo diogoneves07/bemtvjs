@@ -21,7 +21,7 @@ const timeoutForLoop = 1000 / framesLimit;
   requestAnimationFrame(() => {
     let hasChanges = false;
     for (const componentInst of ALL_COMPONENTS_INST) {
-      if (!componentInst.mounted) continue;
+      if (!componentInst.parentElement) continue;
 
       if (!componentInst.shouldTemplateBeUpdate()) {
         shouldComponentBeUnmounted(componentInst);

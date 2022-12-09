@@ -1,20 +1,37 @@
-import { KEY_ATTRIBUTE_NAME, LIBRARY_NAME_IN_ERRORS_MESSAGE } from "../globals";
+import {
+  LIBRARY_NAME_IN_ERRORS_MESSAGE,
+  START_ATTRIBUTE_NAME,
+} from "../globals";
 
 import createTagObject from "./create-tag-object";
-import getAttributesDefinedByKeys from "./get-attributes-defined-by-keys";
+import getForcedAttrs from "./get-forced-attrs";
 import scapeLiteralLibrarySymbols from "./scape-literal-library-symbols";
 import mountHTMLTag from "./mount-html-tag";
 import unscapeLiteralLibrarySymbols from "./unscape-literal-library-symbols";
 
 const regexTagData = /[a-z-0-9]*\[[^\]\[]*?\]/g;
 
-function setAttributesDefinedByKeys(
+function setForcedAttrs(
   tagObject: Exclude<ReturnType<typeof createTagObject>, false>,
-  attrsDefinedByKeys: string[]
+  forcedAttrs: string[]
 ) {
-  tagObject.attributes += ` ${KEY_ATTRIBUTE_NAME}="${attrsDefinedByKeys.join(
-    " "
-  )}"`;
+  const attrsType: Record<string, string[]> = {};
+
+  for (const item of forcedAttrs) {
+    const t = item.slice(0, item.indexOf("-"));
+    const value = item.slice(item.indexOf("-") + 1);
+    if (Object.hasOwn(attrsType, t)) {
+      attrsType[t].push(value);
+    } else {
+      attrsType[t] = [value];
+    }
+  }
+
+  for (const name of Object.keys(attrsType)) {
+    tagObject.attributes += ` ${START_ATTRIBUTE_NAME}${name}="${attrsType[
+      name
+    ].join(" ")}"`;
+  }
   return tagObject;
 }
 
@@ -36,15 +53,14 @@ export default function brackethtmlToHTML(pureTemplate: string) {
 
       let tagContent = value.slice(leftBracketIndex + 1, -1);
 
-      const { attrs: attrsDefinedByKeys, newTagContent } =
-        getAttributesDefinedByKeys(tagContent);
+      const { attrs: forcedAttrs, newTagContent } = getForcedAttrs(tagContent);
 
       tagContent = newTagContent;
 
       let tagObject = createTagObject(tagName, tagContent);
 
-      if (attrsDefinedByKeys) {
-        tagObject = setAttributesDefinedByKeys(tagObject, attrsDefinedByKeys);
+      if (forcedAttrs) {
+        tagObject = setForcedAttrs(tagObject, forcedAttrs);
       }
 
       return mountHTMLTag(tagObject);

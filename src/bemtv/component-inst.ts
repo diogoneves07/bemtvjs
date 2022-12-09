@@ -14,6 +14,7 @@ function avoidEmptyTemplate(template: string) {
 export type TemplateCallback = () => string;
 
 export default class ComponentInst {
+  parentElement: Element | null = null;
   key: string;
   lastTemplateValue: string = "";
   getCurrentTemplate: TemplateCallback = () => "";
@@ -36,13 +37,10 @@ export default class ComponentInst {
 
   sharedData: Record<string, any> = {};
 
-  /** The component properties */
   readonly props: Props = {};
 
-  /** The component properties */
   readonly name: string;
 
-  /** The component children */
   children: string = "";
 
   constructor(name: string, parent: ComponentInst | null) {
@@ -80,14 +78,17 @@ export default class ComponentInst {
     this.getCurrentTemplate = getCurrentTemplate;
     this.lastTemplateValue = getCurrentTemplate();
   }
+
   getCurrentTemplateWithHost() {
     return `${TAG_HOST_NAME}[id = "${this.key}" ~ ${normalizeRouterShortcut(
       this.getCurrentTemplate()
     )}]`;
   }
+
   updateLastTemplateValueProperty() {
     this.lastTemplateValue = this.getCurrentTemplate();
   }
+
   shouldTemplateBeUpdate() {
     const shouldForceUpdate = this.shouldForceUpdate;
     let check = false;
@@ -101,15 +102,19 @@ export default class ComponentInst {
     }
     return check;
   }
+
   addComponentChild(c: ComponentInst) {
     this.componentsInTemplate.add(c);
   }
+
   hasComponentChild(c: ComponentInst) {
     return this.componentsInTemplate.has(c);
   }
+
   getChildComponents() {
     return this.componentsInTemplate;
   }
+
   resetComponentsChildContainer() {
     this.componentsInTemplate.clear();
   }
@@ -171,6 +176,7 @@ export default class ComponentInst {
     ]);
     return this;
   }
+
   onUpdate(fn: () => void) {
     if (!this.updatedCallbacks) this.updatedCallbacks = new Set();
     this.updatedCallbacks.add(fn);

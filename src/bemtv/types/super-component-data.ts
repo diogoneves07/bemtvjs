@@ -24,8 +24,8 @@ export interface SuperComponentData {
   DOMListeners: Set<SuperComponentDOMListener>;
   lifeCycles: Map<string, ((c: ComponentInst) => void)[]>;
   removeDOMListeners: Map<SuperComponentDOMListener, (() => void)[]>;
-  componentRunning: ComponentInst | null;
-  components: Map<ComponentInst, ComponentProps>;
+  componentInstRunning: ComponentInst | null;
+  componentsInst: Map<ComponentInst, ComponentProps>;
   $disableProxies: boolean;
   classes: string[];
   fns: [fn: string, args: any[]][];

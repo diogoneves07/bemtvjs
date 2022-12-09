@@ -3,15 +3,15 @@ import { Listeners } from "./../types/listeners";
 import { css } from "goober";
 
 import { LIBRARY_NAME_IN_ERRORS_MESSAGE } from "./../../globals";
-import { ManageEl } from "../manage-el";
+import { ElementInst } from "../element-inst";
 import render from "./../render";
 import {
   getComponentInstFirstElement,
-  setRunningComponent,
+  runInComponentInst,
   updateComponentVars,
 } from "./work-with-super-component";
 import { SuperComponentData } from "./../types/super-component-data";
-import generateKey from "./../generate-el-key";
+import { generateForcedKeyAttr } from "../generate-forced-el-attrs";
 import concatTemplateStringArrays from "../../utilities/concat-template-string-arrays";
 import createElManager from "./create-el-manager";
 import manageComponentsVars from "./manage-components-vars";
@@ -75,8 +75,8 @@ export class SuperComponent<Vars extends Record<string, any>> {
     DOMListeners: new Set(),
     lifeCycles: new Map(),
     removeDOMListeners: new Map(),
-    componentRunning: null,
-    components: new Map(),
+    componentInstRunning: null,
+    componentsInst: new Map(),
     $disableProxies: false,
     disableVarsProxies() {
       this.$disableProxies = true;
@@ -122,12 +122,12 @@ export class SuperComponent<Vars extends Record<string, any>> {
    * A callback that when called executes the function passed.
    */
   keepInst<T extends Function>(callback: T) {
-    const keepInstance = this.__data.componentRunning;
+    const keepInstance = this.__data.componentInstRunning;
     return () => {
-      setRunningComponent(this, keepInstance);
-      callback();
-      updateComponentVars(this);
-      setRunningComponent(this);
+      runInComponentInst(this, keepInstance, () => {
+        callback();
+        updateComponentVars(this);
+      });
     };
   }
 
@@ -140,7 +140,7 @@ export class SuperComponent<Vars extends Record<string, any>> {
 
     data.classes.push(classValue);
 
-    for (const c of data.components.keys()) {
+    for (const c of data.componentsInst.keys()) {
       const firstElement = getComponentInstFirstElement(c);
 
       if (firstElement) {
@@ -158,7 +158,7 @@ export class SuperComponent<Vars extends Record<string, any>> {
    */
   useEl<E extends Element = Element>(
     selectorOrElement: string | Element
-  ): ManageEl<E>;
+  ): ElementInst<E>;
 
   /**
    * Creates an instance to manage a real DOM element.
@@ -169,24 +169,24 @@ export class SuperComponent<Vars extends Record<string, any>> {
    */
   useEl<E extends Element = Element>(): [
     elKey: string,
-    getEl: () => ManageEl<E>
+    getEl: () => ElementInst<E>
   ];
 
   useEl<E extends Element = Element>(selectorOrElement?: string | Element) {
     if (selectorOrElement) {
       return createElManager<E>(
         selectorOrElement,
-        this.__data.componentRunning
+        this.__data.componentInstRunning
       );
     }
 
-    const cache = new Map<ComponentInst, ManageEl>();
-    const key = generateKey();
+    const cache = new Map<ComponentInst, ElementInst>();
+    const key = generateForcedKeyAttr();
 
     return [
       key,
       () => {
-        const c = this.__data.componentRunning;
+        const c = this.__data.componentInstRunning;
 
         if (c && cache.has(c)) return cache.get(c);
 
@@ -229,7 +229,7 @@ export class SuperComponent<Vars extends Record<string, any>> {
    * The property value or undefined.
    */
   use<ReturnType = any>(key: string) {
-    const c = this.__data.componentRunning;
+    const c = this.__data.componentInstRunning;
     return c ? c.use<ReturnType>(key) : undefined;
   }
 

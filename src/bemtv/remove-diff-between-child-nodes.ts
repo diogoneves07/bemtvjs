@@ -15,11 +15,14 @@ function removeDiffBetweenNodesAttrs(newNode: Element, oldNode: Element) {
     if (newAttr.value === oldNode.getAttribute(attrName)) continue;
 
     oldNode.setAttribute(attrName, newAttr.value);
+
+    if (attrName in oldNode) (oldNode as any)[attrName] = newAttr.value;
   }
 }
 export function removeDiffBetweenChildNodes(
   newChildNodes: Node[],
-  oldChildNodes: Node[]
+  oldChildNodes: Node[],
+  instParentElement?: Element | null
 ) {
   let newChildNodesArray = newChildNodes;
 
@@ -27,7 +30,8 @@ export function removeDiffBetweenChildNodes(
 
   let oldChildNodesArray = oldChildNodes.slice(0, length);
 
-  const parentElement = oldChildNodes[0].parentElement as HTMLElement;
+  const parentElement = (oldChildNodes[0]?.parentElement ||
+    instParentElement) as HTMLElement;
 
   for (const node of oldChildNodes.slice(length)) {
     parentElement.removeChild(node);
@@ -74,6 +78,9 @@ export function removeDiffBetweenChildNodes(
         newNode.textContent !== oldNode.textContent
       ) {
         oldNode.textContent = newNode.textContent;
+        if ("value" in oldNode) {
+          (oldNode as any).value = oldNode.textContent;
+        }
       }
 
       removeDiffBetweenNodesAttrs(newNode, oldNode as Element);
@@ -81,7 +88,8 @@ export function removeDiffBetweenChildNodes(
       if (newNode.childNodes[0]) {
         removeDiffBetweenChildNodes(
           Array.from(newNode.childNodes),
-          Array.from((oldNode as Element).childNodes)
+          Array.from((oldNode as Element).childNodes),
+          oldNode as Element
         );
       }
     }

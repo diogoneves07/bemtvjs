@@ -1,6 +1,6 @@
 import { _ } from "../../src/main";
 
-it("Should change the children received", (done) => {
+it("Should change the $children content", (done) => {
   const { children } = _`Child`().template`$children`;
 
   children(() => "Hey!");

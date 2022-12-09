@@ -20,5 +20,5 @@ export default function mountHTMLTag(tagProps: TagProps) {
 
   if (isSelfClosingTag(tagName)) return `<${tagName} ${tagAttrs}/>`;
 
-  return `<${tagName} ${tagAttrs}>${children}</${tagName}>`;
+  return `<${tagName} ${tagAttrs}>${children.trim()}</${tagName}>`;
 }

@@ -2,12 +2,17 @@ import ComponentInst from "../component-inst";
 import { dispatchInitedLifeCycle } from "../components-lifecycle";
 import { ComponentProps } from "../types/super-component-data";
 import getVarsInTemplate from "./get-vars-in-template";
+import {
+  ElementsWithBindAttrs,
+  processBindAttrs,
+  setElementsWithBindAttrs,
+} from "./process-bind-attrs";
 import { SuperComponent } from "./super-component";
 import {
   addDOMListenerToComponent,
   getComponentInstFirstElement,
   getSuperComponentData,
-  setRunningComponent,
+  runInComponentInst,
 } from "./work-with-super-component";
 
 export function bindComponentToSuperComponent(
@@ -16,33 +21,16 @@ export function bindComponentToSuperComponent(
 ) {
   const sCompData = getSuperComponentData(sComp);
 
-  let lastTemplateValue = "";
-
   let componentProps: ComponentProps | undefined;
-
-  const template = () => {
-    const { isTemplateFunction } = sCompData;
-
-    setRunningComponent(sComp, cInst);
-
-    if (!componentProps) {
-      componentProps = sCompData.components.get(cInst) as ComponentProps;
-    }
-
-    const { componentVarsCache } = componentProps;
-
-    if (isTemplateFunction || componentVarsCache.size === 0) {
-      lastTemplateValue = getVarsInTemplate(sComp, cInst);
-    }
-
-    setRunningComponent(sComp);
-    return lastTemplateValue;
-  };
 
   let lastFirstElement: undefined | Element;
 
   const updateFirstElement = () => {
     const firstElement = getComponentInstFirstElement(cInst);
+
+    if (!cInst.parentElement && cInst.nodes[0]?.parentElement) {
+      cInst.parentElement = cInst.nodes[0].parentElement;
+    }
 
     if (!firstElement || lastFirstElement === firstElement) return;
 
@@ -52,7 +40,7 @@ export function bindComponentToSuperComponent(
       if (!firstElement.classList.contains(s)) firstElement.classList.add(s);
     }
 
-    const cInstProps = componentProps || sCompData.components.get(cInst);
+    const cInstProps = componentProps || sCompData.componentsInst.get(cInst);
 
     if (cInstProps) {
       const fnsIterator = cInstProps.removeFirstElementDOMListeners.values();
@@ -66,10 +54,6 @@ export function bindComponentToSuperComponent(
       addDOMListenerToComponent(firstElement, sComp, l, cInst);
     }
   };
-
-  cInst.onUnmount(() => sCompData.components.delete(cInst));
-  cInst.onMount(updateFirstElement);
-  cInst.onUpdate(updateFirstElement);
 
   let withoutTypes = cInst as any;
 
@@ -87,6 +71,7 @@ export function bindComponentToSuperComponent(
     switch (fnName) {
       case "children":
         withoutTypes.children = args[0](withoutTypes.children);
+
         break;
       case "props":
         withoutTypes.props = args[0](withoutTypes.props);
@@ -98,7 +83,37 @@ export function bindComponentToSuperComponent(
     }
   }
 
-  sCompData.components.set(cInst, {
+  let lastTemplateValue = "";
+
+  let elementsWithBindAttrs: ElementsWithBindAttrs = [];
+
+  const updateElementsWithBindAttrs = () => {
+    runInComponentInst(sComp, cInst, () => {
+      setElementsWithBindAttrs(sComp, cInst, elementsWithBindAttrs);
+    });
+  };
+
+  const template = () => {
+    const { isTemplateFunction } = sCompData;
+
+    runInComponentInst(sComp, cInst, () => {
+      processBindAttrs(sComp, elementsWithBindAttrs);
+
+      if (!componentProps) {
+        componentProps = sCompData.componentsInst.get(cInst) as ComponentProps;
+      }
+
+      const { componentVarsCache } = componentProps;
+
+      if (isTemplateFunction || componentVarsCache.size === 0) {
+        lastTemplateValue = getVarsInTemplate(sComp, cInst);
+      }
+    });
+
+    return lastTemplateValue;
+  };
+
+  sCompData.componentsInst.set(cInst, {
     vars: {
       ...sCompData.componentsInitVars,
       children: cInst.children,
@@ -110,6 +125,14 @@ export function bindComponentToSuperComponent(
   });
 
   dispatchInitedLifeCycle(cInst);
+
+  cInst.onUnmount(() => sCompData.componentsInst.delete(cInst));
+
+  cInst.onMountWithHighPriority(updateFirstElement);
+  cInst.onUpdateWithHighPriority(updateFirstElement);
+
+  cInst.onMountWithHighPriority(updateElementsWithBindAttrs);
+  cInst.onUpdateWithHighPriority(updateElementsWithBindAttrs);
 
   return template;
 }
