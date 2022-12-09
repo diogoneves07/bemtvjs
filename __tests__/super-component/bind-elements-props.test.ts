@@ -105,9 +105,9 @@ describe("Bind element props and attrs", () => {
     });
 
     template`
-      input[ $inputs<value type="checkbox" name='test' value="1" checked="true"]
-      input[ $inputs<value type="checkbox" name='test' value="2" checked="true"]
-      input[ $inputs<value type="checkbox" name='test' value="3"]`;
+      input[ $inputs<checked type="checkbox" name='test' value="1" checked="true"]
+      input[ type="checkbox" name='test' value="2" checked="true"]
+      input[ type="checkbox" name='test' value="3"]`;
 
     render();
   });

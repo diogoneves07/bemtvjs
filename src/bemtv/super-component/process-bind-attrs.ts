@@ -10,6 +10,7 @@ import createElManager from "./create-el-manager";
 import { SuperComponent } from "./super-component";
 import {
   getComponentVars,
+  getSuperComponentData,
   runInComponentInst,
   updateComponentVars,
 } from "./work-with-super-component";
@@ -20,7 +21,7 @@ export type ElementWithBindAttrs = {
   perpertyName: string;
   lastPerpertyValue?: any;
   isString?: any;
-  isFormElement: boolean;
+  hasInput: boolean;
   compVar: string;
 };
 
@@ -78,12 +79,13 @@ export function getElementsWithBindAttrs(cInst: ComponentInst) {
   return els;
 }
 
-export function handleFormElement(
+export function handleOnInput(
   sComp: SuperComponent,
-  elementWithBindAttrs: ElementWithBindAttrs,
+  bindedAttrs: ElementWithBindAttrs,
   propertyPath: string
 ) {
-  const { el, tagName } = elementWithBindAttrs;
+  const { el, tagName } = bindedAttrs;
+
   const c = getComponentVars(sComp) as Record<string, any>;
   const compVarValue = getOrSetPropertyByPath(c, propertyPath);
 
@@ -107,7 +109,9 @@ export function handleFormElement(
         const name = el.getAttribute("name");
 
         if (!name) {
-          throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} The input checkbox must have a “name” attribute.`;
+          throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} In the “${
+            getSuperComponentData(sComp).componentName
+          }” component to use the binding with a list you must define the attribute name for the input tags`;
         }
 
         const inputs = document.querySelectorAll(
@@ -129,17 +133,17 @@ export function handleFormElement(
   }
 }
 
-export function processBindAttrs(
+export function processElementsWithBindAttrs(
   sComp: SuperComponent,
   elementsWithBindAttrs: ElementsWithBindAttrs
 ) {
   const c = getComponentVars(sComp) as Record<string, any>;
 
   for (const bindObject of elementsWithBindAttrs) {
-    const { el, lastPerpertyValue, perpertyName, isFormElement, compVar } =
+    const { el, lastPerpertyValue, perpertyName, hasInput, compVar } =
       bindObject;
 
-    if (isFormElement) continue;
+    if (hasInput) continue;
 
     const isAttr = !(perpertyName in el);
 
@@ -179,11 +183,30 @@ export function setElementsWithBindAttrs(
   const c = getComponentVars(sComp) as Record<string, any>;
 
   const listenerToElementInput = (
-    elementWithBindAttrs: ElementWithBindAttrs,
+    bindedAttrs: ElementWithBindAttrs,
     compVar: string
   ) => {
     runInComponentInst(sComp, cInst, () => {
-      handleFormElement(sComp, elementWithBindAttrs, compVar);
+      handleOnInput(sComp, bindedAttrs, compVar);
+    });
+  };
+
+  const addOnInputListener = (
+    bindedAttrs: ElementWithBindAttrs,
+    compVar: string
+  ) => {
+    if (
+      bindedAttrs.perpertyName !== "value" &&
+      bindedAttrs.perpertyName !== "checked"
+    ) {
+      bindedAttrs.hasInput = false;
+      return;
+    }
+
+    handleOnInput(sComp, bindedAttrs, compVar);
+
+    bindedAttrs.el.addEventListener("input", () => {
+      listenerToElementInput(bindedAttrs, compVar);
     });
   };
 
@@ -210,37 +233,28 @@ export function setElementsWithBindAttrs(
       });
 
       if (current) {
-        if (current.el !== el) {
-          handleFormElement(sComp, current, compVar);
-
-          current.el.addEventListener("input", () => {
-            listenerToElementInput(current, compVar);
-          });
-        }
-
         current.el = el;
         current.perpertyName = perpertyName;
+
+        if (current.el !== el && current.hasInput)
+          addOnInputListener(current, compVar);
       } else {
         const tagName = el.tagName.toLowerCase();
 
-        const elementWithBindAttrs = {
+        const bindedAttrs = {
           el,
           perpertyName,
           tagName: el.tagName.toLowerCase(),
-          isFormElement: formElements.includes(tagName),
+          hasInput: formElements.includes(tagName),
           compVar,
         };
 
-        handleFormElement(sComp, elementWithBindAttrs, compVar);
+        bindedAttrs.hasInput && addOnInputListener(bindedAttrs, compVar);
 
-        el.addEventListener("input", () => {
-          listenerToElementInput(elementWithBindAttrs, compVar);
-        });
-
-        elementsWithBindAttrs.push(elementWithBindAttrs);
+        elementsWithBindAttrs.push(bindedAttrs);
       }
     }
   }
 
-  processBindAttrs(sComp, elementsWithBindAttrs);
+  processElementsWithBindAttrs(sComp, elementsWithBindAttrs);
 }

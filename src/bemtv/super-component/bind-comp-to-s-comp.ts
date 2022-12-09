@@ -4,7 +4,7 @@ import { ComponentProps } from "../types/super-component-data";
 import getVarsInTemplate from "./get-vars-in-template";
 import {
   ElementsWithBindAttrs,
-  processBindAttrs,
+  processElementsWithBindAttrs,
   setElementsWithBindAttrs,
 } from "./process-bind-attrs";
 import { SuperComponent } from "./super-component";
@@ -97,7 +97,7 @@ export function bindComponentToSuperComponent(
     const { isTemplateFunction } = sCompData;
 
     runInComponentInst(sComp, cInst, () => {
-      processBindAttrs(sComp, elementsWithBindAttrs);
+      processElementsWithBindAttrs(sComp, elementsWithBindAttrs);
 
       if (!componentProps) {
         componentProps = sCompData.componentsInst.get(cInst) as ComponentProps;
