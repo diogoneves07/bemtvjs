@@ -1,3 +1,5 @@
+export type { ElementInst } from "./bemtv/element-inst";
+
 export { _, hasComponent } from "./bemtv/components-main";
 export { tFn } from "./bemtv/transformation-functions/main";
 export {
