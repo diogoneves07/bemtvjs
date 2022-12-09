@@ -4,9 +4,9 @@ import { resetTestEnvironment } from "../test-utilities//reset-test-environment"
 resetTestEnvironment();
 
 describe(`
-   Checks the reapplication of CSS classes to the element of the “ManageEl.it” property
+   Checks the reapplication of CSS classes to the element of the “ElementInst.it” property
 `, () => {
-  it("Should reapply the class inserted via the “ManageEl.css()” method", (done) => {
+  it("Should reapply the class inserted via the “ElementInst.css()” method", (done) => {
     const { useEl, onMount, onUpdate, template, render } = _`App`();
 
     const [key, el] = useEl();
@@ -35,7 +35,7 @@ describe(`
   });
 
   it(`
-     Should apply the class inserted through the “ManageEl.css()” method to the new element
+     Should apply the class inserted through the “ElementInst.css()” method to the new element
   `, (done) => {
     const { useEl, onMount, onUpdate, template, render } = _`App`();
 
