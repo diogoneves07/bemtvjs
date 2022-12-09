@@ -14,18 +14,17 @@
 
 **Bemtv**(Abbreviation of the bird's name [Bem-te-vi](https://pt.wikipedia.org/wiki/Bem-te-vi)) is a JavaScript library that brings a new approach to creating interactive UIs.
 
-Bemtv uses a template change detection system instead of detecting changes to variables or properties.
-
 > **IMPORTANT: Bemtv is a recent project that is improving every day and seeking stability, read the releases to stay informed of what has changed.**
 
 > Don't forget to give your star to the project, as this encourages me to continue developing.
 
-## Why Bemtv?
+## What's new?
 
-Minimalist, lightweight (even with a markup language and a CSS-in-JS library **integrated into the template**), and a Router.
+Currently in the Javascript ecosystem there are excellent tools for developing the user interface. Bemtv reuses much of what these tools brought and brings, however, it is not a copy, it is something totally new.
 
-Fine-grained updates to the real DOM via a template change detection loop that
-allows effortless developer reactivity.
+When looking at a block of code, you will see that the news already starts with the syntax, it may even seem strange at first, but Bemtv's syntax was thought to be minimalist, that is, when doing anything with Bemtv you will only use the number of lines which is really necessary.
+
+Fine-grained updates to the real DOM through template-based reactivity that allows for effortless reactivity.
 
 ---
 
@@ -34,6 +33,30 @@ allows effortless developer reactivity.
 </p>
 
 ---
+
+## Key Features
+
+- Cleaner syntax than other UI libraries and frameworks.
+
+- Brackethtml markup language: instead of `<div>Hey!</div>` do this: `div[Hey!]`.
+
+- CSS-In-JS and CSS-In-Template
+
+- Separation of logic related to DOM events from the component template.
+
+- Instead of a common routing system or based on files, Bemtv brings a new innovative routing system that is capable of “transforming” a component into a route automatically according to its use in the application.
+
+- A new way to share data between components through a built-in system.
+
+- Declarative syntactic sugars through the component template.
+
+- Transform functions that separate data structures like Array, Set, Map and Object from their markup for the template.
+
+- Semi-automatic Code-Splitting
+
+- Easy two-way binding between component variables and HTML element properties and attributes
+
+- Hooks
 
 ## A brief look
 

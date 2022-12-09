@@ -9,18 +9,17 @@
 
 **Bemtv**(Abreviação do nome do pássaro [Bem-te-vi](https://pt.wikipedia.org/wiki/Bem-te-vi)) é uma biblioteca JavaScript que traz uma nova abordagem para a criação de UIs interativas.
 
-Bemtv utiliza um sistema de detecção de alterações no template, ao invés de detectar alterações em variáveis ​​ou propriedades.
-
 > **IMPORTANTE: A Bemtv é um projeto recente que está melhorando a cada dia e buscando a estabilidade, leia os lançamentos para ficar informado do que mudou.**
 
 > Não se esqueça de dar sua estrela ao projeto, pois isso me incentiva a continuar desenvolvendo.
 
-## Por que Bemtv?
+## O que há de novo?
 
-Minimalista, leve(mesmo com uma linguagem de marcação e uma biblioteca CSS-in-JS **integrada ao template**), e um Router.
+Atualmente no ecossistema Javascript existem excelentes ferramentas para desenvolver a interface do usuário. A Bemtv reaproveita muito do que essas ferramentas trouxeram e trazem, porém, não é uma cópia, é algo totalmente novo.
 
-Atualizações refinadas para o DOM real por meio de um loop de detecção de alteração no template que
-permite reatividade sem esforço do desenvolvedor.
+Ao olhar um bloco de código, você verá que a novidade já começa com a sintaxe, pode até parecer estranho no começo, mas a sintaxe do Bemtv foi pensada para ser minimalista, ou seja, ao fazer qualquer coisa com o Bemtv você vai usar apenas o número de linhas que é realmente necessário.
+
+Atualizações refinadas para o DOM real por meio de reatividade baseada no template que permite reatividade sem esforço.
 
 ---
 
@@ -29,6 +28,30 @@ permite reatividade sem esforço do desenvolvedor.
 </p>
 
 ---
+
+## Características principais
+
+- Sintaxe mais limpa do que outras bibliotecas e frameworks de UI.
+
+- Linguagem de marcação Brackethtml: ao invés de `<div>Hey!</div>` faça isto: `div[Hey!]`.
+
+- CSS-In-JS e CSS-In-Template
+
+- Separação da lógica relacionada aos eventos DOM do template do componente.
+
+- Ao invés de um sistema de roteamento comum ou baseado em arquivos, a Bemtv traz um novo sistema de roteamento inovador que é capaz de “transformar” um componente em uma rota automaticamente conforme sua utilização no aplicativo.
+
+- Uma nova maneira de compartilhar dados entre componentes por meio de um sistema integrado.
+
+- Açúcares sintáticos declarativos através do template de componente.
+
+- Funções de transformação que separam estruturas de dados como Array, Set, Map e Object de sua marcação para o modelo
+
+- Divisão de código semi-automática
+
+- Ligação bidirecional fácil entre variáveis ​​de componentes e propriedades e atributos de elementos HTML.
+
+- Ganchos/Hooks
 
 ## Um breve olhar
 
@@ -463,6 +486,108 @@ onMount(() => {
 });
 
 template`button[ ${key} Click me!]`;
+```
+
+### Bindings
+
+Às vezes, precisamos obter o valor de uma propriedade ou atributo de um elemento DOM e salvá-lo em uma variável.
+
+Para fazer isso, podemos simplesmente vincular declarativamente uma `compVar` a um atributo ou propriedade do elemento usando o símbolo `<`:
+
+```javascript
+import { _ } from "bemtv";
+
+const { onMount, $, template, render } = _`App`({
+  divEl: undefined,
+});
+
+onMount(() => {
+  console.log($.divEl);
+});
+
+template`div[ $divEl<this ]`;
+
+render();
+```
+
+Observe o `$divEl<this`, estamos pedindp a Bemtv para definir o elemento DOM como o valor da propriedade `divEl`.
+
+Se quiséssemos uma instância de elemento como em `useEl(`) poderíamos fazer:
+
+```javascript
+import { _ } from "bemtv";
+
+const { onMount, $, template, render } = _`App`({
+  divEl: undefined,
+});
+
+onMount(() => {
+  console.log($.divEl);
+});
+
+template`div[ $divEl<inst ]`;
+
+render();
+```
+
+#### Entradas numéricas
+
+Para obter o valor atual de `inputs` podemos usar a propriedade `value` e se quisermos que esse valor seja convertido para número automaticamente devemos definir o valor inicial da propriedade como um número:
+
+```js
+import { _ } from "bemtv";
+
+const { $, template, render } = _`App`({
+  inputValue: 0,
+});
+
+template`input[ $inputValue<value type="number"]`;
+
+render();
+```
+
+#### Select element
+
+A vinculação com o elemento `select` é semelhante às `inputs`, no entanto, se você usar o atributo `multiple`, deverá definir um array para a propriedade que será vinculada ao valor select:
+
+```js
+import { _ } from "bemtv";
+
+const { $, template, render } = _`App`({
+  options: [],
+});
+
+template`
+    select[
+        $options<value
+
+        multiple="true" ~
+
+        option[value="1" ~ First]
+        option[value="2" ~ Second]
+        option[value="3" ~ Third]]`;
+
+render();
+```
+
+#### Checkbox inputs
+
+Semelhante a `select`, ao usar `checkbox inputs` podemos definir um array para a propriedade que será vinculada à lista de itens `checked`:
+
+```js
+import { _ } from "bemtv";
+
+const { $, template, render } = _`App`({
+  inputs: [],
+});
+
+template`
+      input[ $inputs<checked type="checkbox" name='test' value="1"]
+      
+      input[ type="checkbox" name='test' value="2"]
+      input[ type="checkbox" name='test' value="3"]`;
+
+render();
 ```
 
 ### Props
