@@ -7,11 +7,21 @@ import {
 export function appendNodeToComponentManagerNodes(node: Node) {
   const keys = getNodeComponentKeys(node);
 
+  const nodeParents: Node[] = [];
+  let n: Node | null = node;
+
+  while (n) {
+    n.parentNode && nodeParents.push(n.parentNode);
+    n = n.parentNode;
+  }
+
   if (keys) {
     for (const m of ALL_COMPONENTS_INST) {
       if (!keys.includes(m.key)) continue;
 
-      m.nodes.push(node);
+      const check = m.nodes.find((i) => nodeParents.includes(i));
+
+      !check && m.nodes.push(node);
     }
   }
 }
