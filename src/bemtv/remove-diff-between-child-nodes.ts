@@ -34,7 +34,7 @@ export function removeDiffBetweenChildNodes(
     instParentElement) as HTMLElement;
 
   for (const node of oldChildNodes.slice(length)) {
-    parentElement.removeChild(node);
+    node.parentElement && node.parentElement.removeChild(node);
     removeNodeFromComponentManagerNodes(node);
   }
 
