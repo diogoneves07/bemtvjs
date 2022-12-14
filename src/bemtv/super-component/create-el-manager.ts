@@ -48,14 +48,13 @@ export default function createElManager<E extends Element = Element>(
 
   let element = findElementInComponentNodes(c.nodes, elKey) as E;
 
-  if (!element) {
+  if (!element && !c.mounted) {
     c.onMountWithHighPriority(() => {
       if (!elManager.it) {
         elManager.it =
           (findElementInComponentNodes(c.nodes, elKey) as E) || null;
       }
     });
-    return elManager;
   }
 
   c.onUpdateWithHighPriority(() => {
