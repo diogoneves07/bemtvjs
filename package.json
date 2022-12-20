@@ -19,12 +19,12 @@
     "dist",
     "types"
   ],
-  "main": "./dist/bemtv.umd.cjs",
+  "main": "./dist/bemtv.umd.js",
   "module": "./dist/bemtv.es.js",
   "exports": {
     ".": {
       "import": "./dist/bemtv.es.js",
-      "require": "./dist/bemtv.umd.cjs"
+      "require": "./dist/bemtv.umd.js"
     }
   },
   "scripts": {
