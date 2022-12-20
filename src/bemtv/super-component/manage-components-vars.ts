@@ -38,13 +38,14 @@ function insertTFnSymbol(v: any, p?: undefined | any) {
 function cloneData(value: any) {
   let dtFns: undefined | any;
 
-  if (value && Object.hasOwn(value, T_FNS_SYMBOL)) {
-    dtFns = value[T_FNS_SYMBOL];
-  }
+  if (value && Object.hasOwn(value, T_FNS_SYMBOL)) dtFns = value[T_FNS_SYMBOL];
 
   if (value instanceof Set) return insertTFnSymbol(new Set([...value]), dtFns);
+
   if (value instanceof Map) return insertTFnSymbol(new Map([...value]), dtFns);
+
   if (Array.isArray(value)) return insertTFnSymbol([...value], dtFns);
+
   if (value instanceof Object) return insertTFnSymbol({ ...value }, dtFns);
 
   return value;
@@ -109,9 +110,7 @@ export default function manageComponentsVars<O extends Record<string, any>>(
         data.componentsVarsKeys.push(name);
       }
 
-      if (!data.$disableProxies) {
-        resetComponentVarsCache(sComp);
-      }
+      if (!data.$disableProxies) resetComponentVarsCache(sComp);
 
       target[name] = n;
       return true;

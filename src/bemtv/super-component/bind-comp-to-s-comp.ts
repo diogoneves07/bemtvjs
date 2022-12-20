@@ -63,9 +63,7 @@ export function bindComponentToSuperComponent(
     }
   }
 
-  if (sCompData.propsDefined) {
-    cInst.propsDefined = sCompData.propsDefined;
-  }
+  if (sCompData.propsDefined) cInst.propsDefined = sCompData.propsDefined;
 
   for (const [fnName, args] of sCompData.fns) {
     switch (fnName) {
@@ -75,7 +73,6 @@ export function bindComponentToSuperComponent(
         break;
       case "props":
         withoutTypes.props = args[0](withoutTypes.props);
-
         break;
       default:
         withoutTypes[fnName](...args);

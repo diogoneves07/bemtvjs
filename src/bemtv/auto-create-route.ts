@@ -4,9 +4,7 @@ import { hasComponent } from "./components-main";
 export default function autoCreateRoute(routeName: string) {
   const cleanRouteName = routeName.slice(routeName.indexOf(":") + 1);
 
-  if (!hasComponent(routeName)) {
-    createRoute(cleanRouteName);
-  }
+  if (!hasComponent(routeName)) createRoute(cleanRouteName);
 }
 
 export function autoCreateRouteFromTemplates(t: string) {

@@ -236,8 +236,9 @@ export function setElementsWithBindAttrs(
         current.el = el;
         current.perpertyName = perpertyName;
 
-        if (current.el !== el && current.hasInput)
+        if (current.el !== el && current.hasInput) {
           addOnInputListener(current, compVar);
+        }
       } else {
         const tagName = el.tagName.toLowerCase();
 
