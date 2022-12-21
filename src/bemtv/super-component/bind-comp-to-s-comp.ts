@@ -32,13 +32,15 @@ export function bindComponentToSuperComponent(
       cInst.parentElement = cInst.nodes[0].parentElement;
     }
 
-    if (!firstElement || lastFirstElement === firstElement) return;
-
-    lastFirstElement = firstElement;
+    if (!firstElement) return;
 
     for (const s of sCompData.classes) {
       if (!firstElement.classList.contains(s)) firstElement.classList.add(s);
     }
+
+    if (lastFirstElement === firstElement) return;
+
+    lastFirstElement = firstElement;
 
     const cInstProps = componentProps || sCompData.componentsInst.get(cInst);
 
