@@ -37,7 +37,7 @@ export default class ComponentInst {
 
   sharedData: Record<string, any> = {};
 
-  readonly props: Props = {};
+  props: Props = {};
 
   readonly name: string;
 

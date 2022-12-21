@@ -5,7 +5,6 @@ export default function reshareProps(
   props: Record<string, any>
 ) {
   const { sharedData, parent } = c;
-
   const keys = Object.keys(props);
 
   keys.slice().forEach((key, index) => {

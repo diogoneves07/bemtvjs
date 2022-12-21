@@ -25,8 +25,8 @@ import { routeToKebabCase } from "../../router/routes-case";
 
 export type ComponentVars<V extends Record<string, any> = Record<string, any>> =
   V & {
-    readonly children: string;
-    readonly props: Record<string, any>;
+    children: string;
+    props: Record<string, any>;
   };
 export interface SuperComponent<
   Vars extends Record<string, any> = Record<string, any>
@@ -205,8 +205,17 @@ export class SuperComponent<Vars extends Record<string, any>> {
    * An object.
    */
   share<T extends Record<string, any>>(o: T) {
-    this.__data.fns.push(["share", [o]]);
-    return this.__data.sCompProxy;
+    const d = this.__data;
+    const c = d.componentInstRunning;
+    const r = d.sCompProxy;
+
+    if (c) {
+      c.share(o);
+      return r;
+    }
+
+    d.fns.push(["share", [o]]);
+    return r;
   }
 
   /**
@@ -216,8 +225,17 @@ export class SuperComponent<Vars extends Record<string, any>> {
    *  An object.
    */
   reshare<T extends Record<string, any>>(o: T) {
-    this.__data.fns.push(["reshare", [o]]);
-    return this.__data.sCompProxy;
+    const d = this.__data;
+    const c = d.componentInstRunning;
+    const r = d.sCompProxy;
+
+    if (c) {
+      c.reshare(o);
+      return r;
+    }
+
+    d.fns.push(["reshare", [o]]);
+    return r;
   }
 
   /**
@@ -255,16 +273,34 @@ export class SuperComponent<Vars extends Record<string, any>> {
    * Allows you to manipulate the children passed to the component.
    */
   children(fn: (children: string) => string) {
-    this.__data.fns.push(["children", [fn]]);
-    return this.__data.sCompProxy;
+    const d = this.__data;
+    const c = d.componentInstRunning;
+    const r = d.sCompProxy;
+
+    if (c) {
+      (r.$ as any).children = fn(c.children);
+      return r;
+    }
+
+    d.fns.push(["children", [fn]]);
+    return r;
   }
 
   /**
    * Allows you to manipulate the props passed to the component.
    */
   props(fn: (props: Record<string, any>) => Record<string, any>) {
-    this.__data.fns.push(["props", [fn]]);
-    return this.__data.sCompProxy;
+    const d = this.__data;
+    const c = d.componentInstRunning;
+    const r = d.sCompProxy;
+
+    if (c) {
+      (r.$ as any).props = fn(c.props);
+      return r;
+    }
+
+    d.fns.push(["props", [fn]]);
+    return r;
   }
 
   /**
