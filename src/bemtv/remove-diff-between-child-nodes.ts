@@ -78,8 +78,13 @@ export function removeDiffBetweenChildNodes(
         newNode.textContent !== oldNode.textContent
       ) {
         oldNode.textContent = newNode.textContent;
-        if ("value" in oldNode) {
-          (oldNode as any).value = oldNode.textContent;
+        if ("value" in oldNode && oldNode) {
+          const n = oldNode as unknown as Element;
+          const tagName = n.tagName;
+
+          if (tagName === "TEXTAREA" || tagName === "INPUT") {
+            (oldNode as any).value = oldNode.textContent;
+          }
         }
       }
 
