@@ -1,5 +1,7 @@
 export type { ElementInst } from "./bemtv/element-inst";
 
+export { glob as css } from "goober/global";
+
 export { _, hasComponent } from "./bemtv/components-main";
 export { tFn } from "./bemtv/transformation-functions/main";
 export {
@@ -17,3 +19,4 @@ export { matchComponent as match } from "./bemtv/match-component";
 export { autoImportComponents } from "./bemtv/auto-import-components";
 export { default as render } from "./bemtv/render";
 export { onRouteUnfound } from "./router/main";
+export { store } from "./stores/main";
