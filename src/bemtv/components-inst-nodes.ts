@@ -48,7 +48,7 @@ export function replaceNodeInComponentManagerNodes(
       if (keys.includes(m.key)) {
         const index = m.nodes.findIndex((n) => n === oldNode);
 
-        m.nodes.splice(index, 1, newNode);
+        index > -1 && m.nodes.splice(index, 1, newNode);
       }
     }
   }
