@@ -144,6 +144,7 @@ export class SuperComponent<Vars extends Record<string, any>> {
       const firstElement = getComponentInstFirstElement(c);
 
       if (firstElement) {
+        firstElement.classList.remove(classValue);
         firstElement.classList.add(classValue);
       }
     }
