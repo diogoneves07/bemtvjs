@@ -15,6 +15,6 @@ export default function createRoute(routeName: string) {
       routePath = isRoot ? "" : routePath + "/" + routeOptions.concat;
     }
 
-    return `<a href="#/${routePath}">$children</a>`;
+    return `<a href="#/${routePath}"> $children </a>`;
   });
 }
