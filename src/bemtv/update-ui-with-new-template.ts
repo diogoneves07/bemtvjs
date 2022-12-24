@@ -15,7 +15,7 @@ export default function updateUIWithNewTemplate(componentInst: ComponentInst) {
 
   const [keysAndNodes, possibleNewChildNodes] = getPossibleNewNodes(newHtml);
 
-  const oldChildNodes = componentInst.nodes;
+  const oldChildNodes = componentInst.nodes.slice();
 
   removeDiffBetweenChildNodes(
     possibleNewChildNodes,
