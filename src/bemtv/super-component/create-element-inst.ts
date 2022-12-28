@@ -7,7 +7,7 @@ import {
   normalizeElKeyAttr,
 } from "../generate-forced-el-attrs";
 import { ElementInst } from "../element-inst";
-import { ManageElFactory } from "../element-inst-factory";
+import { ElementInstFactory } from "../element-inst-factory";
 
 function findElementInComponentNodes(
   nodes: Node[] | Element[],
@@ -31,7 +31,7 @@ export default function createElManager<E extends Element = Element>(
   keyOrSelectorOrElement: string | Element,
   c: ComponentInst | null
 ): ElementInst<E> {
-  const elManager = ManageElFactory<E>();
+  const elManager = ElementInstFactory<E>();
 
   if (keyOrSelectorOrElement instanceof Element) {
     elManager.it = getElement(keyOrSelectorOrElement) as E | null;
