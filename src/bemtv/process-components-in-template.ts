@@ -71,6 +71,14 @@ function processEachTemplate(
       newTemplate = componentData.before + componentData.after;
 
       if (isComponentAutoImport(realComponentName)) {
+        if (parent) {
+          if (parent.name === "Router" && parent.parent) {
+            parent.parent.shouldForceUpdate = true;
+          } else {
+            parent.shouldForceUpdate = true;
+          }
+        }
+
         dynamicImportComponents.push(realComponentName);
         continue;
       }
@@ -130,6 +138,5 @@ export default function processComponentsInTemplate(
   return {
     newTemplate,
     componentsManager,
-    dynamicImportComponents,
   };
 }
