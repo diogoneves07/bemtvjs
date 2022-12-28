@@ -27,6 +27,7 @@ export const applyRouter = () => {
   let currentHash = locationHash;
 
   currentHash = isRoot ? "/root" : currentHash;
+
   if (lastHash === currentHash) return;
 
   let path = currentHash.split("/")[1];
@@ -54,9 +55,7 @@ export const applyRouter = () => {
       document.title = routeOptions.title as string;
     }
 
-    routerTemplate = () => {
-      return routeComponent;
-    };
+    routerTemplate = () => routeComponent;
 
     return;
   }
