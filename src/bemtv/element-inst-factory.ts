@@ -2,20 +2,20 @@ import { ComponentListener } from "./types/listeners";
 import insertDOMListener from "./insert-dom-listener";
 import isEventListener from "./is-event-listener";
 import { ElementInst } from "./element-inst";
-import { getManageElData } from "./work-with-el-manager";
+import { getElementInstData } from "./work-with-element-inst";
 import isString from "../utilities/is-string";
 
-export function ManageElFactory<E extends Element = Element>() {
-  const elManager = new ElementInst<E>();
-  const DOMlisteners = getManageElData(elManager).DOMlisteners;
+export function ElementInstFactory<E extends Element = Element>() {
+  const elementInst = new ElementInst<E>();
+  const DOMlisteners = getElementInstData(elementInst).DOMlisteners;
 
-  return new Proxy(elManager, {
+  return new Proxy(elementInst, {
     get(target, name) {
       const propName = name as string;
       let t = target as any;
       if (propName in target) {
         if (typeof t[propName] === "function") {
-          return t[propName].bind(elManager);
+          return t[propName].bind(elementInst);
         }
         return t[propName];
       }
@@ -30,9 +30,9 @@ export function ManageElFactory<E extends Element = Element>() {
 
           DOMlisteners.add(DOMListenerObject);
 
-          if (elManager.it) {
+          if (elementInst.it) {
             const r = insertDOMListener(
-              elManager.it,
+              elementInst.it,
               DOMListenerObject.listener,
               ...args
             );
