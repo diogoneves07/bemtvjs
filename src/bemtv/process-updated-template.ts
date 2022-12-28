@@ -43,18 +43,11 @@ export default function processUpdatedTemplate(
       continue;
     }
 
-    const {
-      newTemplate: componentTemlate,
-      componentsManager,
-      dynamicImportComponents,
-    } = processComponentsInTemplate(
-      `${componentData.name}[${componentData.children}]`,
-      componentInst
-    );
-
-    if (dynamicImportComponents.length > 0) {
-      componentInst.shouldForceUpdate = true;
-    }
+    const { newTemplate: componentTemlate, componentsManager } =
+      processComponentsInTemplate(
+        `${componentData.name}[${componentData.children}]`,
+        componentInst
+      );
 
     newComponentsManager.push(...componentsManager);
 
