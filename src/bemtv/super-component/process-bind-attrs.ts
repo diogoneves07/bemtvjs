@@ -6,7 +6,7 @@ import isNumber from "../../utilities/is-number";
 import isString from "../../utilities/is-string";
 import ComponentInst from "../component-inst";
 import { getNodeComponentKeys } from "../nodes-component-keys";
-import createElManager from "./create-el-manager";
+import createElementInst from "./create-element-inst";
 import { SuperComponent } from "./super-component";
 import {
   getComponentVars,
@@ -223,7 +223,7 @@ export function setElementsWithBindAttrs(
       }
 
       if (perpertyName === "el" && compVarValue?.it !== el) {
-        getOrSetPropertyByPath(sComp.$, compVar, createElManager(el, cInst));
+        getOrSetPropertyByPath(sComp.$, compVar, createElementInst(el, cInst));
         updateComponentVars(sComp);
         continue;
       }

@@ -27,7 +27,7 @@ function findElementInComponentNodes(
   return;
 }
 
-export default function createElManager<E extends Element = Element>(
+export default function createElementInst<E extends Element = Element>(
   keyOrSelectorOrElement: string | Element,
   c: ComponentInst | null
 ): ElementInst<E> {

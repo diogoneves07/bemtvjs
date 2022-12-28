@@ -13,7 +13,7 @@ import {
 import { SuperComponentData } from "./../types/super-component-data";
 import { generateForcedKeyAttr } from "../generate-forced-el-attrs";
 import concatTemplateStringArrays from "../../utilities/concat-template-string-arrays";
-import createElManager from "./create-el-manager";
+import createElementInst from "./create-element-inst";
 import manageComponentsVars from "./manage-components-vars";
 import isStringOrNumber from "../../utilities/is-string-or-number";
 import { treatArgsInTemplate } from "./treat-args-in-template";
@@ -178,7 +178,7 @@ export class SuperComponent<Vars extends Record<string, any>> {
 
   useEl<E extends Element = Element>(selectorOrElement?: string | Element) {
     if (selectorOrElement) {
-      return createElManager<E>(
+      return createElementInst<E>(
         selectorOrElement,
         this.__data.componentInstRunning
       );
@@ -194,7 +194,7 @@ export class SuperComponent<Vars extends Record<string, any>> {
 
         if (c && cache.has(c)) return cache.get(c);
 
-        const elManager = createElManager<E>(key, c);
+        const elManager = createElementInst<E>(key, c);
 
         c && cache.set(c, elManager);
         return elManager;
