@@ -3,24 +3,22 @@ import { ComponentListener } from "./types/listeners";
 import { Listeners } from "./types/listeners";
 import insertDOMListener from "./insert-dom-listener";
 import { css } from "goober";
-import { applyElementCSS } from "./work-with-el-manager";
+import { applyElementCSS } from "./work-with-element-inst";
+import { CSSClass } from "./css-classes";
 
-type CSSInJSParameters = Parameters<typeof BEMTEVI_CSS_IN_JS["gooberCSS"]>;
-export interface ManageElData<E> {
+export interface ElementInstData<E> {
   DOMlisteners: Set<ComponentListener>;
   element: E | null;
   CSSClasses: string[];
-  applyCSSWhenElementIsAvallable: CSSInJSParameters[];
 }
 
 export const ALL_ELEMENTS_MANAGER = new WeakMap<Element, ElementInst>();
 export interface ElementInst<E extends Element = Element> extends Listeners {}
 
 export class ElementInst<E = Element> {
-  protected readonly __data: ManageElData<E> = {
+  protected readonly __data: ElementInstData<E> = {
     DOMlisteners: new Set(),
     CSSClasses: [],
-    applyCSSWhenElementIsAvallable: [],
     element: null,
   };
 
@@ -41,13 +39,8 @@ export class ElementInst<E = Element> {
       return o;
     });
 
-    for (const callCSS of d.applyCSSWhenElementIsAvallable.slice()) {
-      d.CSSClasses.push(applyElementCSS(newIt, callCSS));
-    }
-
     d.CSSClasses.length > 0 && newIt && newIt.classList.add(...d.CSSClasses);
 
-    d.applyCSSWhenElementIsAvallable = [];
     d.element = newIt;
   }
 
@@ -69,12 +62,17 @@ export class ElementInst<E = Element> {
   css(...args: Parameters<typeof css>) {
     const element = this.it;
 
+    const classValue = BEMTEVI_CSS_IN_JS.gooberCSS(...args);
+
+    const classInst = new CSSClass(classValue);
+
     if (!element) {
-      this.__data.applyCSSWhenElementIsAvallable.push(args);
+      this.__data.CSSClasses.push(classValue);
       return this;
     }
+
     this.__data.CSSClasses.push(applyElementCSS(element, args));
 
-    return this;
+    return classInst;
   }
 }

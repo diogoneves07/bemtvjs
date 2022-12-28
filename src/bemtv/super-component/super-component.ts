@@ -22,6 +22,7 @@ import autoCreateRoute, {
   autoCreateRouteFromTemplates,
 } from "../auto-create-route";
 import { routeToKebabCase } from "../../router/routes-case";
+import { CSSClass } from "../css-classes";
 
 export type ComponentVars<V extends Record<string, any> = Record<string, any>> =
   V & {
@@ -132,11 +133,13 @@ export class SuperComponent<Vars extends Record<string, any>> {
   }
 
   /**
-   * Allows CSS-In-JS
+   * Allows CSS-In-JS.
    */
   css = (...args: Parameters<typeof css>) => {
     const classValue = css(...args);
     const data = this.__data;
+
+    const classInst = new CSSClass(classValue);
 
     data.classes.push(classValue);
 
@@ -148,7 +151,7 @@ export class SuperComponent<Vars extends Record<string, any>> {
         firstElement.classList.add(classValue);
       }
     }
-    return classValue;
+    return classInst;
   };
 
   /**
