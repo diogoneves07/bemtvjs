@@ -9,19 +9,19 @@ type PropsFn<V> = {
 type StoreObject<O extends Record<string, any>> = {
   [P in keyof O]: PropsFn<O[P]>;
 };
-
-export function store<O extends Record<string, any>>(o: O) {
-  const keys = Object.keys(o);
+//! O Contador serve para saber se é a primeira interação
+export function store<O extends Record<string, any>>(initStateObject: O) {
+  const keys = Object.keys(initStateObject);
   const storeObject = {} as StoreObject<O>;
-  const objectClone = { ...o } as Record<string, any>;
-
-  let watchers = new Map<WatchCallback, number>();
+  const stateObjectClone = { ...initStateObject } as Record<string, any>;
 
   for (const key of keys) {
-    const propFn = (newValue?: any) => {
-      if (newValue === undefined) return objectClone[key];
+    const watchers = new Map<WatchCallback, number>();
 
-      objectClone[key] = newValue;
+    const propFn = (newValue?: any) => {
+      if (newValue === undefined) return stateObjectClone[key];
+
+      stateObjectClone[key] = newValue;
 
       watchers.forEach((c, fn) => {
         const count = c++;
@@ -33,7 +33,8 @@ export function store<O extends Record<string, any>>(o: O) {
     };
 
     propFn.watch = (fn: WatchCallback) => {
-      fn(objectClone[key], 0);
+      fn(stateObjectClone[key], 0);
+
       watchers.set(fn, 0);
 
       return () => watchers?.delete(fn);
