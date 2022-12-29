@@ -9,6 +9,7 @@ import {
   isComponentAutoImport,
 } from "./auto-import-components";
 import getKeyInComponentName from "./get-key-in-component-name";
+import { isRouterComponent } from "./is-router-component";
 
 type NextComponentData = ReturnType<typeof getNextComponentDataInTemplate>;
 
@@ -72,10 +73,10 @@ function processEachTemplate(
 
       if (isComponentAutoImport(realComponentName)) {
         if (parent) {
-          if (parent.name === "Router" && parent.parent) {
-            parent.parent.shouldForceUpdate = true;
+          if (isRouterComponent(parent.name) && parent.parent) {
+            parent.parent.forceTemplateUpdate();
           } else {
-            parent.shouldForceUpdate = true;
+            parent.forceTemplateUpdate();
           }
         }
 

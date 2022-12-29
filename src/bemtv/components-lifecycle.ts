@@ -1,4 +1,5 @@
 import ComponentInst from "./component-inst";
+import { isRouterComponent } from "./is-router-component";
 
 export function dispatchInitedLifeCycle(c: ComponentInst) {
   c.inited = true;
@@ -8,7 +9,7 @@ export function dispatchInitedLifeCycle(c: ComponentInst) {
 export function dispatchUpdatedLifeCycle(c: ComponentInst) {
   c.updatedCallbacks?.forEach((f) => f());
 
-  if (c.name === "Router") {
+  if (isRouterComponent(c.name)) {
     c.parent && dispatchUpdatedLifeCycle(c.parent);
   }
 }

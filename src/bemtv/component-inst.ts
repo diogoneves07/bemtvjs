@@ -103,6 +103,10 @@ export default class ComponentInst {
     return check;
   }
 
+  forceTemplateUpdate() {
+    this.shouldForceUpdate = true;
+  }
+
   addComponentChild(c: ComponentInst) {
     this.componentsInTemplate.add(c);
   }
