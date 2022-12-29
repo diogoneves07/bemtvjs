@@ -9,7 +9,14 @@ const initialRouterTemplate = () => ``;
 
 let routerTemplate = initialRouterTemplate;
 
+let isFirstTemplate = true;
+
 export function useRouterTemplate() {
+  if (isFirstTemplate) {
+    applyRouter();
+    isFirstTemplate = false;
+  }
+
   return routerTemplate();
 }
 
@@ -68,9 +75,6 @@ export const applyRouter = () => {
     dispatchRouteUnfound();
   }
 };
-
-// Runs the router before the first page paint.
-window.requestAnimationFrame(applyRouter);
 
 window.addEventListener("DOMContentLoaded", applyRouter);
 window.addEventListener("popstate", applyRouter);
