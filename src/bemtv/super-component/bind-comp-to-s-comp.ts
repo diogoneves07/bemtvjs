@@ -34,7 +34,7 @@ export function bindComponentToSuperComponent(
 
     if (!firstElement) return;
 
-    for (const s of sCompData.classes) {
+    for (const s of sCompData.firstElementCSSClasses) {
       if (!firstElement.classList.contains(s)) firstElement.classList.add(s);
     }
 
