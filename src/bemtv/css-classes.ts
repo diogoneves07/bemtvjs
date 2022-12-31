@@ -1,6 +1,8 @@
 export class CSSClass {
   class: string = "";
 
+  protected __onRemoveObervers: Set<() => void> = new Set();
+
   constructor(c: string) {
     this.class = c;
   }
@@ -9,13 +11,12 @@ export class CSSClass {
     document.querySelectorAll("." + this.class).forEach((e) => {
       e.classList.remove(this.class);
     });
+    this.__onRemoveObervers.forEach((fn) => fn());
+
     return this;
   }
 
-  toggle() {
-    document.querySelectorAll("." + this.class).forEach((e) => {
-      e.classList.toggle(this.class);
-    });
-    return this;
+  _onRemove(fn: () => void) {
+    this.__onRemoveObervers.add(fn);
   }
 }

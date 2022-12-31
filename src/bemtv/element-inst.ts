@@ -9,7 +9,7 @@ import { CSSClass } from "./css-classes";
 export interface ElementInstData<E> {
   DOMlisteners: Set<ComponentListener>;
   element: E | null;
-  CSSClasses: string[];
+  CSSClasses: Set<string>;
 }
 
 export const ALL_ELEMENTS_MANAGER = new WeakMap<Element, ElementInst>();
@@ -18,7 +18,7 @@ export interface ElementInst<E extends Element = Element> extends Listeners {}
 export class ElementInst<E = Element> {
   protected readonly __data: ElementInstData<E> = {
     DOMlisteners: new Set(),
-    CSSClasses: [],
+    CSSClasses: new Set(),
     element: null,
   };
 
@@ -39,7 +39,9 @@ export class ElementInst<E = Element> {
       return o;
     });
 
-    d.CSSClasses.length > 0 && newIt && newIt.classList.add(...d.CSSClasses);
+    d.CSSClasses.size > 0 && newIt && newIt.classList.add(...d.CSSClasses);
+
+    BEMTEVI_CSS_IN_JS.applyLastCSSCreated();
 
     d.element = newIt;
   }
@@ -59,20 +61,26 @@ export class ElementInst<E = Element> {
   /**
    * Allows to apply style to element.
    */
-  css(...args: Parameters<typeof css>) {
+  css(...args: Parameters<typeof css>): CSSClass {
     const element = this.it;
 
     const classValue = BEMTEVI_CSS_IN_JS.gooberCSS(...args);
 
     const classInst = new CSSClass(classValue);
 
+    classInst._onRemove(() => {
+      this.__data.CSSClasses.delete(classValue);
+    });
+
     if (!element) {
-      this.__data.CSSClasses.push(classValue);
-      return this;
+      this.__data.CSSClasses.add(classValue);
+
+      return classInst;
     }
 
-    this.__data.CSSClasses.push(applyElementCSS(element, args));
+    this.__data.CSSClasses.add(applyElementCSS(element, args));
 
     return classInst;
   }
+  
 }
