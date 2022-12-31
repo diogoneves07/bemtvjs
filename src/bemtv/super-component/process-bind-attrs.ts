@@ -60,7 +60,7 @@ export function getElementsWithBindAttrs(cInst: ComponentInst) {
 
   const rec = (nodes: Node[]) => {
     for (const n of nodes) {
-      const keys = getNodeComponentKeys(n)?.includes(cInst.key);
+      const keys = getNodeComponentKeys(n)?.has(cInst.name);
 
       if (!keys) continue;
 
