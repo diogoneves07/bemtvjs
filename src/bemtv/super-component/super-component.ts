@@ -23,6 +23,10 @@ import autoCreateRoute, {
 } from "../auto-create-route";
 import { routeToKebabCase } from "../../router/routes-case";
 import { CSSClass } from "../css-classes";
+import {
+  ControlRouterFn,
+  useControlRouter,
+} from "../../router/use-control-router";
 
 export type ComponentVars<V extends Record<string, any> = Record<string, any>> =
   V & {
@@ -85,7 +89,7 @@ export class SuperComponent<Vars extends Record<string, any>> {
     activateVarsProxies() {
       this.$disableProxies = false;
     },
-    classes: [],
+    firstElementCSSClasses: new Set(),
     fns: [],
     sCompProxy: null as any,
     isSigleInstance: false,
@@ -141,7 +145,11 @@ export class SuperComponent<Vars extends Record<string, any>> {
 
     const classInst = new CSSClass(classValue);
 
-    data.classes.push(classValue);
+    data.firstElementCSSClasses.add(classValue);
+
+    classInst._onRemove(() => {
+      data.firstElementCSSClasses.delete(classValue);
+    });
 
     for (const c of data.componentsInst.keys()) {
       const firstElement = getComponentInstFirstElement(c);
@@ -387,5 +395,23 @@ export class SuperComponent<Vars extends Record<string, any>> {
       : `/${routeToKebabCase(componentName)}${concat}`;
 
     return this.__data.sCompProxy;
+  }
+
+  useControlRouter(fn: ControlRouterFn) {
+    const sCompProxy = this.__data.sCompProxy;
+
+    return useControlRouter((r, c) => {
+      const run = () => {
+        runInComponentInst(
+          sCompProxy,
+          sCompProxy.__data.componentInstRunning,
+          () => {
+            fn(r, c);
+          }
+        );
+      };
+
+      sCompProxy.onInit(run);
+    });
   }
 }

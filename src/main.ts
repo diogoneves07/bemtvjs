@@ -18,5 +18,5 @@ export {
 export { matchComponent as match } from "./bemtv/match-component";
 export { autoImportComponents } from "./bemtv/auto-import-components";
 export { default as render } from "./bemtv/render";
-export { onRouteUnfound } from "./router/main";
-export { store } from "./stores/main";
+export { onRouteUnfound, useControlRouter } from "./router/main";
+export { stateFn } from "./state-fn/main";

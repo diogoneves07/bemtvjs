@@ -4,19 +4,26 @@ import { ROUTES_OPTIONS } from "../bemtv/routes-store";
 import { hasComponent } from "../bemtv/components-main";
 import createRoute from "./create-route";
 import hasRoute from "../bemtv/has-route";
+import {
+  dispatchToRouterControlers,
+  hasRouterControlers,
+} from "./use-control-router";
 
 const initialRouterTemplate = () => ``;
 
 let routerTemplate = initialRouterTemplate;
 
-let isFirstTemplate = true;
+const updateRouterTemplate = (value: () => string, componentName: string) => {
+  if (hasRouterControlers()) {
+    dispatchToRouterControlers(() => {
+      routerTemplate = value;
+    }, componentName);
+  } else {
+    routerTemplate = value;
+  }
+};
 
 export function useRouterTemplate() {
-  if (isFirstTemplate) {
-    applyRouter();
-    isFirstTemplate = false;
-  }
-
   return routerTemplate();
 }
 
@@ -37,10 +44,12 @@ export const applyRouter = () => {
 
   if (lastHash === currentHash) return;
 
+  lastHash = "";
+
   let path = currentHash.split("/")[1];
 
   if (!path) {
-    routerTemplate = initialRouterTemplate;
+    updateRouterTemplate(initialRouterTemplate, "Root");
 
     lastRouteUnfound = locationHash;
 
@@ -62,12 +71,12 @@ export const applyRouter = () => {
       document.title = routeOptions.title as string;
     }
 
-    routerTemplate = () => routeComponent;
+    updateRouterTemplate(() => routeComponent, routeName);
 
     return;
   }
 
-  routerTemplate = initialRouterTemplate;
+  updateRouterTemplate(initialRouterTemplate, routeName);
 
   if (lastRouteUnfound !== locationHash) {
     lastRouteUnfound = locationHash;
@@ -75,6 +84,9 @@ export const applyRouter = () => {
     dispatchRouteUnfound();
   }
 };
+
+// Runs the router before the first page paint.
+window.requestAnimationFrame(applyRouter);
 
 window.addEventListener("DOMContentLoaded", applyRouter);
 window.addEventListener("popstate", applyRouter);
