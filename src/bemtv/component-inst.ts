@@ -5,7 +5,6 @@ import normalizeRouterShortcut from "./normalize-router-shortcut";
 import { LifeCycleCallback, Props } from "./types/component-inst-data";
 import reshareProps from "./reshare-props";
 import useSharedProp from "./use-shared-prop";
-import { LIBRARY_NAME } from "../globals";
 
 function avoidEmptyTemplate(template: string) {
   return template.trim() === "" ? AVOIDS_EMPTY_TEMPLATE : template;
@@ -15,7 +14,6 @@ export type TemplateCallback = () => string;
 
 export default class ComponentInst {
   parentElement: Element | null = null;
-  key: string;
   lastTemplateValue: string = "";
   getCurrentTemplate: TemplateCallback = () => "";
   updateOnlyAfterThisTime: number;
@@ -44,8 +42,6 @@ export default class ComponentInst {
   children: string = "";
 
   constructor(name: string, parent: ComponentInst | null) {
-    this.key = `${LIBRARY_NAME}${ALL_COMPONENTS_INST.size}`;
-
     this.name = name;
 
     this.parent = parent;
@@ -80,7 +76,7 @@ export default class ComponentInst {
   }
 
   getCurrentTemplateWithHost() {
-    return `${TAG_HOST_NAME}[id = "${this.key}" ~ ${normalizeRouterShortcut(
+    return `${TAG_HOST_NAME}[id = "${this.name}" ~ ${normalizeRouterShortcut(
       this.getCurrentTemplate()
     )}]`;
   }
