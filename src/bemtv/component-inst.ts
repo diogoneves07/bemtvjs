@@ -12,6 +12,7 @@ function avoidEmptyTemplate(template: string) {
 
 export type TemplateCallback = () => string;
 
+let countComponentInst = 0;
 export default class ComponentInst {
   parentElement: Element | null = null;
   lastTemplateValue: string = "";
@@ -39,12 +40,16 @@ export default class ComponentInst {
 
   readonly name: string;
 
+  key: string;
+
   children: string = "";
 
   constructor(name: string, parent: ComponentInst | null) {
     this.name = name;
 
     this.parent = parent;
+
+    this.key = name + countComponentInst++;
 
     this.shouldForceUpdate = false;
 
@@ -76,7 +81,7 @@ export default class ComponentInst {
   }
 
   getCurrentTemplateWithHost() {
-    return `${TAG_HOST_NAME}[id = "${this.name}" ~ ${normalizeRouterShortcut(
+    return `${TAG_HOST_NAME}[id = "${this.key}" ~ ${normalizeRouterShortcut(
       this.getCurrentTemplate()
     )}]`;
   }

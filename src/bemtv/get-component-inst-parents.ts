@@ -5,7 +5,7 @@ export function getComponentInstParents(cInst: ComponentInst) {
   const parents: Set<string> = new Set();
 
   while (i.parent) {
-    parents.add(i.name);
+    parents.add(i.key);
     i = i.parent;
   }
 

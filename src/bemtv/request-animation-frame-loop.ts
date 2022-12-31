@@ -47,8 +47,8 @@ function requestAnimationFrameLoop() {
       }
 
       for (const c of newComponentsManager) {
-        if (keysAndNodes[c.name]) {
-          setComponentManagerNodes(c.name, keysAndNodes[c.name]);
+        if (keysAndNodes[c.key]) {
+          setComponentManagerNodes(c.key, keysAndNodes[c.key]);
         }
         dispatchMountedLifeCycle(c);
       }
