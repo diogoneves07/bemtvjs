@@ -6,19 +6,30 @@ import { css } from "goober";
 import { applyElementCSS } from "./work-with-element-inst";
 import { CSSClass } from "./css-classes";
 
+type Styles = Partial<HTMLElement["style"]>;
 export interface ElementInstData<E> {
   DOMlisteners: Set<ComponentListener>;
   element: E | null;
   CSSClasses: Set<string>;
+  inlineStyles: Set<Styles>;
 }
 
 export const ALL_ELEMENTS_MANAGER = new WeakMap<Element, ElementInst>();
 export interface ElementInst<E extends Element = Element> extends Listeners {}
 
+function setElementInlineStyle(styles: Styles, element: Element) {
+  Object.keys(styles).forEach((k) => {
+    (element as unknown as HTMLElement).style.setProperty(
+      k,
+      (styles as any)[k]
+    );
+  });
+}
 export class ElementInst<E = Element> {
   protected readonly __data: ElementInstData<E> = {
     DOMlisteners: new Set(),
     CSSClasses: new Set(),
+    inlineStyles: new Set(),
     element: null,
   };
 
@@ -39,10 +50,13 @@ export class ElementInst<E = Element> {
       return o;
     });
 
+    this.__data.inlineStyles.forEach((s) => setElementInlineStyle(s, newIt));
+
     d.CSSClasses.size > 0 && newIt && newIt.classList.add(...d.CSSClasses);
 
     BEMTEVI_CSS_IN_JS.applyLastCSSCreated();
 
+    this.__data.inlineStyles.clear();
     d.element = newIt;
   }
 
@@ -82,5 +96,16 @@ export class ElementInst<E = Element> {
 
     return classInst;
   }
-  
+
+  style(styles: Styles) {
+    const element = this.it;
+
+    if (!element) {
+      this.__data.inlineStyles.add({ ...styles });
+    } else {
+      setElementInlineStyle(styles, element);
+    }
+
+    return this;
+  }
 }
