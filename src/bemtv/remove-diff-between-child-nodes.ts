@@ -3,6 +3,10 @@ import {
   removeNodeFromComponentManagerNodes,
   replaceNodeInComponentManagerNodes,
 } from "./components-inst-nodes";
+import {
+  getNodeComponentKeys,
+  setNodeComponentKey,
+} from "./nodes-component-keys";
 
 function removeDiffBetweenNodesAttrs(newNode: Element, oldNode: Element) {
   const attrsLength = newNode.attributes.length;
@@ -19,12 +23,33 @@ function removeDiffBetweenNodesAttrs(newNode: Element, oldNode: Element) {
     if (attrName in oldNode) (oldNode as any)[attrName] = newAttr.value;
   }
 }
+
+function replaceNodeInKeyAndNodes(
+  keysAndNodes: Record<string, Node[]> | undefined,
+  node: Node,
+  newNode: Node
+) {
+  if (!keysAndNodes) return;
+
+  getNodeComponentKeys(node)?.forEach((k) => setNodeComponentKey(newNode, k));
+
+  for (const nodes of Object.values(keysAndNodes)) {
+    const i = nodes.indexOf(node);
+
+    if (i > -1) nodes[i] = newNode;
+  }
+
+  return keysAndNodes;
+}
 export function removeDiffBetweenChildNodes(
   newChildNodes: Node[],
   oldChildNodes: Node[],
+  keysAndNodes?: Record<string, Node[]>,
   instParentElement?: Element | null
 ) {
   let newChildNodesArray = newChildNodes;
+
+  const nodesListConnected: Node[] = [];
 
   const length = newChildNodesArray.length;
 
@@ -47,6 +72,8 @@ export function removeDiffBetweenChildNodes(
       !newNode.isConnected &&
         parentElement.insertBefore(newNode, lastNode?.nextSibling || null);
       appendNodeToComponentManagerNodes(newNode);
+
+      nodesListConnected.push();
       lastNode = newNode;
       continue;
     }
@@ -69,6 +96,7 @@ export function removeDiffBetweenChildNodes(
       if (newNode.textContent !== oldNode.textContent) {
         oldNode.textContent = newNode.textContent;
       }
+      replaceNodeInKeyAndNodes(keysAndNodes, newNode, oldNode);
       continue;
     }
 
@@ -88,12 +116,15 @@ export function removeDiffBetweenChildNodes(
         }
       }
 
+      replaceNodeInKeyAndNodes(keysAndNodes, newNode, oldNode);
+
       removeDiffBetweenNodesAttrs(newNode, oldNode as Element);
 
       if (newNode.childNodes[0]) {
         removeDiffBetweenChildNodes(
           Array.from(newNode.childNodes),
           Array.from((oldNode as Element).childNodes),
+          undefined,
           oldNode as Element
         );
       }
