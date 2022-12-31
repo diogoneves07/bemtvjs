@@ -2,7 +2,12 @@ import { getComponentFn } from "./components-main";
 
 type AutoImportCallback = () => void;
 
-const importComponents = new Map<string, AutoImportCallback | true>();
+type autoImportComponentObject = {
+  load: AutoImportCallback;
+  suspense: string;
+  loadAlreadyRequired?: true;
+};
+const importComponents = new Map<string, autoImportComponentObject>();
 
 export function isComponentAlreadyImported(name: string) {
   return getComponentFn(name) ? true : false;
@@ -13,26 +18,35 @@ export function isComponentAutoImport(name: string) {
 }
 
 export function autoImportComponent(name: string) {
-  const fn = importComponents.get(name);
-  if (!fn || typeof fn !== "function") return;
+  const has = importComponents.get(name);
 
-  fn();
+  if (!has) return;
 
-  importComponents.set(name, true);
+  const { load, loadAlreadyRequired, suspense } = has;
+
+  if (loadAlreadyRequired) return suspense;
+
+  load();
+
+  return suspense;
 }
 
-/**
- * Automates the dynamic import process of components.
- *
- * @param components
- *
- * An object where the name of the properties must be the name of the components and their values
- *  ​​must be a function that imports the component using dynamic import.
- */
-export function autoImportComponents(
-  components: Record<string, AutoImportCallback>
+type LazyComponentFn<N extends string> = (name: N) => Promise<any>;
+
+export function lazy<N extends string, C extends LazyComponentFn<N>>(
+  componentName: N,
+  lazyComponentFn: C,
+  suspense: string = ""
 ) {
-  for (const k of Object.keys(components)) {
-    importComponents.set(k, components[k]);
-  }
+  const o: autoImportComponentObject = {
+    load: () => {
+      o.loadAlreadyRequired = true;
+      return lazyComponentFn(componentName);
+    },
+    suspense,
+  };
+
+  importComponents.set(componentName, o);
+
+  return o.load;
 }

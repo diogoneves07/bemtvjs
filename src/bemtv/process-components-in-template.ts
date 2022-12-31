@@ -37,10 +37,13 @@ function getTemplateWithCurrentPropsValues(
 
   while ((componentData = getNextComponentDataInTemplate(newTemplate))) {
     const name = componentData.name;
+    const realComponentName = normalizeComponentName(name);
     const componentInst = componentsManager[count];
 
-    if (!isComponentAlreadyImported(normalizeComponentName(name))) {
-      newTemplate = componentData.before + componentData.after;
+    if (!isComponentAlreadyImported(realComponentName)) {
+      const suspense = autoImportComponent(realComponentName) || "";
+
+      newTemplate = componentData.before + suspense + componentData.after;
       continue;
     }
     const value = componentInst.getCurrentTemplateWithHost();
@@ -58,9 +61,8 @@ function getTemplateWithCurrentPropsValues(
 function processEachTemplate(
   template: string,
   componentsManager: ComponentInst[],
-  dynamicImportComponents: string[],
   parent: ComponentInst | null = null
-): [ComponentInst[], string[]] {
+) {
   let newTemplate = template;
   let componentData: NextComponentData;
 
@@ -69,7 +71,9 @@ function processEachTemplate(
     const realComponentName = normalizeComponentName(name);
 
     if (!isComponentAlreadyImported(realComponentName)) {
-      newTemplate = componentData.before + componentData.after;
+      const suspense = autoImportComponent(realComponentName) || "";
+
+      newTemplate = componentData.before + suspense + componentData.after;
 
       if (isComponentAutoImport(realComponentName)) {
         if (parent) {
@@ -80,7 +84,6 @@ function processEachTemplate(
           }
         }
 
-        dynamicImportComponents.push(realComponentName);
         continue;
       }
 
@@ -108,33 +111,25 @@ function processEachTemplate(
     processEachTemplate(
       componentInst.getCurrentTemplateWithHost(),
       componentsManager,
-      dynamicImportComponents,
       componentInst
     );
 
     newTemplate = before + after;
   }
 
-  return [componentsManager, dynamicImportComponents];
+  return componentsManager;
 }
 
 export default function processComponentsInTemplate(
   template: string,
   firstParent: ComponentInst | null = null
 ) {
-  const [componentsManager, dynamicImportComponents] = processEachTemplate(
-    template,
-    [],
-    [],
-    firstParent
-  );
+  const componentsManager = processEachTemplate(template, [], firstParent);
 
   const newTemplate = getTemplateWithCurrentPropsValues(
     template,
     componentsManager
   );
-
-  dynamicImportComponents.forEach(autoImportComponent);
 
   return {
     newTemplate,
