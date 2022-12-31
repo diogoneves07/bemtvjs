@@ -414,4 +414,18 @@ export class SuperComponent<Vars extends Record<string, any>> {
       sCompProxy.onInit(run);
     });
   }
+
+  useFirstEl<E extends Element = Element>() {
+    const [, getEl] = this.useEl<E>();
+
+    const fn = () => {
+      const c = this.__data.componentInstRunning;
+      if (c) (getEl() as any).it = getComponentInstFirstElement(c);
+    };
+
+    this.__data.sCompProxy.onMount(fn);
+    this.__data.sCompProxy.onUpdate(fn);
+
+    return getEl();
+  }
 }
