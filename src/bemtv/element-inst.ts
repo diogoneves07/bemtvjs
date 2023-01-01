@@ -6,7 +6,7 @@ import { css } from "goober";
 import { applyElementCSS } from "./work-with-element-inst";
 import { CSSClass } from "./css-classes";
 
-type Styles = Partial<HTMLElement["style"]>;
+export type Styles = Partial<HTMLElement["style"]>;
 export interface ElementInstData<E> {
   DOMlisteners: Set<ComponentListener>;
   element: E | null;
@@ -17,7 +17,7 @@ export interface ElementInstData<E> {
 export const ALL_ELEMENTS_MANAGER = new WeakMap<Element, ElementInst>();
 export interface ElementInst<E extends Element = Element> extends Listeners {}
 
-function setElementInlineStyle(styles: Styles, element: Element) {
+export function setElementInlineStyle(styles: Styles, element: Element) {
   Object.keys(styles).forEach((k) => {
     (element as unknown as HTMLElement).style.setProperty(
       k,
