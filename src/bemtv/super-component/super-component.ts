@@ -24,9 +24,9 @@ import autoCreateRoute, {
 import { routeToKebabCase } from "../../router/routes-case";
 import { CSSClass } from "../css-classes";
 import {
-  ControlRouterFn,
-  useControlRouter,
-} from "../../router/use-control-router";
+  RouterControlFn,
+  useRouterControl,
+} from "../../router/use-router-control";
 
 export type ComponentVars<V extends Record<string, any> = Record<string, any>> =
   V & {
@@ -407,17 +407,15 @@ export class SuperComponent<Vars extends Record<string, any>> {
     return this.__data.sCompProxy;
   }
 
-  useControlRouter(fn: ControlRouterFn) {
+  useRouterControl(fn: RouterControlFn) {
     const sCompProxy = this.__data.sCompProxy;
 
-    return useControlRouter((r, c) => {
+    return useRouterControl((r) => {
       const run = () => {
         runInComponentInst(
           sCompProxy,
           sCompProxy.__data.componentInstRunning,
-          () => {
-            fn(r, c);
-          }
+          () => fn(r)
         );
       };
 

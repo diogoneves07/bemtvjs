@@ -7,19 +7,23 @@ import hasRoute from "../bemtv/has-route";
 import {
   dispatchToRouterControlers,
   hasRouterControlers,
-} from "./use-control-router";
+  isFirstRoute,
+} from "./use-router-control";
 
 const initialRouterTemplate = () => ``;
 
 let routerTemplate = initialRouterTemplate;
 
-const updateRouterTemplate = (value: () => string, componentName: string) => {
-  if (hasRouterControlers()) {
+const updateRouterTemplate = (value: () => string, componentName?: string) => {
+  if (componentName && hasRouterControlers()) {
     dispatchToRouterControlers(() => {
       routerTemplate = value;
     }, componentName);
   } else {
     routerTemplate = value;
+  }
+  if (componentName) {
+    isFirstRoute.value = false;
   }
 };
 
@@ -76,7 +80,7 @@ export const applyRouter = () => {
     return;
   }
 
-  updateRouterTemplate(initialRouterTemplate, routeName);
+  updateRouterTemplate(initialRouterTemplate);
 
   if (lastRouteUnfound !== locationHash) {
     lastRouteUnfound = locationHash;
