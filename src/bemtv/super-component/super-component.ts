@@ -89,7 +89,6 @@ export class SuperComponent<Vars extends Record<string, any>> {
     activateVarsProxies() {
       this.$disableProxies = false;
     },
-    firstElementCSSClasses: new Set(),
     fns: [],
     sCompProxy: null as any,
     isSigleInstance: false,
@@ -141,24 +140,35 @@ export class SuperComponent<Vars extends Record<string, any>> {
    */
   css = (...args: Parameters<typeof css>) => {
     const classValue = css(...args);
-    const data = this.__data;
 
     const classInst = new CSSClass(classValue);
+    const sCompProxy = this.__data.sCompProxy;
 
-    data.firstElementCSSClasses.add(classValue);
+    let block = false;
 
-    classInst._onRemove(() => {
-      data.firstElementCSSClasses.delete(classValue);
-    });
+    const fn = () => {
+      const c = this.__data.componentInstRunning;
 
-    for (const c of data.componentsInst.keys()) {
-      const firstElement = getComponentInstFirstElement(c);
+      if (block) {
+        if (c) c.updatedCallbacks?.delete(fn);
 
-      if (firstElement) {
-        firstElement.classList.remove(classValue);
+        return;
+      }
+
+      const firstElement = c && getComponentInstFirstElement(c);
+
+      if (firstElement && !firstElement.classList.contains(classValue)) {
         firstElement.classList.add(classValue);
       }
-    }
+    };
+
+    classInst._onRemove(() => {
+      block = true;
+    });
+
+    sCompProxy.onMount(fn);
+    sCompProxy.onUpdate(fn);
+
     return classInst;
   };
 
@@ -417,14 +427,15 @@ export class SuperComponent<Vars extends Record<string, any>> {
 
   useFirstEl<E extends Element = Element>() {
     const [, getEl] = this.useEl<E>();
+    const sCompProxy = this.__data.sCompProxy;
 
     const fn = () => {
       const c = this.__data.componentInstRunning;
       if (c) (getEl() as any).it = getComponentInstFirstElement(c);
     };
 
-    this.__data.sCompProxy.onMount(fn);
-    this.__data.sCompProxy.onUpdate(fn);
+    sCompProxy.onMount(fn);
+    sCompProxy.onUpdate(fn);
 
     return getEl();
   }

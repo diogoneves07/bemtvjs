@@ -27,7 +27,6 @@ export interface SuperComponentData {
   componentInstRunning: ComponentInst | null;
   componentsInst: Map<ComponentInst, ComponentProps>;
   $disableProxies: boolean;
-  firstElementCSSClasses: Set<string>;
   fns: [fn: string, args: any[]][];
   sCompProxy: SuperComponent;
   propsDefined?: Map<string, Props>;
