@@ -3,8 +3,6 @@ import { ComponentTemplateCallback } from "./components-main";
 import { ALL_COMPONENTS_INST } from "./component-inst-store";
 import normalizeRouterShortcut from "./normalize-router-shortcut";
 import { LifeCycleCallback, Props } from "./types/component-inst-data";
-import reshareProps from "./reshare-props";
-import useSharedProp from "./use-shared-prop";
 
 function avoidEmptyTemplate(template: string) {
   return template.trim() === "" ? AVOIDS_EMPTY_TEMPLATE : template;
@@ -33,8 +31,6 @@ export default class ComponentInst {
   mountedCallbacks?: Set<LifeCycleCallback>;
   initCallbacks?: Set<LifeCycleCallback>;
   updatedCallbacks?: Set<LifeCycleCallback>;
-
-  sharedData: Record<string, any> = {};
 
   props: Props = {};
 
@@ -122,18 +118,6 @@ export default class ComponentInst {
 
   resetComponentsChildContainer() {
     this.componentsInTemplate.clear();
-  }
-
-  share<T extends Record<string, any>>(o: T) {
-    Object.assign(this.sharedData, o);
-  }
-
-  reshare<T extends Record<string, any>>(o: T) {
-    reshareProps(this, o);
-  }
-
-  use<ReturnType = any>(key: string) {
-    return useSharedProp(this, key) as ReturnType;
   }
 
   onInit(fn: () => void) {

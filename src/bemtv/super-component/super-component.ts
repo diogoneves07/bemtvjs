@@ -221,59 +221,6 @@ export class SuperComponent<Vars extends Record<string, any>> {
   }
 
   /**
-   * Shares the data with itself(this component) and everyone below it.
-   *
-   * @param o
-   * An object.
-   */
-  share<T extends Record<string, any>>(o: T) {
-    const d = this.__data;
-    const c = d.componentInstRunning;
-    const r = d.sCompProxy;
-
-    if (c) {
-      c.share(o);
-      return r;
-    }
-
-    d.fns.push(["share", [o]]);
-    return r;
-  }
-
-  /**
-   * Updates the values ​​of properties that have been shared.
-   *
-   * @param o
-   *  An object.
-   */
-  reshare<T extends Record<string, any>>(o: T) {
-    const d = this.__data;
-    const c = d.componentInstRunning;
-    const r = d.sCompProxy;
-
-    if (c) {
-      c.reshare(o);
-      return r;
-    }
-
-    d.fns.push(["reshare", [o]]);
-    return r;
-  }
-
-  /**
-   * Allows you to use properties that have been shared.
-   * @param key
-   * The property name.
-   *
-   * @returns
-   * The property value or undefined.
-   */
-  use<ReturnType = any>(key: string) {
-    const c = this.__data.componentInstRunning;
-    return c ? c.use<ReturnType>(key) : undefined;
-  }
-
-  /**
    * @param props
    * An object.
    *
