@@ -7,14 +7,14 @@ import { applyElementCSS } from "./work-with-element-inst";
 import { CSSClass } from "./css-classes";
 
 export type Styles = Partial<HTMLElement["style"]>;
-export interface ElementInstData<E> {
+export interface ElementInstData<E = Element> {
   DOMlisteners: Set<ComponentListener>;
   element: E | null;
   CSSClasses: Set<string>;
   inlineStyles: Set<Styles>;
+  onceItRealList?: Set<(it: Element) => void>;
 }
 
-export const ALL_ELEMENTS_MANAGER = new WeakMap<Element, ElementInst>();
 export interface ElementInst<E extends Element = Element> extends Listeners {}
 
 export function setElementInlineStyle(styles: Styles, element: Element) {
@@ -37,7 +37,7 @@ export class ElementInst<E = Element> {
     const d = this.__data;
     if (!newIt || d.element === newIt) return;
 
-    ALL_ELEMENTS_MANAGER.set(newIt as Element, this);
+    d.element = newIt;
 
     if (d.element) {
       d.DOMlisteners.forEach((o) => {
@@ -50,14 +50,17 @@ export class ElementInst<E = Element> {
       return o;
     });
 
-    this.__data.inlineStyles.forEach((s) => setElementInlineStyle(s, newIt));
+    d.inlineStyles.forEach((s) => setElementInlineStyle(s, newIt));
 
     d.CSSClasses.size > 0 && newIt && newIt.classList.add(...d.CSSClasses);
 
     BEMTEVI_CSS_IN_JS.applyLastCSSCreated();
 
-    this.__data.inlineStyles.clear();
-    d.element = newIt;
+    d.inlineStyles.clear();
+
+    d.onceItRealList?.forEach((fn) => fn(newIt));
+
+    d.onceItRealList?.clear();
   }
 
   /**
@@ -107,5 +110,13 @@ export class ElementInst<E = Element> {
     }
 
     return this;
+  }
+
+  onceItConnected(fn: (it: E) => void) {
+    const d = this.__data;
+
+    if (!d.onceItRealList) d.onceItRealList = new Set();
+
+    d.onceItRealList.add(fn as any);
   }
 }
