@@ -150,7 +150,7 @@ export class SuperComponent<Vars extends Record<string, any>> {
       const c = this.__data.componentInstRunning;
 
       if (block) {
-        if (c) c.updatedCallbacks?.delete(fn);
+        if (c) c.onUpdatedObservers?.delete(fn);
 
         return;
       }

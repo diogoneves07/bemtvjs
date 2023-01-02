@@ -5,6 +5,9 @@ import insertDOMListener from "./insert-dom-listener";
 import { css } from "goober";
 import { applyElementCSS } from "./work-with-element-inst";
 import { CSSClass } from "./css-classes";
+import { ObserverSystem } from "./observers-system";
+
+type RemoveOnItUpdate = () => void;
 
 export type Styles = Partial<HTMLElement["style"]>;
 export interface ElementInstData<E = Element> {
@@ -12,7 +15,8 @@ export interface ElementInstData<E = Element> {
   element: E | null;
   CSSClasses: Set<string>;
   inlineStyles: Set<Styles>;
-  onceItRealList?: Set<(it: Element) => void>;
+  onceItConnectedObservers: ObserverSystem<(it: Element) => void>;
+  onItUpdateObservers: ObserverSystem<(it: Element | null) => void>;
 }
 
 export interface ElementInst<E extends Element = Element> extends Listeners {}
@@ -31,13 +35,19 @@ export class ElementInst<E = Element> {
     CSSClasses: new Set(),
     inlineStyles: new Set(),
     element: null,
+    onceItConnectedObservers: new ObserverSystem(),
+    onItUpdateObservers: new ObserverSystem(),
   };
 
   public set it(newIt: E | null) {
     const d = this.__data;
-    if (!newIt || d.element === newIt) return;
+    const lastElement = d.element;
 
-    d.element = newIt;
+    d.element = newIt || null;
+
+    d.onItUpdateObservers.dispatch(newIt);
+
+    if (!newIt || lastElement === newIt) return;
 
     if (d.element) {
       d.DOMlisteners.forEach((o) => {
@@ -58,9 +68,9 @@ export class ElementInst<E = Element> {
 
     d.inlineStyles.clear();
 
-    d.onceItRealList?.forEach((fn) => fn(newIt));
+    d.onceItConnectedObservers.dispatch(newIt);
 
-    d.onceItRealList?.clear();
+    d.onceItConnectedObservers.clear();
   }
 
   /**
@@ -113,10 +123,15 @@ export class ElementInst<E = Element> {
   }
 
   onceItConnected(fn: (it: E) => void) {
-    const d = this.__data;
+    this.__data.onceItConnectedObservers.add(fn as any);
+  }
 
-    if (!d.onceItRealList) d.onceItRealList = new Set();
+  onItUpdate(fn: (it: E | null) => void): RemoveOnItUpdate {
+    const onItUpdateObservers = this.__data.onItUpdateObservers;
+    onItUpdateObservers.add(fn as any);
 
-    d.onceItRealList.add(fn as any);
+    return () => {
+      onItUpdateObservers.delete(fn as any);
+    };
   }
 }

@@ -3,6 +3,7 @@ import { ComponentTemplateCallback } from "./components-main";
 import { ALL_COMPONENTS_INST } from "./component-inst-store";
 import normalizeRouterShortcut from "./normalize-router-shortcut";
 import { LifeCycleCallback, Props } from "./types/component-inst-data";
+import { ObserverSystem } from "./observers-system";
 
 function avoidEmptyTemplate(template: string) {
   return template.trim() === "" ? AVOIDS_EMPTY_TEMPLATE : template;
@@ -27,10 +28,10 @@ export default class ComponentInst {
 
   propsDefined?: Map<string, Props>;
 
-  unmountedCallbacks?: Set<LifeCycleCallback>;
-  mountedCallbacks?: Set<LifeCycleCallback>;
-  initCallbacks?: Set<LifeCycleCallback>;
-  updatedCallbacks?: Set<LifeCycleCallback>;
+  onUnmountedObservers = new ObserverSystem<LifeCycleCallback>();
+  onMountedObservers = new ObserverSystem<LifeCycleCallback>();
+  onInitObservers = new ObserverSystem<LifeCycleCallback>();
+  onUpdatedObservers = new ObserverSystem<LifeCycleCallback>();
 
   props: Props = {};
 
@@ -123,8 +124,7 @@ export default class ComponentInst {
   onInit(fn: () => void) {
     if (this.inited) return fn();
 
-    if (!this.initCallbacks) this.initCallbacks = new Set();
-    this.initCallbacks.add(fn);
+    this.onInitObservers.add(fn);
 
     return this;
   }
@@ -132,19 +132,14 @@ export default class ComponentInst {
   onMountWithHighPriority(fn: () => void) {
     if (this.mounted) return fn();
 
-    const mountedCallbacks = this.mountedCallbacks;
-    this.mountedCallbacks = new Set<LifeCycleCallback>([
-      fn,
-      ...(mountedCallbacks || []),
-    ]);
+    this.onMountedObservers.addWithPriority(fn);
     return this;
   }
 
   onMount(fn: () => void) {
     if (this.mounted) return fn();
 
-    if (!this.mountedCallbacks) this.mountedCallbacks = new Set();
-    this.mountedCallbacks.add(fn);
+    this.onMountedObservers.add(fn);
 
     return this;
   }
@@ -152,24 +147,17 @@ export default class ComponentInst {
   onUnmount(fn: () => void) {
     if (this.unmounted) return fn();
 
-    if (!this.unmountedCallbacks) this.unmountedCallbacks = new Set();
-    this.unmountedCallbacks.add(fn);
+    this.onUnmountedObservers.add(fn);
     return this;
   }
 
   onUpdateWithHighPriority(fn: () => void) {
-    const updatedCallbacks = this.updatedCallbacks;
-    this.updatedCallbacks = new Set<LifeCycleCallback>([
-      fn,
-      ...(updatedCallbacks || []),
-    ]);
+    this.onUpdatedObservers.addWithPriority(fn);
     return this;
   }
 
   onUpdate(fn: () => void) {
-    if (!this.updatedCallbacks) this.updatedCallbacks = new Set();
-    this.updatedCallbacks.add(fn);
-
+    this.onUpdatedObservers.add(fn);
     return this;
   }
 }

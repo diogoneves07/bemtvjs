@@ -3,11 +3,11 @@ import { isRouterComponent } from "./is-router-component";
 
 export function dispatchInitedLifeCycle(c: ComponentInst) {
   c.inited = true;
-  c.initCallbacks?.forEach((f) => f());
-  c.initCallbacks?.clear();
+  c.onInitObservers.dispatch();
+  c.onInitObservers.clear();
 }
 export function dispatchUpdatedLifeCycle(c: ComponentInst) {
-  c.updatedCallbacks?.forEach((f) => f());
+  c.onUpdatedObservers.dispatch();
 
   if (isRouterComponent(c.name)) {
     c.parent && dispatchUpdatedLifeCycle(c.parent);
@@ -16,12 +16,12 @@ export function dispatchUpdatedLifeCycle(c: ComponentInst) {
 
 export function dispatchMountedLifeCycle(c: ComponentInst) {
   c.mounted = true;
-  c.mountedCallbacks?.forEach((f) => f());
-  c.mountedCallbacks?.clear();
+  c.onMountedObservers.dispatch();
+  c.onMountedObservers.clear();
 }
 
 export function dispatchUnmountedLifeCycle(c: ComponentInst) {
   c.unmounted = true;
-  c.unmountedCallbacks?.forEach((f) => f());
-  c.unmountedCallbacks?.clear();
+  c.onUnmountedObservers.dispatch();
+  c.onUnmountedObservers.clear();
 }
