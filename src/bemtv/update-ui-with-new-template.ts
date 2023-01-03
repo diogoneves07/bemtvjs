@@ -6,11 +6,15 @@ import getPossibleNewNodes from "./get-possible-new-nodes";
 import { getComponentInstParents } from "./get-component-inst-parents";
 
 export default function updateUIWithNewTemplate(componentInst: ComponentInst) {
+  const r = processUpdatedTemplate(componentInst);
+
+  if (!r) return r;
+
   const {
     template: pureTemplate,
     newComponentsManager,
     componentsManagerUpdated,
-  } = processUpdatedTemplate(componentInst);
+  } = r;
 
   const newHtml = brackethtmlToHTML(pureTemplate);
 

@@ -1,3 +1,8 @@
+import {
+  autoImportComponent,
+  isComponentAlreadyImported,
+  isComponentAutoImport,
+} from "./auto-import-components";
 import ComponentInst from "./component-inst";
 import getNextComponentDataInTemplate from "./get-next-component-data-in-template";
 import processComponentsInTemplate from "./process-components-in-template";
@@ -9,15 +14,16 @@ type UpdatedTemplateObject = {
 };
 export default function processUpdatedTemplate(
   componentInst: ComponentInst
-): UpdatedTemplateObject {
+): UpdatedTemplateObject | false {
   const childComponents = [...componentInst.getChildComponents()];
   const newComponentsManager: ComponentInst[] = [];
   const componentsManagerUpdated: ComponentInst[] = [];
+  const lastTemplateValue = componentInst.lastTemplateValue;
 
   let template = componentInst.getCurrentTemplateWithHost();
 
   componentInst.updateLastTemplateValueProperty();
-  componentInst.resetComponentsChildContainer();
+  componentInst.clearComponentsInTemplateList();
 
   let componentData: ReturnType<typeof getNextComponentDataInTemplate>;
 
@@ -41,6 +47,12 @@ export default function processUpdatedTemplate(
       componentInst.addComponentChild(childComponent);
 
       continue;
+    }
+
+    if (!isComponentAlreadyImported(name) && isComponentAutoImport(name)) {
+      componentInst.forceTemplateUpdate();
+
+      if (!autoImportComponent(name, lastTemplateValue)) return false;
     }
 
     const { newTemplate: componentTemlate, componentsManager } =
