@@ -1,7 +1,9 @@
+import { ObserverSystem } from "./observers-system";
+
 export class CSSClass {
   class: string = "";
 
-  protected __onRemoveObervers: Set<() => void> = new Set();
+  protected __onRemoveObervers = new ObserverSystem();
 
   constructor(c: string) {
     this.class = c;
@@ -11,7 +13,7 @@ export class CSSClass {
     document.querySelectorAll("." + this.class).forEach((e) => {
       e.classList.remove(this.class);
     });
-    this.__onRemoveObervers.forEach((fn) => fn());
+    this.__onRemoveObervers.dispatch();
 
     return this;
   }
