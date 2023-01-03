@@ -75,6 +75,7 @@ export default class ComponentInst {
 
     this.getCurrentTemplate = getCurrentTemplate;
     this.lastTemplateValue = getCurrentTemplate();
+    return this;
   }
 
   getCurrentTemplateWithHost() {
@@ -85,6 +86,7 @@ export default class ComponentInst {
 
   updateLastTemplateValueProperty() {
     this.lastTemplateValue = this.getCurrentTemplate();
+    return this;
   }
 
   shouldTemplateBeUpdate() {
@@ -103,10 +105,12 @@ export default class ComponentInst {
 
   forceTemplateUpdate() {
     this.shouldForceUpdate = true;
+    return this;
   }
 
   addComponentChild(c: ComponentInst) {
     this.componentsInTemplate.add(c);
+    return this;
   }
 
   hasComponentChild(c: ComponentInst) {
@@ -117,8 +121,9 @@ export default class ComponentInst {
     return this.componentsInTemplate;
   }
 
-  resetComponentsChildContainer() {
+  clearComponentsInTemplateList() {
     this.componentsInTemplate.clear();
+    return this;
   }
 
   onInit(fn: () => void) {
