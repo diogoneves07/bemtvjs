@@ -31,19 +31,19 @@ export default function createElementInst<E extends Element = Element>(
   keyOrSelectorOrElement: string | Element,
   c: ComponentInst | null
 ): ElementInst<E> {
-  const elManager = ElementInstFactory<E>();
+  const elementInst = ElementInstFactory<E>();
 
   if (keyOrSelectorOrElement instanceof Element) {
-    elManager.it = getElement(keyOrSelectorOrElement) as E | null;
-    return elManager;
+    elementInst.it = getElement(keyOrSelectorOrElement) as E | null;
+    return elementInst;
   }
 
   if (!isForcedAttr(keyOrSelectorOrElement)) {
-    elManager.it = getElement(keyOrSelectorOrElement) as E | null;
-    return elManager;
+    elementInst.it = getElement(keyOrSelectorOrElement) as E | null;
+    return elementInst;
   }
 
-  if (!c) return elManager;
+  if (!c) return elementInst;
 
   const elKey = normalizeElKeyAttr(getForcedAttrValue(keyOrSelectorOrElement));
 
@@ -51,21 +51,21 @@ export default function createElementInst<E extends Element = Element>(
 
   if (!element && !c.mounted) {
     c.onMountWithHighPriority(() => {
-      if (!elManager.it) {
-        elManager.it =
+      if (!elementInst.it) {
+        elementInst.it =
           (findElementInComponentNodes(c.nodes, elKey) as E) || null;
       }
     });
   }
 
   c.onUpdateWithHighPriority(() => {
-    const e = elManager.it;
+    const e = elementInst.it;
     const f = (findElementInComponentNodes(c.nodes, elKey) as E) || null;
 
-    if (e !== f) elManager.it = f;
+    if (e !== f) elementInst.it = f;
   });
 
-  elManager.it = element;
+  elementInst.it = element;
 
-  return elManager;
+  return elementInst;
 }
