@@ -29,7 +29,7 @@ export function ElementInstFactory<E extends Element = Element>() {
           };
 
           DOMlisteners.add(DOMListenerObject);
-
+          //! Esse é o jeito mais correto de gerenciar os eventos mude o superCompomnet
           if (elementInst.it) {
             const r = insertDOMListener(
               elementInst.it,
@@ -37,16 +37,19 @@ export function ElementInstFactory<E extends Element = Element>() {
               ...args
             );
             DOMListenerObject.removeListener = r;
-            return r;
+
+            return () => {
+              DOMlisteners.delete(DOMListenerObject);
+              r();
+            };
           }
 
           return () => {
-            if (!DOMListenerObject.removeListener) {
-              DOMlisteners.delete(DOMListenerObject);
-              return;
-            }
+            const r = DOMListenerObject?.removeListener;
 
-            DOMListenerObject.removeListener();
+            DOMlisteners.delete(DOMListenerObject);
+
+            r && r();
           };
         };
         (target as any)[propName] = newEventListener;

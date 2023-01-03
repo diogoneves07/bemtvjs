@@ -42,18 +42,19 @@ export class ElementInst<E = Element> {
   public set it(newIt: E | null) {
     const d = this.__data;
     const lastElement = d.element;
+    const istheSame = lastElement === newIt;
 
     d.element = newIt || null;
 
-    d.onItUpdateObservers.dispatch(newIt);
+    !istheSame && d.onItUpdateObservers.dispatch(newIt);
 
-    if (!newIt || lastElement === newIt) return;
-
-    if (d.element) {
+    if (lastElement) {
       d.DOMlisteners.forEach((o) => {
         o.removeListener && o.removeListener();
       });
     }
+
+    if (!newIt || istheSame) return;
 
     d.DOMlisteners.forEach((o) => {
       o.removeListener = insertDOMListener(newIt, o.listener, ...o.args);
@@ -123,11 +124,19 @@ export class ElementInst<E = Element> {
   }
 
   onceItConnected(fn: (it: E) => void) {
+    if (this.it) {
+      fn(this.it);
+      return this;
+    }
+
     this.__data.onceItConnectedObservers.add(fn as any);
+
+    return this;
   }
 
   onItUpdate(fn: (it: E | null) => void): RemoveOnItUpdate {
     const onItUpdateObservers = this.__data.onItUpdateObservers;
+
     onItUpdateObservers.add(fn as any);
 
     return () => {
