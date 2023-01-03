@@ -1,6 +1,6 @@
 import { LIBRARY_NAME_IN_ERRORS_MESSAGE } from "../globals";
 
-type WatchCallback<V = any> = (value: V, count: number) => void;
+type WatchCallback<V = any> = (value: V, calledTimes: number) => void;
 type RemoveWatcher = () => void;
 
 type StateFnLib<V> = {
@@ -12,7 +12,7 @@ type StateFn<T, A extends Record<string, (c: T, n: T) => T>> = StateFnLib<T> & {
   [K in keyof A]: (value: Parameters<A[K]>[1]) => T;
 };
 
-export function stateFn<T, A extends Record<string, (c: T, n: T) => T>>(
+export function createStateFn<T, A extends Record<string, (c: T, n: T) => T>>(
   value: T,
   actions?: A
 ) {
@@ -31,9 +31,9 @@ export function stateFn<T, A extends Record<string, (c: T, n: T) => T>>(
     currentValue = newValue;
 
     watchers.forEach((c, fn) => {
-      const count = c++;
-      fn(newValue, count);
-      watchers.set(fn, count);
+      const calledTimes = c++;
+      fn(newValue, calledTimes);
+      watchers.set(fn, calledTimes);
     });
 
     return newValue;
