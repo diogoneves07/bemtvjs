@@ -2,12 +2,16 @@ import { getComponentFn } from "./components-main";
 
 type AutoImportCallback = () => void;
 
-type autoImportComponentObject = {
+type LazyComponentFn<N extends string> = (name: N) => Promise<any>;
+
+type SuspenseFn = (has: boolean) => boolean | string;
+
+type AutoImportComponentObject = {
   load: AutoImportCallback;
-  suspense: string;
+  suspense?: string | SuspenseFn;
   loadAlreadyRequired?: true;
 };
-const importComponents = new Map<string, autoImportComponentObject>();
+const importComponents = new Map<string, AutoImportComponentObject>();
 
 export function isComponentAlreadyImported(name: string) {
   return getComponentFn(name) ? true : false;
@@ -17,31 +21,39 @@ export function isComponentAutoImport(name: string) {
   return importComponents.get(name) ? true : false;
 }
 
-export function autoImportComponent(name: string) {
+export function autoImportComponent(name: string, currentTemplate?: string) {
   const has = importComponents.get(name);
 
   if (!has) return;
 
   const { load, loadAlreadyRequired, suspense } = has;
 
-  if (loadAlreadyRequired) return suspense;
+  let s =
+    typeof suspense === "function" ? suspense(!!currentTemplate) : suspense;
+  s = s === true ? false : s;
+
+  if (loadAlreadyRequired) return s;
 
   load();
 
-  return suspense;
+  return s;
 }
-
-type LazyComponentFn<N extends string> = (name: N) => Promise<any>;
 
 export function lazy<N extends string, C extends LazyComponentFn<N>>(
   componentName: N,
   lazyComponentFn: C,
-  suspense: string = ""
+  suspense?: string | SuspenseFn
 ) {
-  const o: autoImportComponentObject = {
+  let promise: Promise<any>;
+  const o: AutoImportComponentObject = {
     load: () => {
+      if (o.loadAlreadyRequired && promise) return promise;
+
       o.loadAlreadyRequired = true;
-      return lazyComponentFn(componentName);
+
+      promise = lazyComponentFn(componentName) as Promise<any>;
+
+      return promise as ReturnType<C>;
     },
     suspense,
   };
