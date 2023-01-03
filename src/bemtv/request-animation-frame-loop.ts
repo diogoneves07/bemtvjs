@@ -34,11 +34,7 @@ function requestAnimationFrameLoop() {
       const { newComponentsManager, componentsManagerUpdated, keysAndNodes } =
         updatedUI;
 
-      if (
-        !componentInst.shouldForceUpdate ||
-        newComponentsManager.length ||
-        componentsManagerUpdated.length
-      ) {
+      if (!componentInst.shouldForceUpdate) {
         dispatchUpdatedLifeCycle(componentInst);
       }
 
