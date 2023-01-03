@@ -135,6 +135,14 @@ export class SuperComponent<Vars extends Record<string, any>> {
     };
   }
 
+  eachInst(fn: () => void) {
+    const sCompProxy = this.__data.sCompProxy;
+
+    sCompProxy.onInit(fn);
+
+    return sCompProxy;
+  }
+
   /**
    * Allows CSS-In-JS.
    */
