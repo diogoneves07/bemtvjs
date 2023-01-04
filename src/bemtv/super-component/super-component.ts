@@ -27,6 +27,7 @@ import {
   RouterControlFn,
   useRouterControl,
 } from "../../router/use-router-control";
+import { createPortalKey, definePortal } from "./portals";
 
 export type ComponentVars<V extends Record<string, any> = Record<string, any>> =
   V & {
@@ -81,7 +82,7 @@ export class SuperComponent<Vars extends Record<string, any>> {
     lifeCycles: new Map(),
     removeDOMListeners: new Map(),
     componentInstRunning: null,
-    componentsInst: new Map(),
+    componentsInst: new Set(),
     $disableProxies: false,
     disableVarsProxies() {
       this.$disableProxies = true;
@@ -130,7 +131,7 @@ export class SuperComponent<Vars extends Record<string, any>> {
     return () => {
       runInComponentInst(this, keepInstance, () => {
         callback();
-        updateComponentVars(this);
+        updateComponentVars(this.__data.sCompProxy);
       });
     };
   }
@@ -391,5 +392,65 @@ export class SuperComponent<Vars extends Record<string, any>> {
     sCompProxy.onUpdate(fn);
 
     return getEl();
+  }
+
+  portal(fn: (superComponent: SuperComponent<Vars>) => void) {
+    const d = this.__data;
+    const sCompProxy = d.sCompProxy as any;
+
+    const compVarProxy = new Proxy(
+      {},
+      {
+        get(_t, p) {
+          const k = p as string;
+
+          return sCompProxy.$[k];
+        },
+        set(_t, p, newValue) {
+          runInComponentInst(sCompProxy, componentInst, () => {
+            sCompProxy.$[p] = newValue;
+            updateComponentVars(sCompProxy);
+          });
+          return true;
+        },
+      }
+    );
+
+    let componentInst: ComponentInst | null = null;
+    const s = new Proxy(
+      {},
+      {
+        get(_t, p) {
+          const k = p as string;
+
+          if (typeof sCompProxy[k] === "function") {
+            return (...args: any[]) => {
+              runInComponentInst(sCompProxy, componentInst, () => {
+                sCompProxy[k](...args);
+              });
+            };
+          }
+
+          return compVarProxy;
+        },
+        set(_t, p, newValue) {
+          sCompProxy[p] = newValue;
+          return true;
+        },
+      }
+    );
+
+    const name = d.componentName;
+    const key = createPortalKey(name);
+
+    const useComponentInst = (c: ComponentInst) => {
+      componentInst = c;
+
+      c.onInit(() => fn(s as any));
+    };
+
+    definePortal(key, useComponentInst);
+
+    return key;
   }
 }

@@ -1,6 +1,5 @@
 import ComponentInst from "../component-inst";
 import { dispatchInitedLifeCycle } from "../components-lifecycle";
-import { ComponentProps } from "../types/super-component-data";
 import getVarsInTemplate from "./get-vars-in-template";
 import {
   ElementsWithBindAttrs,
@@ -13,6 +12,7 @@ import {
   getComponentInstFirstElement,
   getSuperComponentData,
   runInComponentInst,
+  updateComponentVars,
 } from "./work-with-super-component";
 
 export function bindComponentToSuperComponent(
@@ -20,8 +20,6 @@ export function bindComponentToSuperComponent(
   cInst: ComponentInst
 ) {
   const sCompData = getSuperComponentData(sComp);
-
-  let componentProps: ComponentProps | undefined;
 
   let lastFirstElement: undefined | Element;
 
@@ -38,15 +36,11 @@ export function bindComponentToSuperComponent(
 
     lastFirstElement = firstElement;
 
-    const cInstProps = componentProps || sCompData.componentsInst.get(cInst);
+    const fnsIterator = cInst.removeFirstElementDOMListeners.values();
 
-    if (cInstProps) {
-      const fnsIterator = cInstProps.removeFirstElementDOMListeners.values();
+    for (const fn of fnsIterator) fn();
 
-      for (const fn of fnsIterator) fn();
-
-      cInstProps.removeFirstElementDOMListeners.clear();
-    }
+    cInst.removeFirstElementDOMListeners.clear();
 
     for (const l of sCompData.DOMListeners) {
       addDOMListenerToComponent(firstElement, sComp, l, cInst);
@@ -94,11 +88,7 @@ export function bindComponentToSuperComponent(
     runInComponentInst(sComp, cInst, () => {
       processElementsWithBindAttrs(sComp, elementsWithBindAttrs);
 
-      if (!componentProps) {
-        componentProps = sCompData.componentsInst.get(cInst) as ComponentProps;
-      }
-
-      const { componentVarsCache } = componentProps;
+      const { componentVarsCache } = cInst;
 
       if (isTemplateFunction || componentVarsCache.size === 0) {
         lastTemplateValue = getVarsInTemplate(sComp, cInst);
@@ -108,15 +98,18 @@ export function bindComponentToSuperComponent(
     return lastTemplateValue;
   };
 
-  sCompData.componentsInst.set(cInst, {
-    vars: {
-      ...sCompData.componentsInitVars,
-      children: cInst.children,
-      props: cInst.props,
-    },
-    template,
-    componentVarsCache: new Map<string, string>(),
-    removeFirstElementDOMListeners: new Map(),
+  cInst.componentVars = {
+    ...sCompData.componentsInitVars,
+    children: cInst.children,
+    props: cInst.props,
+  };
+
+  cInst.template = template;
+
+  sCompData.componentsInst.add(cInst);
+
+  runInComponentInst(sComp, cInst, () => {
+    updateComponentVars(sComp);
   });
 
   dispatchInitedLifeCycle(cInst);

@@ -7,12 +7,6 @@ export type SuperComponentDOMListener = {
   callback: Function;
   options?: AddEventListenerOptions;
 };
-export type ComponentProps = {
-  vars: Record<string, any>;
-  template: SuperComponentData["componentsTemplate"];
-  componentVarsCache: Map<string, string>;
-  removeFirstElementDOMListeners: Map<SuperComponentDOMListener, () => void>;
-};
 
 export interface SuperComponentData {
   componentName: string;
@@ -25,7 +19,7 @@ export interface SuperComponentData {
   lifeCycles: Map<string, ((c: ComponentInst) => void)[]>;
   removeDOMListeners: Map<SuperComponentDOMListener, (() => void)[]>;
   componentInstRunning: ComponentInst | null;
-  componentsInst: Map<ComponentInst, ComponentProps>;
+  componentsInst: Set<ComponentInst>;
   $disableProxies: boolean;
   fns: [fn: string, args: any[]][];
   sCompProxy: SuperComponent;

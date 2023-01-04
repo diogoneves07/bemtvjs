@@ -9,6 +9,7 @@ import {
   isComponentAutoImport,
 } from "./auto-import-components";
 import getKeyInComponentName from "./get-key-in-component-name";
+import { usePortal } from "./super-component/portals";
 
 type NextComponentData = ReturnType<typeof getNextComponentDataInTemplate>;
 
@@ -67,6 +68,7 @@ function processEachTemplate(
 
   while ((componentData = getNextComponentDataInTemplate(newTemplate))) {
     const { name, children, before, after } = componentData;
+
     const realComponentName = normalizeComponentName(name);
 
     if (!isComponentAlreadyImported(realComponentName)) {
@@ -86,6 +88,10 @@ function processEachTemplate(
     const componentFn = getComponentFn(realComponentName) as ComponentFn;
 
     const componentInst = new ComponentInst(realComponentName, parent);
+
+    const portal = usePortal(name);
+
+    if (portal) portal(componentInst);
 
     componentInst.children = children;
 

@@ -9,7 +9,7 @@ import { getNodeComponentKeys } from "../nodes-component-keys";
 import createElementInst from "./create-element-inst";
 import { SuperComponent } from "./super-component";
 import {
-  getComponentVars,
+  getComponentInstRunningVars,
   getSuperComponentData,
   runInComponentInst,
   updateComponentVars,
@@ -86,7 +86,7 @@ export function handleOnInput(
 ) {
   const { el, tagName } = bindedAttrs;
 
-  const c = getComponentVars(sComp) as Record<string, any>;
+  const c = getComponentInstRunningVars(sComp) as Record<string, any>;
   const compVarValue = getOrSetPropertyByPath(c, propertyPath);
 
   if (Array.isArray(compVarValue)) {
@@ -137,7 +137,7 @@ export function processElementsWithBindAttrs(
   sComp: SuperComponent,
   elementsWithBindAttrs: ElementsWithBindAttrs
 ) {
-  const c = getComponentVars(sComp) as Record<string, any>;
+  const c = getComponentInstRunningVars(sComp) as Record<string, any>;
 
   for (const bindObject of elementsWithBindAttrs) {
     const { el, lastPerpertyValue, perpertyName, hasInput, compVar } =
@@ -180,7 +180,7 @@ export function setElementsWithBindAttrs(
   cInst: ComponentInst,
   elementsWithBindAttrs: ElementsWithBindAttrs
 ) {
-  const c = getComponentVars(sComp) as Record<string, any>;
+  const c = getComponentInstRunningVars(sComp) as Record<string, any>;
 
   const listenerToElementInput = (
     bindedAttrs: ElementWithBindAttrs,

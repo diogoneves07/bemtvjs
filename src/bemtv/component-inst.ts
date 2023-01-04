@@ -33,13 +33,18 @@ export default class ComponentInst {
   onInitObservers = new ObserverSystem<LifeCycleCallback>();
   onUpdatedObservers = new ObserverSystem<LifeCycleCallback>();
 
-  props: Props = {};
+  componentVarsCache = new Map<string, string>();
+  removeFirstElementDOMListeners = new Map();
+  componentVars?: Record<string, any>;
+  template?: () => string;
 
   readonly name: string;
 
   key: string;
 
   children: string = "";
+
+  props: Props = {};
 
   constructor(name: string, parent: ComponentInst | null) {
     this.name = name;

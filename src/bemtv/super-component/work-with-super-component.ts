@@ -1,9 +1,6 @@
 import { SuperComponent } from "./super-component";
 import { LifeCycleCallback } from "../types/component-inst-data";
-import {
-  ComponentProps,
-  SuperComponentDOMListener,
-} from "./../types/super-component-data";
+import { SuperComponentDOMListener } from "./../types/super-component-data";
 import insertDOMListener from "../insert-dom-listener";
 import ComponentInst from "../component-inst";
 
@@ -20,10 +17,10 @@ export function getComponentInstFirstElement(c: ComponentInst) {
 }
 
 const EMPTY_OBJECT = {};
-export function getComponentVars(sComp: SuperComponent) {
+export function getComponentInstRunningVars(sComp: SuperComponent) {
   const data = getSuperComponentData(sComp);
   const c = data.componentInstRunning;
-  return c ? data.componentsInst.get(c)?.vars || EMPTY_OBJECT : EMPTY_OBJECT;
+  return c ? c.componentVars || EMPTY_OBJECT : EMPTY_OBJECT;
 }
 
 export function runInComponentInst(
@@ -37,7 +34,7 @@ export function runInComponentInst(
   const setCompVars = () => {
     if (!data.componentInstRunning) return;
 
-    const vars = getComponentVars(sComp) as ComponentProps["vars"];
+    const vars = getComponentInstRunningVars(sComp);
 
     data.disableVarsProxies();
 
@@ -59,9 +56,10 @@ export function runInComponentInst(
 
 export function updateComponentVars(sComp: SuperComponent) {
   const data = getSuperComponentData(sComp);
-  const vars = getComponentVars(sComp) as ComponentProps["vars"];
+  const vars = getComponentInstRunningVars(sComp);
 
   data.disableVarsProxies();
+
   for (const p of data.componentsVarsKeys) {
     vars[p] = sComp.$[p] as any;
   }
@@ -81,7 +79,7 @@ export function addLifeCycleToComponents(
     });
   };
 
-  for (const [c] of data.componentsInst) {
+  for (const c of data.componentsInst) {
     (c as any)[name](() => lifeCallback(c));
   }
 
@@ -110,8 +108,6 @@ export function addDOMListenerToComponent(
     });
   };
 
-  const data = getSuperComponentData(sComp);
-
   const removeDOMListener = insertDOMListener(
     firstElement,
     type,
@@ -119,14 +115,7 @@ export function addDOMListenerToComponent(
     DOMListenerOptions
   );
 
-  const componentData = data.componentsInst.get(c);
-
-  if (!componentData) return;
-
-  componentData.removeFirstElementDOMListeners.set(
-    DOMListenerObject,
-    removeDOMListener
-  );
+  c.removeFirstElementDOMListeners.set(DOMListenerObject, removeDOMListener);
 }
 
 export function addDOMListenerToComponents(
@@ -135,7 +124,7 @@ export function addDOMListenerToComponents(
 ) {
   const data = getSuperComponentData(sComp);
 
-  for (const c of data.componentsInst.keys()) {
+  for (const c of data.componentsInst) {
     const firstElement = getComponentInstFirstElement(c);
     if (firstElement) {
       addDOMListenerToComponent(firstElement, sComp, DOMListenerObject, c);
@@ -147,13 +136,13 @@ export function removeDOMListenerFromComponents(
   sComp: SuperComponent,
   DOMListenerObject: SuperComponentDOMListener
 ) {
-  const components = getSuperComponentData(sComp).componentsInst.values();
+  const { componentsInst } = getSuperComponentData(sComp);
 
-  for (const o of components) {
+  for (const c of componentsInst) {
     const removeDOMListener =
-      o.removeFirstElementDOMListeners.get(DOMListenerObject);
+      c.removeFirstElementDOMListeners.get(DOMListenerObject);
     if (removeDOMListener) {
-      o.removeFirstElementDOMListeners.delete(DOMListenerObject);
+      c.removeFirstElementDOMListeners.delete(DOMListenerObject);
       removeDOMListener();
     }
   }
@@ -161,10 +150,7 @@ export function removeDOMListenerFromComponents(
 
 export function resetComponentVarsCache(sComp: SuperComponent) {
   const data = getSuperComponentData(sComp);
-
-  if (!data.componentInstRunning) return;
-
-  const c = data.componentsInst.get(data.componentInstRunning);
+  const c = data.componentInstRunning;
 
   if (!c) return;
 

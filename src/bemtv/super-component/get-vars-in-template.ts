@@ -1,9 +1,8 @@
 import { LIBRARY_NAME_IN_ERRORS_MESSAGE } from "./../../globals";
 import toKebabCase from "../../utilities/to-kebab-case";
 import { T_FNS_SYMBOL } from "../transformation-functions/main";
-import { ComponentProps } from "../types/super-component-data";
 import {
-  getComponentVars,
+  getComponentInstRunningVars,
   getSuperComponentData,
 } from "./work-with-super-component";
 import { SuperComponent } from "./super-component";
@@ -52,7 +51,7 @@ function getVarsValues(
 
   if (getLastValue) return componentVarsCache.get(varName);
 
-  const vars = getComponentVars(sComp) as ComponentProps["vars"];
+  const vars = getComponentInstRunningVars(sComp);
 
   const props = vars.props;
   const hasPathToProp = varName.includes(".");
@@ -113,9 +112,7 @@ export default function getVarsInTemplate(
   c: ComponentInst
 ) {
   const sCompData = getSuperComponentData(sComp);
-  const { componentVarsCache } = sCompData.componentsInst.get(
-    c
-  ) as ComponentProps;
+  const { componentVarsCache } = c;
 
   sCompData.disableVarsProxies();
 
