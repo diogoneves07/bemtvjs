@@ -4,7 +4,7 @@ import { Listeners } from "./types/listeners";
 import insertDOMListener from "./insert-dom-listener";
 import { css } from "goober";
 import { applyElementCSS } from "./work-with-element-inst";
-import { CSSClass } from "./css-classes";
+import { CSSClass, onRemoveClass } from "./css-classes";
 import { ObserverSystem } from "./observers-system";
 
 type RemoveOnItUpdate = () => void;
@@ -96,7 +96,7 @@ export class ElementInst<E = Element> {
 
     const classInst = new CSSClass(classValue);
 
-    classInst._onRemove(() => {
+    onRemoveClass(classInst, () => {
       this.__data.CSSClasses.delete(classValue);
     });
 

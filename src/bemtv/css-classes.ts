@@ -1,5 +1,8 @@
 import { ObserverSystem } from "./observers-system";
 
+export function onRemoveClass(classe: CSSClass, fn: () => void) {
+  (classe as any).__onRemoveObervers.add(fn);
+}
 export class CSSClass {
   class: string = "";
 
@@ -16,9 +19,5 @@ export class CSSClass {
     this.__onRemoveObervers.dispatch();
 
     return this;
-  }
-
-  _onRemove(fn: () => void) {
-    this.__onRemoveObervers.add(fn);
   }
 }

@@ -22,7 +22,7 @@ import autoCreateRoute, {
   autoCreateRouteFromTemplates,
 } from "../auto-create-route";
 import { routeToKebabCase } from "../../router/routes-case";
-import { CSSClass } from "../css-classes";
+import { CSSClass, onRemoveClass } from "../css-classes";
 import {
   RouterControlFn,
   useRouterControl,
@@ -171,7 +171,7 @@ export class SuperComponent<Vars extends Record<string, any>> {
       }
     };
 
-    classInst._onRemove(() => {
+    onRemoveClass(classInst, () => {
       block = true;
     });
 

@@ -1,5 +1,4 @@
 import { ALL_COMPONENTS_INST } from "./../bemtv/component-inst-store";
-import ComponentInst from "../bemtv/component-inst";
 import { ObserverSystem } from "../bemtv/observers-system";
 import { isRouterComponent } from "../bemtv/is-router-component";
 
@@ -13,56 +12,40 @@ export let isFirstRoute = { value: true };
 
 export class RouterControl {
   componentName: string;
-  renderNextRoute: () => this;
+  renderRoute: () => this;
   isFirstRoute: boolean;
-
   isRendered = false;
 
-  onLoadObservers = new ObserverSystem();
+  protected __onLoadObservers = new ObserverSystem();
 
-  constructor(name: string, renderNextRoute: () => void) {
+  constructor(name: string, renderRoute: () => void) {
     this.componentName = name;
-    this.renderNextRoute = () => {
-      renderNextRoute();
+
+    this.renderRoute = () => {
+      renderRoute();
+
       isFirstRoute.value = false;
 
       const routerInst = [...ALL_COMPONENTS_INST].find((i) =>
         isRouterComponent(i.name)
       );
+      if (!routerInst) return this;
 
-      routerInst &&
-        routerInst.onUpdate(() => {
-          if (
-            [...routerInst.componentsInTemplate].find((i) => i.name === name)
-          ) {
-            this.isRendered = true;
-            this.onLoadObservers.dispatch();
-          }
-        });
+      const fn = () => {
+        if (![...routerInst.componentsInTemplate].find((i) => i.name === name))
+          return;
+
+        this.isRendered = true;
+        this.__onLoadObservers.dispatch();
+        this.__onLoadObservers.clear();
+        routerInst.onUpdatedObservers.delete(fn);
+      };
+
+      routerInst.onUpdate(fn);
 
       return this;
     };
     this.isFirstRoute = isFirstRoute.value;
-  }
-
-  protected __defineComponentInst(c: ComponentInst) {
-    const fn = () => {
-      const l = [...c.componentsInTemplate].find(
-        (i) => i.name === this.componentName
-      );
-
-      if (l) {
-        c.onUpdatedObservers.delete(fn);
-        this.onLoadObservers.dispatch();
-        this.onLoadObservers.clear();
-      }
-    };
-
-    c.onUpdate(fn);
-
-    fn();
-
-    return this;
   }
 
   onLoad(fn: () => void) {
@@ -70,10 +53,10 @@ export class RouterControl {
       fn();
       return () => {};
     }
-    this.onLoadObservers.add(fn);
+    this.__onLoadObservers.add(fn);
 
     return () => {
-      this.onLoadObservers.delete(fn);
+      this.__onLoadObservers.delete(fn);
     };
   }
 }
