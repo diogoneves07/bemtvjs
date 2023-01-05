@@ -29,11 +29,16 @@ import {
 } from "../../router/use-router-control";
 import { createPortalKey, definePortal } from "./portals";
 
+type PortalFn<V extends Record<string, any>> = (
+  superComponent: SuperComponent<V>
+) => void;
+
 export type ComponentVars<V extends Record<string, any> = Record<string, any>> =
   V & {
     children: string;
     props: Record<string, any>;
   };
+
 export interface SuperComponent<
   Vars extends Record<string, any> = Record<string, any>
 > extends Listeners {
@@ -394,15 +399,28 @@ export class SuperComponent<Vars extends Record<string, any>> {
     return getEl();
   }
 
-  portal(fn: (superComponent: SuperComponent<Vars>) => void) {
+  portal(
+    fn?: PortalFn<Vars>
+  ): [componentKey: string, componentPortal: (c: PortalFn<Vars>) => void] {
     const d = this.__data;
     const sCompProxy = d.sCompProxy as any;
+
+    const fnList = new Set<PortalFn<Vars>>();
 
     const compVarProxy = new Proxy(
       {},
       {
         get(_t, p) {
           const k = p as string;
+          const value = sCompProxy.$[k];
+
+          if (value instanceof Function) {
+            return (...args: any[]) => {
+              runInComponentInst(sCompProxy, componentInst, () => {
+                value(...args);
+              });
+            };
+          }
 
           return sCompProxy.$[k];
         },
@@ -446,11 +464,26 @@ export class SuperComponent<Vars extends Record<string, any>> {
     const useComponentInst = (c: ComponentInst) => {
       componentInst = c;
 
-      c.onInit(() => fn(s as any));
+      c.onInit(() => {
+        fn && fn(s as any);
+
+        fnList.forEach((f) => f(s as any));
+        fnList.clear();
+      });
     };
 
     definePortal(key, useComponentInst);
 
-    return key;
+    return [
+      key,
+      (f) => {
+        if (componentInst) {
+          f(s as any);
+          return;
+        }
+
+        fnList.add(f);
+      },
+    ];
   }
 }
