@@ -235,24 +235,6 @@ export class SuperComponent<Vars extends Record<string, any>> {
   }
 
   /**
-   * @param props
-   * An object.
-   *
-   * @returns
-   * A key that can be used before the component's opening square bracket, so the component will
-   * receive the declared props.
-   */
-  defineProps<T extends Record<string, any>>(props: T) {
-    if (!this.__data.propsDefined) this.__data.propsDefined = new Map();
-
-    const key = this.__data.propsDefined.size.toString();
-
-    this.__data.propsDefined.set(key, props);
-
-    return "_" + key;
-  }
-
-  /**
    * Allows you to manipulate the children passed to the component.
    */
   children(fn: (children: string) => string) {
@@ -266,23 +248,6 @@ export class SuperComponent<Vars extends Record<string, any>> {
     }
 
     d.fns.push(["children", [fn]]);
-    return r;
-  }
-
-  /**
-   * Allows you to manipulate the props passed to the component.
-   */
-  props(fn: (props: Record<string, any>) => Record<string, any>) {
-    const d = this.__data;
-    const c = d.componentInstRunning;
-    const r = d.sCompProxy;
-
-    if (c) {
-      (r.$ as any).props = fn(c.props);
-      return r;
-    }
-
-    d.fns.push(["props", [fn]]);
     return r;
   }
 

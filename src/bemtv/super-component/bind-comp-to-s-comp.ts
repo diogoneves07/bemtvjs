@@ -55,17 +55,12 @@ export function bindComponentToSuperComponent(
     }
   }
 
-  if (sCompData.propsDefined) cInst.propsDefined = sCompData.propsDefined;
-
   for (const [fnName, args] of sCompData.fns) {
     switch (fnName) {
       case "children":
         withoutTypes.children = args[0](withoutTypes.children);
+        break;
 
-        break;
-      case "props":
-        withoutTypes.props = args[0](withoutTypes.props);
-        break;
       default:
         withoutTypes[fnName](...args);
         break;
@@ -101,7 +96,6 @@ export function bindComponentToSuperComponent(
   cInst.componentVars = {
     ...sCompData.componentsInitVars,
     children: cInst.children,
-    props: cInst.props,
   };
 
   cInst.template = template;

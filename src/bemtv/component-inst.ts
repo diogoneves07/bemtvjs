@@ -2,7 +2,7 @@ import { AVOIDS_EMPTY_TEMPLATE, TAG_HOST_NAME } from "./globals";
 import { ComponentTemplateCallback } from "./components-main";
 import { ALL_COMPONENTS_INST } from "./component-inst-store";
 import normalizeRouterShortcut from "./normalize-router-shortcut";
-import { LifeCycleCallback, Props } from "./types/component-inst-data";
+import { LifeCycleCallback } from "./types/component-inst-data";
 import { ObserverSystem } from "./observers-system";
 
 function avoidEmptyTemplate(template: string) {
@@ -26,8 +26,6 @@ export default class ComponentInst {
   inited: boolean = false;
   unmounted: boolean = false;
 
-  propsDefined?: Map<string, Props>;
-
   onUnmountedObservers = new ObserverSystem<LifeCycleCallback>();
   onMountedObservers = new ObserverSystem<LifeCycleCallback>();
   onInitObservers = new ObserverSystem<LifeCycleCallback>();
@@ -43,8 +41,6 @@ export default class ComponentInst {
   key: string;
 
   children: string = "";
-
-  props: Props = {};
 
   constructor(name: string, parent: ComponentInst | null) {
     this.name = name;

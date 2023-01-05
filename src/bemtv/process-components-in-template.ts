@@ -8,24 +8,9 @@ import {
   isComponentAlreadyImported,
   isComponentAutoImport,
 } from "./auto-import-components";
-import getKeyInComponentName from "./get-key-in-component-name";
 import { usePortal } from "./super-component/portals";
 
 type NextComponentData = ReturnType<typeof getNextComponentDataInTemplate>;
-
-function assignPropsToComponentChild(
-  child: ComponentInst,
-  componentName: string,
-  parent: ComponentInst
-) {
-  const childProps = parent.propsDefined?.get(
-    getKeyInComponentName(componentName)
-  );
-
-  if (childProps) {
-    Object.assign(child.props, childProps);
-  }
-}
 
 function getTemplateWithCurrentPropsValues(
   template: string,
@@ -94,10 +79,6 @@ function processEachTemplate(
     if (portal) portal(componentInst);
 
     componentInst.children = children;
-
-    if (parent) {
-      assignPropsToComponentChild(componentInst, name, parent);
-    }
 
     componentInst.defineComponentTemplate(componentFn(componentInst));
 

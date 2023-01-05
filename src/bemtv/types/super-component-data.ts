@@ -1,4 +1,3 @@
-import { Props } from "./component-inst-data";
 import { SuperComponent } from "../super-component/super-component";
 import ComponentInst from "../component-inst";
 
@@ -23,7 +22,6 @@ export interface SuperComponentData {
   $disableProxies: boolean;
   fns: [fn: string, args: any[]][];
   sCompProxy: SuperComponent;
-  propsDefined?: Map<string, Props>;
   disableVarsProxies(): void;
   activateVarsProxies(): void;
   isSigleInstance: boolean;

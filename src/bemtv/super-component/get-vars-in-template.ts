@@ -53,14 +53,13 @@ function getVarsValues(
 
   const vars = getComponentInstRunningVars(sComp);
 
-  const props = vars.props;
   const hasPathToProp = varName.includes(".");
   const pathToProp = hasPathToProp ? varName.split(".") : false;
 
   let varValue: any;
 
   if (prefix === VARS_AND_ATTR_PREFIX) {
-    const varsAndProps = { ...vars, ...props };
+    const varsAndProps = { ...vars };
 
     let propName = varName;
 
