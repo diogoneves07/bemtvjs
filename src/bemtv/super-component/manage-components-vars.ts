@@ -80,6 +80,7 @@ export default function manageComponentsVars<O extends Record<string, any>>(
 
       if (
         value &&
+        !(value instanceof Function) &&
         !(value instanceof HTMLCollection) &&
         !(value instanceof NodeList) &&
         !(value instanceof Node) &&
