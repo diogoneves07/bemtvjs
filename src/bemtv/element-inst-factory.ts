@@ -29,7 +29,7 @@ export function ElementInstFactory<E extends Element = Element>() {
           };
 
           DOMlisteners.add(DOMListenerObject);
-          //! Esse é o jeito mais correto de gerenciar os eventos mude o superCompomnet
+
           if (elementInst.it) {
             const r = insertDOMListener(
               elementInst.it,
