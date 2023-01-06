@@ -1,17 +1,17 @@
 import { getComponentFn } from "./components-main";
 
-type AutoImportCallback = () => void;
+type AutoImportCallback<R> = () => R;
 
 type LazyComponentFn<N extends string> = (name: N) => Promise<any>;
 
 type SuspenseFn = (has: boolean) => boolean | string;
 
-type AutoImportComponentObject = {
-  load: AutoImportCallback;
+type AutoImportComponentObject<R> = {
+  load: AutoImportCallback<R>;
   suspense?: string | SuspenseFn;
   loadAlreadyRequired?: true;
 };
-const importComponents = new Map<string, AutoImportComponentObject>();
+const importComponents = new Map<string, AutoImportComponentObject<any>>();
 
 export function isComponentAlreadyImported(name: string) {
   return getComponentFn(name) ? true : false;
@@ -45,9 +45,9 @@ export function lazy<N extends string, C extends LazyComponentFn<N>>(
   suspense?: string | SuspenseFn
 ) {
   let promise: Promise<any>;
-  const o: AutoImportComponentObject = {
+  const o: AutoImportComponentObject<ReturnType<C>> = {
     load: () => {
-      if (o.loadAlreadyRequired && promise) return promise;
+      if (o.loadAlreadyRequired && promise) return promise as ReturnType<C>;
 
       o.loadAlreadyRequired = true;
 
