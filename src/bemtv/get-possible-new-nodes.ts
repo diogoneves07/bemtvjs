@@ -1,5 +1,4 @@
 import { TAG_HOST_NAME } from "./globals";
-import { setNodeComponentKey } from "./nodes-component-keys";
 
 const SIMPLE_DIV = document.createElement("div");
 const SIMPLE_DOCUMENT_FRAGMENT = document.createDocumentFragment();
@@ -14,31 +13,32 @@ function removeUnnecessarySpace(a: Node[]) {
   });
 }
 
-function setChildNodesKeys(
-  key: string,
-  nodes: Node[],
-  componentParents?: Set<string>
+function setHostAtrribute(
+  hostValue: string,
+  childNodes: Node[] | NodeListOf<ChildNode>
 ) {
-  for (const n of nodes) {
-    setNodeComponentKey(n, key);
-    if (componentParents) {
-      componentParents.forEach((key) => setNodeComponentKey(n, key));
+  childNodes.forEach((n) => {
+    if (!(n instanceof Element)) return;
+
+    if (n.tagName.toLowerCase() === "bemtv-host") {
+      setHostAtrribute(hostValue, n.childNodes);
+      return;
     }
-    n.childNodes && setChildNodesKeys(key, Array.from(n.childNodes));
-  }
+
+    n.setAttribute(hostValue, "true");
+  });
 }
 
-export default function getPossibleNewNodes(
-  newHtml: string,
-  componentParents?: Set<string>
-): [keysAndNodes: Record<string, Node[]>, nodes: Node[]] {
+export default function getPossibleNewNodes(newHtml: string) {
   SIMPLE_DIV.innerHTML = newHtml;
 
   const hosts = SIMPLE_DIV.getElementsByTagName(TAG_HOST_NAME);
 
-  const keysAndNodes: Record<string, Node[]> = {};
-
   for (const host of Array.from(hosts).reverse()) {
+    const hostValue = host.id;
+
+    if (!hostValue) continue;
+
     SIMPLE_DOCUMENT_FRAGMENT.replaceChildren(
       ...(Array.from(host.childNodes) as Node[])
     );
@@ -47,9 +47,8 @@ export default function getPossibleNewNodes(
       Array.from(SIMPLE_DOCUMENT_FRAGMENT.childNodes)
     );
 
-    setChildNodesKeys(host.id, childNodes, componentParents);
+    setHostAtrribute(hostValue, childNodes);
 
-    keysAndNodes[host.id] = childNodes;
     host.parentElement?.replaceChild(SIMPLE_DOCUMENT_FRAGMENT, host);
   }
 
@@ -59,5 +58,5 @@ export default function getPossibleNewNodes(
 
   SIMPLE_DIV.innerHTML = "";
 
-  return [keysAndNodes, allElementsOrganized];
+  return allElementsOrganized;
 }

@@ -11,7 +11,7 @@ function avoidEmptyTemplate(template: string) {
 
 export type TemplateCallback = () => string;
 
-let countComponentInst = 0;
+let componentsNamesList: string = "";
 export default class ComponentInst {
   parentElement: Element | null = null;
   lastTemplateValue: string = "";
@@ -42,20 +42,29 @@ export default class ComponentInst {
 
   children: string = "";
 
+  hostAttrName: string;
+
   constructor(name: string, parent: ComponentInst | null) {
     this.name = name;
 
     this.parent = parent;
 
-    this.key = name + countComponentInst++;
+    const count = componentsNamesList.split(name).length - 1;
+
+    // Tem que tomar couidado com os : porque isso vai se transformar em atributo
+    this.key = count > 0 ? name + "-" + count : name;
+
+    this.key = this.key.replace(":", "-");
+
+    componentsNamesList += ` ${name} `;
+
+    this.hostAttrName = `bemtv-${this.key.toLowerCase()}`;
 
     this.shouldForceUpdate = false;
 
     this.updateOnlyAfterThisTime = 0;
 
     ALL_COMPONENTS_INST.add(this);
-
-    return this;
   }
 
   defineComponentTemplate(callbackOrText: ComponentTemplateCallback | string) {
@@ -80,9 +89,9 @@ export default class ComponentInst {
   }
 
   getCurrentTemplateWithHost() {
-    return `${TAG_HOST_NAME}[id = "${this.key}" ~ ${normalizeRouterShortcut(
-      this.getCurrentTemplate()
-    )}]`;
+    return `${TAG_HOST_NAME}[id = "${
+      this.hostAttrName
+    }" ~ ${normalizeRouterShortcut(this.getCurrentTemplate())}]`;
   }
 
   updateLastTemplateValueProperty() {

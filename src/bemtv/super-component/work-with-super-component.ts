@@ -9,11 +9,11 @@ export function getSuperComponentData(sComp: SuperComponent) {
 }
 
 export function getComponentInstFirstElement(c: ComponentInst) {
-  for (const node of c.nodes) {
-    if (node instanceof Element) return node;
-  }
+  return document.querySelector(`[${c.hostAttrName}]`);
+}
 
-  return null;
+export function getComponentInstNodes(c: ComponentInst) {
+  return Array.from(document.querySelectorAll(`[${c.hostAttrName}]`));
 }
 
 const EMPTY_OBJECT = {};

@@ -4,7 +4,6 @@ import "./request-animation-frame-loop"; // !important
 
 import brackethtmlTranspiler from "../brackethtml/brackethtml-transpiler";
 import processComponentsInTemplate from "./process-components-in-template";
-import { setComponentManagerNodes } from "./components-inst-nodes";
 import { dispatchMountedLifeCycle } from "./components-lifecycle";
 import { BRACKETHTML_CSS_IN_JS } from "../brackethtml/globals";
 import getPossibleNewNodes from "./get-possible-new-nodes";
@@ -40,13 +39,7 @@ export default function render(
 
     const brackethtml = brackethtmlTranspiler(pureTemplate);
 
-    const [keysAndNodes, possibleNewNodes] = getPossibleNewNodes(
-      brackethtml.html
-    );
-
-    for (const key of Object.keys(keysAndNodes)) {
-      setComponentManagerNodes(key, keysAndNodes[key]);
-    }
+    const possibleNewNodes = getPossibleNewNodes(brackethtml.html);
 
     for (const node of possibleNewNodes) {
       if (!node.isConnected) {

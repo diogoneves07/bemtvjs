@@ -3,7 +3,7 @@ import processUpdatedTemplate from "./process-updated-template";
 import { removeDiffBetweenChildNodes } from "./remove-diff-between-child-nodes";
 import brackethtmlToHTML from "../brackethtml/brackethtml-to-html";
 import getPossibleNewNodes from "./get-possible-new-nodes";
-import { getComponentInstParents } from "./get-component-inst-parents";
+import { getComponentInstNodes } from "./super-component/work-with-super-component";
 
 export default function updateUIWithNewTemplate(componentInst: ComponentInst) {
   const r = processUpdatedTemplate(componentInst);
@@ -18,19 +18,27 @@ export default function updateUIWithNewTemplate(componentInst: ComponentInst) {
 
   const newHtml = brackethtmlToHTML(pureTemplate);
 
-  const [keysAndNodes, possibleNewChildNodes] = getPossibleNewNodes(
-    newHtml,
-    getComponentInstParents(componentInst)
-  );
+  const possibleNewChildNodes = getPossibleNewNodes(newHtml);
 
-  const oldChildNodes = componentInst.nodes.slice();
+  const oldChildNodes = getComponentInstNodes(componentInst);
 
-  removeDiffBetweenChildNodes(
+  const nodesRemoved = removeDiffBetweenChildNodes(
     possibleNewChildNodes,
     oldChildNodes,
-    keysAndNodes,
     componentInst.parentElement
   );
 
-  return { newComponentsManager, componentsManagerUpdated, keysAndNodes };
+  const componentsInTemplate = [...componentInst.componentsInTemplate];
+
+  for (const n of nodesRemoved) {
+    if (!(n instanceof Element)) continue;
+
+    const r = componentsInTemplate.find((v) => n.hasAttribute(v.hostAttrName));
+
+    r && componentsManagerUpdated.push(r);
+  }
+  return {
+    newComponentsManager,
+    componentsManagerUpdated: new Set(componentsManagerUpdated),
+  };
 }

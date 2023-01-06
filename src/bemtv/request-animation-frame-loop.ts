@@ -1,5 +1,4 @@
 import { ALL_COMPONENTS_INST } from "./component-inst-store";
-import { setComponentManagerNodes } from "./components-inst-nodes";
 import updatedUIWithNewTemplate from "./update-ui-with-new-template";
 import {
   dispatchMountedLifeCycle,
@@ -31,8 +30,7 @@ function requestAnimationFrameLoop() {
     const updatedUI = updatedUIWithNewTemplate(componentInst);
 
     if (updatedUI) {
-      const { newComponentsManager, componentsManagerUpdated, keysAndNodes } =
-        updatedUI;
+      const { newComponentsManager, componentsManagerUpdated } = updatedUI;
 
       if (!componentInst.shouldForceUpdate) {
         dispatchUpdatedLifeCycle(componentInst);
@@ -43,9 +41,6 @@ function requestAnimationFrameLoop() {
       }
 
       for (const c of newComponentsManager) {
-        if (keysAndNodes[c.key]) {
-          setComponentManagerNodes(c.key, keysAndNodes[c.key]);
-        }
         dispatchMountedLifeCycle(c);
       }
     }

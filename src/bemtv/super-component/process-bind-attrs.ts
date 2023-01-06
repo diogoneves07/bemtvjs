@@ -5,10 +5,10 @@ import {
 import isNumber from "../../utilities/is-number";
 import isString from "../../utilities/is-string";
 import ComponentInst from "../component-inst";
-import { getNodeComponentKeys } from "../nodes-component-keys";
 import createElementInst from "./create-element-inst";
 import { SuperComponent } from "./super-component";
 import {
+  getComponentInstNodes,
   getComponentInstRunningVars,
   getSuperComponentData,
   runInComponentInst,
@@ -60,10 +60,6 @@ export function getElementsWithBindAttrs(cInst: ComponentInst) {
 
   const rec = (nodes: Node[]) => {
     for (const n of nodes) {
-      const keys = getNodeComponentKeys(n)?.has(cInst.key);
-
-      if (!keys) continue;
-
       if (!(n instanceof Element)) continue;
 
       const v = n.getAttribute(BIND_ATTRIBUTE_NAME);
@@ -74,7 +70,7 @@ export function getElementsWithBindAttrs(cInst: ComponentInst) {
     }
   };
 
-  rec(cInst.nodes);
+  rec(getComponentInstNodes(cInst));
 
   return els;
 }

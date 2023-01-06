@@ -8,11 +8,13 @@ import {
 } from "../generate-forced-el-attrs";
 import { ElementInst } from "../element-inst";
 import { ElementInstFactory } from "../element-inst-factory";
+import { getComponentInstNodes } from "./work-with-super-component";
 
 function findElementInComponentNodes(
-  nodes: Node[] | Element[],
+  v: ComponentInst | Node[],
   elKey: string
 ): Element | undefined {
+  const nodes = v instanceof ComponentInst ? getComponentInstNodes(v) : v;
   for (const n of nodes) {
     if (!(n instanceof Element)) continue;
 
@@ -47,20 +49,19 @@ export default function createElementInst<E extends Element = Element>(
 
   const elKey = normalizeElKeyAttr(getForcedAttrValue(keyOrSelectorOrElement));
 
-  let element = findElementInComponentNodes(c.nodes, elKey) as E;
+  let element = findElementInComponentNodes(c, elKey) as E;
 
   if (!element && !c.mounted) {
     c.onMountWithHighPriority(() => {
       if (!elementInst.it) {
-        elementInst.it =
-          (findElementInComponentNodes(c.nodes, elKey) as E) || null;
+        elementInst.it = (findElementInComponentNodes(c, elKey) as E) || null;
       }
     });
   }
 
   c.onUpdateWithHighPriority(() => {
     const e = elementInst.it;
-    const f = (findElementInComponentNodes(c.nodes, elKey) as E) || null;
+    const f = (findElementInComponentNodes(c, elKey) as E) || null;
 
     if (e !== f) elementInst.it = f;
   });

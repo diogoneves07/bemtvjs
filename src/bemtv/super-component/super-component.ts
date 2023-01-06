@@ -428,8 +428,7 @@ export class SuperComponent<Vars extends Record<string, any>> {
 
     const useComponentInst = (c: ComponentInst) => {
       componentInst = c;
-
-      c.onInit(() => {
+      c.onInitObservers.addWithPriority(() => {
         fn && fn(s as any);
 
         fnList.forEach((f) => f(s as any));

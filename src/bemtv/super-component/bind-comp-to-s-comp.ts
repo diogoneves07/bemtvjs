@@ -26,8 +26,8 @@ export function bindComponentToSuperComponent(
   const updateFirstElement = () => {
     const firstElement = getComponentInstFirstElement(cInst);
 
-    if (!cInst.parentElement && cInst.nodes[0]?.parentElement) {
-      cInst.parentElement = cInst.nodes[0].parentElement;
+    if (!cInst.parentElement && firstElement?.parentElement) {
+      cInst.parentElement = firstElement.parentElement;
     }
 
     if (!firstElement) return;
