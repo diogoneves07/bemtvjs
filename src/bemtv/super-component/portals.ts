@@ -13,8 +13,6 @@ export function definePortal(key: string, fn: PortalFn) {
 export function usePortal(key: string) {
   const i = PORTALS_STORE.get(key);
 
-  PORTALS_STORE.delete(key);
-
   return i;
 }
 export function createPortalKey(name: string) {

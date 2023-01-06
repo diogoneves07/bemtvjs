@@ -432,7 +432,6 @@ export class SuperComponent<Vars extends Record<string, any>> {
         fn && fn(s as any);
 
         fnList.forEach((f) => f(s as any));
-        fnList.clear();
       });
     };
 
