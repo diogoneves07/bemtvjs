@@ -22,6 +22,8 @@ export default class ComponentInst {
   parent: ComponentInst | null;
   componentsInTemplate: Set<ComponentInst> = new Set();
 
+  lastTemplateProcessed: string = "";
+
   mounted: boolean = false;
   inited: boolean = false;
   unmounted: boolean = false;
@@ -44,8 +46,16 @@ export default class ComponentInst {
 
   hostAttrName: string;
 
-  constructor(name: string, parent: ComponentInst | null) {
+  nameInTemplate: string;
+
+  constructor(
+    name: string,
+    parent: ComponentInst | null,
+    nameInTemplate: string
+  ) {
     this.name = name;
+
+    this.nameInTemplate = nameInTemplate;
 
     this.parent = parent;
 
