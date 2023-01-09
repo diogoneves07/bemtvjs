@@ -16,7 +16,6 @@ export default class ComponentInst {
   parentElement: Element | null = null;
   lastTemplateValue: string = "";
   getCurrentTemplate: TemplateCallback = () => "";
-  updateOnlyAfterThisTime: number;
   shouldForceUpdate: boolean;
   nodes: Node[] = [];
   parent: ComponentInst | null;
@@ -69,8 +68,6 @@ export default class ComponentInst {
 
     this.shouldForceUpdate = false;
 
-    this.updateOnlyAfterThisTime = 0;
-
     ALL_COMPONENTS_INST.add(this);
   }
 
@@ -79,13 +76,7 @@ export default class ComponentInst {
     const useTemplate = isResultFn ? callbackOrText : () => callbackOrText;
 
     const getCurrentTemplate = () => {
-      const timeBeforeGenarateTemaplate = Date.now();
       const template = avoidEmptyTemplate(useTemplate());
-      const timeAfterGenarateTemaplate = Date.now();
-
-      this.updateOnlyAfterThisTime =
-        timeAfterGenarateTemaplate +
-        (timeAfterGenarateTemaplate - timeBeforeGenarateTemaplate);
 
       return template;
     };
@@ -108,16 +99,13 @@ export default class ComponentInst {
 
   shouldTemplateBeUpdate() {
     const shouldForceUpdate = this.shouldForceUpdate;
-    let check = false;
 
     if (shouldForceUpdate) {
       this.shouldForceUpdate = false;
       return true;
     }
-    if (Date.now() >= this.updateOnlyAfterThisTime) {
-      check = this.lastTemplateValue !== this.getCurrentTemplate();
-    }
-    return check;
+
+    return this.lastTemplateValue !== this.getCurrentTemplate();
   }
 
   forceTemplateUpdate() {
