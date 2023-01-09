@@ -36,7 +36,6 @@ type PortalFn<V extends Record<string, any>> = (
 export type ComponentVars<V extends Record<string, any> = Record<string, any>> =
   V & {
     children: string;
-    props: Record<string, any>;
   };
 
 export interface SuperComponent<
@@ -79,7 +78,7 @@ export class SuperComponent<Vars extends Record<string, any>> {
   protected __data: SuperComponentData = {
     componentName: "",
     componentsInitVars: {},
-    componentsVarsKeys: ["children", "props"],
+    componentsVarsKeys: ["children"],
     componentsTemplate: () => "",
     isTemplateFunction: false,
     templateHasAlreadyBeenDefined: false,
@@ -226,10 +225,10 @@ export class SuperComponent<Vars extends Record<string, any>> {
 
         if (c && cache.has(c)) return cache.get(c);
 
-        const elManager = createElementInst<E>(key, c);
+        const elementInst = createElementInst<E>(key, c);
 
-        c && cache.set(c, elManager);
-        return elManager;
+        c && cache.set(c, elementInst);
+        return elementInst;
       },
     ];
   }
