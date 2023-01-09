@@ -12,40 +12,9 @@ import { usePortal } from "./super-component/portals";
 
 type NextComponentData = ReturnType<typeof getNextComponentDataInTemplate>;
 
-function getTemplateWithCurrentPropsValues(
-  template: string,
-  componentsManager: ComponentInst[]
-) {
-  let newTemplate = template;
-  let componentData: NextComponentData;
-  let count = 0;
-
-  while ((componentData = getNextComponentDataInTemplate(newTemplate))) {
-    const name = componentData.name;
-    const realComponentName = normalizeComponentName(name);
-    const componentInst = componentsManager[count];
-
-    if (!isComponentAlreadyImported(realComponentName)) {
-      const suspense = autoImportComponent(realComponentName) || "";
-
-      newTemplate = componentData.before + suspense + componentData.after;
-      continue;
-    }
-    const value = componentInst.getCurrentTemplateWithHost();
-
-    componentInst.updateLastTemplateValueProperty();
-
-    newTemplate = componentData.before + value + componentData.after;
-
-    count++;
-  }
-
-  return newTemplate;
-}
-
 function processEachTemplate(
   template: string,
-  componentsManager: ComponentInst[],
+  componentsInst: ComponentInst[],
   parent: ComponentInst | null = null
 ) {
   let newTemplate = template;
@@ -72,7 +41,7 @@ function processEachTemplate(
 
     const componentFn = getComponentFn(realComponentName) as ComponentFn;
 
-    const componentInst = new ComponentInst(realComponentName, parent);
+    const componentInst = new ComponentInst(realComponentName, parent, name);
 
     const portal = usePortal(name);
 
@@ -86,33 +55,34 @@ function processEachTemplate(
       parent.addComponentChild(componentInst);
     }
 
-    componentsManager.push(componentInst);
+    componentsInst.push(componentInst);
 
-    processEachTemplate(
+    const { newTemplate: t } = processEachTemplate(
       componentInst.getCurrentTemplateWithHost(),
-      componentsManager,
+      componentsInst,
       componentInst
     );
 
-    newTemplate = before + after;
+    componentInst.lastTemplateProcessed = t;
+
+    newTemplate = before + t + after;
   }
 
-  return componentsManager;
+  return { newTemplate, componentsInst };
 }
 
 export default function processComponentsInTemplate(
   template: string,
   firstParent: ComponentInst | null = null
 ) {
-  const componentsManager = processEachTemplate(template, [], firstParent);
-
-  const newTemplate = getTemplateWithCurrentPropsValues(
+  const { newTemplate, componentsInst } = processEachTemplate(
     template,
-    componentsManager
+    [],
+    firstParent
   );
 
   return {
     newTemplate,
-    componentsManager,
+    componentsInst,
   };
 }

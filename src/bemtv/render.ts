@@ -34,12 +34,14 @@ export default function render(
   }
 
   requestAnimationFrame(() => {
-    const { newTemplate: pureTemplate, componentsManager } =
+    const { newTemplate: pureTemplate, componentsInst } =
       processComponentsInTemplate(template);
 
     const brackethtml = brackethtmlTranspiler(pureTemplate);
 
-    const possibleNewNodes = getPossibleNewNodes(brackethtml.html);
+    const { possibleNewNodes, componentsNodes } = getPossibleNewNodes(
+      brackethtml.html
+    );
 
     for (const node of possibleNewNodes) {
       if (!node.isConnected) {
@@ -49,7 +51,8 @@ export default function render(
 
     BRACKETHTML_CSS_IN_JS.applyLastCSSCreated(brackethtml.css);
 
-    for (const c of componentsManager) {
+    for (const c of componentsInst) {
+      c.nodes = componentsNodes[c.hostIdValue];
       dispatchMountedLifeCycle(c);
     }
   });

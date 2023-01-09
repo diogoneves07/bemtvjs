@@ -4,20 +4,22 @@ import {
   isComponentAutoImport,
 } from "./auto-import-components";
 import ComponentInst from "./component-inst";
-import getNextComponentDataInTemplate from "./get-next-component-data-in-template";
+import {
+  getComponentDataByName,
+  getTopLevelComponentsName,
+} from "./get-next-component-data-in-template";
 import processComponentsInTemplate from "./process-components-in-template";
 
 type UpdatedTemplateObject = {
   template: string;
-  newComponentsManager: ComponentInst[];
-  componentsManagerUpdated: ComponentInst[];
+  newComponentsInst: ComponentInst[];
 };
+
 export default function processUpdatedTemplate(
   componentInst: ComponentInst
 ): UpdatedTemplateObject | false {
   const childComponents = [...componentInst.getChildComponents()];
-  const newComponentsManager: ComponentInst[] = [];
-  const componentsManagerUpdated: ComponentInst[] = [];
+  const newComponentsInst: ComponentInst[] = [];
   const lastTemplateValue = componentInst.lastTemplateValue;
 
   let template = componentInst.getCurrentTemplateWithHost();
@@ -25,24 +27,23 @@ export default function processUpdatedTemplate(
   componentInst.updateLastTemplateValueProperty();
   componentInst.clearComponentsInTemplateList();
 
-  let componentData: ReturnType<typeof getNextComponentDataInTemplate>;
+  const topLevelComponentsName = getTopLevelComponentsName(template);
 
-  while ((componentData = getNextComponentDataInTemplate(template))) {
-    const name = componentData.name;
+  for (const name of topLevelComponentsName) {
+    const { children, after, before } = getComponentDataByName(name, template);
 
-    const index = childComponents.findIndex((o) => o.name === name);
+    const index = childComponents.findIndex((o) => o.nameInTemplate === name);
 
     if (index > -1) {
       const childComponent = childComponents[index];
-
-      const value = childComponent.getCurrentTemplateWithHost();
+      let value = childComponent.lastTemplateProcessed;
 
       if (childComponent.shouldTemplateBeUpdate()) {
-        componentsManagerUpdated.push(childComponent);
-        childComponent.updateLastTemplateValueProperty();
+        const r = processUpdatedTemplate(childComponent);
+        value = r ? r.template : value;
       }
 
-      template = componentData.before + value + componentData.after;
+      template = before + value + after;
 
       componentInst.addComponentChild(childComponent);
 
@@ -55,16 +56,13 @@ export default function processUpdatedTemplate(
       if (!autoImportComponent(name, lastTemplateValue)) return false;
     }
 
-    const { newTemplate: componentTemlate, componentsManager } =
-      processComponentsInTemplate(
-        `${componentData.name}[${componentData.children}]`,
-        componentInst
-      );
+    const { newTemplate: componentTemlate, componentsInst } =
+      processComponentsInTemplate(`${name}[${children}]`, componentInst);
 
-    newComponentsManager.push(...componentsManager);
+    newComponentsInst.push(...componentsInst);
 
-    template = componentData.before + componentTemlate + componentData.after;
+    template = before + componentTemlate + after;
   }
 
-  return { template, newComponentsManager, componentsManagerUpdated };
+  return { template, newComponentsInst };
 }

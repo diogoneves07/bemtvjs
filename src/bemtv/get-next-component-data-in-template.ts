@@ -23,22 +23,15 @@ function getComponentRightBracket(template: string) {
   return count;
 }
 
-export default function getNextComponentDataInTemplate(
-  allTemplate: string
-): ComponentData | false {
-  const start = allTemplate.search(REGEX_COMPONENT_NAME);
+function getComponentData(start: number, end: number, template: string) {
+  const t = template.slice(start, end);
 
-  if (start === -1) return false;
+  const leftBracketIndex = t.indexOf("[");
 
-  const end = start + getComponentRightBracket(allTemplate.slice(start)) + 1;
-  const template = allTemplate.slice(start, end);
-
-  const leftBracketIndex = template.indexOf("[");
-
-  const before = allTemplate.slice(0, start);
-  const after = allTemplate.slice(end);
-  const name = template.slice(0, leftBracketIndex);
-  const children = template.slice(leftBracketIndex + 1, -1);
+  const before = template.slice(0, start);
+  const after = template.slice(end);
+  const name = t.slice(0, leftBracketIndex);
+  const children = t.slice(leftBracketIndex + 1, -1);
 
   return {
     before,
@@ -46,4 +39,29 @@ export default function getNextComponentDataInTemplate(
     name,
     children,
   };
+}
+export default function getNextComponentDataInTemplate(
+  template: string
+): ComponentData | false {
+  const start = template.search(REGEX_COMPONENT_NAME);
+
+  if (start === -1) return false;
+
+  const end = start + getComponentRightBracket(template.slice(start)) + 1;
+
+  return getComponentData(start, end, template);
+}
+
+export function getComponentDataByName(name: string, template: string) {
+  const start = template.search(name);
+
+  const end = start + getComponentRightBracket(template.slice(start)) + 1;
+
+  return getComponentData(start, end, template);
+}
+
+export function getTopLevelComponentsName(template: string): string[] {
+  const l = template.match(/\b[A-Z][\w|:]*(?=\[)/g);
+
+  return l || [];
 }

@@ -1,6 +1,8 @@
 function removeDiffBetweenNodesAttrs(newNode: Element, oldNode: Element) {
   const attrsLength = newNode.attributes.length;
 
+  let hasChange = false;
+
   for (let attrIndex = 0; attrIndex < attrsLength; attrIndex++) {
     const newAttr = newNode.attributes.item(attrIndex) as Attr;
 
@@ -8,10 +10,12 @@ function removeDiffBetweenNodesAttrs(newNode: Element, oldNode: Element) {
 
     if (newAttr.value === oldNode.getAttribute(attrName)) continue;
 
+    hasChange = true;
     oldNode.setAttribute(attrName, newAttr.value);
 
     if (attrName in oldNode) (oldNode as any)[attrName] = newAttr.value;
   }
+  return hasChange;
 }
 
 export function removeDiffBetweenChildNodes(
@@ -19,7 +23,7 @@ export function removeDiffBetweenChildNodes(
   oldChildNodes: Node[],
   instParentElement?: Element | null
 ) {
-  const nodesRemoved = new Set<Node>();
+  const nodesRemovedOrUpdated = new Set<Node>();
 
   let newChildNodesArray = newChildNodes;
 
@@ -35,7 +39,7 @@ export function removeDiffBetweenChildNodes(
   for (const node of oldChildNodes.slice(length)) {
     node.parentElement && node.parentElement.removeChild(node);
 
-    nodesRemoved.add(node);
+    nodesRemovedOrUpdated.add(node);
   }
 
   let lastNode: undefined | Node;
@@ -60,7 +64,7 @@ export function removeDiffBetweenChildNodes(
       parentElement.replaceChild(newNode, oldNode);
       lastNode = newNode;
 
-      nodesRemoved.add(oldNode);
+      nodesRemovedOrUpdated.add(oldNode);
       continue;
     }
 
@@ -69,6 +73,8 @@ export function removeDiffBetweenChildNodes(
     if (newNode instanceof Text) {
       if (newNode.textContent !== oldNode.textContent) {
         oldNode.textContent = newNode.textContent;
+
+        nodesRemovedOrUpdated.add(oldNode);
       }
       continue;
     }
@@ -87,9 +93,13 @@ export function removeDiffBetweenChildNodes(
             (oldNode as any).value = oldNode.textContent;
           }
         }
+
+        nodesRemovedOrUpdated.add(oldNode);
       }
 
-      removeDiffBetweenNodesAttrs(newNode, oldNode as Element);
+      const r = removeDiffBetweenNodesAttrs(newNode, oldNode as Element);
+
+      r && nodesRemovedOrUpdated.add(oldNode);
 
       if (newNode.childNodes[0]) {
         const r = removeDiffBetweenChildNodes(
@@ -99,11 +109,11 @@ export function removeDiffBetweenChildNodes(
         );
 
         r.forEach((i) => {
-          nodesRemoved.add(i);
+          nodesRemovedOrUpdated.add(i);
         });
       }
     }
   }
 
-  return nodesRemoved;
+  return nodesRemovedOrUpdated;
 }

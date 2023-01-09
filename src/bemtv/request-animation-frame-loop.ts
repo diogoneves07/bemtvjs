@@ -30,17 +30,16 @@ function requestAnimationFrameLoop() {
     const updatedUI = updatedUIWithNewTemplate(componentInst);
 
     if (updatedUI) {
-      const { newComponentsManager, componentsManagerUpdated } = updatedUI;
+      const { newComponentsInst, componentsInstUpdated } = updatedUI;
 
-      if (!componentInst.shouldForceUpdate) {
-        dispatchUpdatedLifeCycle(componentInst);
+      for (const c of componentsInstUpdated) {
+        // Checks if the component intends to update naturally.
+        if (!c.shouldTemplateBeUpdate()) {
+          dispatchUpdatedLifeCycle(c);
+        }
       }
 
-      for (const c of componentsManagerUpdated) {
-        dispatchUpdatedLifeCycle(c);
-      }
-
-      for (const c of newComponentsManager) {
+      for (const c of newComponentsInst) {
         dispatchMountedLifeCycle(c);
       }
     }

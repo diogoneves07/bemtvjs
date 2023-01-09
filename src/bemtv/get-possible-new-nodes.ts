@@ -1,62 +1,43 @@
+import { removeDoubleSpaces } from "../utilities/remove-double-spaces";
 import { TAG_HOST_NAME } from "./globals";
 
-const SIMPLE_DIV = document.createElement("div");
-const SIMPLE_DOCUMENT_FRAGMENT = document.createDocumentFragment();
-
-function removeUnnecessarySpace(a: Node[]) {
-  return a.map((n) => {
-    if (n instanceof Text && n.textContent && n.textContent?.trim() === "") {
-      n.textContent = "";
-      return n;
-    }
-    return n;
-  });
-}
-
-function setHostAtrribute(
-  hostValue: string,
-  childNodes: Node[] | NodeListOf<ChildNode>
-) {
-  childNodes.forEach((n) => {
-    if (!(n instanceof Element)) return;
-
-    if (n.tagName.toLowerCase() === "bemtv-host") {
-      setHostAtrribute(hostValue, n.childNodes);
-      return;
-    }
-
-    n.setAttribute(hostValue, "true");
-  });
-}
+const templateElement = document.createElement("template");
 
 export default function getPossibleNewNodes(newHtml: string) {
-  SIMPLE_DIV.innerHTML = newHtml;
+  templateElement.innerHTML = removeDoubleSpaces(newHtml);
 
-  const hosts = SIMPLE_DIV.getElementsByTagName(TAG_HOST_NAME);
+  const hosts = templateElement.content.querySelectorAll(TAG_HOST_NAME);
+  const componentsNodes: Record<string, Node[]> = {};
 
   for (const host of Array.from(hosts).reverse()) {
     const hostValue = host.id;
 
     if (!hostValue) continue;
 
-    SIMPLE_DOCUMENT_FRAGMENT.replaceChildren(
-      ...(Array.from(host.childNodes) as Node[])
-    );
+    const childNodes = Array.from(host.childNodes);
 
-    const childNodes = removeUnnecessarySpace(
-      Array.from(SIMPLE_DOCUMENT_FRAGMENT.childNodes)
-    );
+    componentsNodes[hostValue] = childNodes;
 
-    setHostAtrribute(hostValue, childNodes);
-
-    host.parentElement?.replaceChild(SIMPLE_DOCUMENT_FRAGMENT, host);
+    if (host.parentElement) {
+      for (const n of childNodes.reverse()) {
+        (host.parentElement as Element).insertBefore(n, host);
+      }
+      host.remove();
+    }
   }
 
-  let allElementsOrganized = removeUnnecessarySpace(
-    Array.from(SIMPLE_DIV.childNodes)
-  );
+  const possibleNewNodes: Node[] = [];
 
-  SIMPLE_DIV.innerHTML = "";
+  for (const n of Array.from(templateElement.content.childNodes)) {
+    const tagName = n instanceof Element ? n.tagName.toLowerCase() : "";
 
-  return allElementsOrganized;
+    if (tagName === TAG_HOST_NAME) {
+      possibleNewNodes.push(...Array.from(n.childNodes));
+    } else {
+      possibleNewNodes.push(n);
+    }
+  }
+
+  templateElement.innerHTML = "";
+  return { possibleNewNodes, componentsNodes };
 }

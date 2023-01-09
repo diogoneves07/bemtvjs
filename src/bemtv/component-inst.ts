@@ -44,7 +44,7 @@ export default class ComponentInst {
 
   children: string = "";
 
-  hostAttrName: string;
+  hostIdValue: string;
 
   nameInTemplate: string;
 
@@ -61,14 +61,11 @@ export default class ComponentInst {
 
     const count = componentsNamesList.split(name).length - 1;
 
-    // Tem que tomar couidado com os : porque isso vai se transformar em atributo
     this.key = count > 0 ? name + "-" + count : name;
-
-    this.key = this.key.replace(":", "-");
 
     componentsNamesList += ` ${name} `;
 
-    this.hostAttrName = `bemtv-${this.key.toLowerCase()}`;
+    this.hostIdValue = this.key.toLowerCase();
 
     this.shouldForceUpdate = false;
 
@@ -100,7 +97,7 @@ export default class ComponentInst {
 
   getCurrentTemplateWithHost() {
     return `${TAG_HOST_NAME}[id = "${
-      this.hostAttrName
+      this.hostIdValue
     }" ~ ${normalizeRouterShortcut(this.getCurrentTemplate())}]`;
   }
 
@@ -184,5 +181,16 @@ export default class ComponentInst {
   onUpdate(fn: () => void) {
     this.onUpdatedObservers.add(fn);
     return this;
+  }
+
+  defineNodesParentElement() {
+    if (this.nodes.length === 0) {
+      this.parentElement = this.parent?.parentElement || null;
+      return;
+    }
+
+    const p = (this.nodes.find((n) => n.parentElement) as Element) || null;
+
+    this.parentElement = p;
   }
 }
