@@ -30,7 +30,8 @@ function requestAnimationFrameLoop() {
     const updatedUI = updatedUIWithNewTemplate(componentInst);
 
     if (updatedUI) {
-      const { newComponentsInst, componentsInstUpdated } = updatedUI;
+      const { newComponentsInst, componentsNodes, componentsInstUpdated } =
+        updatedUI;
 
       for (const c of componentsInstUpdated) {
         // Checks if the component intends to update naturally.
@@ -40,6 +41,8 @@ function requestAnimationFrameLoop() {
       }
 
       for (const c of newComponentsInst) {
+        c.nodes = componentsNodes[c.hostIdValue];
+
         dispatchMountedLifeCycle(c);
       }
     }

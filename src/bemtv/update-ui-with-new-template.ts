@@ -104,7 +104,6 @@ export default function updateUIWithNewTemplate(cInst: ComponentInst) {
     return isChildOfMyChild;
   }
 
-  //console.log(all.size);
   for (const n of allNodesRemovedOrUpdated) {
     for (const c of all) {
       updateNodeParentCompnent(c, n);
@@ -130,6 +129,7 @@ export default function updateUIWithNewTemplate(cInst: ComponentInst) {
 
   return {
     newComponentsInst,
+    componentsNodes,
     componentsInstUpdated,
   };
 }
