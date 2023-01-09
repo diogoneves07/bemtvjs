@@ -8,7 +8,7 @@ type SuspenseFn = (has: boolean) => boolean | string;
 
 type AutoImportComponentObject<R> = {
   load: AutoImportCallback<R>;
-  suspense?: string | SuspenseFn;
+  fallback?: string | SuspenseFn;
   loadAlreadyRequired?: true;
 };
 const importComponents = new Map<string, AutoImportComponentObject<any>>();
@@ -26,10 +26,10 @@ export function autoImportComponent(name: string, currentTemplate?: string) {
 
   if (!has) return;
 
-  const { load, loadAlreadyRequired, suspense } = has;
+  const { load, loadAlreadyRequired, fallback } = has;
 
   let s =
-    typeof suspense === "function" ? suspense(!!currentTemplate) : suspense;
+    typeof fallback === "function" ? fallback(!!currentTemplate) : fallback;
   s = s === true ? false : s;
 
   if (loadAlreadyRequired) return s;
@@ -42,7 +42,7 @@ export function autoImportComponent(name: string, currentTemplate?: string) {
 export function lazy<N extends string, C extends LazyComponentFn<N>>(
   componentName: N,
   lazyComponentFn: C,
-  suspense?: string | SuspenseFn
+  fallback?: string | SuspenseFn
 ) {
   let promise: Promise<any>;
   const o: AutoImportComponentObject<ReturnType<C>> = {
@@ -55,7 +55,7 @@ export function lazy<N extends string, C extends LazyComponentFn<N>>(
 
       return promise as ReturnType<C>;
     },
-    suspense,
+    fallback,
   };
 
   importComponents.set(componentName, o);

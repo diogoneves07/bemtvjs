@@ -26,9 +26,9 @@ function processEachTemplate(
     const realComponentName = normalizeComponentName(name);
 
     if (!isComponentAlreadyImported(realComponentName)) {
-      const suspense = autoImportComponent(realComponentName) || "";
+      const fallback = autoImportComponent(realComponentName) || "";
 
-      newTemplate = componentData.before + suspense + componentData.after;
+      newTemplate = componentData.before + fallback + componentData.after;
 
       if (isComponentAutoImport(realComponentName)) {
         if (parent) parent.forceTemplateUpdate();
