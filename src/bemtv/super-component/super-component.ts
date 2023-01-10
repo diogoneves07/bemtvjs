@@ -94,7 +94,6 @@ export class SuperComponent<Vars extends Record<string, any>> {
     activateVarsProxies() {
       this.$disableProxies = false;
     },
-    fns: [],
     sCompProxy: null as any,
     isSigleInstance: false,
   };
@@ -231,23 +230,6 @@ export class SuperComponent<Vars extends Record<string, any>> {
         return elementInst;
       },
     ];
-  }
-
-  /**
-   * Allows you to manipulate the children passed to the component.
-   */
-  children(fn: (children: string) => string) {
-    const d = this.__data;
-    const c = d.componentInstRunning;
-    const r = d.sCompProxy;
-
-    if (c) {
-      (r.$ as any).children = fn(c.children);
-      return r;
-    }
-
-    d.fns.push(["children", [fn]]);
-    return r;
   }
 
   /**

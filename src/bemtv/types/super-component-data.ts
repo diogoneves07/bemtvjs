@@ -20,7 +20,6 @@ export interface SuperComponentData {
   componentInstRunning: ComponentInst | null;
   componentsInst: Set<ComponentInst>;
   $disableProxies: boolean;
-  fns: [fn: string, args: any[]][];
   sCompProxy: SuperComponent;
   disableVarsProxies(): void;
   activateVarsProxies(): void;
