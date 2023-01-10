@@ -21,14 +21,21 @@ function processEachTemplate(
   let componentData: NextComponentData;
 
   while ((componentData = getNextComponentDataInTemplate(newTemplate))) {
-    const { name, children, before, after } = componentData;
+    const {
+      name,
+      children,
+      before,
+      after,
+      fallback: tFallback,
+    } = componentData;
 
     const realComponentName = normalizeComponentName(name);
 
     if (!isComponentAlreadyImported(realComponentName)) {
       const fallback = autoImportComponent(realComponentName) || "";
 
-      newTemplate = componentData.before + fallback + componentData.after;
+      newTemplate =
+        componentData.before + (tFallback || fallback) + componentData.after;
 
       if (isComponentAutoImport(realComponentName)) {
         if (parent) parent.forceTemplateUpdate();
