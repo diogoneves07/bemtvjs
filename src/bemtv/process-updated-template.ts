@@ -9,6 +9,10 @@ import {
   getTopLevelComponentsName,
 } from "./get-next-component-data-in-template";
 import processComponentsInTemplate from "./process-components-in-template";
+import {
+  runInComponentInst,
+  updateComponentVars,
+} from "./super-component/work-with-super-component";
 
 type UpdatedTemplateObject = {
   template: string;
@@ -18,7 +22,7 @@ type UpdatedTemplateObject = {
 export default function processUpdatedTemplate(
   componentInst: ComponentInst
 ): UpdatedTemplateObject | false {
-  const childComponents = [...componentInst.getChildComponents()];
+  const componentsInTemplate = [...componentInst.componentsInTemplate];
   const newComponentsInst: ComponentInst[] = [];
   const lastTemplateValue = componentInst.lastTemplateValue;
 
@@ -32,10 +36,13 @@ export default function processUpdatedTemplate(
   for (const name of topLevelComponentsName) {
     const { children, after, before } = getComponentDataByName(name, template);
 
-    const index = childComponents.findIndex((o) => o.nameInTemplate === name);
+    const index = componentsInTemplate.findIndex(
+      (o) => o.nameInTemplate === name
+    );
 
     if (index > -1) {
-      const childComponent = childComponents[index];
+      const childComponent = componentsInTemplate[index];
+      const s = childComponent.superComponent;
       let value = childComponent.lastTemplateProcessed;
 
       if (childComponent.shouldTemplateBeUpdate()) {
@@ -44,6 +51,14 @@ export default function processUpdatedTemplate(
       }
 
       template = before + value + after;
+
+      if (childComponent.children !== children && s) {
+        runInComponentInst(s, childComponent, () => {
+          s.$.children = children;
+          updateComponentVars(s);
+        });
+      }
+      childComponent.children = children;
 
       componentInst.addComponentChild(childComponent);
 

@@ -4,6 +4,7 @@ import { ALL_COMPONENTS_INST } from "./component-inst-store";
 import normalizeRouterShortcut from "./normalize-router-shortcut";
 import { LifeCycleCallback } from "./types/component-inst-data";
 import { ObserverSystem } from "./observers-system";
+import { SuperComponent } from "./super-component/super-component";
 
 function avoidEmptyTemplate(template: string) {
   return template.trim() === "" ? AVOIDS_EMPTY_TEMPLATE : template;
@@ -20,6 +21,8 @@ export default class ComponentInst {
   nodes: Node[] = [];
   parent: ComponentInst | null;
   componentsInTemplate: Set<ComponentInst> = new Set();
+
+  superComponent?: SuperComponent<Record<string, any>>;
 
   lastTemplateProcessed: string = "";
 
@@ -120,10 +123,6 @@ export default class ComponentInst {
 
   hasComponentChild(c: ComponentInst) {
     return this.componentsInTemplate.has(c);
-  }
-
-  getChildComponents() {
-    return this.componentsInTemplate;
   }
 
   clearComponentsInTemplateList() {

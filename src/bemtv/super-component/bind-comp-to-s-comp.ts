@@ -19,6 +19,8 @@ export function bindComponentToSuperComponent(
   sComp: SuperComponent,
   cInst: ComponentInst
 ) {
+  cInst.superComponent = sComp;
+
   const sCompData = getSuperComponentData(sComp);
 
   let lastFirstElement: undefined | Element;
@@ -50,18 +52,6 @@ export function bindComponentToSuperComponent(
   for (const l of sCompData.lifeCycles) {
     for (const callback of l[1]) {
       withoutTypes[l[0]](() => callback(cInst));
-    }
-  }
-
-  for (const [fnName, args] of sCompData.fns) {
-    switch (fnName) {
-      case "children":
-        withoutTypes.children = args[0](withoutTypes.children);
-        break;
-
-      default:
-        withoutTypes[fnName](...args);
-        break;
     }
   }
 
