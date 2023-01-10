@@ -21,10 +21,7 @@ function getAllNodesInList(nodes: Node[]) {
 }
 
 function keepOnlyNodesConnected(nodes1: Node[], nodes2: Node[]) {
-  const n1Length = nodes1.length;
-  const n2Length = nodes2.length;
-
-  let length = n1Length > n2Length ? n1Length : n2Length;
+  let length = Math.max(nodes1.length, nodes2.length);
   const r: Node[] = [];
 
   while (length--) {
@@ -32,7 +29,7 @@ function keepOnlyNodesConnected(nodes1: Node[], nodes2: Node[]) {
     const n2 = nodes2[length];
     const v = n1?.isConnected ? n1 : n2;
 
-    v?.isConnected && r.push(v);
+    v?.isConnected && r.unshift(v);
   }
 
   return r;
@@ -41,15 +38,20 @@ function keepOnlyNodesConnected(nodes1: Node[], nodes2: Node[]) {
 export default function updateUIWithNewTemplate(cInst: ComponentInst) {
   const lastComponentsInTemplate = [...cInst.componentsInTemplate];
 
-  const r = processUpdatedTemplate(cInst);
+  cInst.clearComponentsInTemplateList();
 
-  if (!r) return r;
+  const r = processUpdatedTemplate(cInst, lastComponentsInTemplate);
 
+  if (!r) {
+    cInst.componentsInTemplate = new Set(lastComponentsInTemplate);
+    return r;
+  }
   const { parentElement } = cInst;
 
   const { template: pureTemplate, newComponentsInst } = r;
 
   const newHtml = brackethtmlToHTML(pureTemplate);
+
   const { possibleNewNodes, componentsNodes } = getPossibleNewNodes(newHtml);
 
   const oldChildNodes = cInst.nodes;
@@ -82,7 +84,7 @@ export default function updateUIWithNewTemplate(cInst: ComponentInst) {
     componentsInstUpdated.add(c);
   }
 
-  function updateNodeParentCompnent(c: ComponentInst, n: Node): boolean {
+  function updateNodeParentComponent(c: ComponentInst, n: Node): boolean {
     if (c.nodes.includes(n)) {
       componentWasUpdated(c);
       all.delete(c);
@@ -91,7 +93,7 @@ export default function updateUIWithNewTemplate(cInst: ComponentInst) {
 
     let isChildOfMyChild = false;
     for (const i of c.componentsInTemplate) {
-      isChildOfMyChild = updateNodeParentCompnent(i, n);
+      isChildOfMyChild = updateNodeParentComponent(i, n);
     }
 
     if (!isChildOfMyChild) {
@@ -101,12 +103,13 @@ export default function updateUIWithNewTemplate(cInst: ComponentInst) {
         return true;
       }
     }
+
     return isChildOfMyChild;
   }
 
   for (const n of allNodesRemovedOrUpdated) {
     for (const c of all) {
-      updateNodeParentCompnent(c, n);
+      updateNodeParentComponent(c, n);
     }
   }
 
@@ -126,6 +129,8 @@ export default function updateUIWithNewTemplate(cInst: ComponentInst) {
   }
 
   cInst.lastTemplateProcessed = pureTemplate;
+
+  cInst.updateLastTemplateValueProperty();
 
   return {
     newComponentsInst,

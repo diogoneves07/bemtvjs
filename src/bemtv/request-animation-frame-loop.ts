@@ -36,6 +36,8 @@ function requestAnimationFrameLoop() {
       for (const c of componentsInstUpdated) {
         // Checks if the component intends to update naturally.
         if (!c.shouldTemplateBeUpdate()) {
+          c.updateLastTemplateValueProperty();
+
           dispatchUpdatedLifeCycle(c);
         }
       }

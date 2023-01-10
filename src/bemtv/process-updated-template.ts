@@ -20,37 +20,28 @@ type UpdatedTemplateObject = {
 };
 
 export default function processUpdatedTemplate(
-  componentInst: ComponentInst
+  componentInst: ComponentInst,
+  lastComponentsInTemplate: ComponentInst[]
 ): UpdatedTemplateObject | false {
-  const componentsInTemplate = [...componentInst.componentsInTemplate];
   const newComponentsInst: ComponentInst[] = [];
   const lastTemplateValue = componentInst.lastTemplateValue;
 
   let template = componentInst.getCurrentTemplateWithHost();
-
-  componentInst.updateLastTemplateValueProperty();
-  componentInst.clearComponentsInTemplateList();
 
   const topLevelComponentsName = getTopLevelComponentsName(template);
 
   for (const name of topLevelComponentsName) {
     const { children, after, before } = getComponentDataByName(name, template);
 
-    const index = componentsInTemplate.findIndex(
+    const index = lastComponentsInTemplate.findIndex(
       (o) => o.nameInTemplate === name
     );
 
     if (index > -1) {
-      const childComponent = componentsInTemplate[index];
+      const childComponent = lastComponentsInTemplate[index];
       const s = childComponent.superComponent;
-      let value = childComponent.lastTemplateProcessed;
 
-      if (childComponent.shouldTemplateBeUpdate()) {
-        const r = processUpdatedTemplate(childComponent);
-        value = r ? r.template : value;
-      }
-
-      template = before + value + after;
+      template = before + childComponent.lastTemplateProcessed + after;
 
       if (childComponent.children !== children && s) {
         runInComponentInst(s, childComponent, () => {

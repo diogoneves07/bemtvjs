@@ -100,18 +100,6 @@ export function removeDiffBetweenChildNodes(
       const r = removeDiffBetweenNodesAttrs(newNode, oldNode as Element);
 
       r && nodesRemovedOrUpdated.add(oldNode);
-
-      if (newNode.childNodes[0]) {
-        const r = removeDiffBetweenChildNodes(
-          Array.from(newNode.childNodes),
-          Array.from((oldNode as Element).childNodes),
-          oldNode as Element
-        );
-
-        r.forEach((i) => {
-          nodesRemovedOrUpdated.add(i);
-        });
-      }
     }
   }
 
