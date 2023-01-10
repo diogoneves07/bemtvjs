@@ -76,6 +76,7 @@ describe("ElementInst.it property", () => {
     let t = `span[${appKey} class="today" ~ Click me!]`;
 
     onMount(() => {
+      expect(el().it?.tagName?.toLowerCase()).toBe("span");
       t = `strong[${appKey} class="today" ~ Click me!]`;
     });
 
