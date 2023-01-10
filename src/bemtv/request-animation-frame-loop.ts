@@ -28,26 +28,27 @@ function requestAnimationFrameLoop() {
     shouldComponentBeUnmounted(componentInst);
 
     const updatedUI = updatedUIWithNewTemplate(componentInst);
+    requestAnimationFrame(() => {
+      if (updatedUI) {
+        const { newComponentsInst, componentsNodes, componentsInstUpdated } =
+          updatedUI;
 
-    if (updatedUI) {
-      const { newComponentsInst, componentsNodes, componentsInstUpdated } =
-        updatedUI;
+        for (const c of componentsInstUpdated) {
+          // Checks if the component intends to update naturally.
+          if (!c.shouldTemplateBeUpdate()) {
+            c.updateLastTemplateValueProperty();
 
-      for (const c of componentsInstUpdated) {
-        // Checks if the component intends to update naturally.
-        if (!c.shouldTemplateBeUpdate()) {
-          c.updateLastTemplateValueProperty();
+            dispatchUpdatedLifeCycle(c);
+          }
+        }
 
-          dispatchUpdatedLifeCycle(c);
+        for (const c of newComponentsInst) {
+          c.nodes = componentsNodes.get(c.hostIdValue) || [];
+
+          dispatchMountedLifeCycle(c);
         }
       }
-
-      for (const c of newComponentsInst) {
-        c.nodes = componentsNodes[c.hostIdValue];
-
-        dispatchMountedLifeCycle(c);
-      }
-    }
+    });
   }
 
   if (hasChanges) BRACKETHTML_CSS_IN_JS.applyLastCSSCreated();
