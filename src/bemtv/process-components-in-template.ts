@@ -37,6 +37,8 @@ function processEachTemplate(
       newTemplate =
         componentData.before + (tFallback || fallback) + componentData.after;
 
+      if (tFallback) continue;
+
       if (isComponentAutoImport(realComponentName)) {
         if (parent) parent.forceTemplateUpdate();
 
