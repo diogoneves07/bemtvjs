@@ -35,41 +35,33 @@ function keepOnlyNodesConnected(nodes1: Node[], nodes2: Node[]) {
   return r;
 }
 
-export default function updateUIWithNewTemplate(cInst: ComponentInst) {
-  const lastComponentsInTemplate = [...cInst.componentsInTemplate];
-
-  cInst.clearComponentsInTemplateList();
-
-  const r = processUpdatedTemplate(cInst, lastComponentsInTemplate);
-
-  if (!r) {
-    cInst.componentsInTemplate = new Set(lastComponentsInTemplate);
-    return r;
-  }
-  const { parentElement } = cInst;
-
-  const { template: pureTemplate, newComponentsInst } = r;
-
-  const newHtml = brackethtmlToHTML(pureTemplate);
-
-  const { possibleNewNodes, componentsNodes } = getPossibleNewNodes(newHtml);
-
-  const oldChildNodes = cInst.nodes;
-
-  const nodesRemovedOrUpdated = removeDiffBetweenChildNodes(
-    possibleNewNodes,
-    oldChildNodes,
-    parentElement
-  );
-
-  let allNodesRemovedOrUpdated = getAllNodesInList([...nodesRemovedOrUpdated]);
-
+function getComponentsInstUpdated(
+  allNodesRemovedOrUpdated: Node[],
+  componentsNodes: Map<string, Node[]>
+) {
   const componentsInstUpdated = new Set<ComponentInst>();
 
-  const all = new Set(ALL_COMPONENTS_INST);
+  let allComponentsInst = new Set(ALL_COMPONENTS_INST);
+
+  for (const [hostIdValue, nodes] of componentsNodes) {
+    const hasAnyNodeConnected = nodes.find((n) => n.isConnected);
+
+    if (!hasAnyNodeConnected) continue;
+
+    for (const c of allComponentsInst) {
+      if (c.hostIdValue === hostIdValue) {
+        componentsInstUpdated.add(c);
+
+        c.nodes = keepOnlyNodesConnected(c.nodes, nodes);
+
+        allComponentsInst.delete(c);
+        break;
+      }
+    }
+  }
 
   function componentWasUpdated(c: ComponentInst) {
-    const nNodes = componentsNodes[c.hostIdValue];
+    const nNodes = componentsNodes.get(c.hostIdValue);
 
     if (!nNodes) return;
 
@@ -87,7 +79,7 @@ export default function updateUIWithNewTemplate(cInst: ComponentInst) {
   function updateNodeParentComponent(c: ComponentInst, n: Node): boolean {
     if (c.nodes.includes(n)) {
       componentWasUpdated(c);
-      all.delete(c);
+      allComponentsInst.delete(c);
       return true;
     }
 
@@ -99,7 +91,7 @@ export default function updateUIWithNewTemplate(cInst: ComponentInst) {
     if (!isChildOfMyChild) {
       if (getAllNodesInList(c.nodes).includes(n)) {
         componentWasUpdated(c);
-        all.delete(c);
+        allComponentsInst.delete(c);
         return true;
       }
     }
@@ -107,13 +99,54 @@ export default function updateUIWithNewTemplate(cInst: ComponentInst) {
     return isChildOfMyChild;
   }
 
-  for (const n of allNodesRemovedOrUpdated) {
-    for (const c of all) {
+  for (const c of allComponentsInst) {
+    for (const n of allNodesRemovedOrUpdated) {
       updateNodeParentComponent(c, n);
     }
   }
 
+  return componentsInstUpdated;
+}
+
+export default function updateUIWithNewTemplate(cInst: ComponentInst) {
+  const lastComponentsInTemplate = [...cInst.componentsInTemplate];
+
+  cInst.clearComponentsInTemplateList();
+
+  const r = processUpdatedTemplate(cInst, lastComponentsInTemplate);
+
+  if (!r) {
+    cInst.componentsInTemplate = new Set(lastComponentsInTemplate);
+    return r;
+  }
+
+  const { parentElement } = cInst;
+
+  const { template: pureTemplate, newComponentsInst } = r;
+
+  const newHtml = brackethtmlToHTML(pureTemplate);
+
+  const { possibleNewNodes, componentsNodes } = getPossibleNewNodes(newHtml);
+
+  const oldChildNodes = cInst.nodes;
+
+  const nodesRemovedOrUpdated = removeDiffBetweenChildNodes(
+    possibleNewNodes,
+    oldChildNodes,
+    parentElement
+  );
+
+  const allNodesRemovedOrUpdated = getAllNodesInList([
+    ...nodesRemovedOrUpdated,
+  ]);
+
+  const componentsInstUpdated = getComponentsInstUpdated(
+    allNodesRemovedOrUpdated,
+    componentsNodes
+  );
+
   const newComponentsInTemplate = cInst.componentsInTemplate;
+
   let hasComponentsInTemplateChanged = true;
 
   if (lastComponentsInTemplate.length === cInst.componentsInTemplate.size) {
