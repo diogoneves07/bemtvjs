@@ -6,10 +6,6 @@ import { LifeCycleCallback } from "./types/component-inst-data";
 import { ObserverSystem } from "./observers-system";
 import { SuperComponent } from "./super-component/super-component";
 
-function avoidEmptyTemplate(template: string) {
-  return template.trim() === "" ? AVOIDS_EMPTY_TEMPLATE : template;
-}
-
 export type TemplateCallback = () => string;
 
 let componentsNamesList: string = "";
@@ -79,7 +75,7 @@ export default class ComponentInst {
     const useTemplate = isResultFn ? callbackOrText : () => callbackOrText;
 
     const getCurrentTemplate = () => {
-      const template = avoidEmptyTemplate(useTemplate());
+      const template = AVOIDS_EMPTY_TEMPLATE + useTemplate();
 
       return template;
     };
