@@ -15,7 +15,6 @@ export {
   toDl,
 } from "./bemtv/transformation-functions/description-list-dt";
 
-export { matchComponent as match } from "./bemtv/match-component";
 export { lazy } from "./bemtv/auto-import-components";
 export { default as render } from "./bemtv/render";
 export { onRouteUnfound } from "./router/main";
