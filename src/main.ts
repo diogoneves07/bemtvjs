@@ -1,7 +1,6 @@
+export { createPortal } from "./bemtv/super-component/portals";
 export type { CSSClass } from "./bemtv/css-classes";
-
 export type { ElementInst } from "./bemtv/element-inst";
-
 export { _, hasComponent } from "./bemtv/components-main";
 export { tFn } from "./bemtv/transformation-functions/main";
 export {

@@ -12,6 +12,10 @@ export function treatArgsInTemplate(values: any[]) {
       newValues.push(v);
       continue;
     }
+    if (typeof value === "function" && value.key) {
+      newValues.push(value.key);
+      continue;
+    }
     newValues.push(value);
   }
 

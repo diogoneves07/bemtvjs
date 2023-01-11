@@ -27,11 +27,6 @@ import {
   RouterControlFn,
   useRouterControl,
 } from "../../router/use-router-control";
-import { createPortalKey, definePortal } from "./portals";
-
-type PortalFn<V extends Record<string, any>> = (
-  superComponent: SuperComponent<V>
-) => void;
 
 export type ComponentVars<V extends Record<string, any> = Record<string, any>> =
   V & {
@@ -343,91 +338,5 @@ export class SuperComponent<Vars extends Record<string, any>> {
     sCompProxy.onUpdate(fn);
 
     return getEl();
-  }
-
-  portal(
-    fn?: PortalFn<Vars>
-  ): [componentKey: string, componentPortal: (c: PortalFn<Vars>) => void] {
-    const d = this.__data;
-    const sCompProxy = d.sCompProxy as any;
-
-    const fnList = new Set<PortalFn<Vars>>();
-
-    const compVarProxy = new Proxy(
-      {},
-      {
-        get(_t, p) {
-          const k = p as string;
-          const value = sCompProxy.$[k];
-
-          if (value instanceof Function) {
-            return (...args: any[]) => {
-              runInComponentInst(sCompProxy, componentInst, () => {
-                value(...args);
-              });
-            };
-          }
-
-          return sCompProxy.$[k];
-        },
-        set(_t, p, newValue) {
-          runInComponentInst(sCompProxy, componentInst, () => {
-            sCompProxy.$[p] = newValue;
-            updateComponentVars(sCompProxy);
-          });
-          return true;
-        },
-      }
-    );
-
-    let componentInst: ComponentInst | null = null;
-    const s = new Proxy(
-      {},
-      {
-        get(_t, p) {
-          const k = p as string;
-
-          if (typeof sCompProxy[k] === "function") {
-            return (...args: any[]) => {
-              runInComponentInst(sCompProxy, componentInst, () => {
-                sCompProxy[k](...args);
-              });
-            };
-          }
-
-          return compVarProxy;
-        },
-        set(_t, p, newValue) {
-          sCompProxy[p] = newValue;
-          return true;
-        },
-      }
-    );
-
-    const name = d.componentName;
-    const key = createPortalKey(name);
-
-    const useComponentInst = (c: ComponentInst) => {
-      componentInst = c;
-      c.onInitObservers.addWithPriority(() => {
-        fn && fn(s as any);
-
-        fnList.forEach((f) => f(s as any));
-      });
-    };
-
-    definePortal(key, useComponentInst);
-
-    return [
-      key,
-      (f) => {
-        if (componentInst) {
-          f(s as any);
-          return;
-        }
-
-        fnList.add(f);
-      },
-    ];
   }
 }

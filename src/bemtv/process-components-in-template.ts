@@ -10,6 +10,7 @@ import {
   onComponentImported,
 } from "./auto-import-components";
 import { usePortal } from "./super-component/portals";
+import { dispatchInitedLifeCycle } from "./components-lifecycle";
 
 type NextComponentData = ReturnType<typeof getNextComponentDataInTemplate>;
 
@@ -58,19 +59,19 @@ function processEachTemplate(
 
     const componentInst = new ComponentInst(realComponentName, parent, name);
 
-    const portal = usePortal(name);
-
-    if (portal) portal(componentInst);
-
     componentInst.children = children;
 
     componentInst.defineComponentTemplate(componentFn(componentInst));
 
-    if (parent) {
-      parent.addComponentChild(componentInst);
-    }
+    const portal = usePortal(name);
+
+    if (portal) portal(componentInst);
+
+    if (parent) parent.addComponentChild(componentInst);
 
     componentsInst.push(componentInst);
+
+    dispatchInitedLifeCycle(componentInst);
 
     const { newTemplate: t } = processEachTemplate(
       componentInst.getCurrentTemplateWithHost(),

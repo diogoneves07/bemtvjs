@@ -126,6 +126,13 @@ export default class ComponentInst {
     return this;
   }
 
+  onInitWithHighPriority(fn: () => void) {
+    if (this.inited) return fn();
+
+    this.onInitObservers.addWithPriority(fn);
+    return this;
+  }
+
   onMountWithHighPriority(fn: () => void) {
     if (this.mounted) return fn();
 
