@@ -13,7 +13,6 @@ export default class ComponentInst {
   parentElement: Element | null = null;
   lastTemplateValue: string = "";
   getCurrentTemplate: TemplateCallback = () => "";
-  shouldForceUpdate: boolean;
   nodes: Node[] = [];
   parent: ComponentInst | null;
   componentsInTemplate: Set<ComponentInst> = new Set();
@@ -21,6 +20,8 @@ export default class ComponentInst {
   superComponent?: SuperComponent<Record<string, any>>;
 
   lastTemplateProcessed: string = "";
+
+  isImportingComponent: boolean = false;
 
   mounted: boolean = false;
   inited: boolean = false;
@@ -65,8 +66,6 @@ export default class ComponentInst {
 
     this.hostIdValue = this.key.toLowerCase();
 
-    this.shouldForceUpdate = false;
-
     ALL_COMPONENTS_INST.add(this);
   }
 
@@ -97,18 +96,11 @@ export default class ComponentInst {
   }
 
   shouldTemplateBeUpdate() {
-    const shouldForceUpdate = this.shouldForceUpdate;
-
-    if (shouldForceUpdate) {
-      this.shouldForceUpdate = false;
-      return true;
-    }
-
     return this.lastTemplateValue !== this.getCurrentTemplate();
   }
 
   forceTemplateUpdate() {
-    this.shouldForceUpdate = true;
+    this.lastTemplateValue = "";
     return this;
   }
 

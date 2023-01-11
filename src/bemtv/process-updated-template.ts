@@ -1,8 +1,3 @@
-import {
-  autoImportComponent,
-  isComponentAlreadyImported,
-  isComponentAutoImport,
-} from "./auto-import-components";
 import ComponentInst from "./component-inst";
 import {
   getComponentDataByName,
@@ -14,17 +9,11 @@ import {
   updateComponentVars,
 } from "./super-component/work-with-super-component";
 
-type UpdatedTemplateObject = {
-  template: string;
-  newComponentsInst: ComponentInst[];
-};
-
 export default function processUpdatedTemplate(
   componentInst: ComponentInst,
   lastComponentsInTemplate: ComponentInst[]
-): UpdatedTemplateObject | false {
+) {
   const newComponentsInst: ComponentInst[] = [];
-  const lastTemplateValue = componentInst.lastTemplateValue;
 
   let template = componentInst.getCurrentTemplateWithHost();
 
@@ -54,12 +43,6 @@ export default function processUpdatedTemplate(
       componentInst.addComponentChild(childComponent);
 
       continue;
-    }
-
-    if (!isComponentAlreadyImported(name) && isComponentAutoImport(name)) {
-      componentInst.forceTemplateUpdate();
-
-      if (!autoImportComponent(name, lastTemplateValue)) return false;
     }
 
     const { newTemplate: componentTemlate, componentsInst } =

@@ -115,11 +115,6 @@ export default function updateUIWithNewTemplate(cInst: ComponentInst) {
 
   const r = processUpdatedTemplate(cInst, lastComponentsInTemplate);
 
-  if (!r) {
-    cInst.componentsInTemplate = new Set(lastComponentsInTemplate);
-    return r;
-  }
-
   const { parentElement } = cInst;
 
   const { template: pureTemplate, newComponentsInst } = r;
@@ -144,7 +139,6 @@ export default function updateUIWithNewTemplate(cInst: ComponentInst) {
     allNodesRemovedOrUpdated,
     componentsNodes
   );
-
   const newComponentsInTemplate = cInst.componentsInTemplate;
 
   let hasComponentsInTemplateChanged = true;

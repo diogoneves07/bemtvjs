@@ -7,6 +7,7 @@ import {
   autoImportComponent,
   isComponentAlreadyImported,
   isComponentAutoImport,
+  onComponentImported,
 } from "./auto-import-components";
 import { usePortal } from "./super-component/portals";
 
@@ -32,18 +33,23 @@ function processEachTemplate(
     const realComponentName = normalizeComponentName(name);
 
     if (!isComponentAlreadyImported(realComponentName)) {
-      const fallback = autoImportComponent(realComponentName) || "";
+      const fallback =
+        tFallback || autoImportComponent(realComponentName) || "";
 
-      newTemplate =
-        componentData.before + (tFallback || fallback) + componentData.after;
+      newTemplate = componentData.before + fallback + componentData.after;
 
-      if (tFallback) continue;
+      if (isComponentAutoImport(realComponentName) && parent) {
+        parent.isImportingComponent = true;
 
-      if (isComponentAutoImport(realComponentName)) {
-        if (parent) parent.forceTemplateUpdate();
+        onComponentImported(realComponentName, () => {
+          if (!parent.isImportingComponent) return;
 
-        continue;
+          parent.isImportingComponent = false;
+          parent.forceTemplateUpdate();
+        });
       }
+
+      if (fallback) continue;
 
       throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} The component “${realComponentName}” was not created!`;
     }
