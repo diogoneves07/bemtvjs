@@ -3,7 +3,6 @@ import { Listeners } from "./../types/listeners";
 import { css } from "goober";
 
 import { LIBRARY_NAME_IN_ERRORS_MESSAGE } from "./../../globals";
-import { ElementInst } from "../element-inst";
 import render from "./../render";
 import {
   getComponentInstFirstElement,
@@ -11,13 +10,10 @@ import {
   updateComponentVars,
 } from "./work-with-super-component";
 import { SuperComponentData } from "./../types/super-component-data";
-import { generateForcedKeyAttr } from "../generate-forced-el-attrs";
 import concatTemplateStringArrays from "../../utilities/concat-template-string-arrays";
-import createElementInst from "./create-element-inst";
 import manageComponentsVars from "./manage-components-vars";
 import isStringOrNumber from "../../utilities/is-string-or-number";
 import { treatArgsInTemplate } from "./treat-args-in-template";
-import ComponentInst from "../component-inst";
 import autoCreateRoute, {
   autoCreateRouteFromTemplates,
 } from "../auto-create-route";
