@@ -180,54 +180,6 @@ export class SuperComponent<Vars extends Record<string, any>> {
   };
 
   /**
-   * Creates an instance to manage a real DOM element.
-   *
-   * @returns
-   * The instance to manage the real DOM element;
-   */
-  useEl<E extends Element = Element>(
-    selectorOrElement: string | Element
-  ): ElementInst<E>;
-
-  /**
-   * Creates an instance to manage a real DOM element.
-   *
-   * @returns
-   * A Tuple where the first item is a special key that must be applied to the tag
-   * and the second is a function to get the instance.
-   */
-  useEl<E extends Element = Element>(): [
-    elKey: string,
-    getEl: () => ElementInst<E>
-  ];
-
-  useEl<E extends Element = Element>(selectorOrElement?: string | Element) {
-    if (selectorOrElement) {
-      return createElementInst<E>(
-        selectorOrElement,
-        this.__data.componentInstRunning
-      );
-    }
-
-    const cache = new Map<ComponentInst, ElementInst>();
-    const key = generateForcedKeyAttr();
-
-    return [
-      key,
-      () => {
-        const c = this.__data.componentInstRunning;
-
-        if (c && cache.has(c)) return cache.get(c);
-
-        const elementInst = createElementInst<E>(key, c);
-
-        c && cache.set(c, elementInst);
-        return elementInst;
-      },
-    ];
-  }
-
-  /**
    * Defines the component template.
    */
   template(t: string | TemplateStringsArray | (() => string), ...exps: any[]) {
