@@ -1,6 +1,5 @@
 import { LIBRARY_NAME_IN_ERRORS_MESSAGE } from "../globals";
 import ComponentInst from "./component-inst";
-import { ComponentFn, getComponentFn } from "./components-main";
 import normalizeComponentName from "./normalize-component-name";
 import getNextComponentDataInTemplate from "./get-next-component-data-in-template";
 import {
@@ -10,7 +9,7 @@ import {
   onComponentImported,
 } from "./auto-import-components";
 import { usePortal } from "./super-component/portals";
-import { dispatchInitedLifeCycle } from "./components-lifecycle";
+import { bindComponentToSuperComponent } from "./super-component/bind-comp-to-s-comp";
 
 type NextComponentData = ReturnType<typeof getNextComponentDataInTemplate>;
 
@@ -55,23 +54,23 @@ function processEachTemplate(
       throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} The component “${realComponentName}” was not created!`;
     }
 
-    const componentFn = getComponentFn(realComponentName) as ComponentFn;
+    const portalInst = usePortal(name);
+    let componentInst: ComponentInst;
 
-    const componentInst = new ComponentInst(realComponentName, parent, name);
+    if (portalInst) {
+      componentInst = portalInst;
+      componentInst.children = children;
+      componentInst.parent = parent;
+    } else {
+      componentInst = new ComponentInst(realComponentName, parent, name);
+      componentInst.children = children;
 
-    componentInst.children = children;
-
-    componentInst.defineComponentTemplate(componentFn(componentInst));
-
-    const portal = usePortal(name);
-
-    if (portal) portal(componentInst);
+      bindComponentToSuperComponent(componentInst);
+    }
 
     if (parent) parent.addComponentChild(componentInst);
 
     componentsInst.push(componentInst);
-
-    dispatchInitedLifeCycle(componentInst);
 
     const { newTemplate: t } = processEachTemplate(
       componentInst.getCurrentTemplateWithHost(),
