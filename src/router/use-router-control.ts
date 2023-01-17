@@ -1,6 +1,7 @@
 import { ALL_COMPONENTS_INST } from "./../bemtv/component-inst-store";
 import { ObserverSystem } from "../bemtv/observers-system";
 import { isRouterComponent } from "../bemtv/is-router-component";
+import { getComponentAutoImportPromise } from "../bemtv/auto-import-components";
 
 export type RemoveRouterControl = () => void;
 
@@ -48,7 +49,11 @@ export class RouterControl {
     this.isFirstRoute = isFirstRoute.value;
   }
 
-  onLoad(fn: () => void) {
+  importComponent() {
+    return getComponentAutoImportPromise(this.componentName);
+  }
+
+  onRendered(fn: () => void) {
     if (this.isRendered) {
       fn();
       return () => {};
