@@ -3,30 +3,34 @@ import { LIBRARY_NAME_IN_ERRORS_MESSAGE } from "../globals";
 type WatchCallback<V = any> = (value: V, calledTimes: number) => void;
 type RemoveWatcher = () => void;
 
-type StateFnLib<V> = {
+type StateFn<V> = {
   (newValue?: V): V;
-  $watch: (callback: WatchCallback<V>) => RemoveWatcher;
+  watch: (callback: WatchCallback<V>) => RemoveWatcher;
 };
 
-type StateFn<T, A extends Record<string, (c: T, n: T) => T>> = StateFnLib<T> & {
-  [K in keyof A]: (value: Parameters<A[K]>[1]) => T;
-};
+type SetStateFnValue<V> = (newValue: V) => void;
 
-export function createStateFn<T, A extends Record<string, (c: T, n: T) => T>>(
+export function createStateFn<T>(value: T): StateFn<T>;
+
+export function createStateFn<T>(
   value: T,
-  actions?: A
-) {
+  hasActions: boolean
+): [stateFn: StateFn<T>, setStateFnValue: SetStateFnValue<T>];
+
+export function createStateFn<T>(value: T, hasActions: boolean = false) {
   const watchers = new Map<WatchCallback, number>();
 
   let currentValue = value;
 
+  let isSetingWithAction = false;
+
   const fn = (newValue?: T) => {
-    if (actions) {
-      console.error(value);
+    if (newValue === undefined) return currentValue;
+
+    if (hasActions && !isSetingWithAction) {
+      console.error("“", value, "”");
       throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} The state funtion that init with the value above can only have its value changed through “actions”.`;
     }
-
-    if (newValue === undefined) return currentValue;
 
     currentValue = newValue;
 
@@ -39,22 +43,23 @@ export function createStateFn<T, A extends Record<string, (c: T, n: T) => T>>(
     return newValue;
   };
 
-  fn.$watch = (fn: WatchCallback) => {
+  fn.watch = (fn: WatchCallback) => {
     fn(currentValue, 0);
 
     !watchers.has(fn) && watchers.set(fn, 0);
 
-    return (() => watchers.delete(fn)) as RemoveWatcher;
+    return () => watchers.delete(fn);
   };
 
-  if (actions) {
-    Object.keys(actions).forEach((k) => {
-      (fn as any)[k] = (value: T) => {
-        currentValue = actions[k](currentValue, value);
-        return currentValue;
-      };
-    });
+  if (hasActions) {
+    return [
+      fn,
+      (newValue: T) => {
+        isSetingWithAction = true;
+        fn(newValue);
+        isSetingWithAction = false;
+      },
+    ];
   }
-
-  return fn as StateFn<T, A>;
+  return fn as StateFn<T>;
 }
