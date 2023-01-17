@@ -61,17 +61,17 @@ export class RouterControl {
   }
 }
 
-const routerControlers = new Set<RouterControlFn>();
+const routerControlers = new ObserverSystem<RouterControlFn>();
 
 export function hasRouterControlers() {
-  return routerControlers.size > 0;
+  return routerControlers.size() > 0;
 }
 
 export function dispatchToRouterControlers(
   fn: RenderNewRoute,
   componentName: string
 ) {
-  routerControlers.forEach((i) => i(new RouterControl(componentName, fn)));
+  routerControlers.dispatch(new RouterControl(componentName, fn));
 }
 
 export function useRouterControl(fn: RouterControlFn): RemoveRouterControl {
