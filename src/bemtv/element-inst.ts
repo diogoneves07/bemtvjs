@@ -34,7 +34,7 @@ export class ElementInst<E = Element> {
 
     //  !istheSame && d.onItUpdateObservers.dispatch(newIt);
 
-    if (lastElement) {
+    if (!istheSame && lastElement) {
       d.DOMlisteners.forEach((o) => {
         o.removeListener && o.removeListener();
       });
