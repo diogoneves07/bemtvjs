@@ -25,8 +25,7 @@ export class ElementInst<E = Element> {
     // onceItConnectedObservers: new ObserverSystem(),
     // onItUpdateObservers: new ObserverSystem(),
   };
-
-  public set it(newIt: E | null) {
+  set el(newIt: E | null) {
     const d = this.__data;
     const lastElement = d.element;
     const istheSame = lastElement === newIt;
@@ -60,12 +59,12 @@ export class ElementInst<E = Element> {
   /**
    * The real DOM element.
    */
-  public get it() {
+  get el() {
     return this.__data.element;
   }
 
   constructor() {
-    this.it = null;
+    this.el = null;
     return this;
   }
 
@@ -73,7 +72,7 @@ export class ElementInst<E = Element> {
    * Allows to apply style to element.
    */
   css(...args: Parameters<typeof css>): CSSClass {
-    const element = this.it;
+    const element = this.el;
 
     const classValue = BEMTEVI_CSS_IN_JS.gooberCSS(...args);
 

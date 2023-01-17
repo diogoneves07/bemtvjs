@@ -35,38 +35,7 @@ export default function createElementInst<E extends Element = Element>(
 ): ElementInst<E> {
   const elementInst = ElementInstFactory<E>();
 
-  if (keyOrSelectorOrElement instanceof Element) {
-    elementInst.it = getElement(keyOrSelectorOrElement) as E | null;
-    return elementInst;
-  }
-
-  if (!isForcedAttr(keyOrSelectorOrElement)) {
-    elementInst.it = getElement(keyOrSelectorOrElement) as E | null;
-    return elementInst;
-  }
-
-  if (!c) return elementInst;
-
-  const elKey = normalizeElKeyAttr(getForcedAttrValue(keyOrSelectorOrElement));
-
-  let element = findElementInComponentNodes(c, elKey) as E;
-
-  if (!element && !c.mounted) {
-    c.onMountWithHighPriority(() => {
-      if (!elementInst.it) {
-        elementInst.it = (findElementInComponentNodes(c, elKey) as E) || null;
-      }
-    });
-  }
-
-  c.onUpdateWithHighPriority(() => {
-    const e = elementInst.it;
-    const f = (findElementInComponentNodes(c, elKey) as E) || null;
-
-    if (e !== f) elementInst.it = f;
-  });
-
-  elementInst.it = element;
+  elementInst.el = e as E;
 
   return elementInst;
 }

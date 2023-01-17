@@ -218,8 +218,12 @@ export function setElementsWithBindAttrs(
         continue;
       }
 
-      if (perpertyName === "el" && compVarValue?.it !== el) {
-        getOrSetPropertyByPath(sComp.$, compVar, createElementInst(el, cInst));
+      if (perpertyName === "el" && compVarValue?.el !== el) {
+        getOrSetPropertyByPath(
+          sComp.$,
+          compVar,
+          createElementInstFromElement(el)
+        );
         updateComponentVars(sComp);
         continue;
       }

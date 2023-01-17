@@ -30,9 +30,9 @@ export function ElementInstFactory<E extends Element = Element>() {
 
           DOMlisteners.add(DOMListenerObject);
 
-          if (elementInst.it) {
+          if (elementInst.el) {
             const r = insertDOMListener(
-              elementInst.it,
+              elementInst.el,
               DOMListenerObject.listener,
               ...args
             );
