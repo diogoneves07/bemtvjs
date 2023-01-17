@@ -20,11 +20,12 @@ export function ElementInstFactory<E extends Element = Element>() {
         return t[propName];
       }
       if (isString(propName) && isEventListener(propName)) {
+        const listenerName = propName.slice(0, -1);
         const newEventListener = (
           ...args: [fn: Function, options: AddEventListenerOptions]
         ) => {
           const DOMListenerObject: ComponentListener = {
-            listener: propName.slice(0, -1),
+            listener: listenerName,
             args,
           };
 
@@ -36,6 +37,7 @@ export function ElementInstFactory<E extends Element = Element>() {
               DOMListenerObject.listener,
               ...args
             );
+
             DOMListenerObject.removeListener = r;
 
             return () => {
