@@ -1,4 +1,4 @@
-import { getComponentFn } from "./components-main";
+import { getSuperComponentInst } from "./components-main";
 
 type LazyComponentFn<N extends string> = (name: N) => Promise<any>;
 
@@ -12,7 +12,15 @@ type AutoImportComponentObject = {
 const importComponents = new Map<string, AutoImportComponentObject>();
 
 export function isComponentAlreadyImported(name: string) {
-  return getComponentFn(name) ? true : false;
+  return getSuperComponentInst(name) ? true : false;
+}
+
+export function getComponentAutoImportPromise(name: string) {
+  const has = importComponents.get(name);
+  if (has) {
+    return has.load();
+  }
+  return null;
 }
 
 export function isComponentAutoImport(name: string) {
