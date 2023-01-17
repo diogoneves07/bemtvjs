@@ -5,16 +5,14 @@ import insertDOMListener from "./insert-dom-listener";
 import { css } from "goober";
 import { applyElementCSS } from "./work-with-element-inst";
 import { CSSClass, onRemoveClass } from "./css-classes";
-import { ObserverSystem } from "./observers-system";
-
-type RemoveOnItUpdate = () => void;
+// import { ObserverSystem } from "./observers-system";
 
 export interface ElementInstData<E = Element> {
   DOMlisteners: Set<ComponentListener>;
   element: E | null;
   CSSClasses: Set<string>;
-  onceItConnectedObservers: ObserverSystem<(it: Element) => void>;
-  onItUpdateObservers: ObserverSystem<(it: Element | null) => void>;
+  //onceItConnectedObservers: ObserverSystem<(el: Element) => void>;
+  //onItUpdateObservers: ObserverSystem<(el: Element | null) => void>;
 }
 
 export interface ElementInst<E extends Element = Element> extends Listeners {}
@@ -24,8 +22,8 @@ export class ElementInst<E = Element> {
     DOMlisteners: new Set(),
     CSSClasses: new Set(),
     element: null,
-    onceItConnectedObservers: new ObserverSystem(),
-    onItUpdateObservers: new ObserverSystem(),
+    // onceItConnectedObservers: new ObserverSystem(),
+    // onItUpdateObservers: new ObserverSystem(),
   };
 
   public set it(newIt: E | null) {
@@ -35,7 +33,7 @@ export class ElementInst<E = Element> {
 
     d.element = newIt || null;
 
-    !istheSame && d.onItUpdateObservers.dispatch(newIt);
+    //  !istheSame && d.onItUpdateObservers.dispatch(newIt);
 
     if (lastElement) {
       d.DOMlisteners.forEach((o) => {
@@ -54,9 +52,9 @@ export class ElementInst<E = Element> {
 
     BEMTEVI_CSS_IN_JS.applyLastCSSCreated();
 
-    d.onceItConnectedObservers.dispatch(newIt);
+    //  d.onceItConnectedObservers.dispatch(newIt);
 
-    d.onceItConnectedObservers.clear();
+    //  d.onceItConnectedObservers.clear();
   }
 
   /**
@@ -96,9 +94,9 @@ export class ElementInst<E = Element> {
     return classInst;
   }
 
-  onceItConnected(fn: (it: E) => void) {
-    if (this.it) {
-      fn(this.it);
+  /* onceItConnected(fn: (el: E) => void) {
+    if (this.el) {
+      fn(this.el);
       return this;
     }
 
@@ -107,7 +105,7 @@ export class ElementInst<E = Element> {
     return this;
   }
 
-  onItUpdate(fn: (it: E | null) => void): RemoveOnItUpdate {
+  onItUpdate(fn: (el: E | null) => void): RemoveOnItUpdate {
     const onItUpdateObservers = this.__data.onItUpdateObservers;
 
     onItUpdateObservers.add(fn as any);
@@ -115,5 +113,5 @@ export class ElementInst<E = Element> {
     return () => {
       onItUpdateObservers.delete(fn as any);
     };
-  }
+  }*/
 }
