@@ -5,20 +5,8 @@ import brackethtmlToHTML from "../brackethtml/brackethtml-to-html";
 import getPossibleNewNodes from "./get-possible-new-nodes";
 import { ALL_COMPONENTS_INST } from "./component-inst-store";
 import { isRouterComponent } from "./is-router-component";
-
-function getAllNodesInList(nodes: Node[]) {
-  const r: Node[] = [];
-
-  for (const n of nodes) {
-    r.push(n);
-
-    if (n?.childNodes) {
-      r.push(...getAllNodesInList(Array.from(n.childNodes)));
-    }
-  }
-
-  return r;
-}
+import getAllNodesInList from "../utilities/get-all-nodes-in-list";
+import { getNodeParentComponentByInst } from "./get-node-parent-component";
 
 function keepOnlyNodesConnected(nodes1: Node[], nodes2: Node[]) {
   let length = Math.max(nodes1.length, nodes2.length);
@@ -76,32 +64,14 @@ function getComponentsInstUpdated(
     componentsInstUpdated.add(c);
   }
 
-  function updateNodeParentComponent(c: ComponentInst, n: Node): boolean {
-    if (c.nodes.includes(n)) {
-      componentWasUpdated(c);
-      allComponentsInst.delete(c);
-      return true;
-    }
-
-    let isChildOfMyChild = false;
-    for (const i of c.componentsInTemplate) {
-      isChildOfMyChild = updateNodeParentComponent(i, n);
-    }
-
-    if (!isChildOfMyChild) {
-      if (getAllNodesInList(c.nodes).includes(n)) {
-        componentWasUpdated(c);
-        allComponentsInst.delete(c);
-        return true;
-      }
-    }
-
-    return isChildOfMyChild;
-  }
-
   for (const c of allComponentsInst) {
     for (const n of allNodesRemovedOrUpdated) {
-      updateNodeParentComponent(c, n);
+      const r = getNodeParentComponentByInst(c, n);
+
+      if (r) {
+        componentWasUpdated(r);
+        allComponentsInst.delete(r);
+      }
     }
   }
 
