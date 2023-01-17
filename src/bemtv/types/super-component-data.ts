@@ -1,5 +1,6 @@
 import { SuperComponent } from "../super-component/super-component";
 import ComponentInst from "../component-inst";
+import { ObserverSystem } from "../observers-system";
 
 export type SuperComponentDOMListener = {
   type: string;
@@ -25,4 +26,5 @@ export interface SuperComponentData {
   activateVarsProxies(): void;
   isSigleInstance: boolean;
   routeOptions?: { title?: string; concat?: string };
+  onInstObservers: ObserverSystem<(c: ComponentInst) => void>;
 }

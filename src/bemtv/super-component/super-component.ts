@@ -87,6 +87,7 @@ export class SuperComponent<Vars extends Record<string, any>> {
     },
     sCompProxy: null as any,
     isSigleInstance: false,
+    onInstObservers: new ObserverSystem(),
   };
 
   /**
@@ -134,6 +135,23 @@ export class SuperComponent<Vars extends Record<string, any>> {
     const sCompProxy = this.__data.sCompProxy;
 
     sCompProxy.onInit(fn);
+
+    return sCompProxy;
+  }
+
+  onInst(fn: (e: FakeSuperComponent<Vars>) => void) {
+    const d = this.__data;
+    const sCompProxy = d.sCompProxy;
+
+    const run = (c: ComponentInst) => {
+      const fakeSuperComponent = createFakeSuperComponent<Vars>(c, "");
+
+      fn(fakeSuperComponent);
+
+      d.onInstObservers.delete(run);
+    };
+
+    d.onInstObservers.add(run);
 
     return sCompProxy;
   }

@@ -1,4 +1,6 @@
 import ComponentInst from "../component-inst";
+import { dispatchInitedLifeCycle } from "../components-lifecycle";
+import { getSuperComponentInst } from "../components-main";
 import getVarsInTemplate from "./get-vars-in-template";
 import {
   ElementsWithBindAttrs,
@@ -88,6 +90,10 @@ export function bindComponentToSuperComponent(
   cInst.template = template;
 
   sCompData.componentsInst.add(cInst);
+
+  sCompData.onInstObservers.dispatch(cInst);
+
+  dispatchInitedLifeCycle(cInst);
 
   runInComponentInst(sComp, cInst, () => {
     updateComponentVars(sComp);
