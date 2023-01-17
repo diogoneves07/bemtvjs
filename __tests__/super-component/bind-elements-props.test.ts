@@ -42,7 +42,7 @@ describe("Bind element props and attrs", () => {
     } as { spanInst?: ElementInst<HTMLSpanElement> });
 
     onMount(() => {
-      expect($?.spanInst?.it?.tagName).toBe("SPAN");
+      expect($.spanInst?.el?.tagName).toBe("SPAN");
     });
 
     template`div[span[ span[ $spanInst<inst ] ]]`;

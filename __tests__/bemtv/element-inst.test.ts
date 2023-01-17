@@ -1,4 +1,4 @@
-import { _ } from "../../src/main";
+import { useElementInst, _ } from "../../src/main";
 import { resetTestEnvironment } from "../test-utilities/reset-test-environment";
 
 resetTestEnvironment();
@@ -6,61 +6,61 @@ resetTestEnvironment();
 describe("ElementInst", () => {
   describe("ElementInst.css method", () => {
     it("Should add style to element", (done) => {
-      const { useEl, onMount, template, render } = _`App`();
-      const [key, el] = useEl<HTMLButtonElement>();
+      const { onMount, template, render } = _`App`();
+      const elFn = useElementInst<HTMLButtonElement>();
 
       onMount(() => {
-        const appEl = el();
+        const appEl = elFn();
         appEl.css`font-size:50px;`;
 
         expect(document.getElementsByTagName("style").length).toBe(1);
-        expect(appEl.it?.classList.length).toBe(1);
+        expect(appEl.el.classList.length).toBe(1);
         expect(
-          getComputedStyle(appEl.it as HTMLButtonElement).getPropertyValue(
+          getComputedStyle(appEl.el as HTMLButtonElement).getPropertyValue(
             "font-size"
           )
         ).toBe("50px");
         done();
       });
 
-      template(() => `button[${key} Click me!]`);
+      template`button[${elFn} Click me!]`;
 
       render();
     });
 
     it("Should use “onInit” hook to add style to element", (done) => {
-      const { useEl, onInit, onMount, template, render } = _`App`();
-      const [key, el] = useEl<HTMLButtonElement>();
+      const { onInit, onMount, template, render } = _`App`();
+      const elFn = useElementInst<HTMLButtonElement>();
 
       onInit(() => {
-        const appEl = el();
+        const appEl = elFn();
         appEl.css`font-size:50px;`;
       });
 
       onMount(() => {
-        const appEl = el();
+        const appEl = elFn();
 
         expect(document.getElementsByTagName("style").length).toBe(1);
-        expect(appEl.it?.classList.length).toBe(1);
+        expect(appEl.el.classList.length).toBe(1);
         expect(
-          getComputedStyle(appEl.it as HTMLButtonElement).getPropertyValue(
+          getComputedStyle(appEl.el as HTMLButtonElement).getPropertyValue(
             "font-size"
           )
         ).toBe("50px");
         done();
       });
 
-      template(() => `button[${key} Click me!]`);
+      template`button[${elFn} Click me!]`;
 
       render();
     });
 
     it("Should add style to element after a time", (done) => {
-      const { useEl, onMount, template, render } = _`App`();
-      const [key, el] = useEl<HTMLButtonElement>();
+      const { onMount, template, render } = _`App`();
+      const elFn = useElementInst<HTMLButtonElement>();
 
       onMount(() => {
-        const appEl = el();
+        const appEl = elFn();
 
         setTimeout(() => {
           appEl.css`font-size:50px;`;
@@ -69,17 +69,17 @@ describe("ElementInst", () => {
         appEl.css`font-size:50px;`;
 
         expect(document.getElementsByTagName("style").length).toBe(1);
-        expect(appEl.it?.classList.length).toBe(1);
+        expect(appEl.el.classList.length).toBe(1);
 
         expect(
-          getComputedStyle(appEl.it as HTMLButtonElement).getPropertyValue(
+          getComputedStyle(appEl.el as HTMLButtonElement).getPropertyValue(
             "font-size"
           )
         ).toBe("50px");
         done();
       });
 
-      template(() => `button[${key} Click me!]`);
+      template`button[${elFn} Click me!]`;
 
       render();
     });
@@ -87,70 +87,70 @@ describe("ElementInst", () => {
 
   describe("Inject event handlers to ElementInst instance", () => {
     it("Should add onclick event listener to element", (done) => {
-      const { useEl, onMount, template, render } = _`App`();
-      const [key, el] = useEl<HTMLButtonElement>();
+      const { onMount, template, render } = _`App`();
+      const elFn = useElementInst<HTMLButtonElement>();
 
       const clickFn = jest.fn();
 
       onMount(() => {
-        const appEl = el();
+        const appEl = elFn();
 
         appEl.click$(clickFn);
 
-        appEl.it?.click();
+        appEl.el.click();
 
         expect(clickFn).toBeCalledTimes(1);
         done();
       });
 
-      template(() => `button[${key} Click me!]`);
+      template`button[${elFn} Click me!]`;
 
       render();
     });
 
     it("Should use “onInit” hook to add onclick event listener to element", (done) => {
-      const { useEl, onMount, onInit, template, render } = _`App`();
-      const [key, el] = useEl<HTMLButtonElement>();
+      const { onMount, onInit, template, render } = _`App`();
+      const elFn = useElementInst<HTMLButtonElement>();
 
       const clickFn = jest.fn();
 
       onInit(() => {
-        const appEl = el();
+        const appEl = elFn();
         appEl.click$(clickFn);
       });
 
       onMount(() => {
-        const appEl = el();
-        appEl.it?.click();
+        const appEl = elFn();
+        appEl.el.click();
 
         expect(clickFn).toBeCalledTimes(1);
         done();
       });
 
-      template(() => `button[${key} Click me!]`);
+      template`button[${elFn} Click me!]`;
 
       render();
     });
 
     it("Should remove onclick event listener from element", (done) => {
-      const { useEl, onMount, template, render } = _`App`();
-      const [key, el] = useEl<HTMLButtonElement>();
+      const { onMount, template, render } = _`App`();
+      const elFn = useElementInst<HTMLButtonElement>();
 
       const clickFn = jest.fn();
 
       onMount(() => {
-        const appEl = el();
+        const appEl = elFn();
         const removeClickListener = appEl.click$(clickFn);
 
-        appEl.it?.click();
+        appEl.el.click();
         removeClickListener();
-        appEl.it?.click();
+        appEl.el.click();
 
         expect(clickFn).toBeCalledTimes(1);
         done();
       });
 
-      template(() => `button[${key} Click me!]`);
+      template`button[${elFn} Click me!]`;
 
       render();
     });
@@ -159,18 +159,18 @@ describe("ElementInst", () => {
       const button = document.createElement("button");
       document.body.appendChild(button);
 
-      const { useEl, onMount, template, render } = _`App`();
-      const [key, el] = useEl<HTMLButtonElement>();
+      const { onMount, template, render } = _`App`();
+      const elFn = useElementInst<HTMLButtonElement>();
 
       const clickFn = jest.fn();
 
       onMount(() => {
-        const appEl = el();
-        const templateButton = appEl.it;
+        const appEl = elFn();
+        const templateButton = appEl.el;
         appEl.click$(clickFn);
         templateButton?.click();
-        appEl.it = button;
-        appEl.it?.click();
+        appEl.el = button;
+        appEl.el.click();
 
         templateButton?.click();
         templateButton?.click();
@@ -179,30 +179,30 @@ describe("ElementInst", () => {
         done();
       });
 
-      template(() => `button[${key} Click me!]`);
+      template`button[${elFn} Click me!]`;
 
       render();
     });
 
     it(`Should add “onclick” listener to button element after a time mounted`, (done) => {
-      const { useEl, onMount, template, render } = _`App`();
-      const [key, el] = useEl<HTMLButtonElement>();
+      const { onMount, template, render } = _`App`();
+      const elFn = useElementInst<HTMLButtonElement>();
 
       const clickFn = jest.fn();
 
       onMount(() => {
-        const appEl = el();
+        const appEl = elFn();
 
         setTimeout(() => appEl.click$(clickFn));
 
         setTimeout(() => {
-          appEl.it?.click();
+          appEl.el.click();
           expect(clickFn).toBeCalledTimes(1);
           done();
         });
       });
 
-      template(() => `button[${key} Click me!]`);
+      template`button[${elFn} Click me!]`;
 
       render();
     });
@@ -210,15 +210,15 @@ describe("ElementInst", () => {
     it(`
   Should remove “onclick” listener from button element immediately after added
 `, (done) => {
-      const { useEl, onMount, onInit, template, render } = _`App`();
-      const [key, el] = useEl<HTMLButtonElement>();
+      const { onMount, onInit, template, render } = _`App`();
+      const elFn = useElementInst<HTMLButtonElement>();
 
       const clickFn1 = jest.fn();
       const clickFn2 = jest.fn();
       let onInitRemoveClickListener: undefined | Function;
 
       onInit(() => {
-        const appEl = el();
+        const appEl = elFn();
         const removeClickListener = appEl.click$(clickFn2);
 
         removeClickListener();
@@ -226,14 +226,14 @@ describe("ElementInst", () => {
         onInitRemoveClickListener = appEl.click$(clickFn2);
       });
       onMount(() => {
-        const appEl = el();
+        const appEl = elFn();
         const removeClickListener = appEl.click$(clickFn1);
 
         removeClickListener();
 
         onInitRemoveClickListener && onInitRemoveClickListener();
 
-        appEl.it?.click();
+        appEl.el.click();
 
         expect(clickFn1).toBeCalledTimes(0);
         expect(clickFn2).toBeCalledTimes(0);
@@ -241,7 +241,7 @@ describe("ElementInst", () => {
         done();
       });
 
-      template(() => `button[${key} Click me!]`);
+      template`button[${elFn} Click me!]`;
 
       render();
     });
@@ -249,24 +249,24 @@ describe("ElementInst", () => {
     it(`
   Should remove “onclick” listener with “capture:true” from button element immediately after added
 `, (done) => {
-      const { useEl, onMount, template, render } = _`App`();
-      const [key, el] = useEl<HTMLButtonElement>();
+      const { onMount, template, render } = _`App`();
+      const elFn = useElementInst<HTMLButtonElement>();
 
       const clickFn = jest.fn();
 
       onMount(() => {
-        const appEl = el();
+        const appEl = elFn();
         const removeClickListener = appEl.click$(clickFn, { capture: true });
 
         removeClickListener();
 
-        appEl.it?.click();
+        appEl.el.click();
 
         expect(clickFn).toBeCalledTimes(0);
         done();
       });
 
-      template(() => `button[${key} Click me!]`);
+      template`button[${elFn} Click me!]`;
 
       render();
     });
