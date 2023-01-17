@@ -1,5 +1,4 @@
 import { AVOIDS_EMPTY_TEMPLATE, TAG_HOST_NAME } from "./globals";
-import { ComponentTemplateCallback } from "./components-main";
 import { ALL_COMPONENTS_INST } from "./component-inst-store";
 import normalizeRouterShortcut from "./normalize-router-shortcut";
 import { LifeCycleCallback } from "./types/component-inst-data";
@@ -7,6 +6,8 @@ import { ObserverSystem } from "./observers-system";
 import { SuperComponent } from "./super-component/super-component";
 
 export type TemplateCallback = () => string;
+
+export type ComponentTemplateCallback = () => string;
 
 let componentsNamesList: string = "";
 export default class ComponentInst {
@@ -35,7 +36,6 @@ export default class ComponentInst {
   componentVarsCache = new Map<string, string>();
   removeFirstElementDOMListeners = new Map();
   componentVars?: Record<string, any>;
-  template?: () => string;
 
   readonly name: string;
 
