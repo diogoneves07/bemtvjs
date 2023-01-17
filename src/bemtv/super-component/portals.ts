@@ -1,41 +1,42 @@
+import { LIBRARY_NAME_IN_ERRORS_MESSAGE } from "./../../globals";
 import ComponentInst from "../component-inst";
+import { getSuperComponentInst } from "../components-main";
 import { SuperComponent } from "./super-component";
 import {
   runInComponentInst,
   updateComponentVars,
 } from "./work-with-super-component";
+import { bindComponentToSuperComponent } from "./bind-comp-to-s-comp";
 
-type GetComponentInstPortalFn = (c: ComponentInst) => void;
-
-type UsePortalFn<CompVars extends Record<string, any>> = {
-  (c: PortalFn<CompVars>): void;
+export interface FakeSuperComponent<CompVars extends Record<string, any>>
+  extends SuperComponent<CompVars> {
   key: string;
-};
-const PORTALS_STORE = new Map<string, GetComponentInstPortalFn>();
+  isSuperComponentFake: true;
+  __componentInst: ComponentInst;
+}
+
+const PORTALS_STORE = new Map<string, () => ComponentInst>();
 
 let count = 0;
-
-export function usePortal(key: string) {
-  const i = PORTALS_STORE.get(key);
-
-  return i;
-}
-
-function definePortal(key: string, fn: GetComponentInstPortalFn) {
-  PORTALS_STORE.set(key, fn);
-}
 
 function createPortalKey(name: string) {
   return `${name}_${count++}`;
 }
 
-//['div', {}, {}]
+export function usePortal(key: string) {
+  const i = PORTALS_STORE.get(key);
 
-type PortalFn<V extends Record<string, any>> = (
-  superComponent: SuperComponent<V>
-) => void;
+  return i && i();
+}
 
-function createFakeSuperComponent(cInst: ComponentInst) {
+function definePortal(key: string, c: () => ComponentInst) {
+  PORTALS_STORE.set(key, c);
+}
+
+export function createFakeSuperComponent<CompVars extends Record<string, any>>(
+  cInst: ComponentInst,
+  key: string
+) {
   const sCompProxy = cInst.superComponent as any;
   const compVarsProxy = new Proxy(
     {},
@@ -46,35 +47,49 @@ function createFakeSuperComponent(cInst: ComponentInst) {
 
         if (value instanceof Function) {
           return (...args: any[]) => {
-            runInComponentInst(sCompProxy, cInst, () => {
-              value(...args);
-            });
+            runInComponentInst(
+              sCompProxy,
+              fakeSuperComponent.__componentInst,
+              () => {
+                value(...args);
+              }
+            );
           };
         }
 
         return sCompProxy.$[k];
       },
       set(_t, p, newValue) {
-        runInComponentInst(sCompProxy, cInst, () => {
-          sCompProxy.$[p] = newValue;
-          updateComponentVars(sCompProxy);
-        });
+        runInComponentInst(
+          sCompProxy,
+          fakeSuperComponent.__componentInst,
+          () => {
+            sCompProxy.$[p] = newValue;
+            updateComponentVars(sCompProxy);
+          }
+        );
         return true;
       },
     }
   );
 
   const fakeSuperComponent = new Proxy(
-    {},
+    { key, isSuperComponentFake: true, __componentInst: cInst },
     {
-      get(_t, p) {
+      get(t, p) {
         const k = p as string;
+
+        if (Object.hasOwn(t, p)) return (t as any)[p];
 
         if (typeof sCompProxy[k] === "function") {
           return (...args: any[]) => {
-            runInComponentInst(sCompProxy, cInst, () => {
-              sCompProxy[k](...args);
-            });
+            runInComponentInst(
+              sCompProxy,
+              fakeSuperComponent.__componentInst,
+              () => {
+                sCompProxy[k](...args);
+              }
+            );
           };
         }
 
@@ -87,43 +102,46 @@ function createFakeSuperComponent(cInst: ComponentInst) {
     }
   );
 
-  return fakeSuperComponent;
+  return fakeSuperComponent as FakeSuperComponent<CompVars>;
 }
 
 export function createPortal<CompVars extends Record<string, any>>(
   componentName: string
 ) {
-  let componentInst: ComponentInst | null = null;
-  let fakeSuperComponent: SuperComponent<CompVars> | null = null;
+  const realSuperComponent = getSuperComponentInst(componentName);
 
-  const fnList = new Set<PortalFn<any>>();
+  if (!realSuperComponent)
+    throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} The SuperComponent “${componentName}” was not created!`;
 
   const key = createPortalKey(componentName);
 
-  const useComponentInst = (c: ComponentInst) => {
-    componentInst = c;
+  let componentInst = new ComponentInst(componentName, null, key);
 
-    fakeSuperComponent = createFakeSuperComponent(
-      c
-    ) as SuperComponent<CompVars>;
+  componentInst.defineComponentTemplate(
+    bindComponentToSuperComponent(componentInst)
+  );
 
-    c.onInitWithHighPriority(() => {
-      fnList.forEach((f) => f(fakeSuperComponent as any));
-    });
-  };
+  const fakeSuperComponent = createFakeSuperComponent<CompVars>(
+    componentInst,
+    key
+  );
 
-  definePortal(key, useComponentInst);
+  let isFirstInst = true;
 
-  const fn = ((f) => {
-    if (componentInst) {
-      f(fakeSuperComponent as SuperComponent<CompVars>);
-      return;
+  definePortal(key, () => {
+    if (isFirstInst) {
+      isFirstInst = false;
+      return componentInst;
     }
+    componentInst = new ComponentInst(componentName, null, key);
 
-    fnList.add(f);
-  }) as UsePortalFn<CompVars>;
+    componentInst.defineComponentTemplate(
+      bindComponentToSuperComponent(componentInst)
+    );
+    fakeSuperComponent.__componentInst = componentInst;
 
-  fn.key = key;
+    return componentInst;
+  });
 
-  return fn;
+  return fakeSuperComponent;
 }
