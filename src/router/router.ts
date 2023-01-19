@@ -8,7 +8,7 @@ import {
   dispatchToRouterControlers,
   hasRouterControlers,
   isFirstRoute,
-} from "./use-router-control";
+} from "./use-route-control";
 
 const initialRouterTemplate = () => ``;
 
