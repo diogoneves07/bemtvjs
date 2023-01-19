@@ -1,3 +1,4 @@
+import { LIBRARY_NAME_IN_ERRORS_MESSAGE } from "./../../globals";
 import ComponentInst from "../component-inst";
 import { dispatchInitedLifeCycle } from "../components-lifecycle";
 import { getSuperComponentInst } from "../components-main";
@@ -16,10 +17,12 @@ import {
   updateComponentVars,
 } from "./work-with-super-component";
 
-export function bindComponentToSuperComponent(
-  sComp: SuperComponent,
-  cInst: ComponentInst
-) {
+export function bindComponentToSuperComponent(cInst: ComponentInst) {
+  const sComp = getSuperComponentInst(cInst.name);
+
+  if (!sComp)
+    throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} The SuperComponent “${cInst.name}” was not created!`;
+
   cInst.superComponent = sComp;
 
   const sCompData = getSuperComponentData(sComp);
