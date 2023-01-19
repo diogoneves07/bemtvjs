@@ -5,7 +5,7 @@ import {
 import isNumber from "../../utilities/is-number";
 import isString from "../../utilities/is-string";
 import ComponentInst from "../component-inst";
-import createElementInst from "./create-element-inst";
+import { createElementInstFromElement } from "./create-element-inst";
 import { SuperComponent } from "./super-component";
 import {
   getComponentInstNodes,
