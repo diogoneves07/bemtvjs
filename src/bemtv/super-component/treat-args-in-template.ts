@@ -12,7 +12,11 @@ export function treatArgsInTemplate(values: any[]) {
       newValues.push(v);
       continue;
     }
-    if (typeof value === "function" && value.key) {
+
+    if (
+      (typeof value === "function" || value.isFakeSuperComponent) &&
+      value.key
+    ) {
       newValues.push(value.key);
       continue;
     }
