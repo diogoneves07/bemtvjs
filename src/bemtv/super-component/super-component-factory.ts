@@ -27,6 +27,8 @@ export function SuperComponentFactory<Vars extends Record<string, any>>(
 
       const t = target as Record<string, any>;
 
+      if (propName === "onInst") return t[propName];
+
       if (propName.slice(0, 2) === "on") {
         if (t[propName]) return t[propName];
 
