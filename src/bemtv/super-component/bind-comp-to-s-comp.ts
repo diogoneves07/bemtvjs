@@ -8,7 +8,6 @@ import {
   processElementsWithBindAttrs,
   setElementsWithBindAttrs,
 } from "./process-bind-attrs";
-import { SuperComponent } from "./super-component";
 import {
   addDOMListenerToComponent,
   getComponentInstFirstElement,
@@ -90,7 +89,7 @@ export function bindComponentToSuperComponent(cInst: ComponentInst) {
     children: cInst.children,
   };
 
-  cInst.template = template;
+  cInst.defineComponentTemplate(template);
 
   sCompData.componentsInst.add(cInst);
 
