@@ -237,10 +237,10 @@ export class SuperComponent<Vars extends Record<string, any>> {
    * @param selectorOrElement
    * The element to insert the nodes.
    */
-  render = (selectorOrElement?: string | Element) => {
+  render(selectorOrElement?: string | Element) {
     render(this.__data.componentName + "[]", selectorOrElement);
     return this.__data.sCompProxy;
-  };
+  }
 
   route(routeOptions?: SuperComponentData["routeOptions"]) {
     const d = this.__data;
