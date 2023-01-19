@@ -67,11 +67,6 @@ export default function manageComponentsVars<O extends Record<string, any>>(
       const name = p as string;
       const target = t as any;
 
-      if (data.isSigleInstance) {
-        resetComponentVarsCache(sComp);
-        return target[name];
-      }
-
       if (data.$disableProxies) return target[name];
 
       resetComponentVarsCache(sComp);

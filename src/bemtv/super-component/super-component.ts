@@ -86,7 +86,6 @@ export class SuperComponent<Vars extends Record<string, any>> {
       this.$disableProxies = false;
     },
     sCompProxy: null as any,
-    isSigleInstance: false,
     onInstObservers: new ObserverSystem(),
   };
 
@@ -98,10 +97,7 @@ export class SuperComponent<Vars extends Record<string, any>> {
 
   constructor(name: string, vars?: Vars) {
     const data = this.__data;
-    const isSigleInstance = vars === undefined;
     const v = vars || {};
-
-    this.__data.isSigleInstance = isSigleInstance;
 
     Object.assign(data.componentsInitVars, v);
 

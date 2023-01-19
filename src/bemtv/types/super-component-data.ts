@@ -24,7 +24,6 @@ export interface SuperComponentData {
   sCompProxy: SuperComponent;
   disableVarsProxies(): void;
   activateVarsProxies(): void;
-  isSigleInstance: boolean;
   routeOptions?: { title?: string; concat?: string };
   onInstObservers: ObserverSystem<(c: ComponentInst) => void>;
 }
