@@ -30,8 +30,6 @@ export function SuperComponentFactory<Vars extends Record<string, any>>(
       if (propName === "onInst") return t[propName];
 
       if (propName.slice(0, 2) === "on") {
-        if (t[propName]) return t[propName];
-
         return (callback: LifeCycleCallback) => {
           addLifeCycleToComponents(superComponent, propName, callback);
         };
