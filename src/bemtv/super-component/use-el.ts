@@ -8,7 +8,7 @@ import {
   getForcedAttrValue,
   normalizeElKeyAttr,
 } from "../generate-forced-el-attrs";
-import { getComponentInstRunningOnTop } from "../component-inst-in-top";
+import { getComponentInstRunningOnTop } from "../component-inst-on-top";
 import {
   getComponentInstFirstElement,
   getComponentInstNodes,

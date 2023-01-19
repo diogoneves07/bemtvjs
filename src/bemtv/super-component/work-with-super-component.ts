@@ -3,6 +3,7 @@ import { LifeCycleCallback } from "../types/component-inst-data";
 import { SuperComponentDOMListener } from "./../types/super-component-data";
 import insertDOMListener from "../insert-dom-listener";
 import ComponentInst from "../component-inst";
+import { setComponentInstRunningOnTop } from "../component-inst-on-top";
 
 export function getSuperComponentData(sComp: SuperComponent) {
   return (sComp as any).__data as SuperComponent["__data"];
@@ -47,10 +48,15 @@ export function runInComponentInst(
 
   data.componentInstRunning = cInst;
 
+  setComponentInstRunningOnTop(cInst);
+
   setCompVars();
   callback();
 
   data.componentInstRunning = lastCInst;
+
+  setComponentInstRunningOnTop(lastCInst);
+
   setCompVars();
 }
 
