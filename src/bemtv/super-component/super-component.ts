@@ -19,10 +19,11 @@ import autoCreateRoute, {
 } from "../auto-create-route";
 import { routeToKebabCase } from "../../router/routes-case";
 import { CSSClass, onRemoveClass } from "../css-classes";
-import {
-  RouterControlFn,
-  useRouterControl,
-} from "../../router/use-router-control";
+import { createPortal } from "./portals";
+import { ObserverSystem } from "../observers-system";
+import ComponentInst from "../component-inst";
+import { FakeSuperComponent } from "../types/fake-super-component";
+import { createFakeSuperComponent } from "./fake-super-component";
 
 export type ComponentVars<V extends Record<string, any> = Record<string, any>> =
   V & {
@@ -271,34 +272,7 @@ export class SuperComponent<Vars extends Record<string, any>> {
     return this.__data.sCompProxy;
   }
 
-  useRouterControl(fn: RouterControlFn) {
-    const sCompProxy = this.__data.sCompProxy;
-
-    return useRouterControl((r) => {
-      const run = () => {
-        runInComponentInst(
-          sCompProxy,
-          sCompProxy.__data.componentInstRunning,
-          () => fn(r)
-        );
-      };
-
-      sCompProxy.onInit(run);
-    });
-  }
-
-  useFirstEl<E extends Element = Element>() {
-    const [, getEl] = this.useEl<E>();
-    const sCompProxy = this.__data.sCompProxy;
-
-    const fn = () => {
-      const c = this.__data.componentInstRunning;
-      if (c) (getEl() as any).it = getComponentInstFirstElement(c);
-    };
-
-    sCompProxy.onMount(fn);
-    sCompProxy.onUpdate(fn);
-
-    return getEl();
+  inst() {
+    return createPortal<Vars>(this.__data.componentName);
   }
 }
