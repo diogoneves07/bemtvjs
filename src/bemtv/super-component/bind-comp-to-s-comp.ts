@@ -89,13 +89,13 @@ export function bindComponentToSuperComponent(cInst: ComponentInst) {
     children: cInst.children,
   };
 
-  cInst.defineComponentTemplate(template);
-
   sCompData.componentsInst.add(cInst);
 
   sCompData.onInstObservers.dispatch(cInst);
 
   dispatchInitedLifeCycle(cInst);
+
+  cInst.defineComponentTemplate(template);
 
   runInComponentInst(sComp, cInst, () => {
     updateComponentVars(sComp);
