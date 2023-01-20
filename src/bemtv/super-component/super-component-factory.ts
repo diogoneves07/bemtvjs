@@ -54,13 +54,18 @@ export function SuperComponentFactory<Vars extends Record<string, any>>(
 
       if (isEventListener(propName)) {
         const newEventListener = (
-          callback: Function,
+          fn: Function,
           options?: AddEventListenerOptions
         ) => {
           const DOMListenerObject: SuperComponentDOMListener = {
-            type: propName.slice(0, -1),
+            listener: propName.slice(0, -1),
             options,
-            callback,
+            fn: (e: Event) => {
+              if (options?.once) {
+                DOMListeners.delete(DOMListenerObject);
+              }
+              return fn(e);
+            },
           };
 
           DOMListeners.add(DOMListenerObject);

@@ -26,7 +26,13 @@ export function ElementInstFactory<E extends Element = Element>() {
         ) => {
           const DOMListenerObject: ComponentListener = {
             listener: listenerName,
-            args,
+            options: args[1],
+            fn: (e: Event) => {
+              if (args[1]?.once) {
+                DOMListeners.delete(DOMListenerObject);
+              }
+              return args[0](e);
+            },
           };
 
           DOMlisteners.add(DOMListenerObject);
