@@ -3,8 +3,8 @@ import ComponentInst from "../component-inst";
 import { ObserverSystem } from "../observers-system";
 
 export type SuperComponentDOMListener = {
-  type: string;
-  callback: Function;
+  listener: string;
+  fn: Function;
   options?: AddEventListenerOptions;
 };
 

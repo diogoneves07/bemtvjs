@@ -17,6 +17,7 @@ export type Listeners = {
 
 export type ComponentListener = {
   listener: string;
-  args: [fn: Function, options: AddEventListenerOptions];
+  fn: Function;
+  options: AddEventListenerOptions;
   removeListener?: () => void;
 };
