@@ -105,7 +105,11 @@ export function addDOMListenerToComponent(
   DOMListenerObject: SuperComponentDOMListener,
   c: ComponentInst
 ) {
-  const { type, callback, options: DOMListenerOptions } = DOMListenerObject;
+  const {
+    listener,
+    fn: callback,
+    options: DOMListenerOptions,
+  } = DOMListenerObject;
 
   const fn = (e: Event) => {
     runInComponentInst(sComp, c, () => {
@@ -116,7 +120,7 @@ export function addDOMListenerToComponent(
 
   const removeDOMListener = insertDOMListener(
     firstElement,
-    type,
+    listener,
     fn,
     DOMListenerOptions
   );
