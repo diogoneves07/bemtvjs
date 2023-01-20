@@ -56,7 +56,12 @@ export class RouteControl {
   }
 
   load() {
-    return getComponentAutoImportPromise(this.name);
+    return (
+      getComponentAutoImportPromise(this.name) ||
+      new Promise((r) => {
+        r({});
+      })
+    );
   }
 
   onLoad(fn: () => void): RemoveOnLoad {
