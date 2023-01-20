@@ -1,7 +1,6 @@
-import { ALL_COMPONENTS_INST } from "../bemtv/component-inst-store";
 import { ObserverSystem } from "../bemtv/observers-system";
-import { isRouterComponent } from "../bemtv/is-router-component";
 import { getComponentAutoImportPromise } from "../bemtv/auto-import-components";
+import { applyRouteOptions } from "./apply-route-options";
 
 export type RemoveRouterControl = () => void;
 
@@ -21,34 +20,30 @@ export class RouteControl {
   isFirst: boolean;
   isRendered = false;
 
+  cancel: () => void;
+
   protected __onRenderObservers = new ObserverSystem();
 
-  constructor(name: string, render: () => void) {
+  constructor(name: string, render: () => void, cancelRoute: () => void) {
     this.name = name;
+
+    this.cancel = cancelRoute;
 
     this.render = () => {
       render();
 
       isFirstRoute.value = false;
 
-      const routerInst = [...ALL_COMPONENTS_INST].find((i) =>
-        isRouterComponent(i.name)
-      );
-      if (!routerInst) return this;
+      this.load().then(() => {
+        requestAnimationFrame(() => {
+          applyRouteOptions(name);
 
-      const fn = () => {
-        if (![...routerInst.componentsInTemplate].find((i) => i.name === name))
-          return;
+          this.isRendered = true;
 
-        this.isRendered = true;
-
-        this.__onRenderObservers.dispatch();
-        this.__onRenderObservers.clear();
-
-        routerInst.onUpdatedObservers.delete(fn);
-      };
-
-      routerInst.onUpdate(fn);
+          this.__onRenderObservers.dispatch();
+          this.__onRenderObservers.clear();
+        });
+      });
 
       return this;
     };
@@ -103,8 +98,12 @@ export function hasRouterControlers() {
   return routeObservers.size() > 0;
 }
 
-export function dispatchToRouterControlers(fn: RenderNewRoute, name: string) {
-  routeObservers.dispatch(new RouteControl(name, fn));
+export function dispatchToRouteControlers(
+  fn: RenderNewRoute,
+  name: string,
+  cancelRoute: () => void
+) {
+  routeObservers.dispatch(new RouteControl(name, fn, cancelRoute));
 }
 
 export function useRouteControl(fn: RouterControlFn): RemoveRouterControl {

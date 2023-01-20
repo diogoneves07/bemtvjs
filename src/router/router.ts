@@ -1,41 +1,64 @@
 import { routeToCamelCase } from "./routes-case";
 import { dispatchRouteUnfound } from "./on-route-unfound";
-import { ROUTES_OPTIONS } from "../bemtv/routes-store";
 import { hasComponent } from "../bemtv/components-main";
 import createRoute from "./create-route";
 import hasRoute from "../bemtv/has-route";
 import {
-  dispatchToRouterControlers,
+  dispatchToRouteControlers,
   hasRouterControlers,
   isFirstRoute,
 } from "./use-route-control";
+import { applyRouteOptions } from "./apply-route-options";
 
 const initialRouterTemplate = () => ``;
 
 let routerTemplate = initialRouterTemplate;
 
-const updateRouterTemplate = (value: () => string, componentName?: string) => {
-  if (componentName && hasRouterControlers()) {
-    dispatchToRouterControlers(() => {
-      routerTemplate = value;
-    }, componentName);
+const updateRouterTemplate = (
+  value: () => string,
+  cancelRoute: () => void,
+  componentName?: string
+) => {
+  if (!componentName) {
+    routerTemplate = value;
+
+    return;
+  }
+
+  if (hasRouterControlers()) {
+    dispatchToRouteControlers(
+      () => {
+        routerTemplate = value;
+      },
+      componentName,
+      cancelRoute
+    );
   } else {
+    applyRouteOptions(componentName);
     routerTemplate = value;
   }
-  if (componentName) {
-    isFirstRoute.value = false;
-  }
+
+  isFirstRoute.value = false;
 };
 
 export function useRouterTemplate() {
   return routerTemplate();
 }
 
-let lastHash = "";
+let lastComponentHash = "";
 let lastRouteUnfound = " ";
+let previousHash = "";
 
 export const applyRouter = () => {
   const locationHash = window.location.hash;
+
+  const cancelRoute = ((p) => () => {
+    window.location.hash = p || p + "/";
+    previousHash = p;
+  })(previousHash);
+
+  previousHash = locationHash;
+
   const isRoot = !locationHash || locationHash.length < 3;
 
   if (isRoot && !hasRoute(`Root`) && hasComponent("Root")) {
@@ -46,14 +69,14 @@ export const applyRouter = () => {
 
   currentHash = isRoot ? "/root" : currentHash;
 
-  if (lastHash === currentHash) return;
+  if (lastComponentHash === currentHash) return;
 
-  lastHash = "";
+  lastComponentHash = "";
 
   let path = currentHash.split("/")[1];
 
   if (!path) {
-    updateRouterTemplate(initialRouterTemplate, "Root");
+    updateRouterTemplate(initialRouterTemplate, cancelRoute, "Root");
 
     lastRouteUnfound = locationHash;
 
@@ -63,7 +86,6 @@ export const applyRouter = () => {
   }
 
   const routeName = routeToCamelCase(path);
-  const routeOptions = ROUTES_OPTIONS.get(routeName);
 
   if (hasRoute(routeName)) {
     if (routeName === "Root") {
@@ -75,16 +97,12 @@ export const applyRouter = () => {
 
     const routeComponent = `${routeName}[]`;
 
-    if (routeOptions && Object.hasOwn(routeOptions, "title")) {
-      document.title = routeOptions.title as string;
-    }
-
-    updateRouterTemplate(() => routeComponent, routeName);
+    updateRouterTemplate(() => routeComponent, cancelRoute, routeName);
 
     return;
   }
 
-  updateRouterTemplate(initialRouterTemplate);
+  updateRouterTemplate(initialRouterTemplate, cancelRoute);
 
   if (lastRouteUnfound !== locationHash) {
     lastRouteUnfound = locationHash;
