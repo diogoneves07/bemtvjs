@@ -66,7 +66,11 @@ export const applyRouter = () => {
   const routeOptions = ROUTES_OPTIONS.get(routeName);
 
   if (hasRoute(routeName)) {
-    lastHash = currentHash;
+    if (routeName === "Root") {
+      locationHash !== "" && (window.location.hash = "/");
+    }
+
+    lastComponentHash = currentHash;
     lastRouteUnfound = locationHash;
 
     const routeComponent = `${routeName}[]`;
