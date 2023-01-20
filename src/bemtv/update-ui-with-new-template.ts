@@ -8,16 +8,26 @@ import { isRouterComponent } from "./is-router-component";
 import getAllNodesInList from "../utilities/get-all-nodes-in-list";
 import { getNodeParentComponentByInst } from "./get-node-parent-component";
 
-function keepOnlyNodesConnected(nodes1: Node[], nodes2: Node[]) {
-  let length = Math.max(nodes1.length, nodes2.length);
-  const r: Node[] = [];
+function keepOnlyNodesAndComponentsConnected(
+  possibleNewNodes: (Node | string)[],
+  possibleOldNodes: (Node | string)[]
+) {
+  let length = Math.max(possibleNewNodes.length, possibleOldNodes.length);
+  const r: (Node | string)[] = [];
 
   while (length--) {
-    const n1 = nodes1[length];
-    const n2 = nodes2[length];
-    const v = n1?.isConnected ? n1 : n2;
+    const possibleNewNode = possibleNewNodes[length];
+    const possibleOldNode = possibleOldNodes[length];
 
-    v?.isConnected && r.unshift(v);
+    if (typeof possibleNewNode === "string") {
+      r.unshift(possibleNewNode);
+    } else if (possibleNewNode) {
+      if (possibleNewNode?.isConnected) {
+        r.unshift(possibleNewNode);
+      } else if (possibleOldNode) {
+        r.unshift(possibleOldNode);
+      }
+    }
   }
 
   return r;
@@ -25,22 +35,21 @@ function keepOnlyNodesConnected(nodes1: Node[], nodes2: Node[]) {
 
 function getComponentsInstUpdated(
   allNodesRemovedOrUpdated: Node[],
-  componentsNodes: Map<string, Node[]>
+  componentsNodes: Map<string, (Node | string)[]>
 ) {
   const componentsInstUpdated = new Set<ComponentInst>();
 
   let allComponentsInst = new Set(ALL_COMPONENTS_INST);
 
   for (const [hostIdValue, nodes] of componentsNodes) {
-    const hasAnyNodeConnected = nodes.find((n) => n.isConnected);
-
-    if (!hasAnyNodeConnected) continue;
-
     for (const c of allComponentsInst) {
       if (c.hostIdValue === hostIdValue) {
         componentsInstUpdated.add(c);
 
-        c.nodes = keepOnlyNodesConnected(c.nodes, nodes);
+        c.nodesAndComponents = keepOnlyNodesAndComponentsConnected(
+          nodes,
+          c.nodesAndComponents
+        );
 
         allComponentsInst.delete(c);
         break;
@@ -53,7 +62,10 @@ function getComponentsInstUpdated(
 
     if (!nNodes) return;
 
-    c.nodes = keepOnlyNodesConnected(c.nodes, nNodes);
+    c.nodesAndComponents = keepOnlyNodesAndComponentsConnected(
+      nNodes,
+      c.nodesAndComponents
+    );
 
     if (isRouterComponent(c.name)) {
       if (!componentsInstUpdated.has(c.parent as any)) {
@@ -81,6 +93,8 @@ function getComponentsInstUpdated(
 export default function updateUIWithNewTemplate(cInst: ComponentInst) {
   const lastComponentsInTemplate = [...cInst.componentsInTemplate];
 
+  const oldChildNodes = cInst.getAllNodes();
+
   cInst.clearComponentsInTemplateList();
 
   const r = processUpdatedTemplate(cInst, lastComponentsInTemplate);
@@ -92,8 +106,6 @@ export default function updateUIWithNewTemplate(cInst: ComponentInst) {
   const newHtml = brackethtmlToHTML(pureTemplate);
 
   const { possibleNewNodes, componentsNodes } = getPossibleNewNodes(newHtml);
-
-  const oldChildNodes = cInst.nodes;
 
   const nodesRemovedOrUpdated = removeDiffBetweenChildNodes(
     possibleNewNodes,

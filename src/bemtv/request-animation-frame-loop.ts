@@ -43,7 +43,7 @@ function requestAnimationFrameLoop() {
         }
 
         for (const c of newComponentsInst) {
-          c.nodes = componentsNodes.get(c.hostIdValue) || [];
+          c.nodesAndComponents = componentsNodes.get(c.hostIdValue) || [];
 
           dispatchMountedLifeCycle(c);
         }

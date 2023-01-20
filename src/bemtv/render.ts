@@ -52,7 +52,7 @@ export default function render(
     BRACKETHTML_CSS_IN_JS.applyLastCSSCreated(brackethtml.css);
 
     for (const c of componentsInst) {
-      c.nodes = componentsNodes.get(c.hostIdValue) || [];
+      c.nodesAndComponents = componentsNodes.get(c.hostIdValue) || [];
       dispatchMountedLifeCycle(c);
     }
   });

@@ -10,11 +10,37 @@ export type TemplateCallback = () => string;
 export type ComponentTemplateCallback = () => string;
 
 let componentsNamesList: string = "";
+
+function keepNodesOnly(
+  nodesAndComponents: (Node | string)[],
+  components: ComponentInst[]
+): Node[] {
+  const nodes: Node[] = [];
+
+  for (const n of nodesAndComponents) {
+    if (typeof n !== "string") {
+      nodes.push(n);
+      continue;
+    }
+
+    const normalize = components.find((c) => c.hostIdValue === n);
+
+    if (!normalize) continue;
+
+    nodes.push(...(normalize.nodesAndComponents as Node[]));
+  }
+
+  if (nodes.find((v) => typeof v === "string")) {
+    return keepNodesOnly(nodes, components);
+  }
+
+  return nodes;
+}
 export default class ComponentInst {
   parentElement: Element | null = null;
   lastTemplateValue: string = "";
   getCurrentTemplate: TemplateCallback = () => "";
-  nodes: Node[] = [];
+  nodesAndComponents: (Node | string)[] = [];
   parent: ComponentInst | null;
   componentsInTemplate: Set<ComponentInst> = new Set();
 
@@ -165,13 +191,19 @@ export default class ComponentInst {
     return this;
   }
 
+  getAllNodes() {
+    return keepNodesOnly(this.nodesAndComponents, [...ALL_COMPONENTS_INST]);
+  }
+
   defineNodesParentElement() {
-    if (this.nodes.length === 0) {
+    const nodes = this.getAllNodes();
+
+    if (nodes.length === 0) {
       this.parentElement = this.parent?.parentElement || null;
       return;
     }
 
-    const p = (this.nodes.find((n) => n.parentElement) as Element) || null;
+    const p = (nodes.find((n) => n.parentElement) as Element) || null;
 
     this.parentElement = p;
   }

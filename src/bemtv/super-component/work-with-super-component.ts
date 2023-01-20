@@ -10,11 +10,11 @@ export function getSuperComponentData(sComp: SuperComponent) {
 }
 
 export function getComponentInstFirstElement(c: ComponentInst) {
-  return (c.nodes.find((n) => n instanceof Element) as Element) || null;
+  return (c.getAllNodes().find((n) => n instanceof Element) as Element) || null;
 }
 
 export function getComponentInstNodes(c: ComponentInst) {
-  return c.nodes;
+  return c.getAllNodes();
 }
 
 const EMPTY_OBJECT = {};
