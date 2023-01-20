@@ -7,7 +7,7 @@ import isString from "../utilities/is-string";
 
 export function ElementInstFactory<E extends Element = Element>() {
   const elementInst = new ElementInst<E>();
-  const DOMlisteners = getElementInstData(elementInst).DOMlisteners;
+  const DOMListeners = getElementInstData(elementInst).DOMListeners;
 
   return new Proxy(elementInst, {
     get(target, name) {
@@ -35,29 +35,29 @@ export function ElementInstFactory<E extends Element = Element>() {
             },
           };
 
-          DOMlisteners.add(DOMListenerObject);
+          DOMListeners.add(DOMListenerObject);
 
-          if (elementInst.el) {
-            const r = insertDOMListener(
-              elementInst.el,
-              DOMListenerObject.listener,
-              ...args
-            );
-
-            DOMListenerObject.removeListener = r;
-
+          if (!elementInst.el) {
             return () => {
-              DOMlisteners.delete(DOMListenerObject);
-              r();
+              const r = DOMListenerObject?.removeListener;
+
+              DOMListeners.delete(DOMListenerObject);
+
+              r && r();
             };
           }
 
+          const r = insertDOMListener(
+            elementInst.el,
+            DOMListenerObject.listener,
+            ...args
+          );
+
+          DOMListenerObject.removeListener = r;
+
           return () => {
-            const r = DOMListenerObject?.removeListener;
-
-            DOMlisteners.delete(DOMListenerObject);
-
-            r && r();
+            DOMListeners.delete(DOMListenerObject);
+            r();
           };
         };
         (target as any)[propName] = newEventListener;

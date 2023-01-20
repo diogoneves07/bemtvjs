@@ -8,7 +8,7 @@ import { CSSClass, onRemoveClass } from "./css-classes";
 // import { ObserverSystem } from "./observers-system";
 
 export interface ElementInstData<E = Element> {
-  DOMlisteners: Set<ComponentListener>;
+  DOMListeners: Set<ComponentListener>;
   element: E | null;
   CSSClasses: Set<string>;
   //onceItConnectedObservers: ObserverSystem<(el: Element) => void>;
@@ -19,7 +19,7 @@ export interface ElementInst<E extends Element = Element> extends Listeners {}
 
 export class ElementInst<E = Element> {
   protected readonly __data: ElementInstData<E> = {
-    DOMlisteners: new Set(),
+    DOMListeners: new Set(),
     CSSClasses: new Set(),
     element: null,
     // onceItConnectedObservers: new ObserverSystem(),
@@ -35,15 +35,15 @@ export class ElementInst<E = Element> {
     //  !istheSame && d.onItUpdateObservers.dispatch(newIt);
 
     if (!istheSame && lastElement) {
-      d.DOMlisteners.forEach((o) => {
+      d.DOMListeners.forEach((o) => {
         o.removeListener && o.removeListener();
       });
     }
 
     if (!newIt || istheSame) return;
 
-    d.DOMlisteners.forEach((o) => {
-      o.removeListener = insertDOMListener(newIt, o.listener, ...o.args);
+    d.DOMListeners.forEach((o) => {
+      o.removeListener = insertDOMListener(newIt, o.listener, o.fn, o.options);
       return o;
     });
 
