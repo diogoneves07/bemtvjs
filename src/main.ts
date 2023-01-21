@@ -10,6 +10,8 @@ export {
   useFirstElementInst,
 } from "./bemtv/super-component/use-el";
 
+export { proxyFrom } from "./bemtv/super-component/proxy-from";
+
 export { createElementInst } from "./bemtv/super-component/create-element-inst";
 
 export { _, hasComponent } from "./bemtv/components-main";
