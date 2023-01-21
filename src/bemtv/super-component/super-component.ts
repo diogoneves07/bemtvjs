@@ -128,7 +128,7 @@ export class SuperComponent<Vars extends Record<string, any>> {
     };
   }
 
-  forEachInst(fn: () => void) {
+  run(fn: () => void) {
     const sCompProxy = this.__data.sCompProxy;
 
     sCompProxy.onInit(fn);
