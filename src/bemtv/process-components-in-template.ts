@@ -8,7 +8,7 @@ import {
   isComponentAutoImport,
   onComponentImported,
 } from "./auto-import-components";
-import { usePortal } from "./super-component/portals";
+import { useProxyFrom } from "./super-component/proxy-from";
 import { bindComponentToSuperComponent } from "./super-component/bind-comp-to-s-comp";
 
 type NextComponentData = ReturnType<typeof getNextComponentDataInTemplate>;
@@ -54,7 +54,7 @@ function processEachTemplate(
       throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} The component “${realComponentName}” was not created!`;
     }
 
-    const portalInst = usePortal(name);
+    const portalInst = useProxyFrom(name);
     let componentInst: ComponentInst;
 
     if (portalInst) {

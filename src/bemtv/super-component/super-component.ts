@@ -19,7 +19,7 @@ import autoCreateRoute, {
 } from "../auto-create-route";
 import { routeToKebabCase } from "../../router/routes-case";
 import { CSSClass, onRemoveClass } from "../css-classes";
-import { createPortal } from "./portals";
+import { proxyFrom } from "./proxy-from";
 import { ObserverSystem } from "../observers-system";
 import ComponentInst from "../component-inst";
 import { FakeSuperComponent } from "../types/fake-super-component";
@@ -272,7 +272,7 @@ export class SuperComponent<Vars extends Record<string, any>> {
     return this.__data.sCompProxy;
   }
 
-  inst() {
-    return createPortal<Vars>(this.__data.componentName);
+  proxy() {
+    return proxyFrom<Vars>(this.__data.componentName);
   }
 }
