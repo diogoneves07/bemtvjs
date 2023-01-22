@@ -1,6 +1,12 @@
 import { ElementInst } from "../element-inst";
 import { ElementInstFactory } from "../element-inst-factory";
 
+/**
+ * Creates and returns an instance to manipulate a real DOM element.
+ * @param elementOrSelector
+ *
+ * A DOM element or selector(same as `document.querySelector()`).
+ */
 export function createElementInst<E extends Element = Element>(
   elementOrSelector: Element | string
 ): ElementInst<E> {

@@ -17,10 +17,22 @@ export function createStateFn<T>(
   hasActions: boolean
 ): [stateFn: StateFn<T>, setStateFnValue: SetStateFnValue<T>];
 
-export function createStateFn<T>(value: T, hasActions: boolean = false) {
+/**
+ * Allows to manage state.
+ *
+ * @param initialValue
+ * The initial state value.
+ *
+ * @param hasActions
+ * Defines whether the state can only be changed by “actions”.
+ *
+ * @returns
+ * A function that maintains state and allows you to add watchers.
+ */
+export function createStateFn<T>(initialValue: T, hasActions: boolean = false) {
   const watchers = new Map<WatchCallback, number>();
 
-  let currentValue = value;
+  let currentValue = initialValue;
 
   let isSetingWithAction = false;
 
@@ -28,7 +40,7 @@ export function createStateFn<T>(value: T, hasActions: boolean = false) {
     if (newValue === undefined) return currentValue;
 
     if (hasActions && !isSetingWithAction) {
-      console.error("“", value, "”");
+      console.error("“", initialValue, "”");
       throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} The state funtion that init with the value above can only have its value changed through “actions”.`;
     }
 

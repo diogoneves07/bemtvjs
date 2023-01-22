@@ -24,6 +24,12 @@ function defineProxyFrom(key: string, c: () => ComponentInst) {
   BRIDGES_STORE.set(key, c);
 }
 
+/**
+ * Returns a “proxy” of the component that has access to all its resources.
+ *
+ * @param componentName
+ * The component name.
+ */
 export function proxyFrom<CompVars extends Record<string, any>>(
   componentName: string | TemplateStringsArray,
   ...args: (string | number)[]

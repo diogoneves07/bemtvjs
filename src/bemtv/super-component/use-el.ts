@@ -47,7 +47,11 @@ function findElementInComponentNodes(
 }
 
 /**
- * Creates an instance to manage a real DOM element.
+ * Allows access to an instance with methods and properties to manage a real DOM element.
+ *
+ * @returns
+ * A function that when called returns the instance
+ * that manipulates the element to which it has been bound.
  */
 export function useElementInst<E extends Element = Element>() {
   const cache = new Map<string | Element, ElementInst>();
@@ -89,6 +93,10 @@ export function useElementInst<E extends Element = Element>() {
 
 const useFirstElementInstCache = new WeakMap<ComponentInst, ElementInst>();
 
+/**
+ * Returns an instance that can manipulate the
+ * first element in the DOM of the component that called the function.
+ */
 export function useFirstElementInst<E extends Element = Element>() {
   const c = getComponentInstRunningOnTop();
 

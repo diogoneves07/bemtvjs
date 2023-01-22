@@ -53,6 +53,22 @@ export function autoImportComponent(name: string, currentTemplate?: string) {
   return s;
 }
 
+/**
+ * Allows you to create a component that will be imported only when necessary.
+ *
+ * @param componentName
+ * The component name.
+ *
+ * @param lazyComponentFn
+ * A function that should return a dynamic import promise.
+ *
+ * @param fallback
+ * A fallback to show while the component is being imported.
+ *
+ * @returns
+ *
+ * A function that when called imports the component and returns the import promise.
+ */
 export function lazy<N extends string, C extends LazyComponentFn<N>>(
   componentName: N,
   lazyComponentFn: C,

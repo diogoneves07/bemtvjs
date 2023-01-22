@@ -69,7 +69,7 @@ export class ElementInst<E = Element> {
   }
 
   /**
-   * Allows to apply style to element.
+   * Allows to apply style to  the element.
    */
   css(...args: Parameters<typeof css>): CSSClass {
     const element = this.el;

@@ -128,6 +128,9 @@ export class SuperComponent<Vars extends Record<string, any>> {
     };
   }
 
+  /**
+   * Runs a function for all instances of the component.
+   */
   run(fn: () => void) {
     const sCompProxy = this.__data.sCompProxy;
 
@@ -136,7 +139,13 @@ export class SuperComponent<Vars extends Record<string, any>> {
     return sCompProxy;
   }
 
-  onInst(fn: (e: FakeSuperComponent<Vars>) => void) {
+  /**
+   * Allows receiving a proxy to work with each instance of the component separately.
+   *
+   * @param
+   * A function that will be called whenever an instance is created.
+   */
+  onInst(fn: (proxy: FakeSuperComponent<Vars>) => void) {
     const d = this.__data;
     const sCompProxy = d.sCompProxy;
 
@@ -272,6 +281,9 @@ export class SuperComponent<Vars extends Record<string, any>> {
     return this.__data.sCompProxy;
   }
 
+  /**
+   * Returns a “proxy” of this component that has access to all its resources.
+   */
   proxy() {
     return proxyFrom<Vars>(this.__data.componentName);
   }
