@@ -3,11 +3,11 @@ import { ComponentListener } from "./types/listeners";
 import { Listeners } from "./types/listeners";
 import insertDOMListener from "./insert-dom-listener";
 import { css } from "goober";
-import { applyElementCSS } from "./work-with-element-inst";
+import { applyElementCSS } from "./work-with-element-manager";
 import { CSSClass, onRemoveClass } from "./css-classes";
 // import { ObserverSystem } from "./observers-system";
 
-export interface ElementInstData<E = Element> {
+export interface ElementManagerData<E = Element> {
   DOMListeners: Set<ComponentListener>;
   element: E | null;
   CSSClasses: Set<string>;
@@ -15,10 +15,11 @@ export interface ElementInstData<E = Element> {
   //onItUpdateObservers: ObserverSystem<(el: Element | null) => void>;
 }
 
-export interface ElementInst<E extends Element = Element> extends Listeners {}
+export interface ElementManager<E extends Element = Element>
+  extends Listeners {}
 
-export class ElementInst<E = Element> {
-  protected readonly __data: ElementInstData<E> = {
+export class ElementManager<E = Element> {
+  protected readonly __data: ElementManagerData<E> = {
     DOMListeners: new Set(),
     CSSClasses: new Set(),
     element: null,

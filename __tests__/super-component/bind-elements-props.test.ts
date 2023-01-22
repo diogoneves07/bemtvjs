@@ -1,4 +1,4 @@
-import { ElementInst } from "../../src/bemtv/element-inst";
+import { ElementManager } from "./../../src/bemtv/element-manager";
 import { _ } from "../../src/main";
 
 import { resetTestEnvironment } from "../test-utilities//reset-test-environment";
@@ -36,10 +36,10 @@ describe("Bind element props and attrs", () => {
     render();
   });
 
-  it("Should get the ElementInst", () => {
+  it("Should get the ElementManager", () => {
     const { onMount, $, template, render } = _`App`({
       spanInst: undefined,
-    } as { spanInst?: ElementInst<HTMLSpanElement> });
+    } as { spanInst?: ElementManager<HTMLSpanElement> });
 
     onMount(() => {
       expect($.spanInst?.el?.tagName).toBe("SPAN");

@@ -1,4 +1,4 @@
-import { useElementInst, _ } from "../../src/main";
+import { useElManager, _ } from "../../src/main";
 import { resetTestEnvironment } from "../test-utilities//reset-test-environment";
 
 resetTestEnvironment();
@@ -6,7 +6,7 @@ resetTestEnvironment();
 describe("Inject event handlers to component instance", () => {
   it("Should add onclick event listener to element", (done) => {
     const { click$, onMount, template, render } = _`App`();
-    const elFn = useElementInst<HTMLButtonElement>();
+    const elFn = useElManager<HTMLButtonElement>();
 
     const clickFn = jest.fn();
 
@@ -30,7 +30,7 @@ describe("Inject event handlers to component instance", () => {
 
   it("Should remove onclick event listener from element", (done) => {
     const { click$, onMount, template, render } = _`App`();
-    const elFn = useElementInst<HTMLButtonElement>();
+    const elFn = useElManager<HTMLButtonElement>();
     const clickFn = jest.fn();
     const removeClickListener = click$(clickFn);
 

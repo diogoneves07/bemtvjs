@@ -1,21 +1,21 @@
 import { ComponentListener } from "./types/listeners";
 import insertDOMListener from "./insert-dom-listener";
 import isEventListener from "./is-event-listener";
-import { ElementInst } from "./element-inst";
-import { getElementInstData } from "./work-with-element-inst";
+import { ElementManager } from "./element-manager";
+import { getElementManagerData } from "./work-with-element-manager";
 import isString from "../utilities/is-string";
 
-export function ElementInstFactory<E extends Element = Element>() {
-  const elementInst = new ElementInst<E>();
-  const DOMListeners = getElementInstData(elementInst).DOMListeners;
+export function ElementManagerFactory<E extends Element = Element>() {
+  const elementManager = new ElementManager<E>();
+  const DOMListeners = getElementManagerData(elementManager).DOMListeners;
 
-  return new Proxy(elementInst, {
+  return new Proxy(elementManager, {
     get(target, name) {
       const propName = name as string;
       let t = target as any;
       if (propName in target) {
         if (typeof t[propName] === "function") {
-          return t[propName].bind(elementInst);
+          return t[propName].bind(elementManager);
         }
         return t[propName];
       }
@@ -37,7 +37,7 @@ export function ElementInstFactory<E extends Element = Element>() {
 
           DOMListeners.add(DOMListenerObject);
 
-          if (!elementInst.el) {
+          if (!elementManager.el) {
             return () => {
               const r = DOMListenerObject?.removeListener;
 
@@ -48,7 +48,7 @@ export function ElementInstFactory<E extends Element = Element>() {
           }
 
           const r = insertDOMListener(
-            elementInst.el,
+            elementManager.el,
             DOMListenerObject.listener,
             ...args
           );

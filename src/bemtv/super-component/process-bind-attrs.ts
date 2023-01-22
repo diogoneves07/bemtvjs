@@ -5,7 +5,7 @@ import {
 import isNumber from "../../utilities/is-number";
 import isString from "../../utilities/is-string";
 import ComponentInst from "../component-inst";
-import { createElementInstFromElement } from "./create-element-inst";
+import { createElManagerFromElement } from "../create-element-manager";
 import { SuperComponent } from "./super-component";
 import {
   getComponentInstNodes,
@@ -222,7 +222,7 @@ export function setElementsWithBindAttrs(
         getOrSetPropertyByPath(
           sComp.$,
           compVar,
-          createElementInstFromElement(el)
+          createElManagerFromElement(el)
         );
         updateComponentVars(sComp);
         continue;

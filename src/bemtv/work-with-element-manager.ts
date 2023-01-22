@@ -1,10 +1,10 @@
 import { BEMTEVI_CSS_IN_JS } from "./globals";
-import { ElementInst } from "./element-inst";
+import { ElementManager } from "./element-manager";
 
 type CSSInJSParameters = Parameters<typeof BEMTEVI_CSS_IN_JS["gooberCSS"]>;
 
-export function getElementInstData(m: ElementInst) {
-  return (m as any).__data as ElementInst["__data"];
+export function getElementManagerData(m: ElementManager) {
+  return (m as any).__data as ElementManager["__data"];
 }
 
 export function applyElementCSS(el: Element, args: CSSInJSParameters) {

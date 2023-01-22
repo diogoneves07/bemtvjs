@@ -1,18 +1,15 @@
 export type { RouteControl } from "./router/use-route-control";
 
 export type { CSSClass } from "./bemtv/css-classes";
-export type { ElementInst } from "./bemtv/element-inst";
+export type { ElementManager } from "./bemtv/element-manager";
 
 export { useRouteControl } from "./router/use-route-control";
 
-export {
-  useElementInst,
-  useFirstElementInst,
-} from "./bemtv/super-component/use-el";
+export { useElManager, useFirstElManager } from "./bemtv/use-element-manager";
 
 export { proxyFrom } from "./bemtv/super-component/proxy-from";
 
-export { createElementInst } from "./bemtv/super-component/create-element-inst";
+export { createElManager } from "./bemtv/create-element-manager";
 
 export { _, hasComponent } from "./bemtv/components-main";
 

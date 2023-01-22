@@ -1,4 +1,4 @@
-import { ElementInst } from "../element-inst";
+import { ElementManager } from "../element-manager";
 import { T_FNS_SYMBOL } from "../transformation-functions/main";
 import { SuperComponent } from "./super-component";
 import {
@@ -79,7 +79,7 @@ export default function manageComponentsVars<O extends Record<string, any>>(
         !(value instanceof HTMLCollection) &&
         !(value instanceof NodeList) &&
         !(value instanceof Node) &&
-        !(value instanceof ElementInst) &&
+        !(value instanceof ElementManager) &&
         !Object.hasOwn(value, SYMBOL_IS_PROXY)
       ) {
         target[name] = Object.hasOwn(value, SYMBOL_IS_CLONE)

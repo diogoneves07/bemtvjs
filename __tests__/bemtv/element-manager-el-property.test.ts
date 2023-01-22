@@ -1,16 +1,16 @@
-import { _, createElementInst, useElementInst } from "../../src/main";
+import { _, createElManager, useElManager } from "../../src/main";
 import { resetTestEnvironment } from "../test-utilities/reset-test-environment";
 
 resetTestEnvironment();
 
-describe("ElementInst.el property", () => {
-  it("Should use #app element in ElementInst", (done) => {
+describe("ElementManager.el property", () => {
+  it("Should use #app element in ElementManager", (done) => {
     const div = document.createElement("div");
     div.id = "app";
     document.body.appendChild(div);
 
     const { onMount, render } = _`App`();
-    const { el } = createElementInst("#app");
+    const { el } = createElManager("#app");
 
     onMount(() => {
       expect(el).toBe(div);
@@ -22,13 +22,13 @@ describe("ElementInst.el property", () => {
     render();
   });
 
-  it("Should use div element in ElementInst", (done) => {
+  it("Should use div element in ElementManager", (done) => {
     const div = document.createElement("div");
 
     document.body.appendChild(div);
 
     const { onMount, render } = _`App`();
-    const { el } = createElementInst(div);
+    const { el } = createElManager(div);
 
     onMount(() => {
       expect(el).toBe(div);
@@ -40,18 +40,18 @@ describe("ElementInst.el property", () => {
     render();
   });
 
-  it("Should get element from template and use in ElementInst", (done) => {
+  it("Should get element from template and use in ElementManager", (done) => {
     const { onMount, template, render } = _`App`();
 
-    const elInstFn = useElementInst();
+    const elManagerFn = useElManager();
 
     onMount(() => {
-      const appEl = elInstFn();
+      const appEl = elManagerFn();
       expect(appEl.el?.tagName?.toLowerCase()).toBe("button");
       done();
     });
 
-    template`button[ ${elInstFn} Click me!]`;
+    template`button[ ${elManagerFn} Click me!]`;
 
     render();
   });
@@ -59,10 +59,10 @@ describe("ElementInst.el property", () => {
   it("Should be null", (done) => {
     const { onMount, template, render } = _`App`();
 
-    const elInst = createElementInst("#no-exists");
+    const elManager = createElManager("#no-exists");
 
     onMount(() => {
-      expect(elInst.el).toBeNull();
+      expect(elManager.el).toBeNull();
       done();
     });
 
@@ -74,17 +74,17 @@ describe("ElementInst.el property", () => {
   it("Should replace the HTML element “span” with “strong”", (done) => {
     const { onMount, onUpdate, template, render } = _`App`();
 
-    const elInstFn = useElementInst();
+    const elManagerFn = useElManager();
 
-    let t = `span[${elInstFn.key} class="today" ~ Click me!]`;
+    let t = `span[${elManagerFn.key} class="today" ~ Click me!]`;
 
     onMount(() => {
-      expect(elInstFn().el.tagName?.toLowerCase()).toBe("span");
-      t = `strong[${elInstFn.key} class="today" ~ Click me!]`;
+      expect(elManagerFn().el.tagName?.toLowerCase()).toBe("span");
+      t = `strong[${elManagerFn.key} class="today" ~ Click me!]`;
     });
 
     onUpdate(() => {
-      expect(elInstFn().el.tagName?.toLowerCase()).toBe("strong");
+      expect(elManagerFn().el.tagName?.toLowerCase()).toBe("strong");
       done();
     });
 
@@ -96,16 +96,16 @@ describe("ElementInst.el property", () => {
   it("Should update element attributes", (done) => {
     const { onMount, onUpdate, template, render } = _`App`();
 
-    const elInstFn = useElementInst();
+    const elManagerFn = useElManager();
 
-    let t = `span[${elInstFn.key} class="today" color:red; ~ Click me!]`;
+    let t = `span[${elManagerFn.key} class="today" color:red; ~ Click me!]`;
 
     onMount(() => {
-      t = `span[${elInstFn.key} class="today tomorrow" color:red; ~ Click me!]`;
+      t = `span[${elManagerFn.key} class="today tomorrow" color:red; ~ Click me!]`;
     });
 
     onUpdate(() => {
-      expect(elInstFn().el?.tagName?.toLowerCase()).toBe("span");
+      expect(elManagerFn().el?.tagName?.toLowerCase()).toBe("span");
       done();
     });
 
@@ -122,7 +122,7 @@ describe("ElementInst.el property", () => {
     const { onMount, template, render } = _`App`();
 
     onMount(() => {
-      const { el } = createElementInst("#app");
+      const { el } = createElManager("#app");
 
       setTimeout(() => {
         expect(el).toBe(div);

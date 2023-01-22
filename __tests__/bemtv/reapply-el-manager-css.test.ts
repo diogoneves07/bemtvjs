@@ -1,15 +1,15 @@
-import { useElementInst, _ } from "../../src/main";
-import { resetTestEnvironment } from "../test-utilities//reset-test-environment";
+import { useElManager, _ } from "../../src/main";
+import { resetTestEnvironment } from "../test-utilities/reset-test-environment";
 
 resetTestEnvironment();
 
 describe(`
-   Checks the reapplication of CSS classes to the element of the “ElementInst.it” property
+   Checks the reapplication of CSS classes to the element of the “ElementManager.it” property
 `, () => {
-  it("Should reapply the class inserted via the “ElementInst.css()” method", (done) => {
+  it("Should reapply the class inserted via the “ElementManager.css()” method", (done) => {
     const { onMount, onUpdate, template, render } = _`App`();
 
-    const elFn = useElementInst();
+    const elFn = useElManager();
 
     let t = `span[${elFn.key} Hey!]`;
 
@@ -35,11 +35,11 @@ describe(`
   });
 
   it(`
-     Should apply the class inserted through the “ElementInst.css()” method to the new element
+     Should apply the class inserted through the “ElementManager.css()” method to the new element
   `, (done) => {
     const { onMount, onUpdate, template, render } = _`App`();
 
-    const elFn = useElementInst();
+    const elFn = useElManager();
 
     let t = `span[${elFn.key} Hey!]`;
 
