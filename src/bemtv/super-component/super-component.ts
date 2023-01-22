@@ -5,8 +5,8 @@ import { css } from "goober";
 import { LIBRARY_NAME_IN_ERRORS_MESSAGE } from "./../../globals";
 import render from "./../render";
 import {
-  getComponentInstFirstElement,
-  runInComponentInst,
+  getSimpleComponentFirstElement,
+  runInSimpleComponent,
   updateComponentVars,
 } from "./work-with-super-component";
 import { SuperComponentData } from "./../types/super-component-data";
@@ -21,7 +21,7 @@ import { routeToKebabCase } from "../../router/routes-case";
 import { CSSClass, onRemoveClass } from "../css-classes";
 import { proxyFrom } from "./proxy-from";
 import { ObserverSystem } from "../observers-system";
-import ComponentInst from "../component-inst";
+import SimpleComponent from "../simple-component";
 import { FakeSuperComponent } from "../types/fake-super-component";
 import { createFakeSuperComponent } from "./fake-super-component";
 
@@ -77,8 +77,8 @@ export class SuperComponent<Vars extends Record<string, any>> {
     DOMListeners: new Set(),
     lifeCycles: new Map(),
     removeDOMListeners: new Map(),
-    componentInstRunning: null,
-    componentsInst: new Set(),
+    simpleComponentRunning: null,
+    simpleComponents: new Set(),
     $disableProxies: false,
     disableVarsProxies() {
       this.$disableProxies = true;
@@ -119,9 +119,9 @@ export class SuperComponent<Vars extends Record<string, any>> {
    * A callback that when called executes the function passed.
    */
   keepInst<T extends Function>(callback: T) {
-    const keepInstance = this.__data.componentInstRunning;
+    const keepInstance = this.__data.simpleComponentRunning;
     return () => {
-      runInComponentInst(this, keepInstance, () => {
+      runInSimpleComponent(this, keepInstance, () => {
         callback();
         updateComponentVars(this.__data.sCompProxy);
       });
@@ -149,7 +149,7 @@ export class SuperComponent<Vars extends Record<string, any>> {
     const d = this.__data;
     const sCompProxy = d.sCompProxy;
 
-    const run = (c: ComponentInst) => {
+    const run = (c: SimpleComponent) => {
       const fakeSuperComponent = createFakeSuperComponent<Vars>(c, "");
 
       fn(fakeSuperComponent);
@@ -174,7 +174,7 @@ export class SuperComponent<Vars extends Record<string, any>> {
     let block = false;
 
     const fn = () => {
-      const c = this.__data.componentInstRunning;
+      const c = this.__data.simpleComponentRunning;
 
       if (block) {
         if (c) c.onUpdatedObservers?.delete(fn);
@@ -182,7 +182,7 @@ export class SuperComponent<Vars extends Record<string, any>> {
         return;
       }
 
-      const firstElement = c && getComponentInstFirstElement(c);
+      const firstElement = c && getSimpleComponentFirstElement(c);
 
       if (firstElement && !firstElement.classList.contains(classValue)) {
         firstElement.classList.add(classValue);

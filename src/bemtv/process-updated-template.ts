@@ -1,21 +1,21 @@
-import ComponentInst from "./component-inst";
+import SimpleComponent from "./simple-component";
 import {
   getComponentDataByName,
   getTopLevelComponentsName,
 } from "./get-next-component-data-in-template";
 import processComponentsInTemplate from "./process-components-in-template";
 import {
-  runInComponentInst,
+  runInSimpleComponent,
   updateComponentVars,
 } from "./super-component/work-with-super-component";
 
 export default function processUpdatedTemplate(
-  componentInst: ComponentInst,
-  lastComponentsInTemplate: ComponentInst[]
+  simpleComponent: SimpleComponent,
+  lastComponentsInTemplate: SimpleComponent[]
 ) {
-  const newComponentsInst: ComponentInst[] = [];
+  const newSimpleComponents: SimpleComponent[] = [];
 
-  let template = componentInst.getCurrentTemplateWithHost();
+  let template = simpleComponent.getCurrentTemplateWithHost();
 
   const topLevelComponentsName = getTopLevelComponentsName(template);
 
@@ -33,25 +33,25 @@ export default function processUpdatedTemplate(
       template = before + childComponent.lastTemplateProcessed + after;
 
       if (childComponent.children !== children && s) {
-        runInComponentInst(s, childComponent, () => {
+        runInSimpleComponent(s, childComponent, () => {
           s.$.children = children;
           updateComponentVars(s);
         });
       }
       childComponent.children = children;
 
-      componentInst.addComponentChild(childComponent);
+      simpleComponent.addComponentChild(childComponent);
 
       continue;
     }
 
-    const { newTemplate: componentTemlate, componentsInst } =
-      processComponentsInTemplate(`${name}[${children}]`, componentInst);
+    const { newTemplate: componentTemplate, simpleComponents } =
+      processComponentsInTemplate(`${name}[${children}]`, simpleComponent);
 
-    newComponentsInst.push(...componentsInst);
+    newSimpleComponents.push(...simpleComponents);
 
-    template = before + componentTemlate + after;
+    template = before + componentTemplate + after;
   }
 
-  return { template, newComponentsInst };
+  return { template, newSimpleComponents };
 }

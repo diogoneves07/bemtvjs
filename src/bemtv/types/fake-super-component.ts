@@ -1,4 +1,4 @@
-import ComponentInst from "../component-inst";
+import SimpleComponent from "../simple-component";
 import { SuperComponent } from "../super-component/super-component";
 
 export interface FakeSuperComponentInternal<
@@ -6,10 +6,10 @@ export interface FakeSuperComponentInternal<
 > extends SuperComponent<CompVars> {
   key: string;
   isFakeSuperComponent: true;
-  __componentInst: ComponentInst;
+  __simpleComponent: SimpleComponent;
 }
 
 export type FakeSuperComponent<CompVars extends Record<string, any>> = Omit<
   FakeSuperComponentInternal<CompVars>,
-  "__componentInst"
+  "__simpleComponent"
 >;

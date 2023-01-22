@@ -2,11 +2,11 @@ import { LIBRARY_NAME_IN_ERRORS_MESSAGE } from "./../../globals";
 import toKebabCase from "../../utilities/to-kebab-case";
 import { T_FNS_SYMBOL } from "../transformation-functions/main";
 import {
-  getComponentInstRunningVars,
+  getSimpleComponentRunningVars,
   getSuperComponentData,
 } from "./work-with-super-component";
 import { SuperComponent } from "./super-component";
-import ComponentInst from "../component-inst";
+import SimpleComponent from "../simple-component";
 import { generateForcedBindAttr } from "../generate-forced-el-attrs";
 
 //const VARS_PREFIX = "$";
@@ -15,7 +15,7 @@ const BIND_PROPS_PREFIX = "<";
 
 const regexTemplateVars = /(\$|\@)[\.\w]*[\w][\?\<]?[\w]*/g;
 
-function errorMessage(varValue: any, c: ComponentInst) {
+function errorMessage(varValue: any, c: SimpleComponent) {
   console.error(varValue);
   throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} In the “${c.name}” component the template has a value that is not string or number: “${varValue}”`;
 }
@@ -36,7 +36,7 @@ function isBindingElementProps(p: string) {
 function getVarsValues(
   name: string,
   sComp: SuperComponent,
-  c: ComponentInst,
+  c: SimpleComponent,
   componentVarsCache: Map<string, string>
 ) {
   const bindingElementProps = isBindingElementProps(name);
@@ -51,7 +51,7 @@ function getVarsValues(
 
   if (getLastValue) return componentVarsCache.get(varName);
 
-  const vars = getComponentInstRunningVars(sComp);
+  const vars = getSimpleComponentRunningVars(sComp);
 
   const hasPathToProp = varName.includes(".");
   const pathToProp = hasPathToProp ? varName.split(".") : false;
@@ -108,7 +108,7 @@ function getVarsValues(
 
 export default function getVarsInTemplate(
   sComp: SuperComponent,
-  c: ComponentInst
+  c: SimpleComponent
 ) {
   const sCompData = getSuperComponentData(sComp);
   const { componentVarsCache } = c;

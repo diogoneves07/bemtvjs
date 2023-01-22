@@ -4,14 +4,14 @@ import {
 } from "../../globals";
 import isNumber from "../../utilities/is-number";
 import isString from "../../utilities/is-string";
-import ComponentInst from "../component-inst";
+import SimpleComponent from "../simple-component";
 import { createElManagerFromElement } from "../create-element-manager";
 import { SuperComponent } from "./super-component";
 import {
-  getComponentInstNodes,
-  getComponentInstRunningVars,
+  getSimpleComponentNodes,
+  getSimpleComponentRunningVars,
   getSuperComponentData,
-  runInComponentInst,
+  runInSimpleComponent,
   updateComponentVars,
 } from "./work-with-super-component";
 
@@ -55,7 +55,7 @@ function getOrSetPropertyByPath(
   return value;
 }
 
-export function getElementsWithBindAttrs(cInst: ComponentInst) {
+export function getElementsWithBindAttrs(cSimple: SimpleComponent) {
   const els: [el: Element, propertyValue: string[]][] = [];
 
   const rec = (nodes: Node[]) => {
@@ -70,7 +70,7 @@ export function getElementsWithBindAttrs(cInst: ComponentInst) {
     }
   };
 
-  rec(getComponentInstNodes(cInst));
+  rec(getSimpleComponentNodes(cSimple));
 
   return els;
 }
@@ -82,7 +82,7 @@ export function handleOnInput(
 ) {
   const { el, tagName } = bindedAttrs;
 
-  const c = getComponentInstRunningVars(sComp) as Record<string, any>;
+  const c = getSimpleComponentRunningVars(sComp) as Record<string, any>;
   const compVarValue = getOrSetPropertyByPath(c, propertyPath);
 
   if (Array.isArray(compVarValue)) {
@@ -133,7 +133,7 @@ export function processElementsWithBindAttrs(
   sComp: SuperComponent,
   elementsWithBindAttrs: ElementsWithBindAttrs
 ) {
-  const c = getComponentInstRunningVars(sComp) as Record<string, any>;
+  const c = getSimpleComponentRunningVars(sComp) as Record<string, any>;
 
   for (const bindObject of elementsWithBindAttrs) {
     const { el, lastPerpertyValue, perpertyName, hasInput, compVar } =
@@ -173,16 +173,16 @@ const formElements = ["select", "input", "textarea"];
 
 export function setElementsWithBindAttrs(
   sComp: SuperComponent,
-  cInst: ComponentInst,
+  cSimple: SimpleComponent,
   elementsWithBindAttrs: ElementsWithBindAttrs
 ) {
-  const c = getComponentInstRunningVars(sComp) as Record<string, any>;
+  const c = getSimpleComponentRunningVars(sComp) as Record<string, any>;
 
   const listenerToElementInput = (
     bindedAttrs: ElementWithBindAttrs,
     compVar: string
   ) => {
-    runInComponentInst(sComp, cInst, () => {
+    runInSimpleComponent(sComp, cSimple, () => {
       handleOnInput(sComp, bindedAttrs, compVar);
     });
   };
@@ -206,7 +206,7 @@ export function setElementsWithBindAttrs(
     });
   };
 
-  for (const [el, propertyValue] of getElementsWithBindAttrs(cInst)) {
+  for (const [el, propertyValue] of getElementsWithBindAttrs(cSimple)) {
     for (const v of propertyValue) {
       const [perpertyName, compVar] = v.split(":");
 

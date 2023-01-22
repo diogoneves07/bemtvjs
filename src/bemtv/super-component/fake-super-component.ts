@@ -1,15 +1,15 @@
-import ComponentInst from "../component-inst";
+import SimpleComponent from "../simple-component";
 import { FakeSuperComponentInternal } from "../types/fake-super-component";
 import {
-  runInComponentInst,
+  runInSimpleComponent,
   updateComponentVars,
 } from "./work-with-super-component";
 
 export function createFakeSuperComponent<CompVars extends Record<string, any>>(
-  cInst: ComponentInst,
+  cSimple: SimpleComponent,
   key: string
 ) {
-  const sCompProxy = cInst.superComponent as any;
+  const sCompProxy = cSimple.superComponent as any;
   const compVarsProxy = new Proxy(
     {},
     {
@@ -19,9 +19,9 @@ export function createFakeSuperComponent<CompVars extends Record<string, any>>(
 
         if (value instanceof Function) {
           return (...args: any[]) => {
-            runInComponentInst(
+            runInSimpleComponent(
               sCompProxy,
-              fakeSuperComponent.__componentInst,
+              fakeSuperComponent.__simpleComponent,
               () => {
                 value(...args);
               }
@@ -32,9 +32,9 @@ export function createFakeSuperComponent<CompVars extends Record<string, any>>(
         return sCompProxy.$[k];
       },
       set(_t, p, newValue) {
-        runInComponentInst(
+        runInSimpleComponent(
           sCompProxy,
-          fakeSuperComponent.__componentInst,
+          fakeSuperComponent.__simpleComponent,
           () => {
             sCompProxy.$[p] = newValue;
             updateComponentVars(sCompProxy);
@@ -46,7 +46,7 @@ export function createFakeSuperComponent<CompVars extends Record<string, any>>(
   );
 
   const fakeSuperComponent = new Proxy(
-    { key, isFakeSuperComponent: true, __componentInst: cInst },
+    { key, isFakeSuperComponent: true, __simpleComponent: cSimple },
     {
       get(t, p) {
         const k = p as string;
@@ -55,9 +55,9 @@ export function createFakeSuperComponent<CompVars extends Record<string, any>>(
 
         if (typeof sCompProxy[k] === "function") {
           return (...args: any[]) => {
-            runInComponentInst(
+            runInSimpleComponent(
               sCompProxy,
-              fakeSuperComponent.__componentInst,
+              fakeSuperComponent.__simpleComponent,
               () => {
                 sCompProxy[k](...args);
               }

@@ -1,9 +1,9 @@
-import ComponentInst from "./component-inst";
+import SimpleComponent from "./simple-component";
 import processUpdatedTemplate from "./process-updated-template";
 import { removeDiffBetweenChildNodes } from "./remove-diff-between-child-nodes";
 import brackethtmlToHTML from "../brackethtml/brackethtml-to-html";
 import getPossibleNewNodes from "./get-possible-new-nodes";
-import { ALL_COMPONENTS_INST } from "./component-inst-store";
+import { ALL_SIMPLE_COMPONENTS } from "./simple-component-store";
 import { isRouterComponent } from "./is-router-component";
 import getAllNodesInList from "../utilities/get-all-nodes-in-list";
 import { getNodeParentComponentByInst } from "./get-node-parent-component";
@@ -33,31 +33,31 @@ function keepOnlyNodesAndComponentsConnected(
   return r;
 }
 
-function getComponentsInstUpdated(
+function getSimpleComponentsUpdated(
   allNodesRemovedOrUpdated: Node[],
   componentsNodes: Map<string, (Node | string)[]>
 ) {
-  const componentsInstUpdated = new Set<ComponentInst>();
+  const simpleComponentsUpdated = new Set<SimpleComponent>();
 
-  let allComponentsInst = new Set(ALL_COMPONENTS_INST);
+  let allSimpleComponents = new Set(ALL_SIMPLE_COMPONENTS);
 
   for (const [hostIdValue, nodes] of componentsNodes) {
-    for (const c of allComponentsInst) {
+    for (const c of allSimpleComponents) {
       if (c.hostIdValue === hostIdValue) {
-        componentsInstUpdated.add(c);
+        simpleComponentsUpdated.add(c);
 
         c.nodesAndComponents = keepOnlyNodesAndComponentsConnected(
           nodes,
           c.nodesAndComponents
         );
 
-        allComponentsInst.delete(c);
+        allSimpleComponents.delete(c);
         break;
       }
     }
   }
 
-  function componentWasUpdated(c: ComponentInst) {
+  function componentWasUpdated(c: SimpleComponent) {
     const nNodes = componentsNodes.get(c.hostIdValue);
 
     if (!nNodes) return;
@@ -68,40 +68,40 @@ function getComponentsInstUpdated(
     );
 
     if (isRouterComponent(c.name)) {
-      if (!componentsInstUpdated.has(c.parent as any)) {
-        componentsInstUpdated.add(c);
+      if (!simpleComponentsUpdated.has(c.parent as any)) {
+        simpleComponentsUpdated.add(c);
       }
       return;
     }
-    componentsInstUpdated.add(c);
+    simpleComponentsUpdated.add(c);
   }
 
-  for (const c of allComponentsInst) {
+  for (const c of allSimpleComponents) {
     for (const n of allNodesRemovedOrUpdated) {
       const r = getNodeParentComponentByInst(c, n);
 
       if (r) {
         componentWasUpdated(r);
-        allComponentsInst.delete(r);
+        allSimpleComponents.delete(r);
       }
     }
   }
 
-  return componentsInstUpdated;
+  return simpleComponentsUpdated;
 }
 
-export default function updateUIWithNewTemplate(cInst: ComponentInst) {
-  const lastComponentsInTemplate = [...cInst.componentsInTemplate];
+export default function updateUIWithNewTemplate(cSimple: SimpleComponent) {
+  const lastComponentsInTemplate = [...cSimple.componentsInTemplate];
 
-  const oldChildNodes = cInst.getAllNodes();
+  const oldChildNodes = cSimple.getAllNodes();
 
-  cInst.clearComponentsInTemplateList();
+  cSimple.clearComponentsInTemplateList();
 
-  const r = processUpdatedTemplate(cInst, lastComponentsInTemplate);
+  const r = processUpdatedTemplate(cSimple, lastComponentsInTemplate);
 
-  const { parentElement } = cInst;
+  const { parentElement } = cSimple;
 
-  const { template: pureTemplate, newComponentsInst } = r;
+  const { template: pureTemplate, newSimpleComponents } = r;
 
   const newHtml = brackethtmlToHTML(pureTemplate);
 
@@ -117,15 +117,15 @@ export default function updateUIWithNewTemplate(cInst: ComponentInst) {
     ...nodesRemovedOrUpdated,
   ]);
 
-  const componentsInstUpdated = getComponentsInstUpdated(
+  const simpleComponentsUpdated = getSimpleComponentsUpdated(
     allNodesRemovedOrUpdated,
     componentsNodes
   );
-  const newComponentsInTemplate = cInst.componentsInTemplate;
+  const newComponentsInTemplate = cSimple.componentsInTemplate;
 
   let hasComponentsInTemplateChanged = true;
 
-  if (lastComponentsInTemplate.length === cInst.componentsInTemplate.size) {
+  if (lastComponentsInTemplate.length === cSimple.componentsInTemplate.size) {
     if (
       !lastComponentsInTemplate.find((v) => !newComponentsInTemplate.has(v))
     ) {
@@ -134,16 +134,16 @@ export default function updateUIWithNewTemplate(cInst: ComponentInst) {
   }
 
   if (hasComponentsInTemplateChanged) {
-    componentsInstUpdated.add(cInst);
+    simpleComponentsUpdated.add(cSimple);
   }
 
-  cInst.lastTemplateProcessed = pureTemplate;
+  cSimple.lastTemplateProcessed = pureTemplate;
 
-  cInst.updateLastTemplateValueProperty();
+  cSimple.updateLastTemplateValueProperty();
 
   return {
-    newComponentsInst,
+    newSimpleComponents,
     componentsNodes,
-    componentsInstUpdated,
+    simpleComponentsUpdated,
   };
 }

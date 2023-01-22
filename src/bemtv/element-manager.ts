@@ -1,5 +1,5 @@
 import { BEMTEVI_CSS_IN_JS } from "./globals";
-import { ComponentListener } from "./types/listeners";
+import { SimpleComponentDOMListener } from "./types/listeners";
 import { Listeners } from "./types/listeners";
 import insertDOMListener from "./insert-dom-listener";
 import { css } from "goober";
@@ -8,7 +8,7 @@ import { CSSClass, onRemoveClass } from "./css-classes";
 // import { ObserverSystem } from "./observers-system";
 
 export interface ElementManagerData<E = Element> {
-  DOMListeners: Set<ComponentListener>;
+  DOMListeners: Set<SimpleComponentDOMListener>;
   element: E | null;
   CSSClasses: Set<string>;
   //onceItConnectedObservers: ObserverSystem<(el: Element) => void>;

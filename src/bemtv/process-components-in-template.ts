@@ -1,5 +1,5 @@
 import { LIBRARY_NAME_IN_ERRORS_MESSAGE } from "../globals";
-import ComponentInst from "./component-inst";
+import SimpleComponent from "./simple-component";
 import normalizeComponentName from "./normalize-component-name";
 import getNextComponentDataInTemplate from "./get-next-component-data-in-template";
 import {
@@ -15,8 +15,8 @@ type NextComponentData = ReturnType<typeof getNextComponentDataInTemplate>;
 
 function processEachTemplate(
   template: string,
-  componentsInst: ComponentInst[],
-  parent: ComponentInst | null = null
+  simpleComponents: SimpleComponent[],
+  parent: SimpleComponent | null = null
 ) {
   let newTemplate = template;
   let componentData: NextComponentData;
@@ -55,42 +55,42 @@ function processEachTemplate(
     }
 
     const portalInst = useProxyFrom(name);
-    let componentInst: ComponentInst;
+    let simpleComponent: SimpleComponent;
 
     if (portalInst) {
-      componentInst = portalInst;
-      componentInst.children = children;
-      componentInst.parent = parent;
+      simpleComponent = portalInst;
+      simpleComponent.children = children;
+      simpleComponent.parent = parent;
     } else {
-      componentInst = new ComponentInst(realComponentName, parent, name);
-      componentInst.children = children;
+      simpleComponent = new SimpleComponent(realComponentName, parent, name);
+      simpleComponent.children = children;
 
-      bindComponentToSuperComponent(componentInst);
+      bindComponentToSuperComponent(simpleComponent);
     }
 
-    if (parent) parent.addComponentChild(componentInst);
+    if (parent) parent.addComponentChild(simpleComponent);
 
-    componentsInst.push(componentInst);
+    simpleComponents.push(simpleComponent);
 
     const { newTemplate: t } = processEachTemplate(
-      componentInst.getCurrentTemplateWithHost(),
-      componentsInst,
-      componentInst
+      simpleComponent.getCurrentTemplateWithHost(),
+      simpleComponents,
+      simpleComponent
     );
 
-    componentInst.lastTemplateProcessed = t;
+    simpleComponent.lastTemplateProcessed = t;
 
     newTemplate = before + t + after;
   }
 
-  return { newTemplate, componentsInst };
+  return { newTemplate, simpleComponents };
 }
 
 export default function processComponentsInTemplate(
   template: string,
-  firstParent: ComponentInst | null = null
+  firstParent: SimpleComponent | null = null
 ) {
-  const { newTemplate, componentsInst } = processEachTemplate(
+  const { newTemplate, simpleComponents } = processEachTemplate(
     template,
     [],
     firstParent
@@ -98,6 +98,6 @@ export default function processComponentsInTemplate(
 
   return {
     newTemplate,
-    componentsInst,
+    simpleComponents,
   };
 }

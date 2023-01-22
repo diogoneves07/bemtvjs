@@ -34,7 +34,7 @@ export default function render(
   }
 
   requestAnimationFrame(() => {
-    const { newTemplate: pureTemplate, componentsInst } =
+    const { newTemplate: pureTemplate, simpleComponents } =
       processComponentsInTemplate(template);
 
     const brackethtml = brackethtmlTranspiler(pureTemplate);
@@ -51,7 +51,7 @@ export default function render(
 
     BRACKETHTML_CSS_IN_JS.applyLastCSSCreated(brackethtml.css);
 
-    for (const c of componentsInst) {
+    for (const c of simpleComponents) {
       c.nodesAndComponents = componentsNodes.get(c.hostIdValue) || [];
       dispatchMountedLifeCycle(c);
     }

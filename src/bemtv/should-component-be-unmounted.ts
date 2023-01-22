@@ -1,22 +1,22 @@
-import ComponentInst from "./component-inst";
-import { ALL_COMPONENTS_INST } from "./component-inst-store";
+import SimpleComponent from "./simple-component";
+import { ALL_SIMPLE_COMPONENTS } from "./simple-component-store";
 import { dispatchUnmountedLifeCycle } from "./components-lifecycle";
 
 export default function shouldComponentBeUnmounted(
-  componentInst: ComponentInst
+  simpleComponent: SimpleComponent
 ) {
-  if (!componentInst.parent) return false;
+  if (!simpleComponent.parent) return false;
 
   if (
-    !componentInst.parent.unmounted &&
-    componentInst.parent.hasComponentChild(componentInst)
+    !simpleComponent.parent.unmounted &&
+    simpleComponent.parent.hasComponentChild(simpleComponent)
   ) {
     return false;
   }
 
-  ALL_COMPONENTS_INST.delete(componentInst);
+  ALL_SIMPLE_COMPONENTS.delete(simpleComponent);
 
-  dispatchUnmountedLifeCycle(componentInst);
+  dispatchUnmountedLifeCycle(simpleComponent);
 
   return true;
 }

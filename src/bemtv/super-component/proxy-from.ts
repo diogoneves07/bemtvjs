@@ -1,12 +1,12 @@
 import { LIBRARY_NAME_IN_ERRORS_MESSAGE } from "../../globals";
-import ComponentInst from "../component-inst";
-import { getSuperComponentInst } from "../components-main";
+import SimpleComponent from "../simple-component";
+import { getSuperSimpleComponent } from "../components-main";
 import { bindComponentToSuperComponent } from "./bind-comp-to-s-comp";
 import { createFakeSuperComponent } from "./fake-super-component";
 import { FakeSuperComponent } from "../types/fake-super-component";
 import concatTemplateStringArrays from "../../utilities/concat-template-string-arrays";
 
-const BRIDGES_STORE = new Map<string, () => ComponentInst>();
+const BRIDGES_STORE = new Map<string, () => SimpleComponent>();
 
 let count = 0;
 
@@ -20,7 +20,7 @@ export function useProxyFrom(key: string) {
   return i && i();
 }
 
-function defineProxyFrom(key: string, c: () => ComponentInst) {
+function defineProxyFrom(key: string, c: () => SimpleComponent) {
   BRIDGES_STORE.set(key, c);
 }
 
@@ -41,21 +41,21 @@ export function proxyFrom<CompVars extends Record<string, any>>(
     name = concatTemplateStringArrays(componentName, args).join("");
   }
 
-  const realSuperComponent = getSuperComponentInst(name);
+  const realSuperComponent = getSuperSimpleComponent(name);
 
   if (!realSuperComponent)
     throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} The SuperComponent “${name}” was not created!`;
 
   const key = createProxyFromKey(name);
 
-  let componentInst = new ComponentInst(name, null, key);
+  let simpleComponent = new SimpleComponent(name, null, key);
 
-  componentInst.defineComponentTemplate(
-    bindComponentToSuperComponent(componentInst)
+  simpleComponent.defineComponentTemplate(
+    bindComponentToSuperComponent(simpleComponent)
   );
 
   const fakeSuperComponent = createFakeSuperComponent<CompVars>(
-    componentInst,
+    simpleComponent,
     key
   );
 
@@ -64,16 +64,16 @@ export function proxyFrom<CompVars extends Record<string, any>>(
   defineProxyFrom(key, () => {
     if (isFirstInst) {
       isFirstInst = false;
-      return componentInst;
+      return simpleComponent;
     }
-    componentInst = new ComponentInst(name, null, key);
+    simpleComponent = new SimpleComponent(name, null, key);
 
-    componentInst.defineComponentTemplate(
-      bindComponentToSuperComponent(componentInst)
+    simpleComponent.defineComponentTemplate(
+      bindComponentToSuperComponent(simpleComponent)
     );
-    fakeSuperComponent.__componentInst = componentInst;
+    fakeSuperComponent.__simpleComponent = simpleComponent;
 
-    return componentInst;
+    return simpleComponent;
   });
 
   return fakeSuperComponent as FakeSuperComponent<CompVars>;

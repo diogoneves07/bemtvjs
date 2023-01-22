@@ -1,7 +1,7 @@
-import { ALL_COMPONENTS_INST } from "./../../src/bemtv/component-inst-store";
 import { resetDocumentBodyAndRemoveComponents } from "../test-utilities/reset-test-environment";
 import { _ } from "../../src/main";
 import hasRoute from "../../src/bemtv/has-route";
+import { ALL_SIMPLE_COMPONENTS } from "../../src/bemtv/simple-component-store";
 
 resetDocumentBodyAndRemoveComponents("App", "Router:Root", "Root");
 
@@ -10,10 +10,10 @@ beforeEach(() => {
    * It is necessary to remove the link between the components already created
    * before using the Router again.
    * */
-  for (const m of ALL_COMPONENTS_INST) {
+  for (const m of ALL_SIMPLE_COMPONENTS) {
     m.parent = null;
   }
-  ALL_COMPONENTS_INST.clear();
+  ALL_SIMPLE_COMPONENTS.clear();
 
   window.location.hash = "";
 });

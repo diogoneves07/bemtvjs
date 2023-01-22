@@ -1,7 +1,7 @@
 import { AVOIDS_EMPTY_TEMPLATE, TAG_HOST_NAME } from "./globals";
-import { ALL_COMPONENTS_INST } from "./component-inst-store";
+import { ALL_SIMPLE_COMPONENTS } from "./simple-component-store";
 import normalizeRouterShortcut from "./normalize-router-shortcut";
-import { LifeCycleCallback } from "./types/component-inst-data";
+import { LifeCycleCallback } from "./types/simple-component-data";
 import { ObserverSystem } from "./observers-system";
 import { SuperComponent } from "./super-component/super-component";
 
@@ -13,7 +13,7 @@ let componentsNamesList: string = "";
 
 function keepNodesOnly(
   nodesAndComponents: (Node | string)[],
-  components: ComponentInst[]
+  components: SimpleComponent[]
 ): Node[] {
   const nodes: Node[] = [];
 
@@ -36,13 +36,13 @@ function keepNodesOnly(
 
   return nodes;
 }
-export default class ComponentInst {
+export default class SimpleComponent {
   parentElement: Element | null = null;
   lastTemplateValue: string = "";
   getCurrentTemplate: TemplateCallback = () => "";
   nodesAndComponents: (Node | string)[] = [];
-  parent: ComponentInst | null;
-  componentsInTemplate: Set<ComponentInst> = new Set();
+  parent: SimpleComponent | null;
+  componentsInTemplate: Set<SimpleComponent> = new Set();
 
   superComponent?: SuperComponent<Record<string, any>>;
 
@@ -75,7 +75,7 @@ export default class ComponentInst {
 
   constructor(
     name: string,
-    parent: ComponentInst | null,
+    parent: SimpleComponent | null,
     nameInTemplate: string
   ) {
     this.name = name;
@@ -92,7 +92,7 @@ export default class ComponentInst {
 
     this.hostIdValue = this.key.toLowerCase();
 
-    ALL_COMPONENTS_INST.add(this);
+    ALL_SIMPLE_COMPONENTS.add(this);
   }
 
   defineComponentTemplate(callbackOrText: ComponentTemplateCallback | string) {
@@ -130,12 +130,12 @@ export default class ComponentInst {
     return this;
   }
 
-  addComponentChild(c: ComponentInst) {
+  addComponentChild(c: SimpleComponent) {
     this.componentsInTemplate.add(c);
     return this;
   }
 
-  hasComponentChild(c: ComponentInst) {
+  hasComponentChild(c: SimpleComponent) {
     return this.componentsInTemplate.has(c);
   }
 
@@ -192,7 +192,7 @@ export default class ComponentInst {
   }
 
   getAllNodes() {
-    return keepNodesOnly(this.nodesAndComponents, [...ALL_COMPONENTS_INST]);
+    return keepNodesOnly(this.nodesAndComponents, [...ALL_SIMPLE_COMPONENTS]);
   }
 
   defineNodesParentElement() {

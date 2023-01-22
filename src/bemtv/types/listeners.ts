@@ -15,7 +15,7 @@ export type Listeners = {
   >;
 };
 
-export type ComponentListener = {
+export type SimpleComponentDOMListener = {
   listener: string;
   fn: Function;
   options: AddEventListenerOptions;

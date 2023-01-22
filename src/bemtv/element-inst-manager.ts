@@ -1,4 +1,4 @@
-import { ComponentListener } from "./types/listeners";
+import { SimpleComponentDOMListener } from "./types/listeners";
 import insertDOMListener from "./insert-dom-listener";
 import isEventListener from "./is-event-listener";
 import { ElementManager } from "./element-manager";
@@ -24,7 +24,7 @@ export function ElementManagerFactory<E extends Element = Element>() {
         const newEventListener = (
           ...args: [fn: Function, options: AddEventListenerOptions]
         ) => {
-          const DOMListenerObject: ComponentListener = {
+          const DOMListenerObject: SimpleComponentDOMListener = {
             listener: listenerName,
             options: args[1],
             fn: (e: Event) => {

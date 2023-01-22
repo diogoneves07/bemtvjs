@@ -1,4 +1,4 @@
-import { ALL_COMPONENTS_INST } from "./component-inst-store";
+import { ALL_SIMPLE_COMPONENTS } from "./simple-component-store";
 import updatedUIWithNewTemplate from "./update-ui-with-new-template";
 import {
   dispatchMountedLifeCycle,
@@ -13,27 +13,30 @@ const timeoutForLoop = 1000 / framesLimit;
 
 function requestAnimationFrameLoop() {
   let hasChanges = false;
-  for (const componentInst of ALL_COMPONENTS_INST) {
-    if (!componentInst.parentElement) {
+  for (const simpleComponent of ALL_SIMPLE_COMPONENTS) {
+    if (!simpleComponent.parentElement) {
       continue;
     }
 
-    if (!componentInst.shouldTemplateBeUpdate()) {
-      shouldComponentBeUnmounted(componentInst);
+    if (!simpleComponent.shouldTemplateBeUpdate()) {
+      shouldComponentBeUnmounted(simpleComponent);
       continue;
     }
 
     hasChanges = true;
 
-    shouldComponentBeUnmounted(componentInst);
+    shouldComponentBeUnmounted(simpleComponent);
 
-    const updatedUI = updatedUIWithNewTemplate(componentInst);
+    const updatedUI = updatedUIWithNewTemplate(simpleComponent);
     requestAnimationFrame(() => {
       if (updatedUI) {
-        const { newComponentsInst, componentsNodes, componentsInstUpdated } =
-          updatedUI;
+        const {
+          newSimpleComponents,
+          componentsNodes,
+          simpleComponentsUpdated,
+        } = updatedUI;
 
-        for (const c of componentsInstUpdated) {
+        for (const c of simpleComponentsUpdated) {
           // Checks if the component intends to update naturally.
           if (!c.shouldTemplateBeUpdate()) {
             c.updateLastTemplateValueProperty();
@@ -42,7 +45,7 @@ function requestAnimationFrameLoop() {
           }
         }
 
-        for (const c of newComponentsInst) {
+        for (const c of newSimpleComponents) {
           c.nodesAndComponents = componentsNodes.get(c.hostIdValue) || [];
 
           dispatchMountedLifeCycle(c);

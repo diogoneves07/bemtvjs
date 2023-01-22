@@ -1,7 +1,7 @@
 import { LIBRARY_NAME_IN_ERRORS_MESSAGE } from "./../../globals";
-import ComponentInst from "../component-inst";
+import SimpleComponent from "../simple-component";
 import { dispatchInitedLifeCycle } from "../components-lifecycle";
-import { getSuperComponentInst } from "../components-main";
+import { getSuperSimpleComponent } from "../components-main";
 import getVarsInTemplate from "./get-vars-in-template";
 import {
   ElementsWithBindAttrs,
@@ -10,28 +10,28 @@ import {
 } from "./process-bind-attrs";
 import {
   addDOMListenerToComponent,
-  getComponentInstFirstElement,
+  getSimpleComponentFirstElement,
   getSuperComponentData,
-  runInComponentInst,
+  runInSimpleComponent,
   updateComponentVars,
 } from "./work-with-super-component";
 
-export function bindComponentToSuperComponent(cInst: ComponentInst) {
-  const sComp = getSuperComponentInst(cInst.name);
+export function bindComponentToSuperComponent(cSimple: SimpleComponent) {
+  const sComp = getSuperSimpleComponent(cSimple.name);
 
   if (!sComp)
-    throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} The SuperComponent “${cInst.name}” was not created!`;
+    throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} The SuperComponent “${cSimple.name}” was not created!`;
 
-  cInst.superComponent = sComp;
+  cSimple.superComponent = sComp;
 
   const sCompData = getSuperComponentData(sComp);
 
   let lastFirstElement: undefined | Element;
 
   const updateFirstElement = () => {
-    const firstElement = getComponentInstFirstElement(cInst);
+    const firstElement = getSimpleComponentFirstElement(cSimple);
 
-    cInst.defineNodesParentElement();
+    cSimple.defineNodesParentElement();
 
     if (!firstElement) return;
 
@@ -39,22 +39,22 @@ export function bindComponentToSuperComponent(cInst: ComponentInst) {
 
     lastFirstElement = firstElement;
 
-    const fnsIterator = cInst.removeFirstElementDOMListeners.values();
+    const fnsIterator = cSimple.removeFirstElementDOMListeners.values();
 
     for (const fn of fnsIterator) fn();
 
-    cInst.removeFirstElementDOMListeners.clear();
+    cSimple.removeFirstElementDOMListeners.clear();
 
     for (const l of sCompData.DOMListeners) {
-      addDOMListenerToComponent(firstElement, sComp, l, cInst);
+      addDOMListenerToComponent(firstElement, sComp, l, cSimple);
     }
   };
 
-  let withoutTypes = cInst as any;
+  let withoutTypes = cSimple as any;
 
   for (const l of sCompData.lifeCycles) {
     for (const callback of l[1]) {
-      withoutTypes[l[0]](() => callback(cInst));
+      withoutTypes[l[0]](() => callback(cSimple));
     }
   }
 
@@ -63,51 +63,51 @@ export function bindComponentToSuperComponent(cInst: ComponentInst) {
   let elementsWithBindAttrs: ElementsWithBindAttrs = [];
 
   const updateElementsWithBindAttrs = () => {
-    runInComponentInst(sComp, cInst, () => {
-      setElementsWithBindAttrs(sComp, cInst, elementsWithBindAttrs);
+    runInSimpleComponent(sComp, cSimple, () => {
+      setElementsWithBindAttrs(sComp, cSimple, elementsWithBindAttrs);
     });
   };
 
   const template = () => {
     const { isTemplateFunction } = sCompData;
 
-    runInComponentInst(sComp, cInst, () => {
+    runInSimpleComponent(sComp, cSimple, () => {
       processElementsWithBindAttrs(sComp, elementsWithBindAttrs);
 
-      const { componentVarsCache } = cInst;
+      const { componentVarsCache } = cSimple;
 
       if (isTemplateFunction || componentVarsCache.size === 0) {
-        lastTemplateValue = getVarsInTemplate(sComp, cInst);
+        lastTemplateValue = getVarsInTemplate(sComp, cSimple);
       }
     });
 
     return lastTemplateValue;
   };
 
-  cInst.componentVars = {
+  cSimple.componentVars = {
     ...sCompData.componentsInitVars,
-    children: cInst.children,
+    children: cSimple.children,
   };
 
-  sCompData.componentsInst.add(cInst);
+  sCompData.simpleComponents.add(cSimple);
 
-  sCompData.onInstObservers.dispatch(cInst);
+  sCompData.onInstObservers.dispatch(cSimple);
 
-  dispatchInitedLifeCycle(cInst);
+  dispatchInitedLifeCycle(cSimple);
 
-  cInst.defineComponentTemplate(template);
+  cSimple.defineComponentTemplate(template);
 
-  runInComponentInst(sComp, cInst, () => {
+  runInSimpleComponent(sComp, cSimple, () => {
     updateComponentVars(sComp);
   });
 
-  cInst.onUnmount(() => sCompData.componentsInst.delete(cInst));
+  cSimple.onUnmount(() => sCompData.simpleComponents.delete(cSimple));
 
-  cInst.onMountWithHighPriority(updateFirstElement);
-  cInst.onUpdateWithHighPriority(updateFirstElement);
+  cSimple.onMountWithHighPriority(updateFirstElement);
+  cSimple.onUpdateWithHighPriority(updateFirstElement);
 
-  cInst.onMountWithHighPriority(updateElementsWithBindAttrs);
-  cInst.onUpdateWithHighPriority(updateElementsWithBindAttrs);
+  cSimple.onMountWithHighPriority(updateElementsWithBindAttrs);
+  cSimple.onUpdateWithHighPriority(updateElementsWithBindAttrs);
 
   return template;
 }

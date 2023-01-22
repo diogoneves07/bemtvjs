@@ -6,7 +6,7 @@ import { getSuperComponentData } from "./super-component/work-with-super-compone
 
 export const ALL_SUPER_COMPONENTS: SuperComponent[] = [];
 
-export function getSuperComponentInst(componentName: string) {
+export function getSuperSimpleComponent(componentName: string) {
   return ALL_SUPER_COMPONENTS.find(
     (s) => getSuperComponentData(s).componentName === componentName
   );
@@ -19,7 +19,7 @@ export function getSuperComponentInst(componentName: string) {
  * The component name.
  */
 export function hasComponent(name: string) {
-  return getSuperComponentInst(name) ? true : false;
+  return getSuperSimpleComponent(name) ? true : false;
 }
 
 /**
@@ -42,7 +42,7 @@ export function _(componentName: TemplateStringsArray, ...args: string[]) {
       : n
   ) as string;
 
-  if (getSuperComponentInst(name)) {
+  if (getSuperSimpleComponent(name)) {
     throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} The “${name}” component already exists!`;
   }
 

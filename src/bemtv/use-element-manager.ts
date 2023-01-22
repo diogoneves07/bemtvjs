@@ -5,12 +5,12 @@ import {
   getForcedAttrValue,
   normalizeElKeyAttr,
 } from "./generate-forced-el-attrs";
-import { getComponentInstRunningOnTop } from "./component-inst-on-top";
+import { getSimpleComponentRunningOnTop } from "./simple-component-on-top";
 import {
-  getComponentInstFirstElement,
-  getComponentInstNodes,
+  getSimpleComponentFirstElement,
+  getSimpleComponentNodes,
 } from "./super-component/work-with-super-component";
-import ComponentInst from "./component-inst";
+import SimpleComponent from "./simple-component";
 import { ElementManagerFactory } from "./element-inst-manager";
 
 export type ElementManagerConnected<E extends Element> = Omit<
@@ -24,10 +24,10 @@ export type ElementManagerFn<E extends Element = Element> = {
 };
 
 function findElementInComponentNodes(
-  v: ComponentInst | Node[],
+  v: SimpleComponent | Node[],
   elKey: string
 ): Element | undefined {
-  const nodes = v instanceof ComponentInst ? getComponentInstNodes(v) : v;
+  const nodes = v instanceof SimpleComponent ? getSimpleComponentNodes(v) : v;
 
   for (const n of nodes) {
     if (!(n instanceof Element)) continue;
@@ -56,7 +56,7 @@ export function useElManager<E extends Element = Element>() {
 
   const fn = (() => {
     const v = normalizeElKeyAttr(getForcedAttrValue(key));
-    const c = getComponentInstRunningOnTop();
+    const c = getSimpleComponentRunningOnTop();
 
     if (!c)
       throw `${LIBRARY_NAME_IN_ERRORS_MESSAGE} “useElManager()” must be used inside a callback known to the component so that it knows which component to get the element from.`;
@@ -88,14 +88,14 @@ export function useElManager<E extends Element = Element>() {
   return fn;
 }
 
-const useFirstElManagerCache = new WeakMap<ComponentInst, ElementManager>();
+const useFirstElManagerCache = new WeakMap<SimpleComponent, ElementManager>();
 
 /**
  * Returns an instance that can manipulate the
  * first element in the DOM of the component that called the function.
  */
 export function useFirstElManager<E extends Element = Element>() {
-  const c = getComponentInstRunningOnTop();
+  const c = getSimpleComponentRunningOnTop();
 
   const has = c && useFirstElManagerCache.get(c);
 
@@ -107,7 +107,7 @@ export function useFirstElManager<E extends Element = Element>() {
   const elementManager = ElementManagerFactory<E>();
 
   const fn = () => {
-    const e = getComponentInstFirstElement(c);
+    const e = getSimpleComponentFirstElement(c);
 
     elementManager.el = e as E;
   };

@@ -21,7 +21,7 @@ function removeDiffBetweenNodesAttrs(newNode: Element, oldNode: Element) {
 export function removeDiffBetweenChildNodes(
   newChildNodes: Node[],
   oldChildNodes: Node[],
-  instParentElement?: Element | null
+  simpleComponentParentElement?: Element | null
 ) {
   const nodesRemovedOrUpdated = new Set<Node>();
 
@@ -32,7 +32,7 @@ export function removeDiffBetweenChildNodes(
   let oldChildNodesArray = oldChildNodes.slice(0, length);
 
   const parentElement = (oldChildNodes[0]?.parentElement ||
-    instParentElement) as HTMLElement;
+    simpleComponentParentElement) as HTMLElement;
 
   for (const node of oldChildNodes.slice(length)) {
     node.parentElement && node.parentElement.removeChild(node);

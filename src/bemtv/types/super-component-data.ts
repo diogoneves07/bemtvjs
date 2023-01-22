@@ -1,5 +1,5 @@
 import { SuperComponent } from "../super-component/super-component";
-import ComponentInst from "../component-inst";
+import SimpleComponent from "../simple-component";
 import { ObserverSystem } from "../observers-system";
 
 export type SuperComponentDOMListener = {
@@ -16,14 +16,14 @@ export interface SuperComponentData {
   isTemplateFunction: boolean;
   templateHasAlreadyBeenDefined: boolean;
   DOMListeners: Set<SuperComponentDOMListener>;
-  lifeCycles: Map<string, ((c: ComponentInst) => void)[]>;
+  lifeCycles: Map<string, ((c: SimpleComponent) => void)[]>;
   removeDOMListeners: Map<SuperComponentDOMListener, (() => void)[]>;
-  componentInstRunning: ComponentInst | null;
-  componentsInst: Set<ComponentInst>;
+  simpleComponentRunning: SimpleComponent | null;
+  simpleComponents: Set<SimpleComponent>;
   $disableProxies: boolean;
   sCompProxy: SuperComponent;
   disableVarsProxies(): void;
   activateVarsProxies(): void;
   routeOptions?: { title?: string; concat?: string };
-  onInstObservers: ObserverSystem<(c: ComponentInst) => void>;
+  onInstObservers: ObserverSystem<(c: SimpleComponent) => void>;
 }
