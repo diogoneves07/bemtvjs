@@ -1,5 +1,5 @@
 import { ElementManager } from "./element-manager";
-import { ElementManagerFactory } from "./element-inst-manager";
+import { ElementManagerFactory } from "./element-manager-factory";
 
 /**
  * Creates and returns an instance to manipulate a real DOM element.

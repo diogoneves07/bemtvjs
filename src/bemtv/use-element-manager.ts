@@ -11,7 +11,7 @@ import {
   getSimpleComponentNodes,
 } from "./super-component/work-with-super-component";
 import SimpleComponent from "./simple-component";
-import { ElementManagerFactory } from "./element-inst-manager";
+import { ElementManagerFactory } from "./element-manager-factory";
 
 export type ElementManagerConnected<E extends Element> = Omit<
   ElementManager<E>,
