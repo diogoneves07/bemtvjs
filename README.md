@@ -24,10 +24,6 @@
 
 Currently in the Javascript ecosystem there are excellent tools for developing the user interface. Bemtv reuses much of what these tools brought and brings, however, it is not a copy, it is something totally new.
 
-> **IMPORTANT: Bemtv is a recent project that is improving every day and seeking stability, read the releases to stay informed of what has changed.**
-
-> Don't forget to give your star to the project, as this encourages me to continue developing.
-
 ## Key Features
 
 - Cleaner syntax than other UI libraries and frameworks.
@@ -141,3 +137,5 @@ I currently work full time at Bemtv and do not receive any financial compensatio
 If you have some free time, come and be part of building Bemtv!
 
 All help is appreciated!
+
+> Don't forget to give your star to the project, as this encourages me to continue developing.
