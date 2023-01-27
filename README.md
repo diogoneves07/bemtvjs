@@ -44,7 +44,7 @@ Currently in the Javascript ecosystem there are excellent tools for developing t
 
 - Hooks.
 
-- Transform functions that separate data structures like Array, Set, Map and Object from their markup for the template.
+- Transformation functions that separate data structures like Array, Set, Map and Object from their markup for the template.
 
 - Brackethtml markup language: instead of `<div>Hey!</div>` do this: `div[Hey!]`.
 
