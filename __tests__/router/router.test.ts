@@ -1,7 +1,7 @@
 import { resetDocumentBodyAndRemoveComponents } from "../test-utilities/reset-test-environment";
 import { _ } from "../../src/main";
-import hasRoute from "../../src/bemtv/has-route";
 import { ALL_SIMPLE_COMPONENTS } from "../../src/bemtv/simple-component-store";
+import hasRoute from "../../src/router/has-route";
 
 resetDocumentBodyAndRemoveComponents("App", "Router:Root", "Root");
 

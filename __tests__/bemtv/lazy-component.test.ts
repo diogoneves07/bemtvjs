@@ -1,4 +1,4 @@
-import { isComponentAutoImport } from "../../src/bemtv/auto-import-components";
+import { isComponentAutoImport } from "../../src/bemtv/lazy-component";
 import { lazy, _ } from "../../src/main";
 
 lazy(

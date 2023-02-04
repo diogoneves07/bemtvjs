@@ -1,5 +1,5 @@
 import { ObserverSystem } from "../bemtv/observers-system";
-import { getComponentAutoImportPromise } from "../bemtv/auto-import-components";
+import { getComponentAutoImportPromise } from "../bemtv/lazy-component";
 import { applyRouteOptions } from "./apply-route-options";
 
 export type RemoveRouterControl = () => void;

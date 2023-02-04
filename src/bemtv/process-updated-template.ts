@@ -7,7 +7,7 @@ import processComponentsInTemplate from "./process-components-in-template";
 import {
   runInSimpleComponent,
   updateComponentVars,
-} from "./super-component/work-with-super-component";
+} from "../super-component/work-with-super-component";
 
 export default function processUpdatedTemplate(
   simpleComponent: SimpleComponent,

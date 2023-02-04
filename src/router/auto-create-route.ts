@@ -1,5 +1,5 @@
-import createRoute from "../router/create-route";
-import { hasComponent } from "./components-main";
+import createRoute from "./create-route";
+import { hasComponent } from "../bemtv/components-main";
 
 export default function autoCreateRoute(routeName: string) {
   const cleanRouteName = routeName.slice(routeName.indexOf(":") + 1);

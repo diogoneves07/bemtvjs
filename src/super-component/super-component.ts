@@ -1,28 +1,28 @@
-import { ROUTES_OPTIONS } from "./../routes-store";
-import { Listeners } from "./../types/listeners";
+import { ROUTES_OPTIONS } from "../router/routes-store";
+import { Listeners } from "../bemtv/types/listeners";
 import { css } from "goober";
 
-import { LIBRARY_NAME_IN_ERRORS_MESSAGE } from "./../../globals";
-import render from "./../render";
+import { LIBRARY_NAME_IN_ERRORS_MESSAGE } from "../globals";
+import render from "../bemtv/render";
 import {
   getSimpleComponentFirstElement,
   runInSimpleComponent,
   updateComponentVars,
 } from "./work-with-super-component";
-import { SuperComponentData } from "./../types/super-component-data";
-import concatTemplateStringArrays from "../../utilities/concat-template-string-arrays";
+import { SuperComponentData } from "../bemtv/types/super-component-data";
+import concatTemplateStringArrays from "../utilities/concat-template-string-arrays";
 import manageComponentsVars from "./manage-components-vars";
-import isStringOrNumber from "../../utilities/is-string-or-number";
+import isStringOrNumber from "../utilities/is-string-or-number";
 import { treatArgsInTemplate } from "./treat-args-in-template";
 import autoCreateRoute, {
   autoCreateRouteFromTemplates,
-} from "../auto-create-route";
-import { routeToKebabCase } from "../../router/routes-case";
-import { CSSClass, onRemoveClass } from "../css-classes";
+} from "../router/auto-create-route";
+import { routeToKebabCase } from "../router/routes-case";
+import { CSSClass, onRemoveClass } from "../bemtv/css-classes";
 import { proxyFrom } from "./proxy-from";
-import { ObserverSystem } from "../observers-system";
-import SimpleComponent from "../simple-component";
-import { FakeSuperComponent } from "../types/fake-super-component";
+import { ObserverSystem } from "../bemtv/observers-system";
+import SimpleComponent from "../bemtv/simple-component";
+import { FakeSuperComponent } from "../bemtv/types/fake-super-component";
 import { createFakeSuperComponent } from "./fake-super-component";
 
 export type ComponentVars<V extends Record<string, any> = Record<string, any>> =

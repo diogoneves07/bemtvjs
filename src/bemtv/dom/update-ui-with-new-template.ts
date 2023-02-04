@@ -1,12 +1,12 @@
-import SimpleComponent from "./simple-component";
-import processUpdatedTemplate from "./process-updated-template";
+import SimpleComponent from "../simple-component";
+import processUpdatedTemplate from "../process-updated-template";
 import { removeDiffBetweenChildNodes } from "./remove-diff-between-child-nodes";
-import brackethtmlToHTML from "../brackethtml/brackethtml-to-html";
-import getPossibleNewNodes from "./get-possible-new-nodes";
-import { ALL_SIMPLE_COMPONENTS } from "./simple-component-store";
-import { isRouterComponent } from "./is-router-component";
-import getAllNodesInList from "../utilities/get-all-nodes-in-list";
-import { getNodeParentComponentByInst } from "./get-node-parent-component";
+import brackethtmlToHTML from "../../brackethtml/brackethtml-to-html";
+import getPossibleNewNodes from "../get-possible-new-nodes";
+import { ALL_SIMPLE_COMPONENTS } from "../simple-component-store";
+import { isRouterComponent } from "../../router/is-router-component";
+import getAllNodesInList from "../../utilities/get-all-nodes-in-list";
+import { getNodeParentComponentByInst } from "../get-node-parent-component";
 
 function keepOnlyNodesAndComponentsConnected(
   possibleNewNodes: (Node | string)[],

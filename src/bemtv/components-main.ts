@@ -1,8 +1,8 @@
-import { SuperComponent } from "./super-component/super-component";
+import { SuperComponent } from "../super-component/super-component";
 import { LIBRARY_NAME_IN_ERRORS_MESSAGE } from "../globals";
-import { SuperComponentFactory } from "./super-component/super-component-factory";
+import { SuperComponentFactory } from "../super-component/super-component-factory";
 import concatTemplateStringArrays from "../utilities/concat-template-string-arrays";
-import { getSuperComponentData } from "./super-component/work-with-super-component";
+import { getSuperComponentData } from "../super-component/work-with-super-component";
 
 export const ALL_SUPER_COMPONENTS: SuperComponent[] = [];
 

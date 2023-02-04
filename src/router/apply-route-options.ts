@@ -1,4 +1,4 @@
-import { ROUTES_OPTIONS } from "../bemtv/routes-store";
+import { ROUTES_OPTIONS } from "./routes-store";
 import { routeToCamelCase } from "./routes-case";
 
 export function applyRouteOptions(name: string) {

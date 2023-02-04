@@ -7,9 +7,9 @@ import {
   isComponentAlreadyImported,
   isComponentAutoImport,
   onComponentImported,
-} from "./auto-import-components";
-import { useProxyFrom } from "./super-component/proxy-from";
-import { bindComponentToSuperComponent } from "./super-component/bind-comp-to-s-comp";
+} from "./lazy-component";
+import { useProxyFrom } from "../super-component/proxy-from";
+import { bindComponentToSuperComponent } from "../super-component/bind-comp-to-s-comp";
 
 type NextComponentData = ReturnType<typeof getNextComponentDataInTemplate>;
 

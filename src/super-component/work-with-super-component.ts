@@ -1,9 +1,9 @@
 import { SuperComponent } from "./super-component";
-import { LifeCycleCallback } from "../types/simple-component-data";
-import { SuperComponentDOMListener } from "./../types/super-component-data";
-import insertDOMListener from "../insert-dom-listener";
-import SimpleComponent from "../simple-component";
-import { setSimpleComponentRunningOnTop } from "../simple-component-on-top";
+import { LifeCycleCallback } from "../bemtv/types/simple-component-data";
+import { SuperComponentDOMListener } from "../bemtv/types/super-component-data";
+import insertDOMListener from "../bemtv/dom/insert-dom-listener";
+import SimpleComponent from "../bemtv/simple-component";
+import { setSimpleComponentRunningOnTop } from "../bemtv/simple-component-on-top";
 
 export function getSuperComponentData(sComp: SuperComponent) {
   return (sComp as any).__data as SuperComponent["__data"];

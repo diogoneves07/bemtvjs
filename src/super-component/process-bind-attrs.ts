@@ -1,11 +1,11 @@
 import {
   BIND_ATTRIBUTE_NAME,
   LIBRARY_NAME_IN_ERRORS_MESSAGE,
-} from "../../globals";
-import isNumber from "../../utilities/is-number";
-import isString from "../../utilities/is-string";
-import SimpleComponent from "../simple-component";
-import { createElManagerFromElement } from "../create-element-manager";
+} from "../globals";
+import isNumber from "../utilities/is-number";
+import isString from "../utilities/is-string";
+import SimpleComponent from "../bemtv/simple-component";
+import { createElManagerFromElement } from "../bemtv/create-element-manager";
 import { SuperComponent } from "./super-component";
 import {
   getSimpleComponentNodes,

@@ -1,5 +1,5 @@
 import { ALL_SIMPLE_COMPONENTS } from "./simple-component-store";
-import updatedUIWithNewTemplate from "./update-ui-with-new-template";
+import updatedUIWithNewTemplate from "./dom/update-ui-with-new-template";
 import {
   dispatchMountedLifeCycle,
   dispatchUpdatedLifeCycle,

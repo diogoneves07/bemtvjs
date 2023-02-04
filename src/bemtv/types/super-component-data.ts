@@ -1,4 +1,4 @@
-import { SuperComponent } from "../super-component/super-component";
+import { SuperComponent } from "../../super-component/super-component";
 import SimpleComponent from "../simple-component";
 import { ObserverSystem } from "../observers-system";
 

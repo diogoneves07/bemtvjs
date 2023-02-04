@@ -1,5 +1,5 @@
 import SimpleComponent from "../simple-component";
-import { SuperComponent } from "../super-component/super-component";
+import { SuperComponent } from "../../super-component/super-component";
 
 export interface FakeSuperComponentInternal<
   CompVars extends Record<string, any>

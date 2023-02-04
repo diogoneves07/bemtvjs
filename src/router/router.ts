@@ -2,7 +2,7 @@ import { routeToCamelCase } from "./routes-case";
 import { dispatchRouteUnfound } from "./on-route-unfound";
 import { hasComponent } from "../bemtv/components-main";
 import createRoute from "./create-route";
-import hasRoute from "../bemtv/has-route";
+import hasRoute from "./has-route";
 import {
   dispatchToRouteControlers,
   hasRouterControlers,

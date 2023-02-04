@@ -1,7 +1,7 @@
 import { BEMTEVI_CSS_IN_JS } from "./globals";
 import { SimpleComponentDOMListener } from "./types/listeners";
 import { Listeners } from "./types/listeners";
-import insertDOMListener from "./insert-dom-listener";
+import insertDOMListener from "./dom/insert-dom-listener";
 import { css } from "goober";
 import { applyElementCSS } from "./work-with-element-manager";
 import { CSSClass, onRemoveClass } from "./css-classes";

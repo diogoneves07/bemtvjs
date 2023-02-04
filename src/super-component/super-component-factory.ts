@@ -1,15 +1,15 @@
-import isEventListener from "./../is-event-listener";
+import isEventListener from "../bemtv/is-event-listener";
 import { SuperComponent } from "./super-component";
-import { LifeCycleCallback } from "../types/simple-component-data";
-import { SuperComponentDOMListener } from "./../types/super-component-data";
+import { LifeCycleCallback } from "../bemtv/types/simple-component-data";
+import { SuperComponentDOMListener } from "../bemtv/types/super-component-data";
 import {
   addLifeCycleToComponents,
   addDOMListenerToComponents,
   getSuperComponentData,
   removeDOMListenerFromComponents,
 } from "./work-with-super-component";
-import isString from "../../utilities/is-string";
-import hasRoute from "../has-route";
+import isString from "../utilities/is-string";
+import hasRoute from "../router/has-route";
 
 export function SuperComponentFactory<Vars extends Record<string, any>>(
   name: string,

@@ -1,5 +1,5 @@
 import { SimpleComponentDOMListener } from "./types/listeners";
-import insertDOMListener from "./insert-dom-listener";
+import insertDOMListener from "./dom/insert-dom-listener";
 import isEventListener from "./is-event-listener";
 import { ElementManager } from "./element-manager";
 import { getElementManagerData } from "./work-with-element-manager";

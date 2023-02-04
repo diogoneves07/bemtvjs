@@ -1,4 +1,4 @@
-import { ROUTES_OPTIONS } from "./../bemtv/routes-store";
+import { ROUTES_OPTIONS } from "./routes-store";
 import { _ } from "../bemtv/components-main";
 import { routeToKebabCase } from "./routes-case";
 

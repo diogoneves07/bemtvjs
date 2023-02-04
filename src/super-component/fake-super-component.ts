@@ -1,5 +1,5 @@
-import SimpleComponent from "../simple-component";
-import { FakeSuperComponentInternal } from "../types/fake-super-component";
+import SimpleComponent from "../bemtv/simple-component";
+import { FakeSuperComponentInternal } from "../bemtv/types/fake-super-component";
 import {
   runInSimpleComponent,
   updateComponentVars,

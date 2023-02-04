@@ -3,7 +3,7 @@ import { ALL_SIMPLE_COMPONENTS } from "./simple-component-store";
 import normalizeRouterShortcut from "./normalize-router-shortcut";
 import { LifeCycleCallback } from "./types/simple-component-data";
 import { ObserverSystem } from "./observers-system";
-import { SuperComponent } from "./super-component/super-component";
+import { SuperComponent } from "../super-component/super-component";
 
 export type TemplateCallback = () => string;
 

@@ -1,13 +1,13 @@
-import { LIBRARY_NAME_IN_ERRORS_MESSAGE } from "./../../globals";
-import toKebabCase from "../../utilities/to-kebab-case";
 import { T_FNS_SYMBOL } from "../transformation-functions/main";
+import { LIBRARY_NAME_IN_ERRORS_MESSAGE } from "../globals";
+import toKebabCase from "../utilities/to-kebab-case";
 import {
   getSimpleComponentRunningVars,
   getSuperComponentData,
 } from "./work-with-super-component";
 import { SuperComponent } from "./super-component";
-import SimpleComponent from "../simple-component";
-import { generateForcedBindAttr } from "../generate-forced-el-attrs";
+import SimpleComponent from "../bemtv/simple-component";
+import { generateForcedBindAttr } from "../bemtv/generate-forced-el-attrs";
 
 //const VARS_PREFIX = "$";
 const VARS_AND_ATTR_PREFIX = "@";

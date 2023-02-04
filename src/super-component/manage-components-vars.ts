@@ -1,5 +1,5 @@
-import { ElementManager } from "../element-manager";
 import { T_FNS_SYMBOL } from "../transformation-functions/main";
+import { ElementManager } from "../bemtv/element-manager";
 import { SuperComponent } from "./super-component";
 import {
   getSuperComponentData,

@@ -1,4 +1,4 @@
-import isStringOrNumber from "../../utilities/is-string-or-number";
+import isStringOrNumber from "../utilities/is-string-or-number";
 import { tFn } from "./main";
 
 function transformToHTMLList<T extends any[] | Set<any>>(

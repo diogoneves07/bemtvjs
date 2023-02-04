@@ -1,5 +1,5 @@
 import SimpleComponent from "./simple-component";
-import { isRouterComponent } from "./is-router-component";
+import { isRouterComponent } from "../router/is-router-component";
 
 export function dispatchInitedLifeCycle(c: SimpleComponent) {
   c.inited = true;

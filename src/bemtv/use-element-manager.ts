@@ -9,7 +9,7 @@ import { getSimpleComponentRunningOnTop } from "./simple-component-on-top";
 import {
   getSimpleComponentFirstElement,
   getSimpleComponentNodes,
-} from "./super-component/work-with-super-component";
+} from "../super-component/work-with-super-component";
 import SimpleComponent from "./simple-component";
 import { ElementManagerFactory } from "./element-manager-factory";
 

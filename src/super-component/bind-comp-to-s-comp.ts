@@ -1,7 +1,7 @@
-import { LIBRARY_NAME_IN_ERRORS_MESSAGE } from "./../../globals";
-import SimpleComponent from "../simple-component";
-import { dispatchInitedLifeCycle } from "../components-lifecycle";
-import { getSuperSimpleComponent } from "../components-main";
+import { LIBRARY_NAME_IN_ERRORS_MESSAGE } from "../globals";
+import SimpleComponent from "../bemtv/simple-component";
+import { dispatchInitedLifeCycle } from "../bemtv/components-lifecycle";
+import { getSuperSimpleComponent } from "../bemtv/components-main";
 import getVarsInTemplate from "./get-vars-in-template";
 import {
   ElementsWithBindAttrs,
