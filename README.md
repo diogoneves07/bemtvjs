@@ -119,7 +119,7 @@ Counter component:
 ```javascript
 import { _ } from "bemtv";
 
-export const { click$, $, template } = _`Counter`({ count: 0 });
+const { click$, $, template } = _`Counter`({ count: 0 });
 
 click$(() => $.count++);
 
